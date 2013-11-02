@@ -1,0 +1,12 @@
+
+#mainMenuBackGround
+{ 
+  width:100px;
+  height:100px;
+	display:inline-block;
+  background-color:rgba(192,192,192,0.5);
+	padding:3px;
+	margin:3px;
+} 
+
+a:link {text-decoration:none;}
