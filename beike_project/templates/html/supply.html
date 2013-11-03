@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no">
+		<link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="http://code.jquery.com/jquery.js"></script>
+		<script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js"></script>
+		<script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+	    		$(".city").change(function(){
+	        		if($(this).val() == 'ny'){
+	            		$(".district").css("display","");
+	        		}
+	        		else{
+	            		$(".district").css({"display":"none"});
+	        		}
+	    		});
+	    		$(".classified").change(function(){
+	        		if($(this).val() == 'other'){
+	            		$(".subother").css("display","");
+	            		$(".submattress").css({"display":"none"});
+	            		$(".subtable").css({"display":"none"});
+	            		$(".subbed").css({"display":"none"});
+	        		}
+	        		else if($(this).val() == 'bed'){
+	        			$(".subbed").css("display","");
+	        			$(".submattress").css({"display":"none"});
+	            		$(".subtable").css({"display":"none"});
+	            		$(".subother").css({"display":"none"});
+	        		}
+	        		else if($(this).val() == 'table'){
+	        			$(".subtable").css("display","");
+	        			$(".subbed").css({"display":"none"});
+	            		$(".subother").css({"display":"none"});
+	            		$(".submattress").css({"display":"none"});
+	        		}
+	        		else if($(this).val() == 'mattress'){
+	        			$(".submattress").css("display","");
+	        			$(".subtable").css({"display":"none"});
+	            		$(".subbed").css({"display":"none"});
+	            		$(".subother").css({"display":"none"});
+	        		}
+	        		else{
+	            		$(".submattress").css({"display":"none"});
+	            		$(".subtable").css({"display":"none"});
+	            		$(".subbed").css({"display":"none"});
+	            		$(".subother").css({"display":"none"});
+	        		}
+	    		});
+				$(".contact").change(function(){
+	        		if($(this).val() == 'email'){
+	            		$(".subemail").css("display","");
+	            		$(".subphone").css({"display":"none"});
+	        		}
+	        		else if($(this).val() == 'phone'){
+	        			$(".subphone").css({"display":""});
+	            		$(".subemail").css({"display":"none"});
+	        		}
+	        		else{
+	        			$(".subphone").css({"display":"none"});
+	            		$(".subemail").css({"display":"none"});
+	        		}
+	    		});
+			});
+		</script>
+		<style type="text/css">
+	      	body {
+		        padding-top: 40px;
+		        padding-bottom: 40px;
+		        background-color: #f5f5f5;
+		    }
+	      	.form-signin {
+	        	max-width: 300px;
+	        	padding: 19px 29px 29px;
+	        	margin: 0 auto 20px;
+	        	background-color: #fff;
+	        	border: 1px solid #e5e5e5;
+	        	-webkit-border-radius: 5px;
+	           		-moz-border-radius: 5px;
+	                	border-radius: 5px;
+	       		-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+	           		-moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+	                	box-shadow: 0 1px 2px rgba(0,0,0,.05);
+	      	}
+	      	.form-signin .form-signin-heading,
+	      	.form-signin .checkbox {
+	        	margin-bottom: 10px;
+	      	}
+	      	.form-signin input[type="text"],
+	      	.form-signin input[type="password"] {
+	        	font-size: 16px;
+	        	height: auto;
+	        	margin-bottom: 15px;
+	        	padding: 7px 9px;
+	      	}
+    	</style>
+	</head>
+
+	<body>
+		<div class="container">
+			<form class="form-signin">
+				<p>城市</p>
+				<p>
+					<select name="city" class='city'>
+						<option>请选择州</option>
+			    		<option value='ny'>New York</option>
+			    		<option value='dc'selected='true'>D.C.</option>
+			    		<option value='nj'>New Jersy</option>
+					</select>
+				</p>
+				<p>
+					<select name='district' class="district" style="display:none">
+			    		<option value='brooklyn' selected='true'>Brooklyn</option>
+			    		<option value='manhatan'>Manhatan</option>
+			    		<option value='bronx'>Bronx</option>
+					</select>
+				</p>
+				<input name="pricefield" type="text" value="价格" onfocus="if (value =='价格'){value =''}" onblur="if (value ==''){value='价格}" maxLength="10"  onKeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;"/>
+				<p>物品种类</p>
+				<p>
+					<select class='classified'>
+						<option>请选择物品种类</option>
+						<option value='table'>桌子</option>
+						<option value='chair'>椅子</option>
+						<option value='bed'>床</option>
+						<option value='mattress'>床垫</option>
+						<option value='bookcase'>书柜</option>
+						<option value='bedside'>床头柜</option>
+						<option value='tablelamp'>台灯</option>
+						<option value='sofa'>沙发</option>
+						<option value='other'>其他</option>
+					</select>
+				</p>
+				<p>
+					<select name='subtable' class='subtable' style="display:none">
+						<option>请选择桌子种类</option>
+						<option value='study'>书桌</option>
+						<option value='eat'>餐桌</option>
+					</select>
+				</p>
+				<p>
+					<select name='subbed' class='subbed' style="display:none">
+						<option>请选择床的尺寸</option>
+						<option value='twin'>Twin</option>
+						<option value='full'>Full</option>
+						<option value='queen'>Queen</option>
+						<option value='king'>King</option>
+					</select>
+				</p>
+				<p>
+					<select name='submattress' class='submattress' style="display:none">
+						<option>请选择床垫的尺寸</option>
+						<option value='twin'>Twin</option>
+						<option value='full'>Full</option>
+						<option value='queen'>Queen</option>
+						<option value='king'>King</option>
+					</select>
+				</p>
+				<p>
+					<input class='subother' style="display:none" name="otherfield" type="text" value="请输入其他" onfocus="if (value =='请输入其他'){value =''}" onblur="if (value ==''){value='请输入其他}" />
+				</p>
+				<p>
+					<button class="btn btn-small btn-primary" type="button">上传图片</button>
+				</p>
+
+				<p>
+					<textarea id="other" name="other" cols="50" rows="5" 
+		    			onblur="if(this.value == ''){this.style.color = '#ACA899'; this.value = '其他要求'; }" 
+		    			onfocus="if(this.value == '其他要求'){this.value =''; this.style.color = '#000000'; }" 
+		            style="color:#ACA899;">其他要求</textarea>
+				</p>
+				<p>联系方式</p>
+				<p>
+					<select class='contact'>
+						<option>请选择联系方式</option>
+						<option value='email'>邮件</option>
+						<option value='phone'>电话</option>
+					</select>
+				</p>
+				<p>
+					<input class='subemail' style="display:none" name="subemail" type="text" value="请输入email" onfocus="if (value =='请输入email'){value =''}" onblur="if (value ==''){value='请输入email}" />
+				</p>
+				<p>
+					<input class='subphone' style="display:none" name="subphone" type="text" value="请输入电话" onfocus="if (value =='请输入电话'){value =''}" onblur="if (value ==''){value='请输入电话}" />
+				</p>
+				<p>
+					<input type="submit" class="btn btn-small btn-primary" value="递交" />
+				</p>
+			</form>
+		</div>
+	</body>
+</html>
