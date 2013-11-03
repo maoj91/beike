@@ -13,8 +13,10 @@ urlpatterns = patterns('',
 
 	# Uncomment the next line to enable the admin:
 	url(r'^$', TemplateView.as_view(template_name='index.html'), name="home"),
+	url(r'^demand/$', TemplateView.as_view(template_name='html/demand.html'), name="demand"),
+	url(r'^supply/$', TemplateView.as_view(template_name='html/supply.html'), name="supply"),
 	url(r'^admin/', include(admin.site.urls)),
-	url(r'^demand/', include('demand.urls')),
-	url(r'^supply/', include('supply.urls')),
+	#url(r'^demand/', include('demand.urls')),
+	#url(r'^supply/', include('supply.urls')),
 	url(r'^polls/', include('polls.urls')),
 )
