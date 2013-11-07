@@ -2,12 +2,12 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, target-densitydpi=high-dpi">
-		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<meta name="viewport" content="width=device-width, user-scalable=no">
+		<link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 		<script src="http://code.jquery.com/jquery.js"></script>
-		<script src="/bootstrap/js/bootstrap.js"></script>
-		<script src="/bootstrap/js/bootstrap.min.js"></script>
+		<script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js"></script>
+		<script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function(){
 	    		$(".city").change(function(){
