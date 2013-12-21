@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html lang="zh">
+	<head>
+		<meta name="viewport" content = "width=device-width ,  user-scalable=no">
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="/{{ STATIC_URL }}mystyle.css">
+	</head>
+	<body>
+	<h1>Nearby Buy Posts</h1>
+	{% for post in buy_list %}
+	<a href="/{{user_id}}/detail/{{post.id}}"><h3>{{post.title}} [${{post.price_num}}]</h3></a>
+	<div class="post_meta">
+		on {{post.date_published}}  by user{{post.user.id}}</br>
+		in {{post.user.area.city}}, {{post.user.area.state_or_region}}
+	</div>
+	<div class="post_body">
+		{{post.content|safe|linebreaks}}
+	</div>
+	{% endfor %}
+	</body>
+</html>
+

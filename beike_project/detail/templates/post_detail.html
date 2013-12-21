@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html lang="zh">
+	<head>
+		<meta name="viewport" content = "width=device-width ,  user-scalable=no">
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="/static/detail.css">
+	</head>
+	<body>
+		<h3>{{post.title}} [${{post.price_num}}] </h3>
+		<div class="post_meta">
+			on {{post.date_published}}  by user{{post.user.id}}</br>
+			in {{post.user.area.city}}, {{post.user.area.state_or_region}}
+		</div>
+		{% if post.image_urls %}
+			{% load string_utils %}
+			{% for url in post.image_urls|split:";" %}
+				<div class="post_image">
+					<img src= {{url}}  height="200" width="200">
+				</div>
+			{% endfor%}
+		{% endif%}
+		<div class="post_body">
+			{{post.content|safe|linebreaks}}
+		</div>
+		{% if comments %}
+		    <p>{{comments|length}} Comments:</p>
+			{% if wx_id == post.user.wx_id %}
+				{% for comment in comments %}
+				    <div class="comment">
+					<div class="body">{{ comment.content|linebreaks }}</div>
+				    </div>
+				{% endfor %}
+			{% else %}
+				<p>Sorry. Only post publisher can see the content</p>
+			{% endif %}
+		{% endif %}
+	
+		<div id="addc">Add a comment</div>
+		<!-- Comment form  -->
+		<form action="add_comment/" method="POST">{% csrf_token %}
+		    <div id="comment_form">
+			<p>{{ comment_form.content|linebreaks }}</p>
+		    </div>
+			{% csrf_token %}
+		    <div id="submit"><input type="submit" value="Submit"></div>
+		</form>
+	</body>
+</html>

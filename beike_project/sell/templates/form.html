@@ -1,0 +1,45 @@
+<html>
+	<head>
+		<meta name="viewport" content = "width=device-width ,  user-scalable=no">
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="/static/sell.css">
+		<script src="/static/sell.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+		</script>
+	</head>
+<body>
+	{% if errors %}
+	<ul>
+	    {% for error in errors %}
+	    <li>{{ error }}</li>
+	    {% endfor %}
+	</ul>
+	{% endif %}
+	<form action="/{{user_id}}/sell/form_submit/"  method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		<table>
+		    {{ text_form.as_table }}
+		</table>
+		{{ image_form_set.management_form }}
+		{% for form in image_form_set.forms %}
+		    <div class='table' id='image_form'>
+		    <table class='no_error'>
+			{{ form.as_table }}
+		    </table>
+		    </div>
+		{% endfor %}
+		<input type="button" value="+Pic" id="add_more">
+		<script>
+			var i=1;
+		    $('#add_more').click(function() {
+			if(i<3){
+				cloneMore('div.table:last', 'form');
+				i+=1;
+			}
+		    });
+		</script>
+		<div>
+		<input type="submit" value="Submit" id="submit_btn">
+		</div>
+	</form>
+</html>

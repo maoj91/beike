@@ -5,7 +5,6 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 BASE_DIR = '' 
-TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -37,7 +36,7 @@ TIME_ZONE = 'America/Chicago'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'zh-CN'
+LANGUAGE_CODE = ''
 
 SITE_ID = 1
 
@@ -56,12 +55,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
 
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
+STATIC_ROOT = os.path.join('/var/www/', 'static')
+AWS_STORAGE_BUCKET_NAME = 'beike-s3' #os.environ['AWS_STORAGE_BUCKET_NAME']
+#STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+#S3_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
+#STATIC_URL = S3_URL
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
 	os.path.join(BASE_DIR, 'static'),
+	'/home/ubuntu/beike_repo/beike_project/static/',
+	#'/var/www/static/',
 )
 
 # List of finder classes that know how to find static files in
@@ -102,6 +106,7 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 	os.path.join(BASE_DIR, 'templates'),
+	'/home/ubuntu/beike_repo/beike_project/templates/',
 )
 
 INSTALLED_APPS = (
@@ -115,9 +120,12 @@ INSTALLED_APPS = (
 	'django.contrib.admin',
 	# Uncomment the next line to enable admin documentation:
 	# 'django.contrib.admindocs',
-	'supply',
-	'demand',
-	'polls',
+	'sell',
+	'buy',
+	'history',
+	'detail',
+	'data',
+	'storages',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

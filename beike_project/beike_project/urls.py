@@ -4,19 +4,12 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-	# Examples:
-	# url(r'^$', 'beike_project.views.home', name='home'),
-	# url(r'^beike_project/', include('beike_project.foo.urls')),
-
-	# Uncomment the admin/doc line below to enable admin documentation:
-	# url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-	# Uncomment the next line to enable the admin:
 	url(r'^$', TemplateView.as_view(template_name='index.html'), name="home"),
-	url(r'^demand/$', TemplateView.as_view(template_name='html/demand.html'), name="demand"),
-	url(r'^supply/$', TemplateView.as_view(template_name='html/supply.html'), name="supply"),
 	url(r'^admin/', include(admin.site.urls)),
-	#url(r'^demand/', include('demand.urls')),
-	#url(r'^supply/', include('supply.urls')),
-	url(r'^polls/', include('polls.urls')),
+	url(r'^weixin$',include('weixin.urls')),
+	url(r'^(?P<userid>[-\w]+)/$', TemplateView.as_view(template_name='index.html'), name="home"),
+	url(r'^(?P<user_id>[-\w]+)/sell/', include('sell.urls')),
+	url(r'^(?P<user_id>[-\w]+)/buy/', include('buy.urls')),
+	url(r'^(?P<user_id>[-\w]+)/history/', include('history.urls')),
+	url(r'^(?P<user_id>[-\w]+)/detail/', include('detail.urls')),
 )
