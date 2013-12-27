@@ -6,6 +6,7 @@
 		<script src="/static/sell.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
 		</script>
+		<script type="text/javascript" src="https://raw.github.com/bestiejs/lodash/v1.1.1/dist/lodash.min.js"></script>
 	</head>
 <body>
 	{% if errors %}
@@ -29,6 +30,14 @@
 		    </div>
 		{% endfor %}
 		<input type="button" value="+Pic" id="add_more">
+			<div>
+		<input type="submit" value="Submit" id="submit_btn">
+		<input type="file" id="file" onchange="image_upload();">
+		<p id="progress">
+		<p id="status">
+		<p id="avatar_url">
+		<div id="preview"><img src="/static/default.png"  /></div>
+		</div>
 		<script>
 			var i=1;
 		    $('#add_more').click(function() {
@@ -38,8 +47,7 @@
 			}
 		    });
 		</script>
-		<div>
-		<input type="submit" value="Submit" id="submit_btn">
-		</div>
+
+
 	</form>
 </html>

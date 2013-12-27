@@ -61,9 +61,9 @@ content_template
     message = message.replace("toEmail",to)
     message = message.replace("subject_template",subject)
     message = message.replace("content_template",text)
-    gmail_user = "yurenji@gmail.com"
-    gmail_pwd = "yurenji886461"
-    FROM = "yurenji@gmail.com"
+    gmail_user = "homeinshell@gmail.com"
+    gmail_pwd = "shellinhome"
+    FROM = "homeinshell@gmail.com"
     TO = to
     result = False
     try:
