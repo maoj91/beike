@@ -6,7 +6,8 @@
 		<script src="/static/sell.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
 		</script>
-		<script type="text/javascript" src="https://raw.github.com/bestiejs/lodash/v1.1.1/dist/lodash.min.js"></script>
+		<script src="/static/lodash.js"></script>
+		<script type="text/javascript" src="/static/s3upload.js"></script>
 	</head>
 <body>
 	{% if errors %}
@@ -32,20 +33,38 @@
 		<input type="button" value="+Pic" id="add_more">
 			<div>
 		<input type="submit" value="Submit" id="submit_btn">
-		<input type="file" id="file" onchange="image_upload();">
+		<input type="file" id="file" onchange="image_s3_upload('file');">
 		<p id="progress">
 		<p id="status">
 		<p id="avatar_url">
-		<div id="preview"><img src="/static/default.png"  /></div>
+		<div id="preview"><img /></div>
 		</div>
 		<script>
 			var i=1;
-		    $('#add_more').click(function() {
+			$('#add_more').click(function() {
 			if(i<3){
 				cloneMore('div.table:last', 'form');
 				i+=1;
 			}
-		    });
+			});
+			function image_s3_upload(file_dom_id){
+			    var s3upload = new S3Upload({
+				file_dom_selector: file_dom_id,
+				s3_sign_put_url: '/s3/sign/',
+
+				onProgress: function(percent, message) {
+				    $('#status').html('Upload progress: ' + percent + '%' + message);
+				},
+				onFinishS3Put: function(url) {
+				    $('#status').html('Upload completed. Uploaded to: '+ url);
+				    $("#avatar_url").val(url);
+				    $("#preview").html('<img src="'+url+'" style="width:300px;" />');
+				},
+				onError: function(status) {
+				    $('#status').html('Upload error: ' + status);
+				}
+			    });
+			}
 		</script>
 
 
