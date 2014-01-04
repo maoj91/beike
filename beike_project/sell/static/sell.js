@@ -22,7 +22,7 @@ function add_more(user_id){
 
 function get_image_name_prefix(i,user_id){
 	var currentTime = Date.now();	
-	var prefix = user_id+"_"+currentTime+"_"+i;
+	var prefix = user_id+"/"+currentTime+"_"+i;
 	return prefix;
 }
 
