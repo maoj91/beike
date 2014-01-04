@@ -1,8 +1,9 @@
 (function() {
 
-  window.S3Upload = (function() {
+window.S3Upload = (function() {
 
     S3Upload.prototype.s3_object_name = '';
+    S3Upload.prototype.s3_object_name_prefix = '';
     S3Upload.prototype.s3_sign_put_url = '';
     S3Upload.prototype.file_dom_selector = '';
 
@@ -24,21 +25,29 @@
         this[option] = options[option];
       }
       this.handleFileSelect(document.getElementById(this.file_dom_selector));
-      //this.handleFileSelect(document.getElementById("file"));
-    }
+}
 
-    S3Upload.prototype.handleFileSelect = function(file_element) {
-	console.log(file_element);
-      var f, files, output, _i, _len, _results;
-      //this.onProgress(0, 'Upload started.');
+S3Upload.prototype.setImageName = function(file) {
+	var dot = file.name.lastIndexOf(".");
+	var suffix = ".jpg"; 
+	if(dot != -1) {
+		suffix = file.name.substring(dot).toLowerCase(); 
+	}
+	this.s3_object_name = this.s3_object_name_prefix+suffix;
+}
+
+S3Upload.prototype.handleFileSelect = function(file_element) {
+      var f, files, output, i, len, results;
       files = file_element.files;
       output = [];
-      _results = [];
-      for (_i = 0, _len = files.length; _i < _len; _i++) {
-        f = files[_i];
-        _results.push(this.uploadFile(f));
+      results = [];
+	var currentTime = Date.now();
+      for (i = 0, len = files.length; i < len; i++) {
+        f = files[i];
+	this.setImageName(f);
+        results.push(this.uploadFile(f));
       }
-      return _results;
+      return results;
     };
 
     S3Upload.prototype.createCORSRequest = function(method, url) {
@@ -59,7 +68,7 @@
       var this_s3upload, xhr;
       this_s3upload = this;
       xhr = new XMLHttpRequest();
-      xhr.open('GET', this.s3_sign_put_url + '?s3_object_type=' + file.type + '&s3_object_name=' + file.name, true);
+      xhr.open('GET', this.s3_sign_put_url + '?s3_object_type=' + file.type + '&s3_object_name=' + this.s3_object_name, true);
       xhr.overrideMimeType('text/plain; charset=x-user-defined');
       xhr.onreadystatechange = function(e) {
         var result;
@@ -94,7 +103,7 @@
           }
         };
         xhr.onerror = function() {
-          return this_s3upload.onError('XHR error.');
+          return this_s3upload.onError('Upload error. Please try again later.');
         };
         xhr.upload.onprogress = function(e) {
           var percentLoaded;

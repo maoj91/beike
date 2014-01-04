@@ -47,7 +47,7 @@ def responseMsg(request):
 	rawStr = smart_str(request.body)
 	msg = paraseMsgXml(ET.fromstring(rawStr))
 	user_id = msg['FromUserName']
-	content = msg['Content']
+	content = msg.get('Content','content')
 	process_user_input(user_id,content)
 	if not is_user_exist(user_id):
 		return request_user_address(msg)

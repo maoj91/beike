@@ -1,19 +1,68 @@
-function cloneMore(selector, type) {
-    var newElement = $(selector).clone(true);
-    var total = $('#id_' + type + '-TOTAL_FORMS').val();
-    newElement.find(':input').each(function() {
-        var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
-        var id = 'id_' + name;
-        $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
-    });
-    newElement.find('label').each(function() {
-        var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
-        $(this).attr('for', newFor);
-    });
-    total++;
-    $('#id_' + type + '-TOTAL_FORMS').val(total);
-    $(selector).after(newElement);
+
+function add_more(user_id){
+	var i = $("[id^=div_image]").length; 
+	if( i < 3 ){
+		var lastDiv = $("#div_image"+i.toString());
+		lastDiv.after("<div id='div_image"+(i+1).toString()+"'></div>");
+		var newDiv = $('#div_image'+(i+1).toString());
+		var inputId = 'image'+(i+1).toString();
+		var hiddenId = 'image_name'+(i+1).toString();
+		var progressId = 'progress'+(i+1).toString();
+		var statusId = 'status'+(i+1).toString();
+		var previewId = 'preview'+(i+1).toString();
+		newDiv.append("<input type='file' id='"+inputId+"' onchange=image_s3_upload(this.id,'"+user_id+"')>");
+		newDiv.append("<input type='hidden' id='"+hiddenId+"' val=''>");
+		newDiv.append("<p id='"+progressId+"'>");
+		newDiv.append("<p id='"+statusId+"'>");
+		newDiv.append("<p id='"+previewId+"'>");
+	}
 }
 
+			
 
-	
+function get_image_name_prefix(i,user_id){
+	var currentTime = Date.now();	
+	var prefix = user_id+"_"+currentTime+"_"+i;
+	return prefix;
+}
+
+function update_image_names(){
+	var max = $("[id^=div_image]").length; 
+	console.log(max.toString()+" max");
+	$('#image_names').val('');
+	for(var i=1;i<=max;i++){
+		var names = $('#image_names').val();
+		var name = $('#image_name'+i.toString()).val();
+		if(name != ''){
+			if(names === ''){
+				$('#image_names').val(name);
+			}else{
+				$('#image_names').val(names+";"+name);
+			}
+		}
+	}
+}
+
+function image_s3_upload(file_dom_id,user_id){
+	var i = file_dom_id[file_dom_id.length-1];
+	var image_name_prefix = get_image_name_prefix(i,user_id);
+	var s3upload = new S3Upload({
+		file_dom_selector: file_dom_id,
+		s3_sign_put_url: '/s3/sign/',
+		s3_object_name_prefix: image_name_prefix,
+		onProgress: function(percent, message) {
+			$('#status'+i).html('Upload progress: ' + percent + '%' + message);
+		},
+		onFinishS3Put: function(url) {
+			var current_name = $('#image_name'+i).val(url);	
+			update_image_names();
+			$('#status'+i).html('Upload completed. Uploaded to: '+ url);
+			$("#preview"+i).html('<img src="'+url+'" style="width:300px;" />');
+		},
+		onError: function(status) {
+			$('#status'+i).html('Upload error: ' + status);
+		}
+	    });
+	}
+
+

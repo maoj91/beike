@@ -22,51 +22,15 @@
 		<table>
 		    {{ text_form.as_table }}
 		</table>
-		{{ image_form_set.management_form }}
-		{% for form in image_form_set.forms %}
-		    <div class='table' id='image_form'>
-		    <table class='no_error'>
-			{{ form.as_table }}
-		    </table>
-		    </div>
-		{% endfor %}
-		<input type="button" value="+Pic" id="add_more">
-			<div>
-		<input type="submit" value="Submit" id="submit_btn">
-		<input type="file" id="file" onchange="image_s3_upload('file');">
-		<p id="progress">
-		<p id="status">
-		<p id="avatar_url">
-		<div id="preview"><img /></div>
+		<div id="div_image1">
+			<input type="file" id="image1" onchange="image_s3_upload(this.id,'{{user_id}}');">
+			<input type="hidden" id="image_name1"  value="">
+			<p id="progress1">
+			<p id="status1">
+			<div id="preview1"></div>
 		</div>
-		<script>
-			var i=1;
-			$('#add_more').click(function() {
-			if(i<3){
-				cloneMore('div.table:last', 'form');
-				i+=1;
-			}
-			});
-			function image_s3_upload(file_dom_id){
-			    var s3upload = new S3Upload({
-				file_dom_selector: file_dom_id,
-				s3_sign_put_url: '/s3/sign/',
-
-				onProgress: function(percent, message) {
-				    $('#status').html('Upload progress: ' + percent + '%' + message);
-				},
-				onFinishS3Put: function(url) {
-				    $('#status').html('Upload completed. Uploaded to: '+ url);
-				    $("#avatar_url").val(url);
-				    $("#preview").html('<img src="'+url+'" style="width:300px;" />');
-				},
-				onError: function(status) {
-				    $('#status').html('Upload error: ' + status);
-				}
-			    });
-			}
-		</script>
-
-
+		<input type="hidden" id="image_names" name="image_names"  value="">
+		<input type="submit" value="Submit" id="submit_btn">
 	</form>
+	<button id="add_more"  onclick="add_more('{{user_id}}')">+Pic</button>
 </html>
