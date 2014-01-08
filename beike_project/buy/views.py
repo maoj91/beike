@@ -2,7 +2,7 @@ from django.http import Http404,HttpResponse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_exempt
 from data.models import Post
 from data.models import User
 from buy.forms import BuyForm
@@ -19,7 +19,7 @@ def form(request,user_id):
 	form = BuyForm()
 	return render_to_response('buy_form.html',{'form': form,'user_id':user_id}); 
 
-@csrf_protect
+@csrf_exempt
 def form_submit(request,user_id):
 #    c = {}
 #    c.update(csrf(request))

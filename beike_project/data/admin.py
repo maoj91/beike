@@ -8,8 +8,12 @@ from data.models import Area
 from data.models import Category
 from data.models import Post
 from data.models import Comment
+from data.models import Notification
+from data.models import Privacy
 
 admin.site.register(User)
+admin.site.register(Notification)
+admin.site.register(Privacy)
 admin.site.register(Address)
 admin.site.register(State)
 admin.site.register(City)

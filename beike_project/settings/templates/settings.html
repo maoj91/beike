@@ -4,7 +4,27 @@
 	<meta name="viewport" content = "width=device-width ,  user-scalable=no">
 	<meta charset="UTF-8">
 	<link rel="stylesheet" type="text/css" href="/static/mystyle.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+	<script src="/static/settings.js"></script>
 </head>
 <body>
-个人资料
+<div id="profile">
+	<p>--------------- 个人资料 ----------------</p>
+	<p>用户名：{{user.name}}</p>
+	<p>邮箱：{{user.email}}</p>
+	<p>地区：{{user.area.city}} , {{user.area.state_or_region}}</p>
+	<button id="edit_profile" onclick="profile();">Edit</button>
+</div>
+<div id="notification">
+	<p>--------------- 通知设置 ----------------</p>
+	<p>当前选项：{{user.notification.description}}</p>	
+	<input type="button" id="edit_notification" value="Edit">
+<div id="privacy">
+	<p>--------------- 隐私设置 ----------------</p>
+	<p>当前选项：{{user.privacy.description}}</p>	
+	<input type="button" id="edit_privacy" value="Edit">
+</div>
+
+</div>
 </body>
+</html>

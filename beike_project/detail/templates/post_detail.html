@@ -8,7 +8,7 @@
 	<body>
 		<h3>{{post.title}} [${{post.price_num}}] </h3>
 		<div class="post_meta">
-			on {{post.date_published}}  by user{{post.user.id}}</br>
+			on {{post.date_published}}  by {{post.user.name}}</br>
 			in {{post.user.area.city}}, {{post.user.area.state_or_region}}
 		</div>
 		{% if post.image_urls %}

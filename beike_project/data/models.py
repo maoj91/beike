@@ -1,4 +1,8 @@
+# -*- coding: utf-8 -*-
 from django.db import models
+
+def decode(info):
+      return info.decode('GB2312')
 
 class State(models.Model):
 	name = models.CharField(max_length=50)
@@ -19,13 +23,29 @@ class Area(models.Model):
 	country = models.CharField(max_length=50, default='US')
 	zipcode = models.CharField(max_length=15)
 
+class Notification(models.Model):
+	name = models.CharField(max_length = 30)
+	description = models.CharField(max_length = 100)
+
+class Privacy(models.Model):
+	name = models.CharField(max_length = 30)
+	description = models.CharField(max_length = 100)
+
+def get_default_notification():
+	return Notification.objects.get(id=1)
+
+def get_default_privacy():
+	return Privacy.objects.get(id=1)
+
 
 class User(models.Model):
-	name = models.CharField(max_length=50)
+	name = models.CharField(max_length=50, default='匿名用户')
 	wx_id = models.CharField(max_length=50,unique=True)
 	wx_name = models.CharField(max_length=50)
 	email = models.EmailField(max_length=70,blank=True, null= True, unique= True)
 	area = models.ForeignKey(Area)
+	notification = models.ForeignKey(Notification, default=get_default_notification)
+	privacy = models.ForeignKey(Privacy, default= get_default_privacy)
 
 class Address(models.Model):
 	street_line_1 = models.CharField(max_length=50)
@@ -65,3 +85,5 @@ class Comment(models.Model):
 	date_published = models.DateTimeField('comment publish date')
 	def __unicode__(self):
 		return unicode("%s: %s" % (self.post, self.content[:60]))
+
+

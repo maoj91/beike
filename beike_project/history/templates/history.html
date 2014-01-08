@@ -10,7 +10,7 @@
 	{% for post in my_list %}
 	<a href="/{{user_id}}/detail/{{post.id}}"><h3>{{post.title}} [${{post.price_num}}]</h3></a>
 	<div class="post_meta">
-		on {{post.date_published}}  by user{{post.user.id}}</br>
+		on {{post.date_published}}  by {{post.user.name}}</br>
 		in {{post.user.area.city}}, {{post.user.area.state_or_region}}
 	</div>
 	<div class="post_body">
