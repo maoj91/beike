@@ -10,3 +10,51 @@
 } 
 
 a:link {text-decoration:none;}
+
+body{
+    margin:0;
+    padding:0;
+    background:url(https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/background.png) center center fixed no-repeat;
+    -moz-background-size: cover;
+    background-size: cover;
+}
+
+#logo_background{
+    margin:0;
+    padding:0;
+    background:url(https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/logo_background.png) center center fixed no-repeat;
+    -moz-background-size: cover;
+    background-size: cover;
+}
+
+.outer_top{
+    width: 100%;
+    text-align: center;
+}
+
+.outer_mid{
+    width: 100%;
+    text-align: center;
+}
+
+.outer_bot{
+    width: 100%;
+    text-align: center;
+}
+
+.inner{
+    display: inline-block;
+}
+
+#logo{
+    margin-top: 15%;
+}
+
+#dot{
+    margin-top: 15%;
+}
+#button{
+    margin-left:2%;
+    margin-right:2%;
+    margin-top:2%
+}
