@@ -6,14 +6,22 @@ def decode(info):
 
 class State(models.Model):
 	name = models.CharField(max_length=50)
+	def __unicode__(self):
+		return self.name
 
 class City(models.Model):
 	name = models.CharField(max_length=50)
 	state = models.ForeignKey(State)
+	image_url = models.CharField(max_length= 100,blank=True,null=True)
+	image_selected_url = models.CharField(max_length= 100,blank=True,null=True)
+	def __unicode__(self):
+		return self.name
 
 class District(models.Model):
 	name = models.CharField(max_length=50)
 	city = models.ForeignKey(City)
+	def __unicode__(self):
+		return self.name
 
 class Area(models.Model):
 	community = models.CharField(max_length=50)
@@ -22,14 +30,21 @@ class Area(models.Model):
 	state_or_region = models.CharField(max_length=50)
 	country = models.CharField(max_length=50, default='US')
 	zipcode = models.CharField(max_length=15)
+	def __unicode__(self):
+		return self.city+","+self.state_or_region
 
 class Notification(models.Model):
 	name = models.CharField(max_length = 30)
 	description = models.CharField(max_length = 100)
+	def __unicode__(self):
+		return self.name
 
 class Privacy(models.Model):
 	name = models.CharField(max_length = 30)
 	description = models.CharField(max_length = 100)
+	def __unicode__(self):
+		return self.name
+
 
 def get_default_notification():
 	return Notification.objects.get(id=1)
@@ -37,15 +52,6 @@ def get_default_notification():
 def get_default_privacy():
 	return Privacy.objects.get(id=1)
 
-
-class User(models.Model):
-	name = models.CharField(max_length=50, default='匿名用户')
-	wx_id = models.CharField(max_length=50,unique=True)
-	wx_name = models.CharField(max_length=50)
-	email = models.EmailField(max_length=70,blank=True, null= True, unique= True)
-	area = models.ForeignKey(Area)
-	notification = models.ForeignKey(Notification, default=get_default_notification)
-	privacy = models.ForeignKey(Privacy, default= get_default_privacy)
 
 class Address(models.Model):
 	street_line_1 = models.CharField(max_length=50)
@@ -56,9 +62,27 @@ class Address(models.Model):
 	zipcode = models.CharField(max_length=15)
 	latitude = models.CharField(max_length=15)
 	longitude = models.CharField(max_length=15)
+	def __unicode__(self):
+		return self.city+','+self.state_or_region;
+
+class User(models.Model):
+	name = models.CharField(max_length=50, default='新用户')
+	wx_id = models.CharField(max_length=50,unique=True)
+	wx_name = models.CharField(max_length=50)
+	email = models.EmailField(max_length=70,blank=True, null= True, unique= True)
+	address = models.ForeignKey(Address,blank=True, null=True)
+	notification = models.ForeignKey(Notification, default=get_default_notification)
+	privacy = models.ForeignKey(Privacy, default= get_default_privacy)
+	image_url = models.CharField(max_length= 100, blank=True,null=True)
 
 class Category(models.Model):
 	name = models.CharField(max_length=50)
+	def __unicode__(self):
+		return self.name
+
+class Condition(models.Model):
+	name = models.CharField(max_length=50)
+	description = models.CharField(max_length=100)
 	def __unicode__(self):
 		return self.name
 
@@ -68,13 +92,16 @@ class Post(models.Model):
 	content = models.CharField(max_length = 500)
 	category = models.ForeignKey(Category)
 	price_num = models.IntegerField(default=0)
+	item_condition = models.IntegerField(default=0)
 	price_unit = models.CharField(max_length=10,default='USD')
 	user = models.ForeignKey(User)
 	is_buy = models.BooleanField(default=True)
+	is_open = models.BooleanField(default=True)
 	#image urls separated by ';'
 	image_urls = models.CharField(max_length= 300)
 	def __unicode__(self):
 		return unicode("%s: %s" % (self.title, self.content[:60]))
+
 
 class Comment(models.Model):
 	#image urls separated by ';'

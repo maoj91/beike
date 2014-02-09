@@ -13,5 +13,5 @@ urlpatterns = patterns('',
 	url(r'^(?P<user_id>[-\w]+)/buy/', include('buy.urls')),
 	url(r'^(?P<user_id>[-\w]+)/history/', include('history.urls')),
 	url(r'^(?P<user_id>[-\w]+)/detail/', include('detail.urls')),
-	url(r'^(?P<user_id>[-\w]+)/settings/', include('settings.urls')),
+	url(r'^(?P<user_id>[-\w]+)/me/', include('me.urls')),
 )

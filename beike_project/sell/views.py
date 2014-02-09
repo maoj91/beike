@@ -18,8 +18,6 @@ def all_list(request,user_id):
 	sell_list = Post.objects.filter(is_buy=False).order_by('-date_published')
 	return render_to_response('sell.html', {'sell_list':sell_list,'user_id':user_id })
 
-
-
 def form(request,user_id):
 	text_form = SellTextForm()
 	return render_to_response('form.html',{'text_form': text_form,'user_id':user_id}); 
@@ -28,7 +26,7 @@ def form(request,user_id):
 def form_submit(request,user_id):
     errors = []
     if request.method == 'POST':
-	text_form = SellTextForm(request.POST)
+	#text_form = SellTextForm(request.POST)
 	is_text_form_valid = False
 	is_image_form_valid = False
 	new_post = Post()

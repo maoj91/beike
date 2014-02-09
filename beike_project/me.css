@@ -1,0 +1,11 @@
+img {
+	max-width: 100%;
+}
+
+.background{
+	z-index:-1;
+}
+
+.email{
+	z-index:1;
+}

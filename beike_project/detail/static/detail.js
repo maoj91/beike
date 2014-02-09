@@ -1,4 +1,3 @@
-
 function add_more(position,user_id){
 	var i = $("[id^=div_image]").length; 
 	if( i < 3 && i==position){
@@ -28,6 +27,7 @@ function get_image_name_prefix(i,user_id){
 
 function update_image_names(){
 	var max = $("[id^=div_image]").length; 
+	console.log(max.toString()+" max");
 	$('#image_names').val('');
 	for(var i=1;i<=max;i++){
 		var names = $('#image_names').val();
@@ -62,7 +62,7 @@ function image_s3_upload(file_dom_id,user_id){
 			$('#status'+i).html('Upload error: ' + status);
 		}
 	    });
-	add_more(i,user_id);
+	add_more(i, user_id);
 }
 
 

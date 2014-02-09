@@ -24,6 +24,8 @@ def add_comment(request, user_id, post_id):
 		comment.user = User.objects.get(wx_id=user_id)
 		comment.content = content
 		comment.date_published = datetime.datetime.now()
+		
+		comment.image_urls = request.POST.get('image_names','') 
 		comment.save()
 		sendEmail(comment)
 	return HttpResponseRedirect("/"+user_id+"/detail/"+post_id)

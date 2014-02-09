@@ -1,15 +1,13 @@
 <html>
 	<head>
-		<meta name="viewport" content = "width=device-width ,  user-scalable=no">
+		<meta name="viewport" content = "width=device-width ,  user-scalable=no, initial-scale=1.0,maximum-scale=1.0">
 		<meta charset="UTF-8">
 		<link rel="stylesheet" type="text/css" href="/static/sell.css">
 		<script src="/static/sell.js"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
-		</script>
-		<script src="/static/lodash.js"></script>
 		<script type="text/javascript" src="/static/s3upload.js"></script>
 	</head>
 <body>
+	<img id='header' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/header.png'>
 	{% if errors %}
 	<ul>
 	    {% for error in errors %}
@@ -19,18 +17,23 @@
 	{% endif %}
 	<form action="/{{user_id}}/sell/form_submit/"  method="post" enctype="multipart/form-data">
 		{% csrf_token %}
-		<table>
-		    {{ text_form.as_table }}
-		</table>
+		<span style="color:#00CED1">标&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;题</span><input type="text" name="title" placeholder="请输入标题">
 		<div id="div_image1">
-			<input type="file" id="image1" onchange="image_s3_upload(this.id,'{{user_id}}');">
+			<input type="file" id="image1"  onchange="image_s3_upload(this.id,'{{user_id}}');">
 			<input type="hidden" id="image_name1"  value="">
 			<p id="progress1">
 			<p id="status1">
 			<div id="preview1"></div>
 		</div>
 		<input type="hidden" id="image_names" name="image_names"  value="">
-		<input type="submit" value="Submit" id="submit_btn">
+		<div>
+			<span style="color:#00CED1">价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格</span><input type="text" name="price" placeholder="请标价">
+		</div>
+		<div>
+			<span style="color:#00CED1">其他描述</span><input type="text" name="content" placeholder="其他描述">
+		</div>
+		<div>
+		<input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png">
+		</div>
 	</form>
-	<button id="add_more"  onclick="add_more('{{user_id}}')">+Pic</button>
 </html>
