@@ -1,7 +1,8 @@
 from data.models import User,Area,City
 from django.core.signing import Signer
 import time
-
+from data.models import User,Address,City
+from validate_email import validate_email
 
 def is_user_exist(user_id):
 	user_count = User.objects.filter(wx_id=user_id).count()
@@ -32,7 +33,12 @@ def create_user(user_id,email,city_id):
 	if not is_user_exist(user_id):
 		user = User()
 		user.wx_id = user_id
-		user.area = get_area_by_city(city_id)
+		address = Address()
+		city = City.objects.get(pk=city_id)
+		address.city = city.name
+		address.state_or_region = city.state.name
+		address.save()
+		user.address = address
 		user.email = email
 		user.save()
 
@@ -50,4 +56,11 @@ def get_area_by_city(city_id):
 	return Area.objects.get(city=city.name,state_or_region=city.state.name)
 
 def is_email_valid(email):
-	return True
+	is_valid = validate_email(email)
+	is_exist = False 
+	if User.objects.filter(email=email):
+		is_exist = True	
+	if not is_exist and is_valid:
+		return True
+	else:
+		return False

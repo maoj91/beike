@@ -9,9 +9,9 @@
 </head>
 <body>
 <div id="error">
-{% if error != "" %}
-	<p> {{error}} </p>
-{% endif %}
+	{% if error %}
+		<p> {{error}} </p>
+	{% endif %}
 </div>
 <div id="profile">
 	<p>--------------- 个人资料 ----------------</p>

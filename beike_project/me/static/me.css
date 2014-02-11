@@ -1,0 +1,55 @@
+body{
+margin:0;
+padding:0;
+background:url(https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/bkgd.png) center center fixed no-repeat;
+-moz-background-size: cover;
+background-size: cover;
+}
+
+#bkgd{
+margin:0;
+padding:0;
+background:url(https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/green_bkgd.png) center center fixed no-repeat;
+-moz-background-size: cover;
+background-size: cover;
+}
+
+
+#logo{
+margin-top:15%;
+}
+
+#email{
+}
+
+#dots{
+margin-top:1em;
+}
+
+#arrow{
+}
+
+p{
+color:#FFFFFF;
+}
+
+#error{
+}
+
+#start{
+}
+
+#my_city{
+}
+
+#cities{
+}
+
+.outer {
+width: 100%;
+text-align: center;
+}
+
+.inner {
+display: inline-block;
+}

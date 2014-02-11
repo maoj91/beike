@@ -26,7 +26,7 @@ def form(request,user_id):
 def form_submit(request,user_id):
     errors = []
     if request.method == 'POST':
-	text_form = SellTextForm(request.POST)
+	#text_form = SellTextForm(request.POST)
 	is_text_form_valid = False
 	is_image_form_valid = False
 	new_post = Post()
