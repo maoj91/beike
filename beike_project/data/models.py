@@ -92,7 +92,7 @@ class Post(models.Model):
 	content = models.CharField(max_length = 500)
 	category = models.ForeignKey(Category)
 	price_num = models.IntegerField(default=0)
-	item_condition = models.IntegerField(default=0)
+	item_condition = models.IntegerField(default=0,blank=True,null=True)
 	price_unit = models.CharField(max_length=10,default='USD')
 	user = models.ForeignKey(User)
 	is_buy = models.BooleanField(default=True)

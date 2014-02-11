@@ -4,8 +4,10 @@
 		<meta charset="UTF-8">
 		<link rel="stylesheet" type="text/css" href="/static/sell.css">
 		<script src="/static/sell.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+		<script src="/static/lodash.js"></script>
 		<script type="text/javascript" src="/static/s3upload.js"></script>
-	</head>
+</head>
 <body>
 	<img id='header' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/header.png'>
 	{% if errors %}
@@ -18,12 +20,15 @@
 	<form action="/{{user_id}}/sell/form_submit/"  method="post" enctype="multipart/form-data">
 		{% csrf_token %}
 		<span style="color:#00CED1">标&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;题</span><input type="text" name="title" placeholder="请输入标题">
+		<div id="current_image_div">
+			<img id="current_image">
+			<p id="progress">
+			<p id="status">
+			<div id="preview"></div>
+		</div>
 		<div id="div_image1">
-			<input type="file" id="image1"  onchange="image_s3_upload(this.id,'{{user_id}}');">
+			<input type="file" id="image1" onchange="image_s3_upload(this.id,'{{user_id}}');">
 			<input type="hidden" id="image_name1"  value="">
-			<p id="progress1">
-			<p id="status1">
-			<div id="preview1"></div>
 		</div>
 		<input type="hidden" id="image_names" name="image_names"  value="">
 		<div>
