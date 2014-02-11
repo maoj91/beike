@@ -125,9 +125,9 @@ INSTALLED_APPS = (
 	'history',
 	'detail',
 	'data',
-	'storages',
+	#'storages',
 	's3',
-	'settings',
+	'me',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

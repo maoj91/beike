@@ -5,17 +5,17 @@
 	<meta charset="UTF-8">
 	<link rel="stylesheet" type="text/css" href="/static/mystyle.css">
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
-	<script src="/static/settings.js"></script>
+	<script src="/static/me.js"></script>
 </head>
 <body>
 <div id="error">
-	{% if error %}
-		<p> {{error}} </p>
-	{% endif %}
+{% if error != "" %}
+	<p> {{error}} </p>
+{% endif %}
 </div>
 <div id="profile">
 	<p>--------------- 个人资料 ----------------</p>
-	<form action="/{{user.wx_id}}/settings/save_profile/" method="post" enctype="multipart/form-data">{% csrf_token %}
+	<form action="/{{user.wx_id}}/me/save_profile/" method="post" enctype="multipart/form-data">{% csrf_token %}
 		用户名：<input type="text" name="user_name" placeholder={{user.name}} value={{user.name}}></br>
 		邮箱：<input type="text" name="user_email" placeholder={{user.email}} value={{user.email}}></br>
 		地区：<select name="area_city">
@@ -42,7 +42,8 @@
 </div>
 <div id="notification">
 	<p>--------------- 通知设置 ----------------</p>
-	<p>当前选项：
+	<form action="/{{user.wx_id}}/me/save_notification/" method="post" enctype="multipart/form-data">{% csrf_token %}
+	当前选项：
 		<select name="notification">
 		{% for notification in notifications %}
 			{% if notification.description == user.notification.description %}
@@ -52,11 +53,22 @@
 			{% endif %}
 		{% endfor %}
 		</select></br>
-	<input type="button" id="save_notification" value="Save">
+	<input type="submit" id="save_notification" value="Save">
 <div id="privacy">
+	</form>
 	<p>--------------- 隐私设置 ----------------</p>
-	<p>当前选项：{{user.privacy.description}}</p>	
-	<input type="button" id="edit_privacy" value="Edit">
+	<form action="/{{user.wx_id}}/me/save_privacy/" method="post" enctype="multipart/form-data">{% csrf_token %}
+		当前选项：<select name="privacy">
+		{% for privacy in privacies %}
+			{% if privacy.description == user.privacy.description %}
+				<option value="{{privacy.description}}" selected>{{privacy.description}}</option>
+			{% else %}
+				<option value="{{privacy.description}}">{{privacy.description}}</option>
+			{% endif %}
+		{% endfor %}
+		</select></br>
+	<input type="submit" id="save_privacy" value="Save">
+	</form>
 </div>
 
 </div>

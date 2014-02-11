@@ -6,14 +6,20 @@ def decode(info):
 
 class State(models.Model):
 	name = models.CharField(max_length=50)
+	def __unicode__(self):
+		return self.name
 
 class City(models.Model):
 	name = models.CharField(max_length=50)
 	state = models.ForeignKey(State)
+	def __unicode__(self):
+		return self.name
 
 class District(models.Model):
 	name = models.CharField(max_length=50)
 	city = models.ForeignKey(City)
+	def __unicode__(self):
+		return self.name
 
 class Area(models.Model):
 	community = models.CharField(max_length=50)
@@ -22,6 +28,8 @@ class Area(models.Model):
 	state_or_region = models.CharField(max_length=50)
 	country = models.CharField(max_length=50, default='US')
 	zipcode = models.CharField(max_length=15)
+	def __unicode__(self):
+		return self.city+","+self.state_or_region
 
 class Notification(models.Model):
 	name = models.CharField(max_length = 30)

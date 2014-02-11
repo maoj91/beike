@@ -4,9 +4,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.encoding import smart_str, smart_unicode
 from data.views import is_user_exist
 from data.views import get_user
-from data.views import create_user
 from data.views import is_user_has_email
 from data.views import set_user_email
+from data.models import User
 
 import xml.etree.ElementTree as ET
 import urllib,urllib2,time,hashlib
@@ -48,13 +48,12 @@ def responseMsg(request):
 	msg = paraseMsgXml(ET.fromstring(rawStr))
 	user_id = msg['FromUserName']
 	content = msg.get('Content','content')
-	process_user_input(user_id,content)
+	url = ''
 	if not is_user_exist(user_id):
-		return request_user_address(msg)
-	elif is_user_has_email(user_id):
-		return getReplyXml(msg)
+		url='http://54.204.4.250/'+user_id+'/me/get_area/'
 	else:
-		return request_user_email(msg)
+		url = 'http://54.204.4.250/'+user_id
+	return getReplyXml(msg,url)
 
 def paraseMsgXml(rootElem):
 	msg = {}
@@ -80,7 +79,7 @@ def request_user_email(msg):
 	extTpl = extTpl % (fromUserName,toUserName,str(int(time.time())),content)
 	return extTpl
 
-def getReplyXml(msg):
+def getReplyXml(msg,url):
 	extTpl ="<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>1</ArticleCount><Articles><item><Title><![CDATA[%s]]></Title><Description><![CDATA[%s]]></Description><PicUrl><![CDATA[%s]]></PicUrl><Url><![CDATA[%s]]></Url></item></Articles></xml>"
 
 	fromUserName = msg['FromUserName']
@@ -89,7 +88,6 @@ def getReplyXml(msg):
 	title = "Welcome to beike!"
 	description = "Click on this article to main page."
 	picUrl = "https://s3-us-west-2.amazonaws.com/beike-s3/beike_main.jpg"
-	url = "http://54.204.4.250/"+fromUserName
 	extTpl = extTpl % (fromUserName,toUserName,str(int(time.time())),title,description,picUrl,url)
 	return extTpl
 
@@ -100,11 +98,3 @@ def is_email_input(content):
 	return '@' in content 
 
 
-def process_user_input(user_id,content):
-	if is_address_input(content):
-		create_user(user_id)
-	elif is_email_input(content):
-		set_user_email(user_id,content)
-	else:
-		print 'Meaningless input '+content
-			

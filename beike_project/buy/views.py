@@ -8,7 +8,6 @@ from data.models import User
 from buy.forms import BuyForm
 from data.views import get_user
 import datetime
-
 def all_list(request,user_id):
 	buy_list = Post.objects.filter(is_buy=True).order_by('-date_published')
 	return render_to_response('buy.html', {'buy_list':buy_list,'user_id':user_id })

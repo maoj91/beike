@@ -1,7 +1,6 @@
-
-function add_more(user_id){
+function add_more(position,user_id){
 	var i = $("[id^=div_image]").length; 
-	if( i < 3 ){
+	if( i < 3 && i==position){
 		var lastDiv = $("#div_image"+i.toString());
 		lastDiv.after("<div id='div_image"+(i+1).toString()+"'></div>");
 		var newDiv = $('#div_image'+(i+1).toString());
@@ -63,7 +62,7 @@ function image_s3_upload(file_dom_id,user_id){
 			$('#status'+i).html('Upload error: ' + status);
 		}
 	    });
-	add_more(user_id);
+	add_more(i, user_id);
 }
 
 

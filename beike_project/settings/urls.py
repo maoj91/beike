@@ -5,4 +5,5 @@ from django.views.generic import TemplateView
 
 urlpatterns = patterns('',
 	url(r'^$', views.index),
+	url(r'^save_profile/$', views.save_profile),
 )

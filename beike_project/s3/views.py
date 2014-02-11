@@ -8,12 +8,14 @@ import hmac
 import hashlib
 import urllib
 import json
+import os
 
 @csrf_exempt
 def sign(request):
-    AWS_ACCESS_KEY = 'AKIAIHSXDEZMJ2N7VJWQ'
-    AWS_SECRET_KEY = '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'
+    AWS_ACCESS_KEY = os.environ["AWS_ACCESS_KEY"]
+    AWS_SECRET_KEY = os.environ["AWS_SECRET_KEY"]
     S3_BUCKET = 'beike-s3'
+
 
     object_name = request.GET.get('s3_object_name')
     mime_type = request.GET.get('s3_object_type')

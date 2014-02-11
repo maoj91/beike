@@ -18,8 +18,6 @@ def all_list(request,user_id):
 	sell_list = Post.objects.filter(is_buy=False).order_by('-date_published')
 	return render_to_response('sell.html', {'sell_list':sell_list,'user_id':user_id })
 
-
-
 def form(request,user_id):
 	text_form = SellTextForm()
 	return render_to_response('form.html',{'text_form': text_form,'user_id':user_id}); 
