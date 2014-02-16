@@ -27,8 +27,10 @@
 	</div>
 	<div class='outer'>
 		<a href="#jump_to"><img id='arrow' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/arrow.png'></a>
-		<p>下方选择城市</p>
 	</div>
+	<div class='outer'>
+		<p>下方选择城市</p>
+ 	</div>	
 	<div class='outer'>
 		<img id='my_city_img' src='{{default_city.image_selected_url}}'>
 		<div id='my_city_name'>{{default_city.name}}</div>
@@ -40,7 +42,7 @@
 	<div id='cities' class='outer'>
 	{% for city in cities %}
 		<span onclick="select_city({{city.id}},'{{city.name}}','{{city.image_url}}');">
-			<img id='my_city_img' src='{{city.image_url}}'>
+			<img class='city_img' src='{{city.image_url}}'>
 		</span>
 	{% endfor %}
 	<input type="hidden" id="city_id" name="city_id" value="{{default_city.id}}">

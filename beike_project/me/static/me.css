@@ -1,36 +1,40 @@
-body{
-margin:0;
-padding:0;
-background:url(https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/bkgd.png) center center fixed no-repeat;
--moz-background-size: cover;
-background-size: cover;
+body_test{
+	margin:0;
+	padding:0;
+	background:url(https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/bkgd.png) center center fixed no-repeat;
+	-moz-background-size: cover;
+	background-size: cover;
 }
 
 #bkgd{
-margin:0;
-padding:0;
-background:url(https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/green_bkgd.png) center center fixed no-repeat;
--moz-background-size: cover;
-background-size: cover;
+	margin:0;
+	padding:0;
+	background:url(https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/green_bkgd.png) center center fixed no-repeat;
+	-moz-background-size: cover;
+	background-size: cover;
 }
 
-
 #logo{
-margin-top:15%;
+	margin-top:3em;
+	margin-left:2em;
+	width:10em;
+	height:10em;
 }
 
 #email{
 }
 
 #dots{
-margin-top:1em;
+	margin-top:1em;
 }
 
 #arrow{
+	width:7em;
+	height:7em;
 }
 
 p{
-color:#FFFFFF;
+	color:#FFFFFF;
 }
 
 #error{
@@ -39,17 +43,24 @@ color:#FFFFFF;
 #start{
 }
 
-#my_city{
+#my_city_img{
+	width:8em;
+	height:8em;
 }
 
 #cities{
+	height:5em;
+}
+
+.city_img{
+	height:100%;
 }
 
 .outer {
-width: 100%;
-text-align: center;
+	width: 100%;
+	text-align: center;
 }
 
 .inner {
-display: inline-block;
+	display: inline-block;
 }

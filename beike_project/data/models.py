@@ -89,10 +89,17 @@ class Condition(models.Model):
 class Post(models.Model):
 	title = models.CharField(max_length= 60)
 	date_published = models.DateTimeField('post publish date')
+	open_util = models.DateTimeField(null=True,blank=True)
 	content = models.CharField(max_length = 500)
+	phone = models.CharField(max_length = 20,blank=True,null=True)
+	prefer_call = models.BooleanField(default=True)
 	category = models.ForeignKey(Category)
-	price_num = models.IntegerField(default=0)
-	item_condition = models.IntegerField(default=0,blank=True,null=True)
+	#used by sell post
+	price_num = models.IntegerField(default=0,blank=True,null=True)
+	#used by buy post
+	price_min = models.IntegerField(default=0,blank=True,null=True)
+	price_max = models.IntegerField(default=0,blank=True,null=True)
+	item_condition = models.IntegerField(default=1,blank=True,null=True)
 	price_unit = models.CharField(max_length=10,default='USD')
 	user = models.ForeignKey(User)
 	is_buy = models.BooleanField(default=True)
