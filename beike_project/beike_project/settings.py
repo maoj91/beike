@@ -125,7 +125,7 @@ INSTALLED_APPS = (
 	'history',
 	'detail',
 	'data',
-	'storages',
+	#'storages',
 	's3',
 	'me',
 )

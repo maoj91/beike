@@ -16,7 +16,6 @@ def sign(request):
 	AWS_SECRET_KEY = 'KiQUaRHY8cSYzVdZdDmlZn5/9xOFI3I0SCQgMgjD'#os.environ["AWS_SECRET_KEY"]
 	S3_BUCKET = 'beike-s3'
 
-
 	object_name = request.GET.get('s3_object_name')
 	mime_type = request.GET.get('s3_object_type')
 

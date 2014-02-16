@@ -1,9 +1,18 @@
+from data.models import User,Area,City
+from django.core.signing import Signer
+import time
 from data.models import User,Address,City
 from validate_email import validate_email
 
 def is_user_exist(user_id):
 	user_count = User.objects.filter(wx_id=user_id).count()
+	user = User.objects.get(wx_id=user_id)
+	user.lastlogin = time.time()
+	user.save()
 	return user_count>0
+def get_lastlogin(user_id):
+	user = User.objects.get(wx_id=user_id)
+	return user.lastlogin
 
 def get_user(user_id):
 	user = User.objects.get(wx_id=user_id)
