@@ -5,11 +5,13 @@ from data.models import User,Address,City
 from validate_email import validate_email
 
 def is_user_exist(user_id):
-	user_count = User.objects.filter(wx_id=user_id).count()
-	user = User.objects.get(wx_id=user_id)
-	user.lastlogin = time.time()
-	user.save()
-	return user_count>0
+	exist = User.objects.filter(wx_id=user_id).exists()
+	if(exist):
+		user = User.objects.get(wx_id=user_id)
+		user.lastlogin = time.time()
+		user.save()
+	return exist
+
 def get_lastlogin(user_id):
 	user = User.objects.get(wx_id=user_id)
 	return user.lastlogin
