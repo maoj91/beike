@@ -50,11 +50,7 @@ def responseMsg(request):
 	content = msg.get('Content','content')
 	url = ''
 	if not is_user_exist(user_id):
-<<<<<<< HEAD
-		url='http://54.204.4.250/'+user_id+'/me/get_area/'
-=======
 		url='http://54.204.4.250/'+user_id+'/me/get_info/'
->>>>>>> c42416a795d90201da74ee1e803a3f50544fa537
 	else:
 		url = 'http://54.204.4.250/'+user_id
 	return getReplyXml(msg,url)
@@ -67,25 +63,6 @@ def paraseMsgXml(rootElem):
 	return msg
 
 
-<<<<<<< HEAD
-def request_user_address(msg):
-	fromUserName = msg['FromUserName']
-	toUserName = msg['ToUserName']
-	content = "We don't have your address info yet. Please choose your area: 1 for Seattle"
-	extTpl ="<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content></xml>"
-	extTpl = extTpl % (fromUserName,toUserName,str(int(time.time())),content)
-	return extTpl
-
-def request_user_email(msg):
-	fromUserName = msg['FromUserName']
-	toUserName = msg['ToUserName']
-	content = "We'd like to send notification to you when anyone replies to your post. Please type your email:"
-	extTpl ="<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content></xml>"
-	extTpl = extTpl % (fromUserName,toUserName,str(int(time.time())),content)
-	return extTpl
-
-=======
->>>>>>> c42416a795d90201da74ee1e803a3f50544fa537
 def getReplyXml(msg,url):
 	extTpl ="<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>1</ArticleCount><Articles><item><Title><![CDATA[%s]]></Title><Description><![CDATA[%s]]></Description><PicUrl><![CDATA[%s]]></PicUrl><Url><![CDATA[%s]]></Url></item></Articles></xml>"
 
@@ -99,7 +76,3 @@ def getReplyXml(msg,url):
 	return extTpl
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> c42416a795d90201da74ee1e803a3f50544fa537
