@@ -89,7 +89,7 @@ class Condition(models.Model):
 class Post(models.Model):
 	title = models.CharField(max_length= 60)
 	date_published = models.DateTimeField('post publish date')
-	open_util = models.DateTimeField(null=True,blank=True)
+	open_until = models.DateTimeField()
 	content = models.CharField(max_length = 500)
 	phone = models.CharField(max_length = 20,blank=True,null=True)
 	prefer_call = models.BooleanField(default=True)
