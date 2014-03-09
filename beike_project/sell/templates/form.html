@@ -13,7 +13,7 @@
 	<form action="/{{user_id}}/sell/form_submit/"  method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
 		{% csrf_token %}
 		<div id="title_div">
-			<span class="text">标&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;题</span><input type="text" name="title" placeholder="请输入标题">
+			<span class="text">标&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;题</span><input type="text" name="title" class="input_box" placeholder="请输入标题">
 		</div>
 		<div id="current_image_div">
 			<img id="current_image">
@@ -37,7 +37,7 @@
 		<input type="hidden" id="image_name2" name="image_name2"  value="">
 		<input type="hidden" id="image_name3" name="image_name3"  value="">
 		<div id="price_div">
-			<span class="text">价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格</span><input type="text" name="price" placeholder="请标价">
+			<span class="text">价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格</span><input type="text" name="price" class="input_box" placeholder="请标价">
 		</div>
 		<div id="condition_div">
 			<div id="condition_text">新旧程度</div>
@@ -52,13 +52,13 @@
 			<input type="hidden" id="my_condition" name="my_condition"  value=1>
 		</div>
 		<div id="phone_div">
-			<span class="text">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话</span><input type="text" name="phone" placeholder="联系电话">
+			<span class="text">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话</span><input type="text" name="phone" class="input_box" placeholder="联系电话">
 		</div>
 		<div id="open_until_div">
-			<span class="text">保&nbsp;&nbsp;留&nbsp;&nbsp;至</span><input type="date" name="open_until_date" id="open_until_date">
+			<span class="text">保&nbsp;&nbsp;留&nbsp;&nbsp;至</span><input type="date" name="open_until_date" class="input_box" id="open_until_date">
 		</div>
 		<div id="content_div">
-			<span class="text">其他描述</span><input type="text" name="content" placeholder="其他描述">
+			<span class="text">其他描述</span><input type="text" name="content" class="input_box" placeholder="其他描述">
 		</div>
 		<div>
 			<input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png">
