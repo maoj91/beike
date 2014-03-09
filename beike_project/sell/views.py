@@ -2,7 +2,7 @@ from django.http import Http404,HttpResponse
 from django.shortcuts import render,render_to_response
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt,csrf_protect
-from data.models import Post,User,Category
+from data.models import Post,User,Category,Condition
 from data.views import get_user
 from django.forms.formsets import formset_factory
 from datetime import datetime 
@@ -33,7 +33,7 @@ def form_submit(request,user_id):
 		image1 = request.POST.get('image_name1','') 
 		image2 = request.POST.get('image_name2','') 
 		image3 = request.POST.get('image_name3','') 
-		my_condition = request.POST.get('my_condition',1) 
+		condition_num = request.POST.get('my_condition',1) 
 		phone = request.POST.get('phone','')
 		open_until = request.POST.get('open_until_date','')
 		url = image1
@@ -43,7 +43,7 @@ def form_submit(request,user_id):
 			url = url+';' + image3
 		new_post.image_urls = url
 		new_post.title = title
-		new_post.item_condition = my_condition
+		new_post.item_condition = Condition.objects.all()[int(condition_num)]
 		new_post.price_num = price
 		new_post.phone = phone
 		new_post.category = Category.objects.all()[0]

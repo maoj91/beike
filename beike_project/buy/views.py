@@ -31,8 +31,8 @@ def form_submit(request,user_id):
 		new_post.id = None
 		new_post.is_buy = True
 		new_post.date_published = datetime.now()
-		new_post.price_min = min_price
-		new_post.price_max = max_price
+		new_post.ask_price_min = min_price
+		new_post.ask_price_max = max_price
 		new_post.open_until = datetime.strptime(open_until,'%Y-%m-%d')
 		new_post.phone = phone
 		new_post.user = get_user(user_id)
