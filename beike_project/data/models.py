@@ -11,7 +11,7 @@ class Country(models.Model):
 
 class State(models.Model):
 	name = models.CharField(max_length=255)
-	state = models.ForeignKey('Country')
+	country = models.ForeignKey('Country')
 	def __unicode__(self):
 		return self.name
 
