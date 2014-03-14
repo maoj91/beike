@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 
-def decode(info):
-	return info.decode('GB2312')
-
 class Country(models.Model):
 	name = models.CharField(max_length=255)
+	currency_code = models.CharField(max_length=10)
 	def __unicode__(self):
 		return self.name
 
@@ -52,24 +50,28 @@ def get_default_privacy():
 class Address(models.Model):
 	street_line_1 = models.CharField(max_length=255)
 	street_line_2 = models.CharField(max_length=255)
-	city = models.CharField(max_length=50)
-	state_or_region = models.CharField(max_length=50)
-	country = models.CharField(max_length=50, default='US')
-	zipcode = models.CharField(max_length=15)
-	latitude = models.CharField(max_length=15)
-	longitude = models.CharField(max_length=15)
+	city = models.ForeignKey(City)
+	zip_code = models.CharField(max_length=255)
+	latitude = models.CharField(max_length=15, null=True)
+	longitude = models.CharField(max_length=15, null=True)
 	def __unicode__(self):
-		return self.city+','+self.state_or_region
+		return self.street_line_1 + ',' + self.street_line_2 + ',' + self.zip_code
 
 class User(models.Model):
-	name = models.CharField(max_length=255, default='新用户')
+	name = models.CharField(max_length=255, default='张三')
+	gender = models.IntegerField()
 	wx_id = models.CharField(max_length=255,unique=True)
 	wx_name = models.CharField(max_length=255)
+	qq_number = models.CharField(max_length=255, null=True)
+	mobile_phone = models.CharField(max_length=255, null=True)
+	home_phone = models.CharField(max_length=255, null=True)
 	email = models.EmailField(max_length=255, null= True, unique= True)
 	address = models.ForeignKey(Address,blank=True, null=True)
 	notification = models.ForeignKey(Notification, default=get_default_notification)
 	privacy = models.ForeignKey(Privacy, default= get_default_privacy)
 	image_url = models.CharField(max_length= 255, null=True)
+	def __unicode__(self):
+		return self.name
 
 class Category(models.Model):
 	name = models.CharField(max_length=255)
@@ -82,37 +84,45 @@ class Condition(models.Model):
 	def __unicode__(self):
 		return self.name
 
-class Post(models.Model):
+class BuyPost(models.Model):
 	title = models.CharField(max_length= 255)
 	date_published = models.DateTimeField('post publish date')
 	open_until = models.DateTimeField()
 	content = models.CharField(max_length = 4000)
-	phone = models.CharField(max_length = 20, null=True)
-	prefer_contact = models.IntegerField(default=1)
 	category = models.ForeignKey('Category')
-	#used by sell post
-	quote_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-	#used by buy post
-	ask_price_min = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-	ask_price_max = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-	item_condition = models.ForeignKey('Condition', null=True)
+	min_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+	max_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
 	user = models.ForeignKey('User')
-	is_buy = models.BooleanField(default=True)
+	preferred_contacts = models.CharField(max_length = 255)
 	is_open = models.BooleanField(default=True)
 	#image urls separated by ';'
-	image_urls = models.CharField(max_length= 2000)
+	image_urls = models.CharField(max_length= 2000, null=True)
 	def __unicode__(self):
 		return unicode("%s: %s" % (self.title, self.content[:60]))
 
+class SellPost(models.Model):
+	title = models.CharField(max_length= 255)
+	date_published = models.DateTimeField('post publish date')
+	open_until = models.DateTimeField()
+	content = models.CharField(max_length = 4000)
+	category = models.ForeignKey('Category')
+	item_condition = models.ForeignKey('Condition', null=True)
+	price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+	user = models.ForeignKey('User')
+	preferred_contacts = models.CharField(max_length = 255)
+	is_open = models.BooleanField(default=True)
+	image_urls = models.CharField(max_length= 2000)
+	def __unicode__(self):
+	    return unicode("%s: %s" % (self.title, self.content[:60]))
+
 class Comment(models.Model):
 	#image urls separated by ';'
-	image_urls = models.CharField(max_length = 2000)
+	image_urls = models.CharField(max_length = 2000, null=True)
 	content = models.CharField(max_length= 2000)
 	user = models.ForeignKey('User')
-	post = models.ForeignKey('Post')
+	buy_post = models.ForeignKey('BuyPost')
+	sell_post = models.ForeignKey('SellPost')
 	reply_to = models.ForeignKey('Comment', null=True)
 	date_published = models.DateTimeField('comment publish date')
 	def __unicode__(self):
 		return unicode("%s: %s" % (self.post, self.content[:60]))
-
-

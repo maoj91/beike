@@ -3,5 +3,4 @@ from history import views
 
 urlpatterns = patterns('',
 	url(r'^$',views.my_list),
-#	url(r'^detail/(\d+)/$',views.detail),
 )

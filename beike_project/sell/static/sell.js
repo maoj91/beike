@@ -3,15 +3,11 @@ var isUploading = false;
 var currentIndex = 0;
 var currentCondition = 1;
 
-
-
-
 function get_image_name_prefix(user_id){
 	var currentTime = Date.now();	
 	var prefix = user_id+"/"+currentTime;
 	return prefix;
 }
-
 
 function image_s3_upload(file_dom_id,user_id){
 	if (!isUploading && imageNum<3){
@@ -107,17 +103,15 @@ function validateForm(){
 	var isValid = false;
 	var title = $('[name="title"]').val();
 	var price = $('[name="price"]').val();
-	var phone = $('[name="phone"]').val();
 	var open_until_date = $('[name="open_until_date"]').val();
 	var content = $('[name="content"]').val();
 	var image1 = $('[name="image_name1"]').val();
 	var image2 = $('[name="image_name2"]').val();
 	var image3 = $('[name="image_name3"]').val();
+
 	if(!title){
 		msg = '输入项不能为空';
 	} else if(!price){
-		msg = '输入项不能为空';
-	} else if(!phone){
 		msg = '输入项不能为空';
 	} else if(!open_until_date){
 		msg = '输入项不能为空';
