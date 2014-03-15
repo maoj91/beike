@@ -9,8 +9,7 @@ from data.views import create_user,is_email_valid
 def index(request,user_id):
 	user = User.objects.get(wx_id=user_id)
 	states = State.objects.values('name')
-	current_state = user.address.state_or_region
-	cities = City.objects.filter(state__name=current_state)
+	cities = City.objects.all()
 	notifications = Notification.objects.values('description')
 	privacies = Privacy.objects.values('description')
 	return render_to_response('me.html',{'user':user,'states':states,'cities':cities,'notifications':notifications,'privacies':privacies})

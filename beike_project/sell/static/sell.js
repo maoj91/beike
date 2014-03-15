@@ -3,13 +3,11 @@ var isUploading = false;
 var currentIndex = 0;
 var currentCondition = 1;
 
-
 function get_image_name_prefix(user_id){
 	var currentTime = Date.now();	
 	var prefix = user_id+"/"+currentTime;
 	return prefix;
 }
-
 
 function image_s3_upload(file_dom_id,user_id){
 	if (!isUploading && imageNum<3){
@@ -19,18 +17,21 @@ function image_s3_upload(file_dom_id,user_id){
 			s3_sign_put_url: '/s3/sign/',
 			s3_object_name_prefix: image_name_prefix,
 			onProgress: function(percent, message) {
-				$('#status').html('Upload progress: ' + percent + '%' + message);
+				$('#upload_status').html('Upload progress: ' + percent + '%' + message);
+				$('#upload_status').show();
 				isUploading = false;
 			},
 			onFinishS3Put: function(url) {
 				imageNum = imageNum + 1;
 				var current_name = $('#image_name'+imageNum).val(url);	
-				$('#status').html('Upload completed. Uploaded to: '+ url);
+				//$('#upload_status').html('Upload completed. Uploaded to: '+ url);
+				$('#upload_status').hide();
 				selectImage(imageNum);
 				isUploading = false;
 			},
 			onError: function(status) {
-				$('#status').html('Upload error: ' + status);
+				$('#upload_status').html('Upload error: ' + status);
+				$('#upload_status').show();
 				isUploading = false;
 			}
 		    });
@@ -75,4 +76,59 @@ function selectCondition(i){
 	}
 	$('#condition'+i).css("border","1px solid black");
 	$('#my_condition').val(i);
+}
+
+//3 months from now by default 
+function setOpenUntil(){
+	var date = new Date();
+	var day = date.getDate();
+	var currentMonth = date.getMonth() + 1;
+	var month = date.getMonth() + 4;
+	var year = date.getFullYear();
+	if (month < 10) month = "0" + month;
+	if (day < 10) day = "0" + day;
+	var currentDate = year + "-" + currentMonth + "-" + day;
+	var defaultDate = year + "-" + month + "-" + day;
+	$('#open_until_date').attr("value",defaultDate);
+	$('#open_until_date').attr("min",currentDate);
+}
+
+function initiatePage(){
+	selectCondition(1);
+	setOpenUntil();
+}
+
+function validateForm(){
+	var msg = '';
+	var isValid = false;
+	var title = $('[name="title"]').val();
+	var price = $('[name="price"]').val();
+	var open_until_date = $('[name="open_until_date"]').val();
+	var content = $('[name="content"]').val();
+	var image1 = $('[name="image_name1"]').val();
+	var image2 = $('[name="image_name2"]').val();
+	var image3 = $('[name="image_name3"]').val();
+
+	if(!title){
+		msg = '输入项不能为空';
+	} else if(!price){
+		msg = '输入项不能为空';
+	} else if(!open_until_date){
+		msg = '输入项不能为空';
+	} else if(!content){
+		msg = '输入项不能为空';
+	} else if(!isValidInteger(price)){
+		msg = '请检查您输入的价格';
+	} else if(image1=="" && image2=="" && image3==""){
+		msg = '请至少上传一张图片';
+	} else {
+		isValid = true;
+	}
+	//TODO:need to validate phone number, price
+	$('#validate_msg').html(msg);	
+	return isValid;
+}
+
+function isValidInteger(str){
+	return (!isNaN(str)) && (str.indexOf(".")==-1); 
 }

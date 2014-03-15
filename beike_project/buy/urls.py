@@ -1,5 +1,4 @@
 from django.conf.urls import patterns, url
-from data.models import Post
 from buy import views
 
 urlpatterns = patterns('',

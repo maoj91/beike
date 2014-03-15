@@ -1,50 +1,45 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 
-def decode(info):
-      return info.decode('GB2312')
+class Country(models.Model):
+	name = models.CharField(max_length=255)
+	currency_code = models.CharField(max_length=10)
+	def __unicode__(self):
+		return self.name
 
 class State(models.Model):
-	name = models.CharField(max_length=50)
+	name = models.CharField(max_length=255)
+	country = models.ForeignKey('Country')
 	def __unicode__(self):
 		return self.name
 
 class City(models.Model):
-	name = models.CharField(max_length=50)
+	name = models.CharField(max_length=255)
 	state = models.ForeignKey(State)
-	image_url = models.CharField(max_length= 100,blank=True,null=True)
-	image_selected_url = models.CharField(max_length= 100,blank=True,null=True)
+	image_url = models.CharField(max_length= 255, null=True)
+	image_selected_url = models.CharField(max_length= 255, null=True)
 	def __unicode__(self):
 		return self.name
 
 class District(models.Model):
-	name = models.CharField(max_length=50)
+	name = models.CharField(max_length=255)
 	city = models.ForeignKey(City)
+	first_level_district = models.ForeignKey('District', null=True)
+	zip_code = models.CharField(max_length=255)
 	def __unicode__(self):
 		return self.name
 
-class Area(models.Model):
-	community = models.CharField(max_length=50)
-	district = models.CharField(max_length=50)
-	city = models.CharField(max_length=50)
-	state_or_region = models.CharField(max_length=50)
-	country = models.CharField(max_length=50, default='US')
-	zipcode = models.CharField(max_length=15)
-	def __unicode__(self):
-		return self.city+","+self.state_or_region
-
 class Notification(models.Model):
-	name = models.CharField(max_length = 30)
-	description = models.CharField(max_length = 100)
+	name = models.CharField(max_length = 255)
+	description = models.CharField(max_length = 1000)
 	def __unicode__(self):
 		return self.name
 
 class Privacy(models.Model):
-	name = models.CharField(max_length = 30)
-	description = models.CharField(max_length = 100)
+	name = models.CharField(max_length = 255)
+	description = models.CharField(max_length = 1000)
 	def __unicode__(self):
 		return self.name
-
 
 def get_default_notification():
 	return Notification.objects.get(id=1)
@@ -52,72 +47,82 @@ def get_default_notification():
 def get_default_privacy():
 	return Privacy.objects.get(id=1)
 
-
 class Address(models.Model):
-	street_line_1 = models.CharField(max_length=50)
-	street_line_2 = models.CharField(max_length=50)
-	city = models.CharField(max_length=50)
-	state_or_region = models.CharField(max_length=50)
-	country = models.CharField(max_length=50, default='US')
-	zipcode = models.CharField(max_length=15)
-	latitude = models.CharField(max_length=15)
-	longitude = models.CharField(max_length=15)
+	street_line_1 = models.CharField(max_length=255)
+	street_line_2 = models.CharField(max_length=255)
+	city = models.ForeignKey(City)
+	zip_code = models.CharField(max_length=255)
+	latitude = models.CharField(max_length=15, null=True)
+	longitude = models.CharField(max_length=15, null=True)
 	def __unicode__(self):
-		return self.city+','+self.state_or_region;
+		return self.street_line_1 + ',' + self.street_line_2 + ',' + self.zip_code
 
 class User(models.Model):
-	name = models.CharField(max_length=50, default='新用户')
-	wx_id = models.CharField(max_length=50,unique=True)
-	wx_name = models.CharField(max_length=50)
-	email = models.EmailField(max_length=70,blank=True, null= True, unique= True)
+	name = models.CharField(max_length=255, default='张三')
+	gender = models.IntegerField()
+	wx_id = models.CharField(max_length=255,unique=True)
+	wx_name = models.CharField(max_length=255)
+	qq_number = models.CharField(max_length=255, null=True)
+	mobile_phone = models.CharField(max_length=255, null=True)
+	home_phone = models.CharField(max_length=255, null=True)
+	email = models.EmailField(max_length=255, null= True, unique= True)
 	address = models.ForeignKey(Address,blank=True, null=True)
 	notification = models.ForeignKey(Notification, default=get_default_notification)
 	privacy = models.ForeignKey(Privacy, default= get_default_privacy)
-	image_url = models.CharField(max_length= 100, blank=True,null=True)
+	image_url = models.CharField(max_length= 255, null=True)
+	def __unicode__(self):
+		return self.name
 
 class Category(models.Model):
-	name = models.CharField(max_length=50)
+	name = models.CharField(max_length=255)
 	def __unicode__(self):
 		return self.name
 
 class Condition(models.Model):
-	name = models.CharField(max_length=50)
-	description = models.CharField(max_length=100)
+	name = models.CharField(max_length=255)
+	description = models.CharField(max_length=1000)
 	def __unicode__(self):
 		return self.name
 
-class Post(models.Model):
-	title = models.CharField(max_length= 60)
+class BuyPost(models.Model):
+	title = models.CharField(max_length= 255)
 	date_published = models.DateTimeField('post publish date')
-	open_util = models.DateTimeField(null=True,blank=True)
-	content = models.CharField(max_length = 500)
-	phone = models.CharField(max_length = 20,blank=True,null=True)
-	prefer_call = models.BooleanField(default=True)
-	category = models.ForeignKey(Category)
-	#used by sell post
-	price_num = models.IntegerField(default=0,blank=True,null=True)
-	#used by buy post
-	price_min = models.IntegerField(default=0,blank=True,null=True)
-	price_max = models.IntegerField(default=0,blank=True,null=True)
-	item_condition = models.IntegerField(default=1,blank=True,null=True)
-	price_unit = models.CharField(max_length=10,default='USD')
-	user = models.ForeignKey(User)
-	is_buy = models.BooleanField(default=True)
+	open_until = models.DateTimeField()
+	content = models.CharField(max_length = 4000)
+	category = models.ForeignKey('Category')
+	min_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+	max_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+	user = models.ForeignKey('User')
+	preferred_contacts = models.CharField(max_length = 255)
 	is_open = models.BooleanField(default=True)
 	#image urls separated by ';'
-	image_urls = models.CharField(max_length= 300)
+	image_urls = models.CharField(max_length= 2000, null=True)
 	def __unicode__(self):
 		return unicode("%s: %s" % (self.title, self.content[:60]))
 
+class SellPost(models.Model):
+	title = models.CharField(max_length= 255)
+	date_published = models.DateTimeField('post publish date')
+	open_until = models.DateTimeField()
+	content = models.CharField(max_length = 4000)
+	category = models.ForeignKey('Category')
+	item_condition = models.ForeignKey('Condition', null=True)
+	price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+	user = models.ForeignKey('User')
+	preferred_contacts = models.CharField(max_length = 255)
+	is_open = models.BooleanField(default=True)
+	image_urls = models.CharField(max_length= 2000)
+	def __unicode__(self):
+	    return unicode("%s: %s" % (self.title, self.content[:60]))
 
 class Comment(models.Model):
 	#image urls separated by ';'
-	image_urls = models.CharField(max_length = 300)
-	content = models.CharField(max_length= 300)
-	user = models.ForeignKey(User)
-	post = models.ForeignKey(Post)
+	image_urls = models.CharField(max_length = 2000, null=True)
+	content = models.CharField(max_length= 2000)
+	user = models.ForeignKey('User')
+	buy_post = models.ForeignKey('BuyPost')
+	sell_post = models.ForeignKey('SellPost')
+	reply_to = models.ForeignKey('Comment', null=True)
 	date_published = models.DateTimeField('comment publish date')
 	def __unicode__(self):
 		return unicode("%s: %s" % (self.post, self.content[:60]))
-
-

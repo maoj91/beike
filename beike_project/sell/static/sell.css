@@ -1,17 +1,49 @@
+body{
+	margin:0;
+	padding:0;
+}
+
 #header{
-	max-width:100%;
+	width:100%;
 }
 
 span{
 	style="color:#00CED1"
 }
 
+#imageContainer {
+    height: 50px;
+    width: 50px;
+}
+
+#current_image_div{
+	position: relative;
+	width:100%;
+	height:12em;
+}
 #current_image{
 	width:100%;
-	height:10em;
+	height:100%;
+}
+
+#upload_status{
+        position: absolute;
+	width: 100%;
+	height:100%;
+	left: 0;
+        bottom: 0;
+	margin:0;
+	padding:0;
+        background: rgba(0,0,0,0.5);
+        color: #FFF;
+        font-family: arial;
+        font-size: 10px;
+        font-weight: bold;
 }
 
 #title_div{
+	width:100%;
+	margin-top:1em;
 	margin-bottom:1em;
 }
 
@@ -33,18 +65,17 @@ span{
 
 
 
-.div_image1 {
+.upload_button {
 	float: right;
 	position: relative;
 	background-image: url(https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/more_pic.png);
 	background-repeat:no-repeat;
-	background-size: contain;    
+	background-size: cover;    
 	height:100%;
-	max-width:20%;
-	width:auto;
+	width:20%;
 }
 
-.div_image1 input[type=file]
+.upload_button input[type=file]
 {
     outline:none;
     position: relative;
@@ -53,7 +84,7 @@ span{
     filter:alpha(opacity: 0);
     opacity: 0;
     z-index: 2;
-    max-width:100%;
+    width:100%;
     height:100%;
 }
 
@@ -69,7 +100,7 @@ span{
 }
 
 #preview2{
-	width:33%;
+	width:34%;
 	height:100%;
 	float:left;
 }
@@ -89,6 +120,7 @@ span{
 	width:100%;
 	margin-top:1em;
 	margin-bottom:3em;
+	margin-left:0.5em;
 }
 
 #condition_text{
@@ -114,11 +146,28 @@ span{
 
 #phone_div{
 	clear:both;
+	margin-bottom:1em;
+}
+
+#open_until_div{
 }
 
 #submit_btn{
 	width:8em;
 	height:3em;	
+	margin-left:0.5em;
+	float: left;
 }
 
+.text{
+	color:#00CED1;
+	margin-left:0.5em;
+	margin-right:0.5em;
+}
 
+#validate_msg{
+	color: red;
+	float: left;
+	margin-left: 1em;
+	margin-bottom: 2em;
+}

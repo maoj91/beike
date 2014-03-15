@@ -1,3 +1,9 @@
+body{
+	margin:0;
+	padding:0;
+}
+
+
 body_test{
 	margin:0;
 	padding:0;
@@ -10,15 +16,13 @@ body_test{
 	margin:0;
 	padding:0;
 	background:url(https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/green_bkgd.png) center center fixed no-repeat;
-	-moz-background-size: cover;
-	background-size: cover;
+	-moz-background-size: 100% 100%;
+	background-size: 100% 100%;
 }
 
 #logo{
 	margin-top:3em;
-	margin-left:2em;
-	width:10em;
-	height:10em;
+	margin-left:5em;
 }
 
 #email{
@@ -29,8 +33,6 @@ body_test{
 }
 
 #arrow{
-	width:7em;
-	height:7em;
 }
 
 p{
@@ -44,16 +46,12 @@ p{
 }
 
 #my_city_img{
-	width:8em;
-	height:8em;
 }
 
 #cities{
-	height:5em;
 }
 
 .city_img{
-	height:100%;
 }
 
 .outer {

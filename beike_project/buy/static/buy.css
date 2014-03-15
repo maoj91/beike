@@ -1,0 +1,70 @@
+body{
+	margin:0;
+	padding:0;
+}
+
+#header{
+	width:100%;
+}
+
+.text{
+	color:#00CED1;
+	margin-left:0.5em;
+	margin-right:0.5em;
+}
+
+#submit_btn{
+	width:8em;
+	height:3em;	
+	margin-left:0.5em;
+	float: left;
+}
+
+#title_div{
+	width:100%;
+	margin-top:1em;
+	margin-bottom:1em;
+}
+
+#content_div{
+	margin-top:1em;
+	margin-bottom:1em;
+}
+
+#phone_div{
+	clear:both;
+	margin-bottom:1em;
+}
+
+#condition_text{
+	color:#00CED1;
+	float:left;
+}
+
+#condition_sub_div{
+	margin-left:0.2em;
+	width:78%;
+	float:left;
+}
+
+#price_div{
+	width:100%;
+	margin-top:1em;
+}
+
+input[name=min_price]{
+	width: 8em;
+	margin-right:2em;
+}
+
+input[name=max_price]{
+	width: 8em;
+}
+
+
+#validate_msg{
+	color: red;
+	float: left;
+	margin-left: 1em;
+	margin-bottom: 2em;
+}
