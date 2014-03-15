@@ -11,6 +11,11 @@ span{
 	style="color:#00CED1"
 }
 
+#imageContainer {
+    height: 50px;
+    width: 50px;
+}
+
 #current_image_div{
 	position: relative;
 	width:100%;

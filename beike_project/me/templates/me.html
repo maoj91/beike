@@ -20,7 +20,7 @@
 		邮箱：<input type="text" name="user_email" placeholder={{user.email}} value={{user.email}}></br>
 		地区：<select name="area_city">
 		{% for city in cities %}
-			{% if city.name == user.area.city %}
+			{% if city.name == user.city.name %}
 				<option value="{{city.name}}" selected>{{city.name}}</option>
 			{% else %}
 				<option value="{{city.name}}">{{city.name}}</option>
@@ -30,7 +30,7 @@
 
 		<select name="area_state">
 		{% for state in states %}
-			{% if state == user.area.state_or_region %}
+			{% if state == user.city.state.name %}
 				<option value="{{state.name}}" selected>{{state.name}}</option>
 			{% else %}
 				<option value="{{state.name}}">{{state.name}}</option>

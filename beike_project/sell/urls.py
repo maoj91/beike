@@ -1,6 +1,5 @@
 from django.conf.urls import patterns, url
 from django.views.generic import ListView
-from data.models import Post
 from sell import views
 
 urlpatterns = patterns('',

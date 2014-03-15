@@ -3,3 +3,4 @@ venv
 staticfiles
 *.swp
 beike_project/s3/views.py
+.DS_Store

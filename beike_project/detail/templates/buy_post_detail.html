@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html lang="zh">
+	<head>
+		<meta name="viewport" content = "width=device-width ,  user-scalable=no">
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="/static/detail.css">
+		<script src="/static/detail.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+		<script src="/static/lodash.js"></script>
+		<script type="text/javascript" src="/static/s3upload.js"></script>
+	</head>
+	<body>
+		<h3>{{post.title}} [${{post.min_price}}] - [${{post.max_price}}]</h3>
+		<div class="post_meta">
+			on {{post.date_published}}  by {{post.user.name}}</br>
+			in {{post.user.address.city}}
+		</div>
+		{% if post.image_urls %}
+			{% load string_utils %}
+			{% for url in post.image_urls|split:";" %}
+				<div class="post_image">
+					<img src= {{url}}  height="200" width="200">
+				</div>
+			{% endfor%}
+		{% endif%}
+		<div class="post_body">
+			{{post.content|safe|linebreaks}}
+		</div>
+		{% if comments %}
+		    <p>{{comments|length}} Comments:</p>
+			{% if wx_id == post.user.wx_id %}
+				{% for comment in comments %}
+				    <div class="comment">
+					<div class="body">{{ comment.content|linebreaks }}</div>
+					{% if comment.image_urls %}
+						{% load string_utils %}
+						{% for url in comment.image_urls|split:";" %}
+						<div class="comment_image">
+							<img src= {{url}}  height="150" width="150">
+						</div>
+						{% endfor%}
+					{% endif%}
+				    </div>
+				{% endfor %}
+			{% else %}
+				<p>Sorry. Only post publisher can see the content</p>
+			{% endif %}
+		{% endif %}
+	
+		<div id="addc">Add a comment</div>
+		<form action="add_comment/" method="POST">{% csrf_token %}
+		    <div id="comment_form">
+			<p>{{ comment_form.content|linebreaks }}</p>
+		    </div>
+		{% if post.is_buy %}
+			<div id="div_image1">
+				<input type="file" id="image1" onchange="image_s3_upload(this.id,'{{user_id}}');">
+				<input type="hidden" id="image_name1"  value="">
+				<p id="progress1">
+				<p id="status1">
+				<div id="preview1"></div>
+			</div>
+			<input type="hidden" id="image_names" name="image_names"  value="">
+		{% endif %}
+		{% csrf_token %}
+		<div id="submit"><input type="submit" value="Submit"></div>
+		</form>
+	</body>
+</html>

@@ -12,6 +12,14 @@
 	<img id='header' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/header.png'>
 	<form action="/{{user_id}}/sell/form_submit/"  method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
 		{% csrf_token %}
+		<div id="category_div">
+        <span class="text">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别</span>
+        <select name='category'>
+        {% for category in categories %}
+            <option value={{ category.id }}>{{category.name}}</option>
+        {% endfor %}
+        </select>
+        </div>
 		<div id="title_div">
 			<span class="text">标&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;题</span><input type="text" name="title" class="input_box" placeholder="请输入标题">
 		</div>
@@ -21,7 +29,7 @@
 		</div>
 		<div id="button_and_thumbnails">
 			<div id="delete_button" onclick="deleteImage()">
-				<img id="delete_img" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/delete_pic.png">		
+				<img id="delete_img" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/delete_pic.png">
 			</div>
 			<div id="upload_button" class="upload_button">
 				<input type="file" id="image1" onchange="image_s3_upload(this.id,'{{user_id}}');">

@@ -9,7 +9,8 @@ from data.models import Privacy
 from data.models import Address
 from data.models import Category
 from data.models import Condition
-from data.models import Post
+from data.models import BuyPost
+from data.models import SellPost
 from data.models import Comment
 
 admin.site.register(Country)
@@ -22,5 +23,6 @@ admin.site.register(Privacy)
 admin.site.register(Address)
 admin.site.register(Category)
 admin.site.register(Condition)
-admin.site.register(Post)
+admin.site.register(BuyPost)
+admin.site.register(SellPost)
 admin.site.register(Comment)

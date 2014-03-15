@@ -10,10 +10,10 @@
 		<script type="text/javascript" src="/static/s3upload.js"></script>
 	</head>
 	<body>
-		<h3>{{post.title}} [${{post.price_num}}] </h3>
+		<h3>{{post.title}} [${{post.price}}] </h3>
 		<div class="post_meta">
 			on {{post.date_published}}  by {{post.user.name}}</br>
-			in {{post.user.area.city}}, {{post.user.area.state_or_region}}
+			in {{post.user.address.city}}
 		</div>
 		{% if post.image_urls %}
 			{% load string_utils %}

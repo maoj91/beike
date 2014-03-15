@@ -6,12 +6,23 @@
 		<link rel="stylesheet" type="text/css" href="/static/mystyle.css">
 	</head>
 	<body>
-	<h1>All My Posts</h1>
-	{% for post in my_list %}
-	<a href="/{{user_id}}/detail/{{post.id}}"><h3>{{post.title}} [${{post.price_num}}]</h3></a>
+	<h1>All My Sell Posts</h1>
+	{% for post in sell_posts %}
+	<a href="/{{user_id}}/detail/sell/{{post.id}}"><h3>{{post.title}} [${{post.price}}]</h3></a>
 	<div class="post_meta">
 		on {{post.date_published}}  by {{post.user.name}}</br>
-		in {{post.user.area.city}}, {{post.user.area.state_or_region}}
+		in {{post.user.city}}, {{post.user.state}}
+	</div>
+	<div class="post_body">
+		{{post.content|safe|linebreaks}}
+	</div>
+	{% endfor %}
+	<h1>All My Buy Posts</h1>
+	{% for post in buy_posts %}
+	<a href="/{{user_id}}/detail/buy/{{post.id}}"><h3>{{post.title}} [${{post.min_price}} - ${{post.max_price}}]</h3></a>
+	<div class="post_meta">
+		on {{post.date_published}}  by {{post.user.name}}</br>
+		in {{post.user.city}}, {{post.user.state}}
 	</div>
 	<div class="post_body">
 		{{post.content|safe|linebreaks}}
