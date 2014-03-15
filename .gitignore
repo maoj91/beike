@@ -2,3 +2,4 @@ venv
 *.pyc
 staticfiles
 *.swp
+beike_project/s3/views.py
