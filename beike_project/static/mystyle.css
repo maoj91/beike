@@ -31,8 +31,12 @@ body{
     background:url(https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/logo_background.png) center center no-repeat;
     -moz-background-size: cover;
     background-size:cover;
+    position:absolute;
 }
-
+#logo_content{
+    width:100%;
+    position:absolute;
+}
 .outer_top{
     width: 100%;
     height: 5%;
@@ -42,6 +46,7 @@ body{
     width: 100%;
     height:47.5%;
     text-align: center;
+    position:relative;
 }
 
 .outer_bot{
@@ -73,17 +78,21 @@ body{
 #user{
 }
 #logo{
-    margin-top: 1.5%;
-    height: 50%;
+    margin-top: 10%;
+    margin-left:20%
+}
+
+#text{
+    margin-top:40%;
+    font-family:"Microsoft Yahei";
 }
 
 #dot{
-    margin-top: 1.5%;
-    margin-bottom: 1.5%;
+    margin-top: 10%;
+    margin-bottom: 5%;
 }
 #button{
-    width: 16%;
-    margin-left:8%;
-    margin-right:8%;
+    margin-left:7%;
+    margin-right:7%;
     margin-top:5%
 }

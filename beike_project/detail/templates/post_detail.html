@@ -10,10 +10,70 @@
 		<script type="text/javascript" src="/static/s3upload.js"></script>
 	</head>
 	<body>
+		<div class='head'>
+			<img id='head_img' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/header.png'>
+		</div>
+		<div class='title'>
+			<h3 id='title_content'>{{post.title}}</h3>
+		</div>
+		<div class='price_wrapper'>
+			<img id='dollar_img' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/dollar.png'>
+			<div class='price'>
+				{%if post.price_min %}
+					{{post.price_min}} ~ {{post.price_max}}
+				{%else %}
+					{{post.price_num}}
+				{%endif%}
+			</div>
+			<ul class='post_base'>
+				<li>
+					发布人：{{post.user.name}}
+				</li>
+				<li>
+					{% load string_utils %}
+					发布日期：{{post.date_published|get_time}}
+				</li>
+			</ul>
+		</div>
+		<div class='location'>
+			{{post.user.address.city}}-{{post.user.address.state_or_region}}
+		</div>	
+
+		<div class='condition'>
+			<img id='condition_img' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/condition.png'>
+		</div>
+		<ul>
+                	<li>
+				<div class='description_title'>
+					详细描述
+				</div>
+				<div class='description_content'>
+					{{post.content}}</br>
+				</div>
+			</li>
+
+			<li>
+				<div class='description_title'>
+					保留至
+				</div>
+				<div class='description_content'>
+					{{post.open_util}}
+				</div>
+			</li>
+			<li>
+				<div class='description_title'>
+					卖家电话
+				</div>
+				<div class='description_phone'>
+					{{post.phone}}
+				</div>
+				<img id='phone' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/phone.png'>
+			</li>
+		</ul>
 		<h3>{{post.title}} [${{post.price_num}}] </h3>
 		<div class="post_meta">
 			on {{post.date_published}}  by {{post.user.name}}</br>
-			in {{post.user.area.city}}, {{post.user.area.state_or_region}}
+			in {{post.user.address.city}}, {{post.user.address.state_or_region}}
 		</div>
 		{% if post.image_urls %}
 			{% load string_utils %}
