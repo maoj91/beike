@@ -18,6 +18,8 @@ def sign(request):
 
 	expires = int(time.time()+60)
 	amz_headers = "x-amz-acl:public-read"
+	AWS_ACCESS_KEY='AKIAIMIWXI3UNOZLDMLA'
+	AWS_SECRET_KEY='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'
 
 	put_request = "PUT\n\n%s\n%d\n%s\n/%s/%s" % (mime_type, expires, amz_headers, S3_BUCKET, object_name)
 

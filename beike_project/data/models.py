@@ -15,7 +15,8 @@ class State(models.Model):
 
 class City(models.Model):
 	name = models.CharField(max_length=255)
-	state = models.ForeignKey(State)
+	state = models.ForeignKey(State, null = True)
+	country = models.ForeignKey(Country)
 	image_url = models.CharField(max_length= 255, null=True)
 	image_selected_url = models.CharField(max_length= 255, null=True)
 	def __unicode__(self):
