@@ -1,7 +1,7 @@
 from django.core.signing import Signer
 import time, operator
 from django.db.models import Q
-from data.models import User,Address,City,Category, District, BuyPost, SellPost
+from data.models import User,Address,City,Category, Condition, District, BuyPost, SellPost
 from validate_email import validate_email
 
 # SellPost
@@ -54,9 +54,15 @@ def get_user(user_id):
     user = User.objects.get(wx_id=user_id)
     return user
 
+# Category
 def get_category(category_id):
     category = Category.objects.get(id=category_id)
     return category
+
+# Condition
+def get_condition(condition_id):
+    condition = Condition.objects.get(id=condition_id)
+    return condition
 
 def is_user_has_email(user_id):
     if not is_user_exist(user_id):
