@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
 from data.models import BuyPost, SellPost
 from data.models import User
-from data.views import get_user
+from data.views import get_user, get_buy_posts
 import datetime
 
 def my_list(request,user_id):
