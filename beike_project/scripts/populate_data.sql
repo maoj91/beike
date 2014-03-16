@@ -7,6 +7,9 @@ insert into data_condition (id, name, description) values (2, 'AlmostNew', 'Item
 insert into data_condition (id, name, description) values (3, 'Used', 'Item is used.');
 insert into data_condition (id, name, description) values (4, 'Refurbished', 'Item is refurbished.');
 
+insert into data_followedreason (id, name, description) values (1, 'Comment', 'User commented on the post');
+insert into data_followedreason (id, name, description) values (2, 'Follow', 'User manually followed the post');	
+
 insert into data_notification (id, name, description)
 values (1, 'EmailNotification', 'Notify me by sending me an email' );
 insert into data_notification (id, name, description)
