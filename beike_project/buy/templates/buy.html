@@ -1,22 +1,81 @@
 <!DOCTYPE HTML>
 <html lang="zh">
-	<head>
-		<meta name="viewport" content = "width=device-width ,  user-scalable=no">
-		<meta charset="UTF-8">
-		<link rel="stylesheet" type="text/css" href="/{{ STATIC_URL }}mystyle.css">
-	</head>
-	<body>
-	<h1>Nearby Buy Posts</h1>
-	{% for post in buy_list %}
-	<a href="/{{user_id}}/detail/{{post.id}}"><h3>{{post.title}} [${{post.price_num}}]</h3></a>
-	<div class="post_meta">
-		on {{post.date_published}}  by user{{post.user.id}}</br>
-		in {{post.user.area.city}}, {{post.user.area.state_or_region}}
-	</div>
-	<div class="post_body">
-		{{post.content|safe|linebreaks}}
-	</div>
-	{% endfor %}
-	</body>
+    <head>
+        <meta name="viewport" content = "width=device-width ,  user-scalable=no">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="/{{ STATIC_URL }}mystyle.css">
+        <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
+        <script src="/static/jquery/jquery-1.8.3.js "></script>
+        <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+    </head>
+    <body>
+    <div data-role="header">
+      <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_buy_posts/header.png"/>
+    </div>
+
+    <div data-role="main">
+
+    <div class="ui-grid-b">
+      <div class="ui-block-a">
+      {% if buy_posts.has_previous %}
+        <a href="?page={{ buy_posts.previous_page_number }}">
+        <img width="60 px" height = "30 px" src="/static/images/nearby_buy_posts/prev_page.png"/>
+        </a>
+      {% else %}
+        <img width="60 px" height = "30 px" src="/static/images/nearby_buy_posts/prev_page.png"/>
+      {% endif %}
+      </div>
+      <div class="ui-block-b">第 X 页 </div>
+      <div class="ui-block-c">
+      {% if buy_posts.has_next %}
+        <a href="?page={{ buy_posts.next_page_number }}">
+          <img style="float: right;" width="60 px" height = "30 px" src="/static/images/nearby_buy_posts/next_page.png" />
+        </a>
+      {% else %}
+        <img style="float: right;" width="60 px" height = "30 px" src="/static/images/nearby_buy_posts/next_page.png" />
+      {% endif %}
+      </div>
+    </div>
+
+    <div>
+    <ul data-role="listview">
+      {% for post in buy_posts %}
+        <li data-icon="false">
+          <a href="#">
+            <img src="/static/images/nearby_buy_posts/plus_sign.png"/>
+            <span>{{post.title}} <br/>  ${{post.min_price}} - ${{post.max_price}}</span>
+            <span style="float: right; ">{{ post.date_published|time:"H:i" }}</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    </div>
+
+    <div class="ui-grid-b">
+      <div class="ui-block-a">
+      {% if buy_posts.has_previous %}
+        <a href="?page={{ buy_posts.previous_page_number }}">
+        <img width="60 px" height = "30 px" src="/static/images/nearby_buy_posts/prev_page.png"/>
+        </a>
+      {% else %}
+        <img width="60 px" height = "30 px" src="/static/images/nearby_buy_posts/prev_page.png"/>
+      {% endif %}
+      </div>
+      <div class="ui-block-b">第 X 页 </div>
+      <div class="ui-block-c">
+      {% if buy_posts.has_next %}
+        <a href="?page={{ buy_posts.next_page_number }}">
+          <img style="float: right;" width="60 px" height = "30 px" src="/static/images/nearby_buy_posts/next_page.png" />
+        </a>
+      {% else %}
+        <img style="float: right;" width="60 px" height = "30 px" src="/static/images/nearby_buy_posts/next_page.png" />
+      {% endif %}
+      </div>
+    </div>
+  </div>
+  <div data-role="footer">
+      <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_buy_posts/footer.png"/>
+    </div>
+  </body>
 </html>
 
