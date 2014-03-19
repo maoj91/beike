@@ -12,8 +12,8 @@ import os
 
 @csrf_exempt
 def sign(request):
-	AWS_ACCESS_KEY='AKIAJW4SRVQIVBYH4DUQ'
-	AWS_SECRET_KEY='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'
+	AWS_ACCESS_KEY='AKIAJNBYYIQZGFJSHN5Q'
+	AWS_SECRET_KEY='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'
 	S3_BUCKET = 'beike-s3'
 	object_name = request.GET.get('s3_object_name')
 	mime_type = request.GET.get('s3_object_type')
