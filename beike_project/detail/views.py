@@ -11,17 +11,15 @@ from email.mime.text import MIMEText
 import datetime
 
 @csrf_exempt
-def add_comment(request, user_id, post_id, post_type):
+def add_comment_buy(request, user_id, post_id):
 	if request.method == 'POST':
 		form = CommentForm(request.POST)
 		if form.is_valid():
 			cd = form.cleaned_data
 			content = cd['content']
 		comment = Comment()
-		if post_type == 'SELL_POST':
-			comment.sell_post = SellPost.objects.get(id=post_id)
-		else:
-			comment.buy_post = BuyPost.objects.get(id=post_id)
+
+		comment.buy_post = BuyPost.objects.get(id=post_id)
 		comment.user = User.objects.get(wx_id=user_id)
 		comment.content = content
 		comment.date_published = datetime.datetime.now()
@@ -31,6 +29,22 @@ def add_comment(request, user_id, post_id, post_type):
 		sendEmail(comment)
 	return HttpResponseRedirect("/"+user_id+"/detail/"+post_id)
 
+def add_comment_sell(request, user_id, post_id):
+	if request.method == 'POST':
+		form = CommentForm(request.POST)
+		if form.is_valid():
+			cd = form.cleaned_data
+			content = cd['content']
+		comment = Comment()
+		comment.sell_post = SellPost.objects.get(id=post_id)
+		comment.user = User.objects.get(wx_id=user_id)
+		comment.content = content
+		comment.date_published = datetime.datetime.now()
+		
+		comment.image_urls = request.POST.get('image_names','') 
+		comment.save()
+		sendEmail(comment)
+	return HttpResponseRedirect("/"+user_id+"/detail/"+post_id)
 
 def sell_post_detail(request,offset,user_id):
 	try:

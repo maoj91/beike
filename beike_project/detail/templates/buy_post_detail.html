@@ -19,11 +19,7 @@
 		<div class='price_wrapper'>
 			<img id='dollar_img' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/dollar.png'>
 			<div class='price'>
-				{%if post.price_min %}
-					{{post.price_min}} ~ {{post.price_max}}
-				{%else %}
-					{{post.price_num}}
-				{%endif%}
+				{{post.min_price}} ~ {{post.max_price}}
 			</div>
 			<ul class='post_base'>
 				<li>
@@ -36,7 +32,7 @@
 			</ul>
 		</div>
 		<div class='location'>
-			{{post.user.address.city}}-{{post.user.address.state_or_region}}
+			{{post.user.address.city}}
 		</div>	
 
 		<div class='condition'>
@@ -57,7 +53,8 @@
 					保留至
 				</div>
 				<div class='description_content'>
-					{{post.open_util}}
+					{% load string_utils %}
+					{{post.open_until|get_time}}
 				</div>
 			</li>
 			<li>
@@ -65,11 +62,15 @@
 					卖家电话
 				</div>
 				<div class='description_phone'>
-					{{post.phone}}
+					{{post.user.home_phone}}
 				</div>
 				<img id='phone' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/phone.png'>
 			</li>
 		</ul>
+		<div class='comment_head'>
+			<img id='comment_head_img' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/from_buy.png'>
+		</div>
+
 		<h3>{{post.title}} [${{post.price_num}}] </h3>
 		<div class="post_meta">
 			on {{post.date_published}}  by {{post.user.name}}</br>

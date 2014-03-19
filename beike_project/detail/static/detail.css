@@ -13,6 +13,15 @@ body{
     width: 100%;
 }
 
+.comment_head{
+    width: 100%;
+}
+
+#comment_head_img{
+    width: 94%;
+    margin-left: 3%;
+    margin-right: 3%;
+}
 .title{
     margin-top: -5%;
     margin-left: 20%;
@@ -32,9 +41,9 @@ body{
 
 .price{
     margin-left: 5%;
-    margin-top: 3%;
+    margin-top: 4%;
     float:left;
-    font-size: 160%;
+    font-size: 120%;
 }
 
 .post_base{
