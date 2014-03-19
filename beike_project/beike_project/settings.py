@@ -1,5 +1,5 @@
 # Django settings for beike_project project.
-import os
+import os,sys
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -159,4 +159,10 @@ LOGGING = {
         },
     }
 }
+
+if 'test' in sys.argv:
+    try:
+        from test_settings import *
+    except ImportError:
+        pass
 

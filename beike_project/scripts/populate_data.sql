@@ -32,6 +32,13 @@ insert into data_city (id, name, state_id, country_id, image_url, image_selected
 values (1, 'Seattle', 1, 1, 'https://s3-us-west-2.amazonaws.com/beike-s3/static/img/cities/seattle.png', 'https://s3-us-west-2.amazonaws.com/beike-s3/static/img/cities/seattle_selected.png');
 insert into data_city (id, name, state_id, country_id, image_url, image_selected_url) values (2, 'Beijing', null, 2, 'https://s3-us-west-2.amazonaws.com/beike-s3/static/img/cities/beijing.png', 'https://s3-us-west-2.amazonaws.com/beike-s3/static/img/cities/beijing_selected.png');
 
+insert into data_district (id, name, city_id, first_level_district_id, zip_code)
+values (1, 'University District', 1, null, '98105');
+insert into data_district (id, name, city_id, first_level_district_id, zip_code)
+values (2, 'Ballard', 1, null, '98117');
+insert into data_district (id, name, city_id, first_level_district_id, zip_code)
+values (3, 'South Lake Union', 1, null, '98109');
+
 insert into data_address (id, street_line_1, street_line_2, city_id, zip_code, latitude, longitude)
 values (1, '535 Terry Ave N', 'Apt 100', 1, 98109, null, null);
 

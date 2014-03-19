@@ -119,8 +119,8 @@ class SellPost(models.Model):
 	    return unicode("%s: %s" % (self.title, self.content[:60]))
 
 class FollowedPost(models.Model):
-	buy_post = models.ForeignKey('BuyPost')
-	sell_post = models.ForeignKey('SellPost')
+	post_type = models.IntegerField()
+	post_id = models.IntegerField()
 	user = models.ForeignKey('User')
 	last_updated_time = models.DateTimeField()
 	reason = models.ForeignKey('FollowedReason')
@@ -136,8 +136,8 @@ class Comment(models.Model):
 	image_urls = models.CharField(max_length = 2000, null=True)
 	content = models.CharField(max_length= 2000)
 	user = models.ForeignKey('User')
-	buy_post = models.ForeignKey('BuyPost')
-	sell_post = models.ForeignKey('SellPost')
+	post_type = models.IntegerField()
+	post_id = models.IntegerField()
 	reply_to = models.ForeignKey('Comment', null=True)
 	date_published = models.DateTimeField('comment publish date')
 	def __unicode__(self):

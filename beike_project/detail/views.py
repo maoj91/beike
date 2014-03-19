@@ -39,7 +39,7 @@ def sell_post_detail(request,offset,user_id):
 		raise Http404()
 	post = SellPost.objects.get(id=offset)
 	comment_form = CommentForm()
-	comments = Comment.objects.filter(sell_post_id=post.id)
+	comments = Comment.objects.filter(post_id=post.id, post_type=2)
 	return render_to_response('sell_post_detail.html', {'post':post,'comment_form':comment_form,'comments':comments,'wx_id':user_id})
 
 def buy_post_detail(request,offset,user_id):
@@ -49,7 +49,7 @@ def buy_post_detail(request,offset,user_id):
 		raise Http404()
 	post = BuyPost.objects.get(id=offset)
 	comment_form = CommentForm()
-	comments = Comment.objects.filter(buy_post_id=post.id)
+	comments = Comment.objects.filter(post_id=post.id, post_type=1)
 	return render_to_response('buy_post_detail.html', {'post':post,'comment_form':comment_form,'comments':comments,'wx_id':user_id})
 
 def sendEmail(comment):
