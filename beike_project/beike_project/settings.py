@@ -1,5 +1,5 @@
 # Django settings for beike_project project.
-import os
+import os,sys
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -63,9 +63,8 @@ AWS_STORAGE_BUCKET_NAME = 'beike-s3' #os.environ['AWS_STORAGE_BUCKET_NAME']
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
+    '/home/ubuntu/beike_repo/beike_project/static/',
 	os.path.join(BASE_DIR, 'static'),
-	'/home/ubuntu/beike_repo/beike_project/static/',
-	#'/var/www/static/',
 )
 
 # List of finder classes that know how to find static files in
@@ -160,4 +159,10 @@ LOGGING = {
         },
     }
 }
+
+if 'test' in sys.argv:
+    try:
+        from test_settings import *
+    except ImportError:
+        pass
 

@@ -2,27 +2,27 @@ from django.http import Http404,HttpResponse
 from django.shortcuts import render,render_to_response
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-from data.models import BuyPost,User,Category
-from data.views import get_user, get_category
+from data.models import BuyPost,User,Category, District
+from data.views import get_user, get_category, get_district
 from datetime import datetime
 
 def all_list(request,user_id):
 	buy_list = BuyPost.objects.order_by('-date_published')
 	return render_to_response('buy.html', {'buy_list':buy_list,'user_id':user_id })
 
-
-
 def form(request,user_id):
 	#retrieve all the categories
-	categories = Category.objects.all();
-	return render_to_response('buy_form.html',{'user_id':user_id, 'categories':categories}); 
+	categories = Category.objects.all()
+	districts = District.objects.all()
+	return render_to_response('buy_form.html',{'user_id':user_id, 'categories':categories, 'districts':districts})
 
 @csrf_exempt
 def form_submit(request,user_id):
 	if request.method == 'POST':
 		title = request.POST.get('title','')
 		content = request.POST.get('content','')
-		category_id = int(request.POST.get('category',''))
+		category_id = int(request.POST.get('category'))
+		district_id = int(request.POST.get('category'))
 		min_price = request.POST.get('min_price','')
 		max_price = request.POST.get('max_price','')
 		phone = request.POST.get('phone','')
@@ -34,6 +34,7 @@ def form_submit(request,user_id):
 		new_post.max_price = max_price
 		new_post.open_until = datetime.strptime(open_until,'%Y-%m-%d')
 		new_post.user = get_user(user_id)
+		new_post.district = get_district(district_id)
 		new_post.title = title
 		new_post.category = get_category(category_id)
 		new_post.content = content

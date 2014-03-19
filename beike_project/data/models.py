@@ -93,6 +93,7 @@ class BuyPost(models.Model):
 	category = models.ForeignKey('Category')
 	min_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
 	max_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+	district = models.ForeignKey('District', null=True)
 	user = models.ForeignKey('User')
 	preferred_contacts = models.CharField(max_length = 255)
 	is_open = models.BooleanField(default=True)
@@ -109,6 +110,7 @@ class SellPost(models.Model):
 	category = models.ForeignKey('Category')
 	item_condition = models.ForeignKey('Condition', null=True)
 	price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+	district = models.ForeignKey('District', null=True)
 	user = models.ForeignKey('User')
 	preferred_contacts = models.CharField(max_length = 255)
 	is_open = models.BooleanField(default=True)
@@ -116,13 +118,26 @@ class SellPost(models.Model):
 	def __unicode__(self):
 	    return unicode("%s: %s" % (self.title, self.content[:60]))
 
+class FollowedPost(models.Model):
+	post_type = models.IntegerField()
+	post_id = models.IntegerField()
+	user = models.ForeignKey('User')
+	last_updated_time = models.DateTimeField()
+	reason = models.ForeignKey('FollowedReason')
+
+class FollowedReason(models.Model):
+	name = models.CharField(max_length = 255)
+	description = models.CharField(max_length = 1000)
+	def __unicode__(self):
+		return self.name
+
 class Comment(models.Model):
 	#image urls separated by ';'
 	image_urls = models.CharField(max_length = 2000, null=True)
 	content = models.CharField(max_length= 2000)
 	user = models.ForeignKey('User')
-	buy_post = models.ForeignKey('BuyPost')
-	sell_post = models.ForeignKey('SellPost')
+	post_type = models.IntegerField()
+	post_id = models.IntegerField()
 	reply_to = models.ForeignKey('Comment', null=True)
 	date_published = models.DateTimeField('comment publish date')
 	def __unicode__(self):

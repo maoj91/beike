@@ -7,6 +7,9 @@ insert into data_condition (id, name, description) values (2, 'AlmostNew', 'Item
 insert into data_condition (id, name, description) values (3, 'Used', 'Item is used.');
 insert into data_condition (id, name, description) values (4, 'Refurbished', 'Item is refurbished.');
 
+insert into data_followedreason (id, name, description) values (1, 'Comment', 'User commented on the post');
+insert into data_followedreason (id, name, description) values (2, 'Follow', 'User manually followed the post');	
+
 insert into data_notification (id, name, description)
 values (1, 'EmailNotification', 'Notify me by sending me an email' );
 insert into data_notification (id, name, description)
@@ -28,6 +31,13 @@ insert into data_state (id, name, country_id) values (4, 'Zhejiang', 2);
 insert into data_city (id, name, state_id, country_id, image_url, image_selected_url)
 values (1, 'Seattle', 1, 1, 'https://s3-us-west-2.amazonaws.com/beike-s3/static/img/cities/seattle.png', 'https://s3-us-west-2.amazonaws.com/beike-s3/static/img/cities/seattle_selected.png');
 insert into data_city (id, name, state_id, country_id, image_url, image_selected_url) values (2, 'Beijing', null, 2, 'https://s3-us-west-2.amazonaws.com/beike-s3/static/img/cities/beijing.png', 'https://s3-us-west-2.amazonaws.com/beike-s3/static/img/cities/beijing_selected.png');
+
+insert into data_district (id, name, city_id, first_level_district_id, zip_code)
+values (1, 'University District', 1, null, '98105');
+insert into data_district (id, name, city_id, first_level_district_id, zip_code)
+values (2, 'Ballard', 1, null, '98117');
+insert into data_district (id, name, city_id, first_level_district_id, zip_code)
+values (3, 'South Lake Union', 1, null, '98109');
 
 insert into data_address (id, street_line_1, street_line_2, city_id, zip_code, latitude, longitude)
 values (1, '535 Terry Ave N', 'Apt 100', 1, 98109, null, null);

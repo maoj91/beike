@@ -12,10 +12,11 @@ import os
 
 @csrf_exempt
 def sign(request):
+	AWS_ACCESS_KEY='AKIAJW4SRVQIVBYH4DUQ'
+	AWS_SECRET_KEY='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'
 	S3_BUCKET = 'beike-s3'
 	object_name = request.GET.get('s3_object_name')
 	mime_type = request.GET.get('s3_object_type')
-
 	expires = int(time.time()+60)
 	amz_headers = "x-amz-acl:public-read"
 

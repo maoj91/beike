@@ -2,6 +2,25 @@ var imageNum = 0;
 var isUploading = false;
 var currentIndex = 0;
 var currentCondition = 1;
+var currentImageOrientation = 1;
+
+function get_set_image_orientation_info(file_dom_id){
+		//get and set orientation info
+		var fileId = "#"+file_dom_id
+		var file = $(fileId)[0].files[0];
+		var fr   = new FileReader;
+		fr.onloadend = function() {
+			var exif = EXIF.readFromBinaryFile(new BinaryFile(this.result));
+			var currentImageWidth = exif.PixelXDimension;
+			var currentImageHeight = exif.PixelYDimension;
+			if(currentImageWidth > 0 && currentImageHeight > 0){
+				currentImageOrientation = currentImageHeight.toFixed(2)/currentImageWidth.toFixed(2);
+			}
+		};
+		fr.readAsBinaryString(file);
+
+}
+
 
 function get_image_name_prefix(user_id){
 	var currentTime = Date.now();	
@@ -11,6 +30,7 @@ function get_image_name_prefix(user_id){
 
 function image_s3_upload(file_dom_id,user_id){
 	if (!isUploading && imageNum<3){
+		get_set_image_orientation_info(file_dom_id);
 		var image_name_prefix = get_image_name_prefix(user_id);
 		var s3upload = new S3Upload({
 			file_dom_selector: file_dom_id,
@@ -24,7 +44,6 @@ function image_s3_upload(file_dom_id,user_id){
 			onFinishS3Put: function(url) {
 				imageNum = imageNum + 1;
 				var current_name = $('#image_name'+imageNum).val(url);	
-				//$('#upload_status').html('Upload completed. Uploaded to: '+ url);
 				$('#upload_status').hide();
 				selectImage(imageNum);
 				isUploading = false;
@@ -49,6 +68,15 @@ function selectImage(i){
 		}
 		$('#preview'+currentIndex).css("border","1px solid black");
 		$('#current_image').attr('src',url);
+		if(currentImageOrientation >= 1){
+			$('#current_image').removeClass('landscape_image');
+			$('#current_image').removeClass('potrait_image');
+			$('#current_image').addClass('potrait_image');
+		} else{
+			$('#current_image').removeClass('landscape_image');
+			$('#current_image').removeClass('potrait_image');
+			$('#current_image').addClass('landscape_image');
+		}
 	}
 }
 
