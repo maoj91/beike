@@ -1,81 +1,93 @@
 <!DOCTYPE HTML>
 <html lang="zh">
-    <head>
-        <meta name="viewport" content = "width=device-width ,  user-scalable=no">
-        <meta charset="UTF-8">
-        <link rel="stylesheet" type="text/css" href="/{{ STATIC_URL }}mystyle.css">
-        <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
-        <script src="/static/jquery/jquery-1.8.3.js "></script>
-        <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
-    </head>
-    <body>
+
+<head>
+    <meta name="viewport" content="width=device-width ,  user-scalable=no">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/mystyle.css">
+    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
+    <script src="/static/jquery/jquery-1.8.3.js "></script>
+    <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+    <script type="text/javascript">
+    var pageNum = 1;
+    var hasMore = true;
+    var postLoader = (function($, undefined) {
+        var pub = {};
+        pub.init = function() {
+            //Refresh the posts when scrolling to the bottom
+            $(window).live("hitBottom",
+                function() {pub.getAndDisplayPosts();});
+        };
+
+        pub.getAndDisplayPosts = function() {
+            //Starting loading animation
+            $(".selector").loader("loading");
+            //Get posts and add success callback using then
+            getPosts().then(function() {
+                //Stop loading animation on success
+                $(".selector").loader("hide");
+            });
+        };
+
+        function getPosts() {
+            //Get posts via ajax
+            return $.ajax({
+                type: "get",
+                url: "",
+                dataType: "json",
+                data: {
+                    pageNum: pageNum
+                }
+            }).then(function(data) {
+                displayPosts(data);
+            });
+        }
+
+        function displayPosts(posts) {
+            var postList = $("#postList");
+            var i = 0, len = posts.length;
+            if (len == 0) {
+                hasMore = false;
+            }
+            //process posts data
+            for (; i < len; i++) {
+                var template = '<li data-icon="false">' +
+                    '<a href="#"><img src="/static/images/nearby_buy_posts/plus_sign.png"/><span>' +
+                    posts[i]["fields"]["title"] + '<br/>' + posts[i]["fields"]["min_price"] + ' - ' +
+                    posts[i]["fields"]["max_price"] + '</span><span style="float: right; ">xyz</span></a></li>'
+                postList.append(template);
+            }
+            postList.listview("refresh");
+        }
+        return pub;
+    }(jQuery));
+    postLoader.init();
+    postLoader.getAndDisplayPosts();
+
+    $(document).scroll(function() {
+        if ($(document).height() > $(window).height() && hasMore) {
+            if ($(window).scrollTop() >= $(document).height() - $(window).height()) {
+                pageNum++;
+                postLoader.getAndDisplayPosts();
+            }
+        }
+    });
+    </script>
+
+</head>
+<body>
     <div data-role="header">
-      <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_buy_posts/header.png"/>
+        <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_buy_posts/header.png" />
     </div>
+    <div id="buy-list" data-role="main">
+        <div>
+            <ul id="postList" data-role="listview">
+            </ul>
+        </div>
+    </div>
+    <div data-role="footer">
+        <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_buy_posts/footer.png" />
+    </div>
+</body>
 
-    <div data-role="main">
-
-    <div class="ui-grid-b">
-      <div class="ui-block-a">
-      {% if buy_posts.has_previous %}
-        <a href="?page={{ buy_posts.previous_page_number }}">
-        <img width="60 px" height = "30 px" src="/static/images/nearby_buy_posts/prev_page.png"/>
-        </a>
-      {% else %}
-        <img width="60 px" height = "30 px" src="/static/images/nearby_buy_posts/prev_page.png"/>
-      {% endif %}
-      </div>
-      <div class="ui-block-b">第 X 页 </div>
-      <div class="ui-block-c">
-      {% if buy_posts.has_next %}
-        <a href="?page={{ buy_posts.next_page_number }}">
-          <img style="float: right;" width="60 px" height = "30 px" src="/static/images/nearby_buy_posts/next_page.png" />
-        </a>
-      {% else %}
-        <img style="float: right;" width="60 px" height = "30 px" src="/static/images/nearby_buy_posts/next_page.png" />
-      {% endif %}
-      </div>
-    </div>
-
-    <div>
-    <ul data-role="listview">
-      {% for post in buy_posts %}
-        <li data-icon="false">
-          <a href="#">
-            <img src="/static/images/nearby_buy_posts/plus_sign.png"/>
-            <span>{{post.title}} <br/>  ${{post.min_price}} - ${{post.max_price}}</span>
-            <span style="float: right; ">{{ post.date_published|time:"H:i" }}</span>
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-    </div>
-
-    <div class="ui-grid-b">
-      <div class="ui-block-a">
-      {% if buy_posts.has_previous %}
-        <a href="?page={{ buy_posts.previous_page_number }}">
-        <img width="60 px" height = "30 px" src="/static/images/nearby_buy_posts/prev_page.png"/>
-        </a>
-      {% else %}
-        <img width="60 px" height = "30 px" src="/static/images/nearby_buy_posts/prev_page.png"/>
-      {% endif %}
-      </div>
-      <div class="ui-block-b">第 X 页 </div>
-      <div class="ui-block-c">
-      {% if buy_posts.has_next %}
-        <a href="?page={{ buy_posts.next_page_number }}">
-          <img style="float: right;" width="60 px" height = "30 px" src="/static/images/nearby_buy_posts/next_page.png" />
-        </a>
-      {% else %}
-        <img style="float: right;" width="60 px" height = "30 px" src="/static/images/nearby_buy_posts/next_page.png" />
-      {% endif %}
-      </div>
-    </div>
-  </div>
-  <div data-role="footer">
-      <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_buy_posts/footer.png"/>
-    </div>
-  </body>
 </html>
-

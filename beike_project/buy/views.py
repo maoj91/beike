@@ -6,21 +6,26 @@ from data.models import BuyPost,User,Category, District
 from data.views import get_user, get_category, get_district
 from datetime import datetime
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core import serializers
 
 def all_list(request,user_id):
-    buy_list = BuyPost.objects.order_by('-date_published')
-    paginator = Paginator(buy_list, 4)
-    page = request.GET.get('page')
-    try:
-        buy_posts = paginator.page(page)   
-    except PageNotAnInteger:
-        # if page is not an integer, deliver the first page
-        buy_posts = paginator.page(1)
-    except EmptyPage:
-        # if page is out of range, deliever the last page
-        buy_posts = paginator.page(paginator.num_pages)
+    if request.is_ajax():
+        page_num = request.GET.get('pageNum')
+        buy_list = BuyPost.objects.order_by('-date_published')
+        paginator = Paginator(buy_list, 6)
+        try:
+            buy_posts = paginator.page(page_num)
+        except PageNotAnInteger:
+            # if page is not an integer, deliver the first page
+            buy_posts = {}
+        except EmptyPage:
+            # if page is out of range, deliever the last page
+            buy_posts = {}
 
-    return render_to_response('buy.html', {'buy_posts':buy_posts,'user_id':user_id })
+        data = serializers.serialize('json', buy_posts, fields=('title', 'min_price', 'max_price'))
+        return HttpResponse(data)
+    else:
+        return render_to_response('buy.html', {'user_id':user_id })
 
 def form(request,user_id):
     #retrieve all the categories
