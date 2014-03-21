@@ -21,11 +21,11 @@
 
         pub.getAndDisplayPosts = function() {
             //Starting loading animation
-            $(".selector").loader("loading");
+            $('#load-more').show();
             //Get posts and add success callback using then
             getPosts().then(function() {
                 //Stop loading animation on success
-                $(".selector").loader("hide");
+                // $('#load-more').hide();
             });
         };
 
@@ -48,14 +48,18 @@
             var i = 0, len = posts.length;
             if (len == 0) {
                 hasMore = false;
+                $('#load-more').hide();
             }
             //process posts data
             for (; i < len; i++) {
-                var template = '<li data-icon="false">' +
-                    '<a href="#"><img src="/static/images/nearby_buy_posts/plus_sign.png"/><span>' +
-                    posts[i]["fields"]["title"] + '<br/>' + posts[i]["fields"]["min_price"] + ' - ' +
-                    posts[i]["fields"]["max_price"] + '</span><span style="float: right; ">xyz</span></a></li>'
-                postList.append(template);
+              var d = new Date(posts[i]["date_published"]);
+              var template = '<li><a href="#"><span><img width="20" height="20" src="/static/images/nearby_buy_posts/request_logo.png" /> ' +
+                posts[i]["title"] + '<br/>$' + posts[i]["min_price"] + ' - $' +
+                posts[i]["max_price"] + '</span>    <span>[' +
+                posts[i]["city"] + "] [" + posts[i]["district"] +
+                ']</span><span style="float: right; ">' +
+               + d.getMonth() + '-' + d.getDate() + '</span></a></li>' 
+            postList.append(template);
             }
             postList.listview("refresh");
         }
@@ -66,7 +70,7 @@
 
     $(document).scroll(function() {
         if ($(document).height() > $(window).height() && hasMore) {
-            if ($(window).scrollTop() >= $(document).height() - $(window).height()) {
+            if ($(window).scrollTop() >= $(document).height() - $(window).height() - 100) {
                 pageNum++;
                 postLoader.getAndDisplayPosts();
             }
@@ -76,7 +80,7 @@
 
 </head>
 <body>
-    <div data-role="header">
+    <div data-role="header" data-position="fixed">
         <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_buy_posts/header.png" />
     </div>
     <div id="buy-list" data-role="main">
@@ -85,7 +89,8 @@
             </ul>
         </div>
     </div>
-    <div data-role="footer">
+    <div id="load-more" style="vertical-align:middle; text-align:center; display:none"><img width="50px" height="50px" src="/static/images/general/loading_green.gif"/></div>
+    <div data-role="footer" data-position="fixed">
         <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_buy_posts/footer.png" />
     </div>
 </body>

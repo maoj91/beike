@@ -6,7 +6,8 @@ from data.models import BuyPost,User,Category, District
 from data.views import get_user, get_category, get_district
 from datetime import datetime
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.core import serializers
+import json
+from django.core.serializers.json import DjangoJSONEncoder
 
 def all_list(request,user_id):
     if request.is_ajax():
@@ -21,11 +22,31 @@ def all_list(request,user_id):
         except EmptyPage:
             # if page is out of range, deliever the last page
             buy_posts = {}
-
-        data = serializers.serialize('json', buy_posts, fields=('title', 'min_price', 'max_price'))
+        print buy_posts
+        buy_post_summaries = []
+        for post in buy_posts:
+            buy_post_summaries.append(get_buy_post_summary(post))
+        data = json.dumps(buy_post_summaries, cls=DjangoJSONEncoder)
         return HttpResponse(data)
     else:
         return render_to_response('buy.html', {'user_id':user_id })
+
+def get_buy_post_summary(post):
+    if isinstance(post, BuyPost):
+        district = post.district
+        city = district.city
+        buy_post_summary = {
+            'title': post.title,
+            'min_price': post.min_price,
+            'max_price': post.max_price,
+            'date_published': post.date_published,
+            'district': district.name,
+            'city': city.name
+        }
+        return buy_post_summary
+    else:
+        raise ValueError("Argument should be an BuyPost instance.")
+
 
 def form(request,user_id):
     #retrieve all the categories
