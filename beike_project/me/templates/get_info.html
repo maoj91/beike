@@ -1,53 +1,108 @@
 <!DOCTYPE HTML>
 <html lang="zh">
-<head>
-	<meta name="viewport" content = "width=device-width ,  user-scalable=no">
-	<meta charset="UTF-8">
-	<link rel="stylesheet" type="text/css" href="/static/me.css">
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-	<script src="/static/me.js"></script>
-</head>
-<body>
-<div id='bkgd'>
-<div class='outer'>
-<img id='logo' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/logo.png'>
-</div>
-{% if error %}
-<div class='outer'>
-	<p>{{error}} </p>
-</div>
-{% endif %}
 
-<form action="/{{user_id}}/me/create/" method="post" enctype="multipart/form-data">{% csrf_token %}
-	<div class='outer'>
-		<input id='email' class='inner' type="text" name="user_email" placeholder="请输入常用邮箱"></br>
-	</div>
-	<div class='outer'>
-		<img id='dots' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/dots.png'>
-	</div>
-	<div class='outer'>
-		<a href="#jump_to"><img id='arrow' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/arrow.png'></a>
-	</div>
-	<div class='outer'>
-		<p>下方选择城市</p>
- 	</div>	
-	<div class='outer' id='my_city_div'>
-		<img id='my_city_img' src='{{default_city.image_selected_url}}'>
-		<div id='my_city_name'>{{default_city.name}}</div>
-	</div>
-	<div class='outer'>
-		<input type="image" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/start.png">
-	</div>
-	<A NAME="jump_to">
-	<div id='cities' class='outer'>
-	{% for city in cities %}
-	<span onclick="select_city({{city.id}},'{{city.name}}','{{city.image_selected_url}}');">
-			<img class='city_img' src='{{city.image_url}}'>
-		</span>
-	{% endfor %}
-	<input type="hidden" id="city_id" name="city_id" value="{{default_city.id}}">
-	</div>
-</form>
-</div>
+<head>
+    <meta name="viewport" content="width=device-width ,  user-scalable=no">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/me.css">
+    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
+    <script src="/static/jquery/jquery-1.8.3.js "></script>
+    <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+
+    <script type="text/javascript">
+    function getLatitudeLongtitude(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        $.ajax({
+            type: "get",
+            url: "",
+            dataType: "json",
+            data: {
+                latitude: latitude,
+                longitude: longitude
+            }
+        }).then(function(data) {
+            console.log(data);
+            $("#city").text(data.city_name);
+            $("#city_id").val(data.city_id);
+            $("#district").text(data.lv1_district_name);
+        });
+    }
+
+    $(document).ready(function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
+        }
+    });
+
+    $(document).on("click", "#getzipcode", function() {
+        var zipcode = $('#zipcode').val();
+        if (zipcode) {
+            $.ajax({
+                type: "get",
+                url: "",
+                dataType: "json",
+                data: {
+                    zipcode: zipcode,
+                }
+            }).then(function(data) {
+                console.log(data);
+                $("#city").text(data.city_name);
+                $("#district").text(data.lv1_district_name);
+            });
+        }
+    });
+    </script>
+</head>
+
+<body>
+
+    <div id='bkgd'>
+        <div class='outer'>
+            <img id='logo' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/logo.png'>
+        </div>
+        {% if error %}
+        <div class='outer'>
+            <p>{{error}}</p>
+        </div>
+        {% endif %}
+
+        <form action="/{{user_id}}/me/create/" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <div class='outer'>
+                <input size="20" id='email' class='inner' type="text" name="user_email" placeholder="请输入常用邮箱" />
+                </br>
+            </div>
+            <div class='outer'>
+                <img id='dots' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/dots.png'>
+            </div>
+            <div class='outer'>
+                <a href="#jump_to">
+                    <img id='arrow' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/arrow.png'>
+                </a>
+            </div>
+            <div class='outer'>
+                <p>下方选择城市</p>
+            </div>
+            <div class='outer' id='my_city_div'>
+                <img id='my_city_img' src='{{default_city.image_selected_url}}'>
+                <div id='my_city_name'>{{default_city.name}}</div>
+            </div>
+            <A NAME="jump_to" />
+            <div style="text-align: center;">
+                <label>当前所在城市:</label>
+                <div style="display:block" id='city' name='city'></div>
+                <input type="hidden" id="city_id" name="city_id" value=""><input>
+                <label>当前所在区:</label>
+                <div style="display:block" id='district' name='district'></div>
+                <div>如果你不想从这座城市开始，请输入一个指定邮编:</div>
+                <input id="zipcode" name="zipcode"></input>
+                <a href="#" id="getzipcode" data-role="button" data-icon="check">获取城市</a>
+            </div>
+            <div class='outer'>
+                <input type="image" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/start.png">
+            </div>
+        </form>
+    </div>
 </body>
+
 </html>
