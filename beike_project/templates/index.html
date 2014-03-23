@@ -2,62 +2,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <html lang="zh">
 	<head>
-		<meta name="viewport" content = "width=device-width ,  user-scalable=no">
-		<meta charset="UTF-8">
-		<link rel="stylesheet" type="text/css" href="/static/mystyle.css">
+        <meta name="viewport" content = "width=device-width, initial-scale=1">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="/static/mystyle.css">
+        <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
+        <script src="/static/jquery/jquery-1.8.3.js "></script>
+        <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
 	</head>
 	<body>
-		<div class='outer_top'>
-			<div class='top_left'>
-				<img id='city' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/city.png'>{{city}}
-			</div>
-			<div class='top_right'>
-			<img id='user' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/user.png'>{{user.name}}
-			</div>
-		</div>
-		<div class='outer_mid'>
-			<div id='logo_background'>
-				<img id='logo' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/logo.png'>
-			</div>
-			<div id='logo_content'>
-				<div id='text'>开启绿色交易微生活</div>
-				<img id='dot' class='innner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/three_point.png'>
-			</div>
-		</div>
-		<div class='outer_bot'>
-			<a href="buy/form">
-			<img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/buy.png'>
-			<a href="sell/form">
-			<img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/sell.png'>
-			<a href="history/">
-			<img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/my.png'></br>
-			<a href="sell/all_list">
-			<img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/nearby.png'>
-			<a href="buy/all_list">
-			<img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/request.png'>
-			<a href="me/">
-			<img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/help.png'>
+		<div class="ui-grid-a">
+			    <div class="ui-block-a"><div class="ui-body ui-body-d" style="height:20px"><img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/city.png" style="float:left"><div class="head_text">&nbsp{{city}}</div></div></div>
+   			    <div class="ui-block-b"><div class="ui-body ui-body-d" style="height:20px; float:right"><div class="head_text_right">&nbsp{{user.name}}</div><img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/user.png" style="float:right"></div></div>
 		</div>
 
-		<!--
-		<a href="buy/form/" id="mainMenuBackGround">
-	 	我要买	
-		</a>
-		<a href="sell/form/" id="mainMenuBackGround">
-		我要卖		
-		</a>
-		<a href="sell/all_list/" id="mainMenuBackGround">
-		周边物品	
-		</a>
-		<a href="buy/all_list/" id="mainMenuBackGround">
-		周边需求	
-		</a>
-		<a href="history/" id="mainMenuBackGround">
-	  	历史订单	
-		</a>
-		<a href="me/" id="mainMenuBackGround">
-	  	我的资料	
-		</a>
-		-->
+		<div style="margin: 0 0 -.25em 0"><img width="100%" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/logo.png"/></div>
+
+
+
+		<div class="ui-grid-b">
+	   		<div class="ui-block-a"><a href="buy/form"><img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/buy.png'></div>
+		    <div class="ui-block-b"><a href="sell/form"><img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/sell.png'></div>
+		    <div class="ui-block-c"><a href="history/"><img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/my.png'></div>
+		    <div class="ui-block-a"><a href="sell/all_list"><img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/nearby.png'></div>
+		    <div class="ui-block-b"><a href="buy/all_list"><img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/request.png'></div>
+		    <div class="ui-block-c"><a href="me/"><img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/help.png'></div>
+		</div>
 	</body>
 </html>

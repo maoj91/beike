@@ -59,6 +59,16 @@ body{
     display: inline-block;
 }
 
+.head_text{
+    float:left;
+    margin-top: 0.4em;
+}
+
+.head_text_right{
+    float:right;
+    margin-top: 0.4em;
+}
+
 .top_left{
     width: 50%;
     text-align:left;
@@ -72,11 +82,6 @@ body{
     left: 50%;
 }
 
-#city{
-}
-
-#user{
-}
 #logo{
     margin-top: 10%;
     margin-left:20%
@@ -92,7 +97,8 @@ body{
     margin-bottom: 5%;
 }
 #button{
-    margin-left:7%;
+    width: 50%;
+    margin-left:27%;
     margin-right:7%;
     margin-top:5%
 }
