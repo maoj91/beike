@@ -144,7 +144,9 @@ class Comment(models.Model):
 		return unicode("%s: %s" % (self.post, self.content[:60]))
 
 class AWS(models.Model):
-	access_key = models.CharField(max_length = 2000, null=True)
-	access_secret = models.CharField(max_length = 2000, null=True)
+	access_key = models.CharField(max_length = 200, null=True)
+	access_secret = models.CharField(max_length = 200, null=True)
+	def __unicode__(self):
+		return self.access_key+", "+self.access_secret
 
 

@@ -2,6 +2,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import Http404,HttpResponse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from data.models import AWS
 import time
 import base64
 import hmac
@@ -12,6 +13,8 @@ import os
 
 @csrf_exempt
 def sign(request):
+	AWS_ACCESS_KEY = AWS.objects.all()[0].access_key.encode('ascii')
+	AWS_SECRET_KEY = AWS.objects.all()[0].access_secret.encode('ascii')
 	S3_BUCKET = 'beike-s3'
 	object_name = request.GET.get('s3_object_name')
 	mime_type = request.GET.get('s3_object_type')
