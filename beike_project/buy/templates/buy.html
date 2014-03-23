@@ -1,22 +1,98 @@
 <!DOCTYPE HTML>
 <html lang="zh">
-	<head>
-		<meta name="viewport" content = "width=device-width ,  user-scalable=no">
-		<meta charset="UTF-8">
-		<link rel="stylesheet" type="text/css" href="/{{ STATIC_URL }}mystyle.css">
-	</head>
-	<body>
-	<h1>Nearby Buy Posts</h1>
-	{% for post in buy_list %}
-	<a href="/{{user_id}}/detail/{{post.id}}"><h3>{{post.title}} [${{post.price_num}}]</h3></a>
-	<div class="post_meta">
-		on {{post.date_published}}  by user{{post.user.id}}</br>
-		in {{post.user.area.city}}, {{post.user.area.state_or_region}}
-	</div>
-	<div class="post_body">
-		{{post.content|safe|linebreaks}}
-	</div>
-	{% endfor %}
-	</body>
-</html>
 
+<head>
+    <meta name="viewport" content="width=device-width ,  user-scalable=no">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/mystyle.css">
+    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
+    <script src="/static/jquery/jquery-1.8.3.js "></script>
+    <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+    <script type="text/javascript">
+    var pageNum = 1;
+    var hasMore = true;
+    var postLoader = (function($, undefined) {
+        var pub = {};
+        pub.init = function() {
+            //Refresh the posts when scrolling to the bottom
+            $(window).live("hitBottom",
+                function() {pub.getAndDisplayPosts();});
+        };
+
+        pub.getAndDisplayPosts = function() {
+            //Starting loading animation
+            $('#load-more').show();
+            //Get posts and add success callback using then
+            getPosts().then(function() {
+                //Stop loading animation on success
+                // $('#load-more').hide();
+            });
+        };
+
+        function getPosts() {
+            //Get posts via ajax
+            return $.ajax({
+                type: "get",
+                url: "",
+                dataType: "json",
+                data: {
+                    pageNum: pageNum
+                }
+            }).then(function(data) {
+                displayPosts(data);
+            });
+        }
+
+        function displayPosts(posts) {
+            var postList = $("#postList");
+            var i = 0, len = posts.length;
+            if (len == 0) {
+                hasMore = false;
+                $('#load-more').hide();
+            }
+            //process posts data
+            for (; i < len; i++) {
+              var d = new Date(posts[i]["date_published"]);
+              var template = '<li><a href="#"><span><img width="20" height="20" src="/static/images/nearby_buy_posts/request_logo.png" /> ' +
+                posts[i]["title"] + '<br/>$' + posts[i]["min_price"] + ' - $' +
+                posts[i]["max_price"] + '</span>    <span>[' +
+                posts[i]["city"] + "] [" + posts[i]["district"] +
+                ']</span><span style="float: right; ">' +
+               + d.getMonth() + '-' + d.getDate() + '</span></a></li>' 
+            postList.append(template);
+            }
+            postList.listview("refresh");
+        }
+        return pub;
+    }(jQuery));
+    postLoader.init();
+    postLoader.getAndDisplayPosts();
+
+    $(document).scroll(function() {
+        if ($(document).height() > $(window).height() && hasMore) {
+            if ($(window).scrollTop() >= $(document).height() - $(window).height() - 100) {
+                pageNum++;
+                postLoader.getAndDisplayPosts();
+            }
+        }
+    });
+    </script>
+
+</head>
+<body>
+    <div data-role="header" data-position="fixed">
+        <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_buy_posts/header.png" />
+    </div>
+    <div id="buy-list" data-role="main">
+        <div>
+            <ul id="postList" data-role="listview">
+            </ul>
+        </div>
+    </div>
+    <div id="load-more" style="vertical-align:middle; text-align:center; display:none"><img width="50px" height="50px" src="/static/images/general/loading_green.gif"/></div>
+    <div data-role="footer" data-position="fixed">
+        <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_buy_posts/footer.png" />
+    </div>
+</body>
+
+</html>
