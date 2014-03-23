@@ -142,3 +142,9 @@ class Comment(models.Model):
 	date_published = models.DateTimeField('comment publish date')
 	def __unicode__(self):
 		return unicode("%s: %s" % (self.post, self.content[:60]))
+
+class AWS(models.Model):
+	access_key = models.CharField(max_length = 2000, null=True)
+	access_secret = models.CharField(max_length = 2000, null=True)
+
+
