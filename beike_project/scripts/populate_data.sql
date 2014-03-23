@@ -20,7 +20,7 @@ values (1, 'Public', 'Everyone can see my profile.');
 insert into data_privacy (id, name, description)
 values (2, 'Private', 'No one can see my profile.');
 
-insert into data_country (id, name, currency_code) values (1, 'USA', 'USD');
+insert into data_country (id, name, currency_code) values (1, 'United States', 'USD');
 insert into data_country (id, name, currency_code) values (2, 'China', 'CNY');
 
 insert into data_state (id, name, country_id) values (1, 'Washington', 1);

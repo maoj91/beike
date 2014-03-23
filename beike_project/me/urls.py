@@ -9,5 +9,6 @@ urlpatterns = patterns('',
 	url(r'^save_notification/$', views.save_notification),
 	url(r'^save_privacy/$', views.save_privacy),
 	url(r'^get_info/$', views.get_info),
+	url(r'^get_info/get_city$', views.get_city_by_zipcode),
 	url(r'^create/$', views.create),
 )

@@ -1,7 +1,7 @@
 from pygeocoder import Geocoder
 import json
 
-def get_location(latitude, longitude):
+def get_location_by_latlong(latitude, longitude):
     # call google geolocation service to get the location detail
     results = Geocoder.reverse_geocode(latitude, longitude)
     if results is not None and len(results) > 0:
@@ -30,12 +30,13 @@ def get_location(latitude, longitude):
     else:
         return None
 
-def get_city_district(zipcode):
+def get_location_by_zipcode(zipcode):
     results = Geocoder.geocode(zipcode)
     if results is not None and len(results) > 0:
         google_location = results.raw[0]
         print google_location
         location = Geolocation()
+        address_components = google_location['address_components']
         for component in address_components:
             if 'neighborhood' in component['types']:
                 location.lv1_district = component['long_name']

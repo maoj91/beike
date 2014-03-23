@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from data.models import User,Country,State,City,District,Address,Notification,Privacy
 from django.views.decorators.csrf import csrf_exempt
 from data.views import create_user,is_email_valid
-from geolocation import get_location
+from geolocation import get_location_by_latlong, get_location_by_zipcode
 import json, logging
 from django.core.serializers.json import DjangoJSONEncoder
 
@@ -25,12 +25,21 @@ def get_info(request,user_id):
         latitude = float(request.GET.get('latitude'))
         longitude = float(request.GET.get('longitude'))
         print("latitude: " + request.GET.get('latitude') + ", longitude: " + request.GET.get('longitude'))
-        geolocation = get_location(latitude, longitude)
-        cityDistrict = get_city_district(geolocation)
-        return HttpResponse(json.dumps(cityDistrict, cls=DjangoJSONEncoder))
+        geolocation = get_location_by_latlong(latitude, longitude)
+        city_district = get_city_district(geolocation)
+        return HttpResponse(json.dumps(city_district, cls=DjangoJSONEncoder))
     else :
         cities = City.objects.all()
         return render_to_response('get_info.html',{'user_id':user_id,'cities':cities,'default_city':'Seattle'})
+
+def get_city_by_zipcode(request,  user_id):
+    if request.is_ajax():
+        zipcode = request.GET.get("zipcode")
+        geolocation = get_location_by_zipcode(zipcode)
+        city_district = get_city_district(geolocation)
+        return HttpResponse(json.dumps(city_district, cls=DjangoJSONEncoder))
+    else:
+        raise Http404
 
 def get_name(request,user_id):
     return render_to_response('get_name.html')
@@ -47,6 +56,7 @@ def create(request,user_id):
         if is_email_valid(email):
             create_user(user_id,email,city_id)
             print 'email valid'
+            print user_id
             return HttpResponseRedirect('/'+user_id)
         else: 
             print 'email invalid'
@@ -60,8 +70,7 @@ def get_city_district(geolocation):
     try:
         country = Country.objects.get(name__iexact=geolocation.country)
     except Country.DoesNotExist:
-        country = Country(name=geolocation.country)
-        country.save()
+        raise ValueError("Country " + geolocation.country + " is not allowed.")
 
     # create the state/province if it does not yet exist in DB
     try:
@@ -81,18 +90,18 @@ def get_city_district(geolocation):
         city.save()
 
     # create the district if it does not yet exist in DB
-    try:
-        lv1_district = District.objects.get(name__iexact=geolocation.lv1_district)
-    except District.DoesNotExist:
-        lv1_district = District(name=geolocation.lv1_district)
-        lv1_district.city = city
-        lv1_district.save()
+    lv1_district = District()
+    if geolocation.lv1_district is not None:
+        try:
+            lv1_district = District.objects.get(name__iexact=geolocation.lv1_district)
+        except District.DoesNotExist:
+            lv1_district = District(name=geolocation.lv1_district)
+            lv1_district.city = city
+            lv1_district.save()
 
     cityDistrict={'city_id': city.id, 'city_name': city.name,
         'lv1_district_id': lv1_district.id, 'lv1_district_name': lv1_district.name}
     return cityDistrict
-
-
 
 @csrf_exempt
 def save_profile(request,user_id):

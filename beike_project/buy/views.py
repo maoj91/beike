@@ -60,7 +60,7 @@ def form_submit(request,user_id):
         title = request.POST.get('title','')
         content = request.POST.get('content','')
         category_id = int(request.POST.get('category'))
-        district_id = int(request.POST.get('category'))
+        district_id = int(request.POST.get('district'))
         min_price = request.POST.get('min_price','')
         max_price = request.POST.get('max_price','')
         phone = request.POST.get('phone','')
