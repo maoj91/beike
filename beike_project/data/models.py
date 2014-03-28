@@ -88,7 +88,7 @@ class Condition(models.Model):
 class BuyPost(models.Model):
 	title = models.CharField(max_length= 255)
 	date_published = models.DateTimeField('post publish date')
-	open_until = models.DateTimeField()
+	open_until = models.DateTimeField(null=True)
 	content = models.CharField(max_length = 4000)
 	category = models.ForeignKey('Category')
 	min_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
@@ -105,7 +105,7 @@ class BuyPost(models.Model):
 class SellPost(models.Model):
 	title = models.CharField(max_length= 255)
 	date_published = models.DateTimeField('post publish date')
-	open_until = models.DateTimeField()
+	open_until = models.DateTimeField(null=True)
 	content = models.CharField(max_length = 4000)
 	category = models.ForeignKey('Category')
 	item_condition = models.ForeignKey('Condition', null=True)

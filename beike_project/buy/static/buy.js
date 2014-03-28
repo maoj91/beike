@@ -34,8 +34,6 @@ function validateForm(){
 		msg = '输入项不能为空';
 	} else if(!phone){
 		msg = '输入项不能为空';
-	} else if(!open_until_date){
-		msg = '输入项不能为空';
 	} else if(!content){
 		msg = '输入项不能为空';
 	} else if(!isValidInteger(min_price) || !isValidInteger(max_price)){

@@ -10,7 +10,7 @@
 <body>
 First visist, please select your area!
 {% for city in cities %}
-<a href="/{{user_id}}/me/get_email/{{city.id}}" id="mainMenuBackGround">
+<a href="/me/get_email/{{city.id}}" id="mainMenuBackGround">
 {{city.name}}
 </a>
 {% endfor %}

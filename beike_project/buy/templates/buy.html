@@ -33,7 +33,7 @@
             //Get posts via ajax
             return $.ajax({
                 type: "get",
-                url: "",
+                url: "/buy/get_posts_by_page",
                 dataType: "json",
                 data: {
                     pageNum: pageNum
@@ -53,7 +53,7 @@
             //process posts data
             for (; i < len; i++) {
               var d = new Date(posts[i]["date_published"]);
-              var template = '<li><a href="#"><span><img width="20" height="20" src="/static/images/nearby_buy_posts/request_logo.png" /> ' +
+              var template = '<li><a href="/detail/buy/' + posts[i]['post_id'] + '"><span><img width="20" height="20" src="/static/images/nearby_buy_posts/request_logo.png" /> ' +
                 posts[i]["title"] + '<br/>$' + posts[i]["min_price"] + ' - $' +
                 posts[i]["max_price"] + '</span>    <span>[' +
                 posts[i]["city"] + "] [" + posts[i]["district"] +

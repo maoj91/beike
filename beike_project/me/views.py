@@ -5,22 +5,32 @@ from django.http import HttpResponseRedirect
 from data.models import User,Country,State,City,District,Address,Notification,Privacy
 from django.views.decorators.csrf import csrf_exempt
 from data.views import create_user,is_email_valid
+from beike_project.views import check_wx_id
 from geolocation import get_location_by_latlong, get_location_by_zipcode
 import json, logging
 from django.core.serializers.json import DjangoJSONEncoder
 
-#TO-DO: fix logging problem
-logger = logging.getLogger(__name__)
 
-def index(request,user_id):
-    user = User.objects.get(wx_id=user_id)
+def index(request):
+    check_wx_id(request)
+    wx_id = request.session['wx_id']
+    user = User.objects.get(wx_id=wx_id)
     states = State.objects.values('name')
     cities = City.objects.all()
     notifications = Notification.objects.values('description')
     privacies = Privacy.objects.values('description')
     return render_to_response('me.html',{'user':user,'states':states,'cities':cities,'notifications':notifications,'privacies':privacies})
 
-def get_info(request,user_id):
+def get_info(request):
+    wx_id = request.GET.get('wx_id')
+    if wx_id is None:
+        raise Http404
+    else:
+        request.session['wx_id'] = wx_id
+    cities = City.objects.all()
+    return render_to_response('get_info.html',{'user_id':wx_id,'cities':cities,'default_city':'Seattle'})
+
+def get_city_by_latlong(request):
     if request.is_ajax():
         latitude = float(request.GET.get('latitude'))
         longitude = float(request.GET.get('longitude'))
@@ -28,11 +38,10 @@ def get_info(request,user_id):
         geolocation = get_location_by_latlong(latitude, longitude)
         city_district = get_city_district(geolocation)
         return HttpResponse(json.dumps(city_district, cls=DjangoJSONEncoder))
-    else :
-        cities = City.objects.all()
-        return render_to_response('get_info.html',{'user_id':user_id,'cities':cities,'default_city':'Seattle'})
+    else:
+        raise Http404
 
-def get_city_by_zipcode(request,  user_id):
+def get_city_by_zipcode(request):
     if request.is_ajax():
         zipcode = request.GET.get("zipcode")
         geolocation = get_location_by_zipcode(zipcode)
@@ -41,11 +50,13 @@ def get_city_by_zipcode(request,  user_id):
     else:
         raise Http404
 
-def get_name(request,user_id):
+def get_name(request):
     return render_to_response('get_name.html')
 
 @csrf_exempt
-def create(request,user_id):
+def create(request):
+    check_wx_id(request)
+    wx_id = request.session['wx_id']
     cities = City.objects.all()
     default_city = cities[0]
     error = ''
@@ -54,16 +65,35 @@ def create(request,user_id):
         email = request.POST.get('user_email','')
         default_city = cities.get(id=city_id)
         if is_email_valid(email):
-            create_user(user_id,email,city_id)
-            print 'email valid'
-            print user_id
-            return HttpResponseRedirect('/'+user_id)
+            create_user(wx_id,email,city_id)
+            return HttpResponseRedirect('/', {'error':error})
         else: 
             print 'email invalid'
             error = 'Email is not valid. Please try again.' 
-            return render_to_response('get_info.html',{'user_id':user_id,'cities':cities,'default_city':default_city,'error':error})
+            return render_to_response('get_info.html',{'wx_id':wx_id,'cities':cities,'default_city':default_city,'error':error})
     else: 
         raise Http404
+
+
+@csrf_exempt
+def save_profile(request):
+    check_wx_id(request)
+    wx_id = request.session['wx_id']
+    user = User.objects.get(wx_id=wx_id)
+    error = ""
+    if request.method == 'POST':
+        user_name = request.POST.get('user_name','')    
+        user_email = request.POST.get('user_email','')
+        address_city = request.POST.get('address_city','')
+        address_state = request.POST.get('address_state','')
+        error = validate_profile(user_name,user_email,address_city,address_state)
+        if(error == ""):
+            user.name = user_name
+            user.email = user_email
+            user.address.city = address_city
+            user.address.state_or_region = address_state
+            user.save()
+    return HttpResponseRedirect('/',{'user':user,'error':error})
 
 def get_city_district(geolocation):
     # create the country if it does not yet exist DB
@@ -102,27 +132,9 @@ def get_city_district(geolocation):
     cityDistrict={'city_id': city.id, 'city_name': city.name,
         'lv1_district_id': lv1_district.id, 'lv1_district_name': lv1_district.name}
     return cityDistrict
-
-@csrf_exempt
-def save_profile(request,user_id):
-    user = User.objects.get(wx_id=user_id)
-    error = ""
-    if request.method == 'POST':
-        user_name = request.POST.get('user_name','')    
-        user_email = request.POST.get('user_email','')
-        address_city = request.POST.get('address_city','')
-        address_state = request.POST.get('address_state','')
-        error = validate_profile(user_name,user_email,address_city,address_state)
-        if(error == ""):
-            user.name = user_name
-            user.email = user_email
-            user.address.city = address_city
-            user.address.state_or_region = address_state
-            user.save()
-    return HttpResponseRedirect('/'+user.wx_id+'/me/',{'user':user,'error':error})
     
 @csrf_exempt
-def save_notification(request,user_id):
+def save_notification(request,  ):
     user = User.objects.get(wx_id=user_id)
     error = ""
     if request.method == 'POST':

@@ -5,13 +5,16 @@ from django.views.decorators.csrf import csrf_exempt,csrf_protect
 from data.models import SellPost,User,Category,Condition
 from data.views import get_user, get_category
 from django.forms.formsets import formset_factory
+from beike_project.views import check_wx_id
 from datetime import datetime 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def index(request):
     return HttpResponse('sell');
 
-def all_list(request,user_id):
+def all_list(request):
+    check_wx_id(request)
+    wx_id = request.session['wx_id']
     sell_list = SellPost.objects.order_by('-date_published')
     paginator = Paginator(sell_list, 2)
 
@@ -26,20 +29,24 @@ def all_list(request,user_id):
         # if page is out of range, deliever the last page
         sell_posts = paginator.page(paginator.num_pages)
 
-    return render_to_response('sell.html', {'sell_posts':sell_posts, 'user_id':user_id })
+    return render_to_response('sell.html', {'sell_posts':sell_posts, 'user_id':wx_id })
 
-def form(request,user_id):
+def form(request):
+    check_wx_id(request)
+    wx_id = request.session['wx_id']
     #retrieve all the categories
     categories = Category.objects.all();
-    return render_to_response('form.html',{'user_id':user_id, 'categories':categories}); 
+    return render_to_response('form.html',{'user_id':wx_id, 'categories':categories}); 
 
 @csrf_exempt
-def form_submit(request,user_id):
+def form_submit(request):
+    check_wx_id(request)
+    wx_id = request.session['wx_id']
     error = ''
     if request.method == 'POST':
         new_post = SellPost()
         new_post.date_published = datetime.now()
-        new_post.user = get_user(user_id)
+        new_post.user = get_user(wx_id)
         #get image urls 
         category_id = int(request.POST.get('category',''))
         new_post.category = get_category(category_id)
@@ -60,7 +67,7 @@ def form_submit(request,user_id):
             url = url+';' + image3
         new_post.image_urls = url
         new_post.save()
-        return HttpResponseRedirect('/'+user_id+'/history/')
+        return HttpResponseRedirect('/history/')
     else:
         raise Http404
 

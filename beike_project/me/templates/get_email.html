@@ -12,7 +12,7 @@
 	<p> {{error}} </p>
 {% endif %}
 First visist, please enter your email address:
-<form action="/{{user_id}}/me/create/" method="post" enctype="multipart/form-data">{% csrf_token %}
+<form action="/me/create/" method="post" enctype="multipart/form-data">{% csrf_token %}
 Email: <input type="text" name="user_email"></br>
 <input type="submit" value="下一页">
 <input type="hidden" name="city_id"  value="{{city_id}}">

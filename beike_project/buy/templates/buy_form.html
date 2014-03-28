@@ -1,56 +1,58 @@
 <html>
-    <head>
-        <meta name="viewport" content = "width=device-width ,  user-scalable=no">
-        <meta charset="UTF-8">
-        <link rel="stylesheet" type="text/css" href="/static/buy.css">
-        <script src="/static/buy.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
-        <script src="/static/lodash.js"></script>
-        <script type="text/javascript" src="/static/s3upload.js"></script>
+
+<head>
+    <meta name="viewport" content="width=device-width ,  user-scalable=no">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/buy.css">
+    <script src="/static/buy.js"></script>
+    <script src="/static/lodash.js"></script>
+    <script type="text/javascript" src="/static/s3upload.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
+    <script src="/static/jquery/jquery-1.8.3.js "></script>
+    <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
 </head>
+
 <body onload="initiatePage()">
-<img id='header' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/04/header.png'>
-<form action="/{{user_id}}/buy/form_submit/"  method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
-    {% csrf_token %}
-    <div id="category_div">
-        <span class="text">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别</span>
-        <select name='category'>
-        {% for category in categories %}
-            <option value={{ category.id }}>{{category.name}}</option>
-        {% endfor %}
-        </select>
-    </div>
-    <div id="title_div">
-        <span class="text">标&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;题</span>
-        <input type="text" name="title" class="input_box" placeholder="请输入标题">
-    </div>
-    <div id="price_div">
-        <span class="text">价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格</span><input type="text" name="min_price" class="input_box" placeholder="最低价">
-        <input type="text" name="max_price" class="input_box" placeholder="最高价">&nbsp;&nbsp;$
-    </div>
-    <div id="content_div">
+    <img id='header' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/04/header.png'>
+    <form action="/buy/form_submit/" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
+        {% csrf_token %}
+        <div id="category_div">
+            <span class="text">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别</span>
+            <select name='category'>
+                {% for category in categories %}
+                <option value={{ category.id }}>{{category.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div id="title_div">
+            <span class="text">标&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;题</span>
+            <input type="text" name="title" class="input_box" placeholder="请输入标题">
+        </div>
+        <div id="price_div">
+            <span class="text">价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格</span>
+            <input type="text" name="min_price" class="input_box" placeholder="最低价">
+            <input type="text" name="max_price" class="input_box" placeholder="最高价">&nbsp;&nbsp;$
+        </div>
+        <div id="content_div">
             <span class="text">详细描述</span>
             <input type="text" name="content" class="input_box" placeholder="描述颜色、大小、形状、新旧等需求">
-    </div>
-    <div id="phone_div">
-        <span class="text">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话</span>
-        <input type="text" name="phone" class="input_box" placeholder="联系电话">
-    </div>
-    <div id="open_until_div">
-        <span class="text">保&nbsp;&nbsp;留&nbsp;&nbsp;至</span>
-        <input type="date" name="open_until_date" class="input_box" id="open_until_date">
-    </div>
-    <div id="district_div">
-        <span class="text">区&nbsp;&nbsp;&nbsp;&nbsp;域</span>
-        <select name='district'>
-        {% for district in districts %}
-            <option value={{ district.id }}>{{district.name}}</option>
-        {% endfor %}
-        </select>
-    </div>
-    <div>
-        <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/04/submit.png">
-        <p id="validate_msg"></p>
-    </div>
+        </div>
+        <div id="phone_div">
+            <span class="text">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话</span>
+            <input type="text" name="phone" class="input_box" placeholder="联系电话">
+        </div>
+        <div id="district_div">
+            <span class="text">区&nbsp;&nbsp;&nbsp;&nbsp;域</span>
+            <select name='district'>
+                {% for district in districts %}
+                <option value={{ district.id }}>{{district.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/04/submit.png">
+            <p id="validate_msg"></p>
+        </div>
     </form>
+
 </html>
