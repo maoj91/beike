@@ -8,7 +8,19 @@
     <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
     <script src="/static/jquery/jquery-1.8.3.js "></script>
     <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
-    <script type="text/javascript">
+
+</head>
+<body>
+    <div data-role="page">
+    <div data-role="header" data-position="fixed">
+        <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_buy_posts/header.png" />
+    </div>
+    <div id="buy-list" data-role="main">
+        <div>
+            <ul id="postList" data-role="listview">
+            </ul>
+        </div>
+        <script type="text/javascript">
     var pageNum = 1;
     var hasMore = true;
     var postLoader = (function($, undefined) {
@@ -65,8 +77,12 @@
         }
         return pub;
     }(jQuery));
-    postLoader.init();
-    postLoader.getAndDisplayPosts();
+
+    $(document).live('pageshow', function() {
+        postLoader.init();
+        postLoader.getAndDisplayPosts();
+    });
+
 
     $(document).scroll(function() {
         if ($(document).height() > $(window).height() && hasMore) {
@@ -77,22 +93,14 @@
         }
     });
     </script>
-
-</head>
-<body>
-    <div data-role="header" data-position="fixed">
-        <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_buy_posts/header.png" />
     </div>
-    <div id="buy-list" data-role="main">
-        <div>
-            <ul id="postList" data-role="listview">
-            </ul>
-        </div>
+    <div id="load-more" style="vertical-align:middle; text-align:center; display:none"><img width="50px" height="50px" src="/static/images/general/loading_green.gif"/>
     </div>
-    <div id="load-more" style="vertical-align:middle; text-align:center; display:none"><img width="50px" height="50px" src="/static/images/general/loading_green.gif"/></div>
     <div data-role="footer" data-position="fixed">
         <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_buy_posts/footer.png" />
     </div>
+    </div>
+
 </body>
 
 </html>
