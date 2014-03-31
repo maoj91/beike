@@ -21,7 +21,6 @@ function get_set_image_orientation_info(file_dom_id){
 
 }
 
-
 function get_image_name_prefix(user_id){
 	var currentTime = Date.now();	
 	var prefix = user_id+"/"+currentTime;
@@ -51,6 +50,7 @@ function image_s3_upload(file_dom_id,user_id){
 			onError: function(status) {
 				$('#upload_status').html('Upload error: ' + status);
 				$('#upload_status').show();
+				alert('error uploading');
 				isUploading = false;
 			}
 		    });
@@ -131,7 +131,6 @@ function validateForm(){
 	var isValid = false;
 	var title = $('[name="title"]').val();
 	var price = $('[name="price"]').val();
-	var open_until_date = $('[name="open_until_date"]').val();
 	var content = $('[name="content"]').val();
 	var image1 = $('[name="image_name1"]').val();
 	var image2 = $('[name="image_name2"]').val();
@@ -140,8 +139,6 @@ function validateForm(){
 	if(!title){
 		msg = '输入项不能为空';
 	} else if(!price){
-		msg = '输入项不能为空';
-	} else if(!open_until_date){
 		msg = '输入项不能为空';
 	} else if(!content){
 		msg = '输入项不能为空';

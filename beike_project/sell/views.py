@@ -58,8 +58,6 @@ def form_submit(request):
         image1 = request.POST.get('image_name1','') 
         image2 = request.POST.get('image_name2','') 
         image3 = request.POST.get('image_name3','') 
-        open_until = request.POST.get('open_until_date','')
-        new_post.open_until = datetime.strptime(open_until,'%Y-%m-%d')
         url = image1
         if image2:
             url = url+';'+image2
@@ -70,4 +68,3 @@ def form_submit(request):
         return HttpResponseRedirect('/history/')
     else:
         raise Http404
-

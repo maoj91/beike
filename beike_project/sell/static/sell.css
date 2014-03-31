@@ -199,3 +199,12 @@ span{
     border-right: none;    
     box-shadow: 0 4px 2px -2px #9ecaed;
 }
+
+.form-label{
+	color:#00CED1;
+}
+
+.ui-block-a {
+	padding-top: 20px;
+}
+
