@@ -91,12 +91,11 @@ def set_user_email(user_id,content):
     user.email = content
     user.save()
 
+#0 - valid; 1 - invalid ; 2 - exist 
 def is_email_valid(email):
-    is_valid = validate_email(email)
-    is_exist = False 
+    type = 0
+    if not validate_email(email):
+        type = 1
     if User.objects.filter(email=email):
-        is_exist = True 
-    if not is_exist and is_valid:
-        return True
-    else:
-        return False
+        type = 2
+    return type

@@ -60,16 +60,20 @@ def create(request):
     cities = City.objects.all()
     default_city = cities[0]
     error = ''
+    email_valid_type = 0;
     if request.method == 'POST':
         city_id = request.POST.get('city_id','')    
         email = request.POST.get('user_email','')
         default_city = cities.get(id=city_id)
-        if is_email_valid(email):
+        email_valid_type = is_email_valid(email)
+        if email_valid_type ==0:
             create_user(wx_id,email,city_id)
             return HttpResponseRedirect('/', {'error':error})
         else: 
-            print 'email invalid'
-            error = 'Email is not valid. Please try again.' 
+            if email_valid_type == 1:
+                error = 'Email is not valid. Please try again.' 
+            if email_valid_type == 2: 
+                error = 'Email already exist.'
             return render_to_response('get_info.html',{'wx_id':wx_id,'cities':cities,'default_city':default_city,'error':error})
     else: 
         raise Http404
