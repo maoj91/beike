@@ -50,7 +50,7 @@ def responseMsg(request):
 	content = msg.get('Content','content')
 	url = ''
 	if not is_user_exist(user_id):
-		url='http://54.204.4.250/?wx_id='+user_id+'/me/get_info/'
+		url='http://54.204.4.250/me/get_info/?wx_id='+user_id
 	else:
 		url = 'http://54.204.4.250/?wx_id='+user_id
 	return getReplyXml(msg,url)
