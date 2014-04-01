@@ -24,18 +24,20 @@
                 <img id="current_image">
                 <p id="upload_status">
             </div>
-            <div id="button_and_thumbnails">
-                <div id="delete_button" onclick="deleteImage()">
+            <div id="button_and_thumbnails" class="ui-grid-b">
+                <div id="delete_button" class="ui-block-a" onclick="deleteImage()">
                     <img id="delete_img" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/delete_pic.png">
                 </div>
-                <div id="upload_button" class="upload_button">
-                    <input type="file" id="image1" onchange="image_s3_upload(this.id,'{{user_id}}');">
-                </div>
 
-                <div id="thumbnails">
+
+                <div id="thumbnails" class="ui-block-b">
                     <img id="preview1" onclick="selectImage(1)">
                     <img id="preview2" onclick="selectImage(2)">
                     <img id="preview3" onclick="selectImage(3)">
+                </div>
+
+                <div id="upload_button" class="ui-block-c">
+                    <input type="file" id="image1" onchange="image_s3_upload(this.id,'{{user_id}}');">
                 </div>
             </div>
 
