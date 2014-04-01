@@ -67,8 +67,9 @@ def create(request):
         default_city = cities.get(id=city_id)
         email_valid_type = is_email_valid(email)
         if email_valid_type ==0:
+            print wx_id + " " + email + " " + city_id
             create_user(wx_id,email,city_id)
-            return HttpResponseRedirect('/', {'error':error})
+            return HttpResponseRedirect('/')
         else: 
             if email_valid_type == 1:
                 error = 'Email is not valid. Please try again.' 
