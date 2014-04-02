@@ -8,20 +8,10 @@ body{
     -moz-background-size: cover;
     background-size: cover;
 }
-
-#head_img{
-    width: 100%;
+#header{
+    width:100%;
 }
 
-.comment_head{
-    width: 100%;
-}
-
-#comment_head_img{
-    width: 94%;
-    margin-left: 3%;
-    margin-right: 3%;
-}
 .title{
     margin-top: -5%;
     margin-left: 20%;
@@ -30,7 +20,8 @@ body{
 .price_wrapper{
     background: rgb(175,238,238);
     width: 100%;
-    height: 10%;
+    height: 60px;
+    margin-top: -4%;
 }
 
 #dollar_img{
@@ -41,29 +32,25 @@ body{
 
 .price{
     margin-left: 5%;
-    margin-top: 4%;
+    margin-top: 6%;
     float:left;
     font-size: 120%;
 }
 
-.post_base{
-    float:right;
-    margin-top:3%;
-}
-
 .location{
-    margin-top: 2%;
-    margin-left: 2%;
+    margin-top: 4%;
+    margin-left: 4%;
+    font-size: 1.2em;
 }
 
 .condition{
     margin-top: 4%;
+    margin-left: 4%
     margin-bottom: 2%;
 }
 
 #condition_img{
     width: 45%;
-    margin-left: 2%;
 }
 
 #phone{
@@ -71,24 +58,25 @@ body{
 }
 .description_title{
     float: left;
-    width: 20%;
-    font-size: 100%;
+    width: 30%;
+    font-size: 1.5em;
     margin-left: -10%;
 }
 
 .description_content{
     float: left;
-    width: 80%;
-    font-size: 100%;
+    width: 70%;
+    font-size: 1.5em;
 }
 .description_phone{
     float: left;
     width: 20%;
-    font-size:100%;   
+    font-size: 1.5em;
+
 }
 
 li{
     font-size:70%;
     list-style: none outside none;
-    padding-bottom:10%;
+    padding-bottom:15%;
 }
