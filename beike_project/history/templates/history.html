@@ -1,67 +1,95 @@
 <!DOCTYPE HTML>
 <html lang="zh">
-    <head>
-        <meta name="viewport" content = "width=device-width, initial-scale=1">
-        <meta charset="UTF-8">
-        <link rel="stylesheet" type="text/css" href="/static/mystyle.css">
-        <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
-        <script src="/static/jquery/jquery-1.8.3.js "></script>
-        <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
-    </head>
-    <body>
-    
-    <div data-role="collapsible-set">
-    <div style="margin: 0 0 -.25em 0"><img src="/static/images/my_account/my_posts.png"/></div>
-    <div data-role="collapsible" data-collapsed="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
-      <h4><img width="40px" height="40px" style="vertical-align:middle;"  src="/static/images/my_account/my_buy_posts.png"/> 我要卖 </h4>
-      <ul data-role="listview" data-inset="false">
-        {% for post in sell_posts %}
-          <li>
-            <a href="/{{user_id}}/detail/sell/{{post.id}}"><h3>{{post.title}} [${{post.price}}]</h3>
-            <div class="post_meta">
-                on {{post.date_published}}  by {{post.user.name}}</br>
-                in {{post.user.city}}, {{post.user.state}}
-            </div>
-            <div class="post_body">
-              {{post.content|safe|linebreaks}}
-            </div>
-            </a>
-          </li>
-        {% endfor %}
-      <ul data-role="listview" data-inset="false">
-    </div>
 
-    <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
-      <h4><img width="40px" height="40px" style="vertical-align:middle;"  src="/static/images/my_account/my_buy_posts.png"/> 我要买 </h4>
-      <ul data-role="listview" data-inset="false">
-        {% for post in buy_posts %}
-          <li>
-            <a href="/{{user_id}}/detail/buy/{{post.id}}"><h2>{{post.title}} [${{post.min_price}} - ${{post.max_price}}]</h2>
-            <p class="post_meta">
-              on {{post.date_published}}  by {{post.user.name}} {{post.content}}
-            </p>
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-    </div>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <!-- jquery library -->
+    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
+    <script src="/static/jquery/jquery-1.8.3.js "></script>
+    <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+
+    <!--js library for s3 upload-->
+    <script src="/static/lodash.js"></script>
+    <script type="text/javascript" src="/static/s3upload.js"></script>
+    <script src="/static/exif.js"></script>
+    <script src="/static/binaryajax.js"></script>
+
+    <!-- beike customized css and js -->
+    <link rel="stylesheet" type="text/css" href="/static/mystyle.css">
+    <link rel="stylesheet" type="text/css" href="/static/me.css">
+    <link rel="stylesheet" type="text/css" href="/static/buy.css">
+    <link rel="stylesheet" type="text/css" href="/static/sell.css">
+    <script src="/static/buy.js"></script>
+    <script src="/static/sell.js"></script>
+</head>
+
+<body>
 
     <div data-role="collapsible-set">
-    <div style="margin: 0 0 -.25em 0"><img src="/static/images/my_account/my_posts.png"/></div>
-    <div data-role="collapsible" data-collapsed="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
-      <h4><img width="40px" height="40px" style="vertical-align:middle;"  src="/static/images/my_account/my_buy_posts.png"/> 周边物品 </h4>
-      <ul data-role="listview" data-inset="false">
-      <ul data-role="listview" data-inset="false">
+        <div style="margin: 0 0 -.25em 0">
+            <img src="/static/images/my_account/my_posts.png" />
+        </div>
+        <div data-role="collapsible" data-collapsed="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
+            
+            <h4>
+                <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_buy_posts.png" />我要卖</h4>
+            <ul data-role="listview" data-inset="false">
+                {% for post in sell_posts %}
+                <li>
+                    <a href="/{{user_id}}/detail/sell/{{post.id}}">
+                        <h3>{{post.title}} [${{post.price}}]</h3>
+                        <div class="post_meta">
+                            on {{post.date_published}} by {{post.user.name}}</br>
+                            in {{post.user.city}}, {{post.user.state}}
+                        </div>
+                        <div class="post_body">
+                            {{post.content|safe|linebreaks}}
+                        </div>
+                    </a>
+                </li>
+                {% endfor %}
+                <ul data-role="listview" data-inset="false">
+        </div>
+
+        <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
+            <h4>
+                <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_buy_posts.png" />我要买</h4>
+            <ul data-role="listview" data-inset="false">
+                {% for post in buy_posts %}
+                <li>
+                    <a href="/{{user_id}}/detail/buy/{{post.id}}">
+                        <h2>{{post.title}} [${{post.min_price}} - ${{post.max_price}}]</h2>
+                        <p class="post_meta">
+                            on {{post.date_published}} by {{post.user.name}} {{post.content}}
+                        </p>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 
-    <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
-      <h4><img width="40px" height="40px" style="vertical-align:middle;"  src="/static/images/my_account/my_buy_posts.png"/> 周边需求 </h4>
-      <ul data-role="listview" data-inset="false">
-      </ul>
-    </div>
+    <div data-role="collapsible-set">
+        <div style="margin: 0 0 -.25em 0">
+            <img src="/static/images/my_account/my_posts.png" />
+        </div>
+        <div data-role="collapsible" data-collapsed="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
+            
+            <h4>
+                <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_buy_posts.png" />周边物品</h4>
+            <ul data-role="listview" data-inset="false">
+                <ul data-role="listview" data-inset="false">
+        </div>
+
+        <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
+            <h4>
+                <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_buy_posts.png" />周边需求</h4>
+            <ul data-role="listview" data-inset="false">
+            </ul>
+        </div>
     </div>
 
-    </body>
+</body>
+
 </html>
-
