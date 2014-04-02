@@ -37,14 +37,17 @@
                 </div>
 
                 <div id="upload_button" class="ui-block-c">
-                    <input type="file" id="image1" onchange="image_s3_upload(this.id,'{{user_id}}');">
+                    <!-- <input type="file" id="image1" onchange="image_s3_upload(this.id,'{{user_id}}');"> -->
+                    <img id="chooseFile" src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/more_pic.png'>
+                    <div class="hiddenfile">
+                        <input type="file" id="image1" data-clear-btn="false" name="image" accept="image/*" onchange="image_s3_upload(this.id,'{{user_id}}');" capture>
+                    </div>
                 </div>
             </div>
 
 
             <form action="/sell/form_submit/" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
                 {% csrf_token %}
-
                 <input type="hidden" id="image_name1" name="image_name1" value="">
                 <input type="hidden" id="image_name2" name="image_name2" value="">
                 <input type="hidden" id="image_name3" name="image_name3" value="">

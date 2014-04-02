@@ -124,6 +124,13 @@ function setOpenUntil(){
 function initiatePage(){
 	selectCondition(1);
 	setOpenUntil();
+	$("#chooseFile").click(function(e){
+		e.preventDefault();
+		$("input[type=file]").trigger("click");
+	});
+	// $("input[type=file]").change(function(){
+	// 	var file = $("input[type=file]")[0].files[0];  
+	// });
 }
 
 function validateForm(){

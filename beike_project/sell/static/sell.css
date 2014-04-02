@@ -89,9 +89,16 @@
     margin-left: 1em;
     margin-bottom: 2em;
 }
+
 .form-label {
     color:#00CED1;
 }
 .ui-block-a {
     padding-top: 20px;
+}
+
+.hiddenfile {
+    width: 0px;
+    height: 0px;
+    overflow: hidden;
 }
