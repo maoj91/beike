@@ -1,55 +1,74 @@
 <!DOCTYPE HTML>
 <html lang="zh">
-	<head>
-		<meta name="viewport" content = "width=device-width ,  user-scalable=no">
-		<meta charset="UTF-8">
-		<link rel="stylesheet" type="text/css" href="/static/sell.css">
-	</head>
-	<body>
-	<img id="header" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/11/nearby_items.png">
+
+<head>
+    <meta name="viewport" content="width=device-width ,  user-scalable=no">
+    <meta charset="UTF-8">
+    <!-- jquery library -->
+    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
+    <script src="/static/jquery/jquery-1.8.3.js "></script>
+    <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+
+    <!--js library for s3 upload-->
+    <script src="/static/lodash.js"></script>
+    <script type="text/javascript" src="/static/s3upload.js"></script>
+    <script src="/static/exif.js"></script>
+    <script src="/static/binaryajax.js"></script>
+
+    <!-- beike customized css and js -->
+    <link rel="stylesheet" type="text/css" href="/static/mystyle.css">
+    <link rel="stylesheet" type="text/css" href="/static/me.css">
+    <link rel="stylesheet" type="text/css" href="/static/buy.css">
+    <link rel="stylesheet" type="text/css" href="/static/sell.css">
+    <script src="/static/buy.js"></script>
+    <script src="/static/sell.js"></script>
+</head>
+
+<body>
+    <img id="header" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/11/nearby_items.png">
 
     <table>
-    	<tr>
-    	<td width="20%">
-        {% if sell_posts.has_previous %}
-            <a href="?page={{ sell_posts.previous_page_number }}">
-                <img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/11/previous_page.png"/>
-            </a>
-        {% else %}
-            <img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/11/previous_page.png"/>
-        {% endif %}
-        </td>
-        <td width="60%"/>
-        <td width="20%" >
-        {% if sell_posts.has_next %}
-            <a href="?page={{ sell_posts.next_page_number }}">
-            	<img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/11/next_page.png" />
-            </a>
-        {% else %}
-                <img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/11/next_page.png" />
-        {% endif %}
-        </td>
+        <tr>
+            <td width="20%">
+                {% if sell_posts.has_previous %}
+                <a href="?page={{ sell_posts.previous_page_number }}">
+                    <img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/11/previous_page.png" />
+                </a>
+                {% else %}
+                <img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/11/previous_page.png" />{% endif %}
+            </td>
+            <td width="60%" />
+            <td width="20%">
+                {% if sell_posts.has_next %}
+                <a href="?page={{ sell_posts.next_page_number }}">
+                    <img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/11/next_page.png" />
+                </a>
+                {% else %}
+                <img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/11/next_page.png" />{% endif %}
+            </td>
         </tr>
     </table>
 
     <table>
-	{% for post in sell_posts %}
-	<tr>
-    <td width="40%"><img width="80" height="80" src="{{post.image_urls}}" /></td>
-	<td width="60%">
-	<div>
-		<a href="/{{user_id}}/detail/{{post.id}}">{{post.title}}</a>
-		{{ post.date_published|date:"Y-m-d" }} {{ post.date_published|time:"H:i" }}
-	</div>
-	<div>
-		$ {{post.quote_price}}    {{post.user.name}}, {{post.user.address}}
-    </div>
-    </td>
-    <tr>
-	{% endfor %}
+        {% for post in sell_posts %}
+        <tr>
+            <td width="40%">
+                <img width="80" height="80" src="{{post.image_urls}}" />
+            </td>
+            <td width="60%">
+                <div>
+                    <a href="/{{user_id}}/detail/{{post.id}}">{{post.title}}</a>
+                    {{ post.date_published|date:"Y-m-d" }} {{ post.date_published|time:"H:i" }}
+                </div>
+                <div>
+                    $ {{post.quote_price}} {{post.user.name}}, {{post.user.address}}
+                </div>
+            </td>
+            <tr>
+                {% endfor %}
     </table>
 
 
-	</body>
-</html>
+</body>
 
+</html>
