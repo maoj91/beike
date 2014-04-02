@@ -26,6 +26,7 @@ def get_info(request):
     if wx_id is None:
         raise Http404
     else:
+        #set the wx_id in session
         request.session['wx_id'] = wx_id
     cities = City.objects.all()
     return render_to_response('get_info.html',{'user_id':wx_id,'cities':cities,'default_city':'Seattle'})
