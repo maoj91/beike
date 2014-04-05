@@ -36,7 +36,7 @@ function image_s3_upload(file_dom_id,user_id){
 			s3_sign_put_url: '/s3/sign/',
 			s3_object_name_prefix: image_name_prefix,
 			onProgress: function(percent, message) {
-				$('#upload_status').html('Upload progress: ' + percent + '%' + message);
+				$('#upload_status').html('Uploaded ' + percent + '%');
 				$('#upload_status').show();
 				isUploading = false;
 			},
@@ -50,10 +50,9 @@ function image_s3_upload(file_dom_id,user_id){
 			onError: function(status) {
 				$('#upload_status').html('Upload error: ' + status);
 				$('#upload_status').show();
-				alert('error uploading');
 				isUploading = false;
 			}
-		    });
+		});
 	}
 }
 
@@ -124,7 +123,7 @@ function setOpenUntil(){
 function initiatePage(){
 	selectCondition(1);
 	setOpenUntil();
-	$("#chooseFile").click(function(e){
+	$("#choose_file").click(function(e){
 		e.preventDefault();
 		$("input[type=file]").trigger("click");
 	});

@@ -10,21 +10,24 @@ import hashlib
 import urllib
 import json
 import os
+from django.utils import simplejson
 
 @csrf_exempt
 def sign(request):
-    AWS_ACCESS_KEY = AWS.objects.all()[0].access_key.encode('ascii')
-    AWS_SECRET_KEY = AWS.objects.all()[0].access_secret.encode('ascii')
+    AWS_ACCESS_KEY = AWS.objects.all()[0].access_key.encode('utf8')
+    AWS_SECRET_KEY = AWS.objects.all()[0].access_secret.encode('utf8')
     S3_BUCKET = 'beike-s3'
     object_name = request.GET.get('s3_object_name')
     mime_type = request.GET.get('s3_object_type')
-    expires = int(time.time()+360)
+    expires = int(time.time()+10)
     amz_headers = "x-amz-acl:public-read"
 
     put_request = "PUT\n\n%s\n%d\n%s\n/%s/%s" % (mime_type, expires, amz_headers, S3_BUCKET, object_name)
 
     signature = base64.encodestring(hmac.new(AWS_SECRET_KEY,put_request, hashlib.sha1).digest())
+    print "Signature Before: "+signature
     signature = urllib.quote_plus(signature.strip())
+    print "Signature After: "+signature
 
     url = 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, object_name)
 
