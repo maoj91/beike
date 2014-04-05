@@ -4,9 +4,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <!-- jquery library -->
-    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
+
     <script src="/static/jquery/jquery-1.8.3.js "></script>
     <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/jquery/flat-ui-theme/jquery.mobile.flatui.css">
+
 
     <!--js library for s3 upload-->
     <script src="/static/lodash.js"></script>
@@ -24,9 +26,9 @@
 </head>
 
 <body onload="initiatePage()">
-    <div data-role="page" id="main-page">
+    <div data-role="page" id="main-page" data-theme="b">
         <div data-role="header" data-position="fixed">
-            <img id='header' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/header.png'>
+            <img id='header' style="width: 100%;" src='/static/images/navigation/buy_form_header.png'>
         </div>
         <div data-role="content">
             <div id="current_image_div">
@@ -64,11 +66,12 @@
                 <input type="hidden" id="image_orientation2" name="image_orientation2" value="">
                 <input type="hidden" id="image_orientation3" name="image_orientation3" value="">
 
-                <div id="ui-grid-a">
-                    <div class="ui-block-a" style="width:25%;">
-                        <label for="category" class="form-label">类 别</label>
+
+                <div class="ui-grid-a ui-corner-all">
+                    <div class="ui-block-a" style="width:15%;">
+                        <label for="category" class="form-label">物品类别</label>
                     </div>
-                    <div class="ui-block-b" style="width:75%;">
+                    <div class="ui-block-b" style="width:85%;">
                         <select name='category' id="category">
                             {% for category in categories %}
                             <option value={{ category.id }}>{{category.name}}</option>
@@ -76,96 +79,110 @@
                         </select>
                     </div>
 
-                    <div class="ui-block-a" style="width:25%;">
-                        <label for="title" class="form-label">标 题</label>
+                    <div class="ui-block-a" style="width:15%;">
+                        <label for="title" class="form-label">物品名称</label>
                     </div>
-                    <div class="ui-block-b" style="width:75%; margin-bottom: 0px;">
+                    <div class="ui-block-b" style="width:85%">
                         <input type="text" name="title" id="title" placeholder="请输入标题" />
                     </div>
 
-                    <div class="ui-block-a" style="width:25%;">
-                        <label class="form-label">价 格</label>
+
+                    <div class="ui-block-a" style="width:15%;">
+                        <label class="form-label">出售价格</label>
                     </div>
-                    <div class="ui-block-b" style="width:75%">
+                    <div class="ui-block-b" style="width:85%;">
                         <input type="number" name="price" placeholder="请标价">
                     </div>
+                </div>
 
-
-                    <div class="ui-block-a" style="width:25%;">
-                        <label class="form-label">新旧程度</label>
+                <div class="ui-grid-solo ui-corner-all" style="background-color: 66d3b4">
+                    <div style="position: relative; margin: 5px 30px 30px 10px">
+                        <div class="form-label scale-a">全新</div>
+                        <div class="form-label scale-b">九成新</div>
+                        <div class="form-label scale-c">七成新</div>
+                        <div class="form-label scale-d">五成新</div>
+                        <div class="form-label scale-e">旧</div>
                     </div>
-                    <div class="ui-block-b" style="width:75%;">
-                        <div style="padding-top:10px">
-                            <img class="condition" id="condition1" onclick="selectCondition(1)" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/condition1.png">
-                            <img class="condition" id="condition2" onclick="selectCondition(2)" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/condition2.png">
-                            <img class="condition" id="condition3" onclick="selectCondition(3)" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/condition3.png">
-                            <img class="condition" id="condition4" onclick="selectCondition(4)" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/condition4.png">
-                            <img class="condition" id="condition5" onclick="selectCondition(5)" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/condition5.png">
-                        </div>
-                    </div>
+                    <input data-highlight="true" type="range" name="condition-slider" id="condition-slider" value="5" min="0" max="4" step="1" />
                     <input type="hidden" id="my_condition" name="my_condition" value=1>
+                </div>
 
 
-                    <div class="ui-block-a" style="width:25%;">
-                        <label id="prefer-contact" class="form-label">如何联系</label>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:15%;">
+                        <label id="prefer-contact" class="form-label">联系方式</label>
                     </div>
-                    <div class="ui-block-b" style="width:75%;">
+                    <div class="ui-block-b" style="width:85%;">
                         <div data-role="fieldcontain">
                             <fieldset data-role="controlgroup" data-type="horizontal">
                                 <input type="checkbox" name="phone-contact" id="phone-contact" class="custom" />
-                                <label for="phone-contact">电话</label>
+                                <label for="phone-contact">
+                                    <img src="/static/images/general/mobile.png" />
+                                </label>
                                 <input type="checkbox" name="email-contact" id="email-contact" class="custom" />
-                                <label for="email-contact">Email</label>
+                                <label for="email-contact">
+                                    <img src="/static/images/general/email.png" />
+                                </label>
                             </fieldset>
                         </div>
                     </div>
-
-                    <div class="ui-block-a" style="width:25%">
-                        <label for="content" class="form-label">其他描述</label>
-                    </div>
-                    <div class="ui-block-b" style="width:75%">
-                        <textarea cols="40" rows="8" name="content" placeholder="其他描述"></textarea>
-                    </div>
-
-                    <div class="ui-block-a" style="width:25%">
-                        <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png">
-                        <p id="validate_msg"></p>
-                    </div>
-                    <div class="ui-block-a" style="width:75%">
-                    </div>
                 </div>
+
+                <div class="ui-grid-solo">
+                    <label for="content" class="form-label">其他描述</label>
+                    <textarea cols="30" rows="20" name="content"></textarea>
+                </div>
+
+                <div class="ui-grid-solo" style="width:25%">
+                    <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png">
+                    <p id="validate_msg"></p>
+                </div>
+
             </form>
         </div>
 
-        <div data-role="footer" data-position="fixed">
-          <div style="background-image: url(/static/images/navigation/footer-background.png);">
-            <div style="display: inline-block; padding: 20px 0px 0px 20px"> <img height="30" width="30" src='/static/images/navigation/homepage.png'/> </div>
-            <div style="display: inline-block; padding: 20px 0px 0px 40px"> <img height="40" width="40" src='/static/images/navigation/buy_form.png'/> </div>
-            <div style="display: inline-block;"> <img height="40" width="40" src='/static/images/navigation/sell_form.png'/> </div>
-            <div style="display: inline-block;"> <img height="40" width="40" src='/static/images/navigation/buy_posts.png'/> </div>
-            <div style="display: inline-block;"> <img height="40" width="40" src='/static/images/navigation/sell_posts.png'/> </div>
-          </div>
-        </div>
-        <script type="text/javascript">
-            // var conditions = {
-            //     0: "全新",
-            //     1: "九成新",
-            //     2: "还可以",
-            //     3: "比较旧",
-            //     4: "很旧啦"
-            // };
-            // $('#main-page').bind('pageinit', function() {
-            //     $("#condition-slider").bind("change", function() {
-            //         index = $("#condition-slider").val();
 
-            //         $("#condition-value").text(conditions[index]);
-            //         console.log($("#condition-value").text());
-            //     });
-            //     $("#condition-value").text(conditions[$("#condition-slider").val()]);
-            // });
+        <div data-role="footer" data-position="fixed">
+            <div style="background-image: url(/static/images/navigation/footer-background.png);
+              background-repeat:no-repeat;  background-size: 100% 100%  ;">
+                <div style="display: inline-block; padding: 20px 0px 0px 20px">
+                    <img height="30" width="30" src='/static/images/navigation/homepage.png' />
+                </div>
+                <div style="display: inline-block; padding: 20px 0px 0px 40px">
+                    <img height="40" width="40" src='/static/images/navigation/buy_form.png' />
+                </div>
+                <div style="display: inline-block;">
+                    <img height="40" width="40" src='/static/images/navigation/sell_form.png' />
+                </div>
+                <div style="display: inline-block;">
+                    <img height="40" width="40" src='/static/images/navigation/buy_posts.png' />
+                </div>
+                <div style="display: inline-block;">
+                    <img height="40" width="40" src='/static/images/navigation/sell_posts.png' />
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+        // var conditions = {
+         //     0: "全新",
+         //     1: "九成新",
+         //     2: "还可以",
+         //     3: "比较旧",
+         //     4: "很旧啦"
+         // };
+         // $('#main-page').bind('pageinit', function() {
+         //     $("#condition-slider").bind("change", function() {
+         //         index = $("#condition-slider").val();
+
+         //         $("#condition-value").text(conditions[index]);
+         //         console.log($("#condition-value").text());
+         //     });
+         //     $("#condition-value").text(conditions[$("#condition-slider").val()]);
+         // });
+         //
         </script>
     </div>
-
 </body>
 
 </html>
