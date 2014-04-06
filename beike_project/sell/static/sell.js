@@ -1,6 +1,9 @@
+// total number of images, max 3
 var imageNum = 0;
+//whether it is in the process of uploading
 var isUploading = false;
-var currentIndex = 0;
+//position of the current image 
+var currentPosition = 0;
 var currentCondition = 1;
 var currentImageOrientation = 1;
 
@@ -58,40 +61,47 @@ function image_s3_upload(file_dom_id,user_id){
 
 function selectImage(i){
 	if(i<=imageNum){
-		currentIndex = i;
-		var url = $('#image_name'+currentIndex).val();
-		$('#preview'+currentIndex).attr('src',url);
+		currentPosition = i;
 		//cleaer all border
 		for(var j=1;j<=3;j++){
-			$('#preview'+j).css("border","none");
-		}
-		$('#preview'+currentIndex).css("border","1px solid black");
-		$('#current_image').attr('src',url);
-		if(currentImageOrientation >= 1){
-			$('#current_image').removeClass('landscape_image');
-			$('#current_image').removeClass('potrait_image');
-			$('#current_image').addClass('potrait_image');
-		} else{
-			$('#current_image').removeClass('landscape_image');
-			$('#current_image').removeClass('potrait_image');
-			$('#current_image').addClass('landscape_image');
+				$('#preview'+j).css("border","none");
+			}
+		if(i==0){
+				$('#current_image').attr('src','');
+				$('#current_image').removeClass('landscape_image');
+				$('#current_image').removeClass('potrait_image');
+		}else{
+			var url = $('#image_name'+currentPosition).val();
+			$('#preview'+currentPosition).attr('src',url);
+			$('#preview'+currentPosition).css("border","1px solid black");
+			$('#current_image').attr('src',url);
+			if(currentImageOrientation >= 1){
+				$('#current_image').removeClass('landscape_image');
+				$('#current_image').removeClass('potrait_image');
+				$('#current_image').addClass('potrait_image');
+			} else{
+				$('#current_image').removeClass('landscape_image');
+				$('#current_image').removeClass('potrait_image');
+				$('#current_image').addClass('landscape_image');
+			}
 		}
 	}
 }
 
 function deleteImage(){
-	for(var j=currentIndex;j<imageNum;j++){
+	for(var j=currentPosition;j<imageNum;j++){
 		var nextIndex = j+1;
 		var url = $('#image_name'+nextIndex).val();
 		$('#image_name'+j).val(url);
 		$('#preview'+j).attr('src',url);
+
 	}
 	$('#image_name'+imageNum).val('');
 	$('#preview'+imageNum).attr('src','');
-	if(currentIndex==imageNum){
+	if(currentPosition==imageNum){
 		selectImage(imageNum-1);
 	}else{
-		selectImage(currentIndex);
+		selectImage(currentPosition);
 	}	
 	imageNum--;
 }
@@ -127,9 +137,6 @@ function initiatePage(){
 		e.preventDefault();
 		$("input[type=file]").trigger("click");
 	});
-	// $("input[type=file]").change(function(){
-	// 	var file = $("input[type=file]")[0].files[0];  
-	// });
 }
 
 function validateForm(){

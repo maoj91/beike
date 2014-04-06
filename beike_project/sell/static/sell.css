@@ -53,19 +53,16 @@
     height:100%;
 }
 #preview1 {
-    width:33%;
+    width:5em;
     height:100%;
-    float:left;
 }
 #preview2 {
-    width:34%;
+    width:5em;
     height:100%;
-    float:left;
 }
 #preview3 {
-    width:33%;
+    width:5em;
     height:100%;
-    float:left;
 }
 .condition {
     float:left;
