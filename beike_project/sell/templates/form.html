@@ -4,9 +4,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <!-- jquery library -->
-    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
     <script src="/static/jquery/jquery-1.8.3.js "></script>
     <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+     <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
+    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
+    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
 
     <!--js library for s3 upload-->
     <script src="/static/lodash.js"></script>
@@ -24,7 +26,7 @@
 </head>
 
 <body onload="initiatePage()">
-    <div data-role="page" id="main-page">
+    <div data-role="page" id="main-page" data-theme="a">
         <div data-role="header" data-position="fixed">
             <img id='header' src='/static/images/navigation/sell_post_header.png'>
         </div>
@@ -64,11 +66,13 @@
                 <input type="hidden" id="image_orientation2" name="image_orientation2" value="">
                 <input type="hidden" id="image_orientation3" name="image_orientation3" value="">
 
-                <div id="ui-grid-a">
-                    <div class="ui-block-a" style="width:25%;">
-                        <label for="category" class="form-label">类 别</label>
+
+
+                <div class="ui-grid-a ui-corner-all">
+                    <div class="ui-block-a" style="width:20%;">
+                        <label for="category" class="form-label">物品类别</label>
                     </div>
-                    <div class="ui-block-b" style="width:75%;">
+                    <div class="ui-block-b" style="width:80%;">
                         <select name='category' id="category">
                             {% for category in categories %}
                             <option value={{ category.id }}>{{category.name}}</option>
@@ -76,46 +80,53 @@
                         </select>
                     </div>
 
-                    <div class="ui-block-a" style="width:25%;">
-                        <label for="title" class="form-label">标 题</label>
+                    <div class="ui-block-a" style="width:20%;">
+                        <label for="title" class="form-label">物品名称</label>
                     </div>
-                    <div class="ui-block-b" style="width:75%; margin-bottom: 0px;">
+                    <div class="ui-block-b" style="width:80%">
                         <input type="text" name="title" id="title" placeholder="请输入标题" />
                     </div>
 
-                    <div class="ui-block-a" style="width:25%;">
-                        <label class="form-label">价 格</label>
+
+                    <div class="ui-block-a" style="width:20%;">
+                        <label class="form-label">出售价格</label>
                     </div>
-                    <div class="ui-block-b" style="width:75%">
+                    <div class="ui-block-b" style="width:80%;">
                         <input type="number" name="price" placeholder="请标价">
                     </div>
 
 
-                    <div class="ui-block-a" style="width:25%;">
-                        <label class="form-label">新旧程度</label>
-                    </div>
-                    <div class="ui-block-b" style="width:75%;">
-                        <div style="padding-top:10px">
-                            <img class="condition" id="condition1" onclick="selectCondition(1)" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/condition1.png">
-                            <img class="condition" id="condition2" onclick="selectCondition(2)" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/condition2.png">
-                            <img class="condition" id="condition3" onclick="selectCondition(3)" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/condition3.png">
-                            <img class="condition" id="condition4" onclick="selectCondition(4)" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/condition4.png">
-                            <img class="condition" id="condition5" onclick="selectCondition(5)" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/condition5.png">
-                        </div>
+                <div class="ui-grid-solo ui-corner-all" style="background-color: 66d3b4">
+                    <div style="position: relative; margin: 5px 30px 30px 10px">
+                        <div class="slider-scale-common slider-scale-div1">全新</div>
+                        <div class="slider-scale-common slider-scale-div2">九成新</div>
+                        <div class="slider-scale-common slider-scale-div3">七成新</div>
+                        <div class="slider-scale-common slider-scale-div4">五成新</div>
+                        <div class="slider-scale-common slider-scale-div5">旧</div>
                     </div>
                     <input type="hidden" id="my_condition" name="my_condition" value=1>
 
 
-                    <div class="ui-block-a" style="width:25%;">
-                        <label id="prefer-contact" class="form-label">如何联系</label>
+
+                <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:20%;">
+                        <label id="prefer-contact" class="form-label">联系方式</label>
                     </div>
-                    <div class="ui-block-b" style="width:75%;">
+                    <div class="ui-block-b" style="width:80%;">
                         <div data-role="fieldcontain">
                             <fieldset data-role="controlgroup" data-type="horizontal">
-                                <input type="checkbox" name="phone-contact" id="phone-contact" class="custom" />
-                                <label for="phone-contact">电话</label>
-                                <input type="checkbox" name="email-contact" id="email-contact" class="custom" />
-                                <label for="email-contact">Email</label>
+                                <input type="checkbox" name="phone-contact" id="phone-contact"/>
+                                <label for="phone-contact">
+                                    <img src="/static/images/general/mobile.png" style="width: 30px; height: 30px"/>
+                                </label>
+                                <input type="checkbox" name="email-contact" id="email-contact"/>
+                                <label for="email-contact">
+                                    <img src="/static/images/general/email.png" style="width: 30px; height: 30px"/>
+                                </label>
+                                <input type="checkbox" name="weixin-contact" id="weixin-contact"/>
+                                <label for="weixin-contact">
+                                    <img src="/static/images/general/weixin.jpg" style="width: 30px; height: 30px"/>
+                                </label>
                             </fieldset>
                         </div>
                     </div>
@@ -127,12 +138,10 @@
                         <textarea cols="40" rows="8" name="content" placeholder="其他描述"></textarea>
                     </div>
 
-                    <div class="ui-block-a" style="width:25%">
-                        <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png">
-                        <p id="validate_msg"></p>
-                    </div>
-                    <div class="ui-block-a" style="width:75%">
-                    </div>
+
+                <div class="ui-grid-solo">
+                    <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png">
+                    <p id="validate_msg"></p>
                 </div>
             </form>
         </div>
