@@ -71,10 +71,10 @@
 
 
                 <div class="ui-grid-a ui-corner-all">
-                    <div class="ui-block-a" style="width:15%;">
+                    <div class="ui-block-a" style="width:20%;">
                         <label for="category" class="form-label">物品类别</label>
                     </div>
-                    <div class="ui-block-b" style="width:85%;">
+                    <div class="ui-block-b" style="width:80%;">
                         <select name='category' id="category">
                             {% for category in categories %}
                             <option value={{ category.id }}>{{category.name}}</option>
@@ -82,18 +82,18 @@
                         </select>
                     </div>
 
-                    <div class="ui-block-a" style="width:15%;">
+                    <div class="ui-block-a" style="width:20%;">
                         <label for="title" class="form-label">物品名称</label>
                     </div>
-                    <div class="ui-block-b" style="width:85%">
+                    <div class="ui-block-b" style="width:80%">
                         <input type="text" name="title" id="title" placeholder="请输入标题" />
                     </div>
 
 
-                    <div class="ui-block-a" style="width:15%;">
+                    <div class="ui-block-a" style="width:20%;">
                         <label class="form-label">出售价格</label>
                     </div>
-                    <div class="ui-block-b" style="width:85%;">
+                    <div class="ui-block-b" style="width:80%;">
                         <input type="number" name="price" placeholder="请标价">
                     </div>
                 </div>
@@ -112,23 +112,23 @@
 
 
                 <div class="ui-grid-a">
-                    <div class="ui-block-a" style="width:15%;">
+                    <div class="ui-block-a" style="width:20%;">
                         <label id="prefer-contact" class="form-label">联系方式</label>
                     </div>
-                    <div class="ui-block-b" style="width:85%;">
+                    <div class="ui-block-b" style="width:80%;">
                         <div data-role="fieldcontain">
                             <fieldset data-role="controlgroup" data-type="horizontal">
                                 <input type="checkbox" name="phone-contact" id="phone-contact"/>
                                 <label for="phone-contact">
-                                    <img src="/static/images/general/mobile.png" />
+                                    <img src="/static/images/general/mobile.png" style="width: 30px; height: 30px"/>
                                 </label>
                                 <input type="checkbox" name="email-contact" id="email-contact"/>
                                 <label for="email-contact">
-                                    <img src="/static/images/general/email.png" />
+                                    <img src="/static/images/general/email.png" style="width: 30px; height: 30px"/>
                                 </label>
                                 <input type="checkbox" name="weixin-contact" id="weixin-contact"/>
                                 <label for="weixin-contact">
-                                    <img src="/static/images/general/weixin.jpg" />
+                                    <img src="/static/images/general/weixin.jpg" style="width: 30px; height: 30px"/>
                                 </label>
                             </fieldset>
                         </div>
