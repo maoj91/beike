@@ -38,7 +38,7 @@ function image_s3_upload(file_dom_id,user_id){
 			onProgress: function(percent, message) {
 				$('#upload_status').html('Uploaded ' + percent + '%');
 				$('#upload_status').show();
-				isUploading = false;
+				isUploading = true;
 			},
 			onFinishS3Put: function(url) {
 				imageNum = imageNum + 1;
