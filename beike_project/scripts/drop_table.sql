@@ -12,4 +12,3 @@ DROP TABLE data_privacy CASCADE;
 DROP TABLE data_notification CASCADE;
 DROP TABLE data_condition CASCADE;
 DROP TABLE data_followedreason CASCADE;
-DROP TABLE data_aws CASCADE;
