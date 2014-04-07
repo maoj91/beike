@@ -6,7 +6,7 @@ from data.models import User,Country,State,City,District,Address,Notification,Pr
 from django.views.decorators.csrf import csrf_exempt
 from data.views import create_user,is_email_valid
 from beike_project.views import check_wx_id
-from geolocation import get_location_by_latlong, get_location_by_zipcode
+from geolocation import get_location_by_latlong, get_location_by_zipcode    
 import json, logging
 from django.core.serializers.json import DjangoJSONEncoder
 
@@ -39,6 +39,16 @@ def get_city_by_latlong(request):
         geolocation = get_location_by_latlong(latitude, longitude)
         city_district = get_city_district(geolocation)
         return HttpResponse(json.dumps(city_district, cls=DjangoJSONEncoder))
+    else:
+        raise Http404
+
+def get_zipcode_by_latlong(request):
+    if request.is_ajax():
+        latitude = float(request.GET.get('latitude'))
+        longitude = float(request.GET.get('longitude'))
+        print("latitude: " + request.GET.get('latitude') + ", longitude: " + request.GET.get('longitude'))
+        geolocation = get_location_by_latlong(latitude, longitude)
+        return HttpResponse(json.dumps({'zipcode': geolocation.zipcode}, cls=DjangoJSONEncoder))
     else:
         raise Http404
 

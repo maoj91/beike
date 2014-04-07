@@ -30,6 +30,16 @@ def get_location_by_latlong(latitude, longitude):
     else:
         return None
 
+def get_zipcode_by_latlong(latitude, longitude):
+    results = Geocoder.reverse_geocode(latitude, longitude)
+    if results is not None and len(results) > 0:
+        google_location = results.raw[0]
+        address_components = google_location['address_components']
+        for component in address_components:
+            if 'postal_code' in component['types']:
+                return component['long_name']
+    return None
+
 def get_location_by_zipcode(zipcode):
     results = Geocoder.geocode(zipcode)
     if results is not None and len(results) > 0:
