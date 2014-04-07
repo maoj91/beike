@@ -26,7 +26,7 @@
 
 <body onload="initiatePage()">
     <img id='header' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/04/header.png'>
-    <form action="/buy/form_submit/" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
+    <form action="/buy/form_submit/" method="post" enctype="multipart/form-data" onsubmit="return validateBuyForm();">
         {% csrf_token %}
         <div id="category_div">
             <span class="text">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别</span>

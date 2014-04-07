@@ -17,14 +17,13 @@ function setOpenUntil(){
 	$('#open_until_date').attr("min",currentDate);
 }
 
-function validateForm(){
+function validateBuyForm(){
 	var msg = '';
 	var isValid = false;
 	var title = $('[name="title"]').val();
 	var min_price = $('[name="min_price"]').val();
 	var max_price = $('[name="max_price"]').val();
 	var phone = $('[name="phone"]').val();
-	var open_until_date = $('[name="open_until_date"]').val();
 	var content = $('[name="content"]').val();
 	if(!title){
 		msg = '输入项不能为空';
