@@ -71,18 +71,21 @@ def form_submit(request):
         title = request.POST.get('title','')
         content = request.POST.get('content','')
         category_id = int(request.POST.get('category'))
-        district_id = int(request.POST.get('district'))
-        min_price = request.POST.get('min_price','')
-        max_price = request.POST.get('max_price','')
-        phone = request.POST.get('phone','')
+        min_price = request.POST.get('min_price')
+        max_price = request.POST.get('max_price')
+        latitude = request.POST.get('latitude')
+        longitude = request.POST.get('longitude')
         new_post = BuyPost()
         new_post.id = None
+        new_post.is_open = True
+        new_post.preferred_contacts = 'TO-DO'
         new_post.date_published = datetime.now()
+        new_post.title = title
         new_post.min_price = min_price
         new_post.max_price = max_price
+        new_post.latitude = latitude
+        new_post.longitude = longitude
         new_post.user = get_user(wx_id)
-        new_post.district = get_district(district_id)
-        new_post.title = title
         new_post.category = get_category(category_id)
         new_post.content = content
         new_post.save()

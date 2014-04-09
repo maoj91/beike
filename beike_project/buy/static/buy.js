@@ -17,35 +17,34 @@ function setOpenUntil(){
 	$('#open_until_date').attr("min",currentDate);
 }
 
-function validateForm(){
-	var msg = '';
-	var isValid = false;
+function validateBuyForm(){
+
+	var titleExist = false;
+	var priceValid = false;
+
 	var title = $('[name="title"]').val();
 	var min_price = $('[name="min_price"]').val();
 	var max_price = $('[name="max_price"]').val();
 	var phone = $('[name="phone"]').val();
-	var open_until_date = $('[name="open_until_date"]').val();
 	var content = $('[name="content"]').val();
 	if(!title){
-		msg = '输入项不能为空';
-	} else if(!min_price){
-		msg = '输入项不能为空';
-	} else if(!max_price){
-		msg = '输入项不能为空';
-	} else if(!phone){
-		msg = '输入项不能为空';
-	} else if(!content){
-		msg = '输入项不能为空';
-	} else if(!isValidInteger(min_price) || !isValidInteger(max_price)){
-		msg = '请检查您输入的价格';
-	} else if(parseInt(min_price) >= parseInt(max_price)){
-		msg = '最低价应小于最高价';
+		$('#title_required').html('输入项不能为空');
 	} else {
-		isValid = true;
+		titleExist = true;
 	}
-	//TODO:need to validate phone number, price
-	$('#validate_msg').html(msg);	
-	return isValid;
+	if(!min_price){
+		$('#price_required').html('输入项不能为空');
+	} else if(!max_price){
+		$('#price_required').html('输入项不能为空');
+	} else if(!isValidInteger(min_price) || !isValidInteger(max_price)){
+		$('#price_required').html('请检查您输入的价格');
+	} else if(parseInt(min_price) >= parseInt(max_price)){
+		$('#price_required').html('最低价应小于最高价');
+	} else {
+		priceValid = true;
+	}
+	
+	return titleExist && priceValid;
 }
 
 function isValidInteger(str){
