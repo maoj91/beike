@@ -37,7 +37,7 @@
             <ul data-role="listview" data-inset="false">
                 {% for post in sell_posts %}
                 <li>
-                    <a href="/{{user_id}}/detail/sell/{{post.id}}">
+                    <a href="/detail/sell/{{post.id}}">
                         <h3>{{post.title}} [${{post.price}}]</h3>
                         <div class="post_meta">
                             on {{post.date_published}} by {{post.user.name}}</br>
@@ -58,7 +58,7 @@
             <ul data-role="listview" data-inset="false">
                 {% for post in buy_posts %}
                 <li>
-                    <a href="/{{user_id}}/detail/buy/{{post.id}}">
+                    <a href="/detail/buy/{{post.id}}">
                         <h2>{{post.title}} [${{post.min_price}} - ${{post.max_price}}]</h2>
                         <p class="post_meta">
                             on {{post.date_published}} by {{post.user.name}} {{post.content}}
