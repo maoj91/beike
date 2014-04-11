@@ -9,6 +9,7 @@ from beike_project.views import check_wx_id
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 from django.core.serializers.json import DjangoJSONEncoder
+from django.contrib.gis.geos import Point
 
 def all_list(request):
     check_wx_id(request)
@@ -72,6 +73,7 @@ def form_submit(request):
         max_price = request.POST.get('max_price')
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
+        latlon = Point(float(longitude), float(latitude))
 
         phone_checked = request.POST.get('phone-checked', 'off')
         email_checked = request.POST.get('email-checked', 'off')
@@ -89,8 +91,7 @@ def form_submit(request):
         new_post.title = title
         new_post.min_price = min_price
         new_post.max_price = max_price
-        new_post.latitude = latitude
-        new_post.longitude = longitude
+        new_post.latlon = latlon
         new_post.user = get_user(wx_id)
         new_post.category = get_category(category_id)
         new_post.content = content
