@@ -67,25 +67,27 @@
                     <div class="ui-block-b" style="width:80%;">
                         <div data-role="fieldcontain">
                             <fieldset data-role="controlgroup" data-type="horizontal">
-                                <input type="checkbox" name="phone-contact" id="phone-contact" onchange="phoneContactChange()"/>
-                                <label for="phone-contact">
+                                <input type="checkbox" name="phone-checked" id="phone-checked" onchange="phoneContactChange()"/>
+                                <label for="phone-checked">
                                     <img src="/static/images/general/mobile.png" style="width: 30px; height: 30px"/>
                                 </label>
                                 <input type="checkbox" name="email-contact" id="email-contact"/>
                                 <label for="email-contact">
                                     <img src="/static/images/general/email.png" style="width: 30px; height: 30px"/>
                                 </label>
-                                <input type="checkbox" name="qq-contact" id="qq-contact" onchange="qqContactChange()"/>
-                                <label for="qq-contact">
+                                <input type="checkbox" name="qq-checked" id="qq-checked" onchange="qqContactChange()"/>
+                                <label for="qq-checked">
                                     <img src="/static/images/general/weixin.jpg" style="width: 30px; height: 30px"/>
                                 </label>
                             </fieldset>
                         </div>
-                        <div id="mobile_number_div">
-                            <input type="text" name="mobile_number" placeholder="手机号码">
+                        <div id="phone_number_div">
+                            <input type="text" name="phone_number" placeholder="手机号码">
+                            <p id="phone_required" style="color: red;"></p>
                         </div>
                         <div id="qq_number_div">
                             <input type="text" name="qq_number" placeholder="QQ号码">
+                            <p id="qq_required" style="color: red;"></p>
                         </div>
                     </div>
                 </div>

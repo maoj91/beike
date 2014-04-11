@@ -63,6 +63,7 @@ def form(request):
 def form_submit(request):
     check_wx_id(request)
     wx_id = request.session['wx_id']
+    user = User.objects.get(wx_id=wx_id)
     if request.method == 'POST':
         title = request.POST.get('title','')
         content = request.POST.get('content','')
@@ -72,19 +73,18 @@ def form_submit(request):
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
 
-        phone_checked = request.POST.get('phone-contact', False)
-        email_checked = request.POST.get('email-contact', False)
-        qq_checked = request.POST.get('qq-contact', False)
-
-        print phone_checked
-
-        mobile_number = request.POST.get('mobile_number')
-        qq_number = request.POST.get('qq_number')
+        phone_checked = request.POST.get('phone-checked', 'off')
+        email_checked = request.POST.get('email-checked', 'off')
+        qq_checked = request.POST.get('qq-checked', 'off')
+        phone_number = request.POST.get('phone_number','')
+        email = user.email
+        qq_number = request.POST.get('qq_number','')
+        contact = get_contact(phone_checked,email_checked,qq_checked,phone_number,email,qq_number)
 
         new_post = BuyPost()
         new_post.id = None
         new_post.is_open = True
-        new_post.preferred_contacts = 'TO-DO'
+        new_post.preferred_contacts = json.loads(contact)
         new_post.date_published = datetime.now()
         new_post.title = title
         new_post.min_price = min_price
@@ -98,4 +98,17 @@ def form_submit(request):
         return HttpResponseRedirect('/history/')
     else: 
         raise Http404
+
+# this could be shared by sell post
+def get_contact(phone_checked,email_checked,qq_checked,phone_number,email,qq_number):
+        contact = {
+            'phone_checked': phone_checked,
+            'email_checked': email_checked,
+            'qq_checked': qq_checked,
+            'phone_number': phone_number,
+            'email': email,
+            'qq_number': qq_number,
+        }
+        return json.dumps(contact, cls=DjangoJSONEncoder)
+
 
