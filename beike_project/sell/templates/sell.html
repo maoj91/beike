@@ -4,6 +4,7 @@
 <head>
     <meta name="viewport" content="width=device-width ,  user-scalable=no">
     <meta charset="UTF-8">
+
     <!-- jquery library -->
     <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
     <script src="/static/jquery/jquery-1.8.3.js "></script>
@@ -22,52 +23,96 @@
     <link rel="stylesheet" type="text/css" href="/static/sell.css">
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
+
 </head>
-
 <body>
-    <img id="header" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/11/nearby_items.png">
+    <div data-role="page">
+    <div data-role="header" data-position="fixed">
+        <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_sell_posts/header.png" />
+    </div>
+    <div id="sell-list" data-role="main">
+        <div>
+            <ul id="postList" data-role="listview">
+            </ul>
+        </div>
+    <script type="text/javascript">
+    var pageNum = 1;
+    var hasMore = true;
+    var postLoader = (function($, undefined) {
+        var pub = {};
+        pub.init = function() {
+            //Refresh the posts when scrolling to the bottom
+            $(window).live("hitBottom",
+                function() {pub.getAndDisplayPosts();});
+        };
 
-    <table>
-        <tr>
-            <td width="20%">
-                {% if sell_posts.has_previous %}
-                <a href="?page={{ sell_posts.previous_page_number }}">
-                    <img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/11/previous_page.png" />
-                </a>
-                {% else %}
-                <img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/11/previous_page.png" />{% endif %}
-            </td>
-            <td width="60%" />
-            <td width="20%">
-                {% if sell_posts.has_next %}
-                <a href="?page={{ sell_posts.next_page_number }}">
-                    <img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/11/next_page.png" />
-                </a>
-                {% else %}
-                <img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/11/next_page.png" />{% endif %}
-            </td>
-        </tr>
-    </table>
+        pub.getAndDisplayPosts = function() {
+            //Starting loading animation
+            $('#load-more').show();
+            //Get posts and add success callback using then
+            getPosts().then(function() {
+                //Stop loading animation on success
+                 $('#load-more').hide();
+            });
+        };
 
-    <table>
-        {% for post in sell_posts %}
-        <tr>
-            <td width="40%">
-                <img width="80" height="80" src="{{post.image_urls}}" />
-            </td>
-            <td width="60%">
-                <div>
-                    <a href="/{{user_id}}/detail/{{post.id}}">{{post.title}}</a>
-                    {{ post.date_published|date:"Y-m-d" }} {{ post.date_published|time:"H:i" }}
-                </div>
-                <div>
-                    $ {{post.quote_price}} {{post.user.name}}, {{post.user.address}}
-                </div>
-            </td>
-            <tr>
-                {% endfor %}
-    </table>
+        function getPosts() {
+            //Get posts via ajax
+            return $.ajax({
+                type: "get",
+                url: "/sell/get_posts_by_page",
+                dataType: "json",
+                data: {
+                    pageNum: pageNum
+                }
+            }).then(function(data) {
+                displayPosts(data);
+            });
+        }
 
+        function displayPosts(posts) {
+            var postList = $("#postList");
+            var i = 0, len = posts.length;
+            if (len == 0) {
+                hasMore = false;
+                $('#load-more').hide();
+            }
+            //process posts data
+            for (; i < len; i++) {
+              var d = new Date(posts[i]["date_published"]);
+              var template = '<li><a href="/detail/sell/' + posts[i]['post_id'] + '"><span><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" /> ' +
+                posts[i]["title"] + '<br/>$' + posts[i]["price"] + '</span>    <span>' +
+                '</span><span style="float: right; ">' +
+               + d.getMonth() + '-' + d.getDate() + '</span></a></li>' 
+            postList.append(template);
+            }
+            postList.listview("refresh");
+        }
+        return pub;
+    }(jQuery));
+
+    $(document).live('pageshow', function() {
+        postLoader.init();
+        postLoader.getAndDisplayPosts();
+    });
+
+
+    $(document).scroll(function() {
+        if ($(document).height() > $(window).height() && hasMore) {
+            if ($(window).scrollTop() >= $(document).height() - $(window).height() - 100) {
+                pageNum++;
+                postLoader.getAndDisplayPosts();
+            }
+        }
+    });
+    </script>
+    </div>
+    <div id="load-more" style="vertical-align:middle; text-align:center; display:none"><img width="50px" height="50px" src="/static/images/general/loading_green.gif"/>
+    </div>
+    <div data-role="footer" data-position="fixed">
+        <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_sell_posts/footer.png" />
+    </div>
+    </div>
 
 </body>
 

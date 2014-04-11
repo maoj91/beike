@@ -17,6 +17,10 @@ body{
     margin-left: 20%;
 }
 
+.post_image{
+    margin-bottom: 5%;
+}
+
 .price_wrapper{
     background: rgb(175,238,238);
     width: 100%;

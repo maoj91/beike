@@ -12,60 +12,82 @@
 		<script type="text/javascript" src="/static/s3upload.js"></script>
 	</head>
 	<body>
-		<h3>{{post.title}} [${{post.price}}] </h3>
-		<div class="post_meta">
-			on {{post.date_published}}  by {{post.user.name}}</br>
-			in {{post.user.address.city}}
-		</div>
-		{% if post.image_urls %}
-			{% load string_utils %}
-			{% for url in post.image_urls|split:";" %}
-				<div class="post_image">
-					<img src= {{url}}  height="200" width="200">
+	    <div data-role="page" id="main-page">
+	    	<div>
+           		<img id='header' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/header.png'>
+        	</div>
+        	<div>
+				<div class='title'>
+					<h3 id='title_content'>{{post.title}}</h3>
 				</div>
-			{% endfor%}
-		{% endif%}
-		<div class="post_body">
-			{{post.content|safe|linebreaks}}
-		</div>
-		{% if comments %}
-		    <p>{{comments|length}} Comments:</p>
-			{% if wx_id == post.user.wx_id %}
-				{% for comment in comments %}
-				    <div class="comment">
-					<div class="body">{{ comment.content|linebreaks }}</div>
-					{% if comment.image_urls %}
-						{% load string_utils %}
-						{% for url in comment.image_urls|split:";" %}
-						<div class="comment_image">
-							<img src= {{url}}  height="150" width="150">
+				{% if post.image_urls %}
+					{% load string_utils %}
+					{% for url in post.image_urls|split:";" %}
+						<div class="post_image">
+							<img src= {{url}}  height="100" width="100">
 						</div>
-						{% endfor%}
-					{% endif%}
-				    </div>
-				{% endfor %}
-			{% else %}
-				<p>Sorry. Only post publisher can see the content</p>
-			{% endif %}
-		{% endif %}
-	
-		<div id="addc">Add a comment</div>
-		<form action="add_comment/" method="POST">{% csrf_token %}
-		    <div id="comment_form">
-			<p>{{ comment_form.content|linebreaks }}</p>
-		    </div>
-		{% if post.is_buy %}
-			<div id="div_image1">
-				<input type="file" id="image1" onchange="image_s3_upload(this.id,'{{user_id}}');">
-				<input type="hidden" id="image_name1"  value="">
-				<p id="progress1">
-				<p id="status1">
-				<div id="preview1"></div>
+					{% endfor%}
+				{% endif%}
+				<div class='price_wrapper'>
+					<img id='dollar_img' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/dollar.png'>
+					<div class='price'>
+						{{post.price}}
+					</div>
+				</div>
+				<div class='location'>
+					{{post.user.address.city}}
+				</div>	
+
+				<div class='condition'>
+					<img id='condition_img' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/condition.png'>
+				</div>
+				<ul>
+					<li>
+						<div class='description_title'>
+							发布人
+						</div>
+						<div class='description_content'>
+							{{post.user.name}}</br>
+						</div>
+					</li>
+					<li>
+						<div class='description_title'>
+							发布日期
+						</div>
+						<div class='description_content'>
+							{% load string_utils %}
+							{{post.date_published|get_time}}</br>
+						</div>
+					</li>
+		            <li>
+						<div class='description_title'>
+							详细描述
+						</div>
+						<div class='description_content'>
+							{{post.content}}</br>
+						</div>
+					</li>
+
+					<li>
+						<div class='description_title'>
+							卖家电话
+						</div>
+						<div class='description_phone'>
+							{{post.user.home_phone}}
+						</div>
+						<img id='phone' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/phone.png'>
+					</li>
+				</ul>
 			</div>
-			<input type="hidden" id="image_names" name="image_names"  value="">
-		{% endif %}
-		{% csrf_token %}
-		<div id="submit"><input type="submit" value="Submit"></div>
-		</form>
+			<div data-role="footer" data-position="fixed">
+	        	<div style="background-image: url(/static/images/navigation/footer-background.png);">
+	            	<div style="display: inline-block; padding: 20px 0px 0px 20px"> <img height="30" width="30" src='/static/images/navigation/	homepage.png'/> </div>
+	            	<div style="display: inline-block; padding: 20px 0px 0px 40px"> <img height="40" width="40" src='/static/images/navigation/buy_form.png'/> </div>
+	            	<div style="display: inline-block;"> <img height="40" width="40" src='/static/images/navigation/sell_form.png'/> </div>
+	            	<div style="display: inline-block;"> <img height="40" width="40" src='/static/images/navigation/buy_posts.png'/> </div>
+	            	<div style="display: inline-block;"> <img height="40" width="40" src='/static/images/navigation/sell_posts.png'/> </div>
+	            </div>
+	        </div>
+		</div>
 	</body>
 </html>

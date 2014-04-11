@@ -40,16 +40,12 @@ def get_posts_by_page(request):
 
 def get_buy_post_summary(post):
     if isinstance(post, BuyPost):
-        district = post.district
-        city = district.city
         buy_post_summary = {
             'post_id': post.id,
             'title': post.title,
             'min_price': post.min_price,
             'max_price': post.max_price,
             'date_published': post.date_published,
-            'district': district.name,
-            'city': city.name
         }
         return buy_post_summary
     else:
