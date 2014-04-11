@@ -51,14 +51,22 @@ function validateBuyForm(){
 	}
 		
 
-	if(phone_checked && !phone_number){
-		phoneValid = false;
-		$('#phone_required').html('请提供电话号码');
+	if(phone_checked){
+		if(!phone_number){
+			phoneValid = false;
+			$('#phone_required').html('请提供电话号码');
+		} else {
+			$('#phone_required').html('');
+		}
 	}
 
-	if(qq_checked && !qq_number){
-		qqValid = false;
-		$('#qq_required').html('请提供QQ号码，对方可添加您为微信好友');
+	if(qq_checked){
+		if(!qq_number){
+			qqValid = false;
+			$('#qq_required').html('请提供QQ号码，对方可添加您为微信好友');
+		} else {
+			$('#qq_required').html('');
+		}		
 	}
 
 	return titleExist && priceValid && phoneValid && qqValid;
