@@ -75,6 +75,16 @@ def form_submit(request):
         max_price = request.POST.get('max_price')
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
+
+        phone_checked = request.POST.get('phone-contact', False)
+        email_checked = request.POST.get('email-contact', False)
+        qq_checked = request.POST.get('qq-contact', False)
+
+        print phone_checked
+
+        mobile_number = request.POST.get('mobile_number')
+        qq_number = request.POST.get('qq_number')
+
         new_post = BuyPost()
         new_post.id = None
         new_post.is_open = True

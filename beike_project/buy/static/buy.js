@@ -50,3 +50,25 @@ function validateBuyForm(){
 function isValidInteger(str){
 	return (!isNaN(str)) && (str.indexOf(".")==-1); 
 }
+
+
+function phoneContactChange(){
+	var isChecked = $('#phone-contact').prop( "checked" );
+	if(isChecked){
+		$('#mobile_number_div').show();
+	} else {
+		$('#mobile_number_div').hide();
+	}
+}
+
+
+function qqContactChange(){
+	var isChecked = $('#qq-contact').prop( "checked" );
+	if(isChecked){
+		$('#qq_number_div').show();
+	} else {
+		$('#qq_number_div').hide();
+	}
+}
+
+

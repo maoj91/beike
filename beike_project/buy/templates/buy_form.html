@@ -49,7 +49,7 @@
                 <div id="price_div">
                     <label>价 格</label>
                     <input type="text" name="min_price" class="input_box" placeholder="最低价">
-                    <input type="text" name="max_price" class="input_box" placeholder="最高价">$
+                    <input type="text" name="max_price" class="input_box" placeholder="最高价">
                     <p id="price_required" style="color: red;"></p>
                 </div>
                 <div id="content_div">
@@ -60,14 +60,14 @@
                     <input type="hidden" name="latitude" id="latitude"></input>
                     <input type="hidden" name="longitude" id="longitude"></input>
                 </div>
-                                <div class="ui-grid-a">
+                <div class="ui-grid-a">
                     <div class="ui-block-a" style="width:20%;">
                         <label id="prefer-contact" class="form-label">联系方式</label>
                     </div>
                     <div class="ui-block-b" style="width:80%;">
                         <div data-role="fieldcontain">
                             <fieldset data-role="controlgroup" data-type="horizontal">
-                                <input type="checkbox" name="phone-contact" id="phone-contact"/>
+                                <input type="checkbox" name="phone-contact" id="phone-contact" onchange="phoneContactChange()"/>
                                 <label for="phone-contact">
                                     <img src="/static/images/general/mobile.png" style="width: 30px; height: 30px"/>
                                 </label>
@@ -75,11 +75,17 @@
                                 <label for="email-contact">
                                     <img src="/static/images/general/email.png" style="width: 30px; height: 30px"/>
                                 </label>
-                                <input type="checkbox" name="weixin-contact" id="weixin-contact"/>
-                                <label for="weixin-contact">
+                                <input type="checkbox" name="qq-contact" id="qq-contact" onchange="qqContactChange()"/>
+                                <label for="qq-contact">
                                     <img src="/static/images/general/weixin.jpg" style="width: 30px; height: 30px"/>
                                 </label>
                             </fieldset>
+                        </div>
+                        <div id="mobile_number_div">
+                            <input type="text" name="mobile_number" placeholder="手机号码">
+                        </div>
+                        <div id="qq_number_div">
+                            <input type="text" name="qq_number" placeholder="QQ号码">
                         </div>
                     </div>
                 </div>
