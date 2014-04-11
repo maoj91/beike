@@ -9,9 +9,11 @@ def index(request):
 	#TO-DO: 
 	if request.method == "GET":
 		wx_id = request.GET.get('wx_id')
-		if wx_id is None and request.session['wx_id'] is None:
+		if wx_id is None:
+			 wx_id = request.session['wx_id']
+		if wx_id is None:
 			raise Http404
-		elif wx_id is not None:
+		else:
 			request.session['wx_id'] = wx_id
 			if not is_user_exist(wx_id):
 				return HttpResponseRedirect('/me/get_info/')
