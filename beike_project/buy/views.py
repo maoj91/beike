@@ -10,6 +10,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import D
 
 def all_list(request):
     check_wx_id(request)
@@ -19,9 +20,13 @@ def all_list(request):
 def get_posts_by_page(request):
     if request.is_ajax():
         page_num = request.GET.get('pageNum')
-        buy_list = BuyPost.objects.order_by('-date_published')
+        latitude = request.GET.get('latitude')
+        longitude = request.GET.get('longitude')
+        origin = Point(float(longitude), float(latitude))
+        #TO-DO, filter more based on city or distance
+        query_set = BuyPost.objects.distance(origin).order_by('distance')
         #TO-DO: make the record count configurable
-        paginator = Paginator(buy_list, 6)
+        paginator = Paginator(query_set, 6)
         try:
             buy_posts = paginator.page(page_num)
         except PageNotAnInteger:
