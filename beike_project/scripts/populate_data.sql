@@ -49,5 +49,5 @@ select 'Ballard', id, null, '98117' from data_city where name='Seattle';
 insert into data_district (name, city_id, first_level_district_id, zip_code)
 select 'South Lake Union', id, null, '98109' from data_city where name='Seattle';
 
-insert into data_address (street_line_1, street_line_2, city_id, zip_code, latitude, longitude)
-select '535 Terry Ave N', 'Apt 100', id, '98109', null, null from data_city where name='Seattle';
+insert into data_address (street_line_1, street_line_2, city_id, zip_code, latlon)
+select '535 Terry Ave N', 'Apt 100', id, '98109', null from data_city where name='Seattle';

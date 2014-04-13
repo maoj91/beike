@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.contrib.gis.db import models
 
 class Country(models.Model):
 	name = models.CharField(max_length=255)
@@ -50,11 +51,10 @@ def get_default_privacy():
 
 class Address(models.Model):
 	street_line_1 = models.CharField(max_length=255)
-	street_line_2 = models.CharField(max_length=255)
+	street_line_2 = models.CharField(max_length=255, null=True)
 	city = models.ForeignKey(City)
-	zip_code = models.CharField(max_length=255)
-	latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-	longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+	zip_code = models.CharField(max_length=255, null=True)
+	latlon = models.PointField(help_text='Point(longitude, latitude)', null=True)
 	def __unicode__(self):
 		return self.street_line_1 + ',' + self.street_line_2 + ',' + self.zip_code
 
@@ -95,8 +95,8 @@ class BuyPost(models.Model):
 	max_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
 	zipcode = models.CharField(max_length=255, null=True)
 	location_type = models.IntegerField(null=True)
-	latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-	longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+	latlon = models.PointField(help_text='Point(longitude, latitude)', null=True)
+	objects = models.GeoManager()
 	user = models.ForeignKey('User')
 	preferred_contacts = models.CharField(max_length = 255)
 	is_open = models.BooleanField(default=True)
@@ -115,8 +115,8 @@ class SellPost(models.Model):
 	price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
 	zipcode = models.CharField(max_length=255, null=True)
 	location_type = models.IntegerField(null=True)
-	latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-	longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+	latlon = models.PointField(help_text='Point(longitude, latitude)', null=True)
+	objects = models.GeoManager()
 	user = models.ForeignKey('User')
 	preferred_contacts = models.CharField(max_length = 255)
 	is_open = models.BooleanField(default=True)

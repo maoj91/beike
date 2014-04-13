@@ -11,6 +11,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.context_processors import csrf
+from django.contrib.gis.geos import Point
+
 
 def all_list(request):
     check_wx_id(request)
@@ -20,9 +22,13 @@ def all_list(request):
 def get_posts_by_page(request):
     if request.is_ajax():
         page_num = request.GET.get('pageNum')
-        buy_list = BuyPost.objects.order_by('-date_published')
+        latitude = request.GET.get('latitude')
+        longitude = request.GET.get('longitude')
+        origin = Point(float(longitude), float(latitude))
+        #TO-DO, filter more based on city or distance
+        query_set = BuyPost.objects.distance(origin).order_by('distance')
         #TO-DO: make the record count configurable
-        paginator = Paginator(buy_list, 6)
+        paginator = Paginator(query_set, 6)
         try:
             buy_posts = paginator.page(page_num)
         except PageNotAnInteger:
@@ -74,6 +80,7 @@ def form_submit(request):
         max_price = request.POST.get('max_price')
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
+        latlon = Point(float(longitude), float(latitude))
 
         phone_checked = request.POST.get('phone-checked', 'off')
         email_checked = request.POST.get('email-checked', 'off')
@@ -91,8 +98,7 @@ def form_submit(request):
         new_post.title = title
         new_post.min_price = min_price
         new_post.max_price = max_price
-        new_post.latitude = latitude
-        new_post.longitude = longitude
+        new_post.latlon = latlon
         new_post.user = get_user(wx_id)
         new_post.category = get_category(category_id)
         new_post.content = content

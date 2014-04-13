@@ -1,15 +1,11 @@
 from django.test import TestCase
-from geolocation import get_location, get_city, Geolocation
+from geolocation import Geolocation
 import json
 
 class GeolocationTest(TestCase):
     # def test_reverse_geocoding(self):
     # 	result = get_location( 39.9100, 116)
     # 	print result
-
-    def test_get_city_by_zipcode(self):
-        result = get_city('98117')
-        print result
 
     def test_construct_geolocation(self):
     	location = Geolocation(47, -122, 535, 'Terry Ave N', 'South Lake Union', None, 'Seattle', 'Washington', 'United States', '98109')
