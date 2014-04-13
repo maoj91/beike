@@ -10,7 +10,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.gis.geos import Point
-from django.contrib.gis.measure import D
 
 def all_list(request):
     check_wx_id(request)
