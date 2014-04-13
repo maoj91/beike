@@ -1,4 +1,5 @@
 from django.http import Http404,HttpResponse
+from django.template import RequestContext
 from django.shortcuts import render,render_to_response
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
@@ -9,6 +10,7 @@ from beike_project.views import check_wx_id
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 from django.core.serializers.json import DjangoJSONEncoder
+from django.core.context_processors import csrf
 
 def all_list(request):
     check_wx_id(request)
@@ -59,7 +61,7 @@ def form(request):
     districts = District.objects.all()
     return render_to_response('buy_form.html',{'categories':categories, 'districts':districts})
 
-@csrf_exempt
+
 def form_submit(request):
     check_wx_id(request)
     wx_id = request.session['wx_id']
