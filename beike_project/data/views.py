@@ -50,8 +50,8 @@ def get_lastlogin(user_id):
     user = User.objects.get(wx_id=user_id)
     return user.lastlogin
 
-def get_user(user_id):
-    user = User.objects.get(wx_id=user_id)
+def get_user(wx_id):
+    user = User.objects.get(wx_id=wx_id)
     return user
 
 # Category
