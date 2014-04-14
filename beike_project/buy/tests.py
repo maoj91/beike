@@ -82,12 +82,13 @@ class FollwedBuyPostTest(TestCase):
         # get all the users following a post
         following_users = util.get_following_users(post)
         self.assertEqual(1, len(following_users))
+        self.assertEqual(user.name, following_users[0].name)
 
         # unfollow a post
         util.unfollow_post(user, post)
         followed_posts = util.get_followed_posts(user)
         self.assertEqual(0, len(followed_posts))
-        # check the post is followed
+        # check the post is unfollowed
         self.assertFalse(util.is_post_followed_by_user(user, post))
         # get all the users following a post
         following_users = util.get_following_users(post)

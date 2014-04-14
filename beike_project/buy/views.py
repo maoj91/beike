@@ -10,6 +10,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.gis.geos import Point
+from buy.buy_post_util import BuyPostUtil
 
 def all_list(request):
     check_wx_id(request)
@@ -42,6 +43,28 @@ def get_posts_by_page(request):
         return HttpResponse(data)
     else:
         raise Http404
+
+def follow_post(request):
+    if request.is_ajax:
+        check_wx_id(request)
+        wx_id = request.session['wx_id']
+        user = get_user(wx_id)
+
+        buy_post_util = BuyPostUtil()
+        post_id = request.GET.get('post_id')
+        post = buy_post_util.get_post(post_id)
+
+        follow_option = request.GET.get('follow_option')
+        if follow_option == 'follow':
+            buy_post_util.follow_post(user, post)
+            return HttpResponse("{}")
+        elif follow_option == 'unfollow':
+            buy_post_util.unfollow_post(user, post)
+            return HttpResponse("{}")
+        else:
+            raise Http500
+    else:
+        raise Http500
 
 def get_buy_post_summary(post):
     if isinstance(post, BuyPost):

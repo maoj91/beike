@@ -1,5 +1,5 @@
 
-from data.models import FollowedBuyPost
+from data.models import FollowedBuyPost, BuyPost
 from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -10,6 +10,20 @@ class BuyPostUtil:
 
     def __init__(self):
         pass
+
+    """
+    Operations for BuyPost
+    """
+    def get_post(self, post_id):
+        try:
+            return BuyPost.objects.get(id = post_id)
+        except ObjectDoesNotExist:
+            return None
+
+
+    """
+    Operations for FollowedBuyPost
+    """
 
     def follow_post(self, user, post):
         try: 
