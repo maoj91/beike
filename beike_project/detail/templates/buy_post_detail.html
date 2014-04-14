@@ -4,13 +4,23 @@
 <head>
     <meta name="viewport" content="width=device-width ,  user-scalable=no">
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="/static/detail.css">
-    <script src="/static/detail.js"></script>
+    <!-- jquery library -->
     <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
     <script src="/static/jquery/jquery-1.8.3.js "></script>
     <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+
+    <!--js library for s3 upload-->
     <script src="/static/lodash.js"></script>
     <script type="text/javascript" src="/static/s3upload.js"></script>
+    <script src="/static/exif.js"></script>
+    <script src="/static/binaryajax.js"></script>
+
+    <!-- beike customized css and js -->
+    <link rel="stylesheet" type="text/css" href="/static/mystyle.css">
+    <link rel="stylesheet" type="text/css" href="/static/buy.css">
+    <link rel="stylesheet" type="text/css" href="/static/sell.css">
+    <script src="/static/buy.js"></script>
+    <script src="/static/sell.js"></script>
 </head>
 
 <body>
@@ -20,7 +30,9 @@
         </div>
         <div data_role="content">
             <div class="ui-grid-solo">
-                <p>{{post.title}}</p>
+                <div class="ui-block-a">
+                    {{post.title}}
+                </div>
             </div>
 
             <div class='ui-grid-b'>
@@ -28,8 +40,10 @@
                     <img id='dollar_img' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/dollar.png'>{{post.min_price}} ~ {{post.max_price}}
                 </div>
                 <div class='ui-block-b'>
-                    <div>发布人:</div>
-                    <div>发布时间:</div>
+                    <div class="ui-grid-solo">
+                        <div class="ui-block-a">发布人:</div>
+                        <div class="ui-block-a">发布时间:</div>
+                    </div>
                 </div>
             </div>
             <div class="ui-grid-solo">
@@ -53,19 +67,11 @@
                 </div>
             </div>
 
-            <label for="follow-post" 关注此贴:</label>
-                <select name="follow-post" id="follow-post" data-role="slider">
-                    <option value="unfollow"
-                      {% if not is_followed %}
-                        selected
-                      {% endif %}
-                    >不关注</option>
-                    <option value="follow"
-                      {% if is_followed %}
-                        selected
-                      {% endif %}
-                    >关注中</option>
-                </select>
+            <label for="follow-post">关注此贴:</label>
+            <select name="follow-post" id="follow-post" data-role="slider">
+                <option value="unfollow" {% if not is_followed %} selected {% endif %}>不关注</option>
+                <option value="follow" {% if is_followed %} selected {% endif %}>关注中</option>
+            </select>
         </div>
         <div>
             <input type="hidden" id="post_id" value={{post.id}}>
@@ -76,7 +82,7 @@
         <div data-role="footer" data-position="fixed">
             <div style="background-image: url(/static/images/navigation/footer-background.png);">
                 <div style="display: inline-block; padding: 20px 0px 0px 20px">
-                    <img height="30" width="30" src='/static/images/navigation/ homepage.png' />
+                    <img height="30" width="30" src='/static/images/navigation/homepage.png' />
                 </div>
                 <div style="display: inline-block; padding: 20px 0px 0px 40px">
                     <img height="40" width="40" src='/static/images/navigation/buy_form.png' />
@@ -106,8 +112,7 @@
                     post_id: post_id,
                     follow_option: follow_option
                 }
-            }).then(function(data) {
-            });
+            }).then(function(data) {});
         });
         </script>
     </div>
