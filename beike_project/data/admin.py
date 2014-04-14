@@ -12,8 +12,8 @@ from data.models import Condition
 from data.models import BuyPost
 from data.models import SellPost
 from data.models import Comment
-from data.models import FollowedPost
-from data.models import FollowedReason
+from data.models import FollowedSellPost
+from data.models import FollowedBuyPost
 from data.models import AWS
 
 admin.site.register(Country)
@@ -29,6 +29,6 @@ admin.site.register(Condition)
 admin.site.register(BuyPost)
 admin.site.register(SellPost)
 admin.site.register(Comment)
-admin.site.register(FollowedPost)
-admin.site.register(FollowedReason)
+admin.site.register(FollowedSellPost)
+admin.site.register(FollowedBuyPost)
 admin.site.register(AWS)

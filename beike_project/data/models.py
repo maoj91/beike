@@ -124,18 +124,15 @@ class SellPost(models.Model):
 	def __unicode__(self):
 	    return unicode("%s: %s" % (self.title, self.content[:60]))
 
-class FollowedPost(models.Model):
-	post_type = models.IntegerField()
-	post_id = models.IntegerField()
+class FollowedBuyPost(models.Model):
+	post = models.ForeignKey('BuyPost')
 	user = models.ForeignKey('User')
 	last_updated_time = models.DateTimeField()
-	reason = models.ForeignKey('FollowedReason')
 
-class FollowedReason(models.Model):
-	name = models.CharField(max_length = 255)
-	description = models.CharField(max_length = 1000)
-	def __unicode__(self):
-		return self.name
+class FollowedSellPost(models.Model):
+	post = models.ForeignKey('SellPost')
+	user = models.ForeignKey('User')
+	last_updated_time = models.DateTimeField()
 
 class Comment(models.Model):
 	#image urls separated by ';'
