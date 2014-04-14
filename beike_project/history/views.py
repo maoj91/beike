@@ -2,7 +2,6 @@ from django.http import Http404,HttpResponse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.views.decorators.csrf import csrf_exempt
 from django.template import RequestContext
 from data.models import BuyPost, SellPost
 from data.models import User

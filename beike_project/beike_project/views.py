@@ -2,7 +2,6 @@ from django.http import Http404,HttpResponse
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from data.models import User,State,City,Notification,Privacy
-from django.views.decorators.csrf import csrf_exempt
 from data.views import is_user_exist
 
 def index(request):
