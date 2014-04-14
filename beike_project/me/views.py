@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.http import Http404,HttpResponse
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from data.models import User,Country,State,City,District,Address,Notification,Privacy
-from django.views.decorators.csrf import csrf_exempt
 from data.views import create_user,is_email_valid
 from beike_project.views import check_wx_id
 from geolocation import get_location_by_latlong, get_location_by_zipcode    
@@ -19,7 +19,7 @@ def index(request):
     cities = City.objects.all()
     notifications = Notification.objects.values('description')
     privacies = Privacy.objects.values('description')
-    return render_to_response('me.html',{'user':user,'states':states,'cities':cities,'notifications':notifications,'privacies':privacies})
+    return render_to_response('me.html',{'user':user,'states':states,'cities':cities,'notifications':notifications,'privacies':privacies},RequestContext(request))
 
 def get_info(request):
     # wx_id = request.GET.get('wx_id')
@@ -30,7 +30,7 @@ def get_info(request):
     check_wx_id(request)
     wx_id = request.session['wx_id']
     cities = City.objects.all()
-    return render_to_response('get_info.html',{'user_id':wx_id,'cities':cities,'default_city':'Seattle'})
+    return render_to_response('get_info.html',{'user_id':wx_id,'cities':cities,'default_city':'Seattle'},RequestContext(request))
 
 def get_city_by_latlong(request):
     if request.is_ajax():
@@ -65,7 +65,6 @@ def get_city_by_zipcode(request):
 def get_name(request):
     return render_to_response('get_name.html')
 
-@csrf_exempt
 def create(request):
     check_wx_id(request)
     wx_id = request.session['wx_id']
@@ -87,12 +86,11 @@ def create(request):
                 error = 'Email is not valid. Please try again.' 
             if email_valid_type == 2: 
                 error = 'Email already exist.'
-            return render_to_response('get_info.html',{'wx_id':wx_id,'cities':cities,'default_city':default_city,'error':error})
+            return render_to_response('get_info.html',{'wx_id':wx_id,'cities':cities,'default_city':default_city,'error':error},RequestContext(request))
     else: 
         raise Http404
 
 
-@csrf_exempt
 def save_profile(request):
     check_wx_id(request)
     wx_id = request.session['wx_id']
@@ -110,7 +108,7 @@ def save_profile(request):
             user.address.city = address_city
             user.address.state_or_region = address_state
             user.save()
-    return HttpResponseRedirect('/',{'user':user,'error':error})
+    return HttpResponseRedirect('/me/',{'user':user,'error':error})
 
 def get_city_district(geolocation):
     # create the country if it does not yet exist DB
@@ -150,9 +148,10 @@ def get_city_district(geolocation):
         'lv1_district_id': lv1_district.id, 'lv1_district_name': lv1_district.name}
     return cityDistrict
     
-@csrf_exempt
-def save_notification(request,  ):
-    user = User.objects.get(wx_id=user_id)
+def save_notification(request):
+    check_wx_id(request)
+    wx_id = request.session['wx_id']
+    user = User.objects.get(wx_id=wx_id)
     error = ""
     if request.method == 'POST':
         nt_description = request.POST.get('notification','')
@@ -162,11 +161,12 @@ def save_notification(request,  ):
         if(error == ""):
             user.notification = notification
             user.save()
-    return HttpResponseRedirect('/'+user.wx_id+'/me/',{'user':user,'error':error})
+    return HttpResponseRedirect('/me/',{'user':user,'error':error})
 
-@csrf_exempt
-def save_privacy(request,user_id):
-    user = User.objects.get(wx_id=user_id)
+def save_privacy(request):
+    check_wx_id(request)
+    wx_id = request.session['wx_id']
+    user = User.objects.get(wx_id=wx_id)
     error = ""
     if request.method == 'POST':
         privacy_des = request.POST.get('privacy','')
@@ -176,7 +176,7 @@ def save_privacy(request,user_id):
         if(error == ""):
             user.privacy = privacy
             user.save()
-    return HttpResponseRedirect('/'+user.wx_id+'/me/',{'user':user,'error':error})
+    return HttpResponseRedirect('/me/',{'user':user,'error':error})
 
 
 

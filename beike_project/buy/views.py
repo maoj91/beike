@@ -1,7 +1,7 @@
 from django.http import Http404,HttpResponse
+from django.template import RequestContext
 from django.shortcuts import render,render_to_response
 from django.http import HttpResponseRedirect
-from django.views.decorators.csrf import csrf_exempt
 from data.models import BuyPost,User,Category, District
 from data.views import get_user, get_category, get_district
 from datetime import datetime
@@ -11,6 +11,7 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.gis.geos import Point
 from buy.buy_post_util import BuyPostUtil
+
 
 def all_list(request):
     check_wx_id(request)
@@ -79,15 +80,13 @@ def get_buy_post_summary(post):
     else:
         raise ValueError("Argument should be an BuyPost instance.")
 
-
 def form(request):
     check_wx_id(request)
     wx_id = request.session['wx_id']
     categories = Category.objects.all()
     districts = District.objects.all()
-    return render_to_response('buy_form.html',{'categories':categories, 'districts':districts})
+    return render_to_response('buy_form.html',{'categories':categories, 'districts':districts},RequestContext(request))
 
-@csrf_exempt
 def form_submit(request):
     check_wx_id(request)
     wx_id = request.session['wx_id']

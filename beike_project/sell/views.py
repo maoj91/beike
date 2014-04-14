@@ -1,7 +1,7 @@
 from django.http import Http404,HttpResponse
+from django.template import RequestContext
 from django.shortcuts import render,render_to_response
 from django.http import HttpResponseRedirect
-from django.views.decorators.csrf import csrf_exempt
 from data.models import SellPost,User,Category,Condition
 from data.views import get_user, get_category
 from django.forms.formsets import formset_factory
@@ -59,9 +59,9 @@ def form(request):
     wx_id = request.session['wx_id']
     #retrieve all the categories
     categories = Category.objects.all();
-    return render_to_response('form.html',{'user_id':wx_id, 'categories':categories}); 
+    return render_to_response('form.html',{'user_id':wx_id, 'categories':categories},RequestContext(request)); 
 
-@csrf_exempt
+
 def form_submit(request):
     check_wx_id(request)
     wx_id = request.session['wx_id']

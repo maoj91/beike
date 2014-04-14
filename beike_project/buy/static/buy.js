@@ -68,7 +68,6 @@ function validateBuyForm(){
 			$('#qq_required').html('');
 		}		
 	}
-
 	return titleExist && priceValid && phoneValid && qqValid;
 }
 
@@ -95,5 +94,7 @@ function qqContactChange(){
 		$('#qq_number_div').hide();
 	}
 }
+
+
 
 
