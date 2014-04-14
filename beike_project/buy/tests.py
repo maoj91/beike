@@ -73,16 +73,25 @@ class FollwedBuyPostTest(TestCase):
         user = User.objects.get(name="Leon")
         post = BuyPost.objects.get(title="Tokyo book")
         util.follow_post(user, post)
-        
+        # check the post is followed
+        self.assertTrue(util.is_post_followed_by_user(user, post))
         # get all the posts followed by a user
         followed_posts = util.get_followed_posts(user)
         self.assertEqual(1, len(followed_posts))
         self.assertEqual(post, followed_posts[0])
-        
         # get all the users following a post
         following_users = util.get_following_users(post)
         self.assertEqual(1, len(following_users))
-        self.assertEqual(user, following_users[0])
+
+        # unfollow a post
+        util.unfollow_post(user, post)
+        followed_posts = util.get_followed_posts(user)
+        self.assertEqual(0, len(followed_posts))
+        # check the post is followed
+        self.assertFalse(util.is_post_followed_by_user(user, post))
+        # get all the users following a post
+        following_users = util.get_following_users(post)
+        self.assertEqual(0, len(following_users))
 
 
 class BuyPostOrderTest(TestCase):

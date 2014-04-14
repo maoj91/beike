@@ -127,11 +127,13 @@ class SellPost(models.Model):
 class FollowedBuyPost(models.Model):
 	post = models.ForeignKey('BuyPost')
 	user = models.ForeignKey('User')
+	status = models.IntegerField()
 	last_updated_time = models.DateTimeField()
 
 class FollowedSellPost(models.Model):
 	post = models.ForeignKey('SellPost')
 	user = models.ForeignKey('User')
+	status = models.IntegerField()
 	last_updated_time = models.DateTimeField()
 
 class Comment(models.Model):
