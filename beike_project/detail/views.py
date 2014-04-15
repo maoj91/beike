@@ -10,6 +10,7 @@ import smtplib
 from email.mime.text import MIMEText
 from beike_project.views import check_wx_id
 from buy.buy_post_util import *
+from sell.sell_post_util import *
 from data.views import get_user
 import datetime
 
@@ -56,14 +57,15 @@ def add_comment_sell(request,post_id):
 def sell_post_detail(request,offset):
     check_wx_id(request)
     wx_id = request.session['wx_id']
+    user = get_user(wx_id)
     try:
         offset = int(offset)
     except ValueError:
         raise Http404()
     post = SellPost.objects.get(id=offset)
-    comment_form = CommentForm()
-    comments = Comment.objects.filter(post_id=post.id, post_type=2)
-    return render_to_response('sell_post_detail.html', {'post':post,'comment_form':comment_form,'comments':comments,'wx_id':wx_id})
+    sell_post_util = SellPostUtil()
+    is_followed = sell_post_util.is_post_followed_by_user(user, post)
+    return render_to_response('sell_post_detail.html', {'post':post, 'is_followed': is_followed, 'wx_id':wx_id})
 
 def buy_post_detail(request,offset):
     check_wx_id(request)
