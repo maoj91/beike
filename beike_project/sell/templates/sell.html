@@ -25,93 +25,97 @@
     <script src="/static/sell.js"></script>
 
 </head>
+
 <body>
     <div data-role="page">
-    <div data-role="header" data-position="fixed">
-        <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_sell_posts/header.png" />
-    </div>
-    <div id="sell-list" data-role="main">
-        <div>
-            <ul id="postList" data-role="listview">
-            </ul>
+        <div data-role="header" data-position="fixed">
+            <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_sell_posts/header.png" />
         </div>
-    <script type="text/javascript">
-    var pageNum = 1;
-    var hasMore = true;
-    var postLoader = (function($, undefined) {
-        var pub = {};
-        pub.init = function() {
-            //Refresh the posts when scrolling to the bottom
-            $(window).live("hitBottom",
-                function() {pub.getAndDisplayPosts();});
-        };
+        <div id="sell-list" data-role="main">
+            <div>
+                <ul id="postList" data-role="listview">
+                </ul>
+            </div>
+            <script type="text/javascript">
+            var pageNum = 1;
+            var hasMore = true;
+            var postLoader = (function($, undefined) {
+                var pub = {};
+                pub.init = function() {
+                    //Refresh the posts when scrolling to the bottom
+                    $(window).live("hitBottom",
+                        function() {
+                            pub.getAndDisplayPosts();
+                        });
+                };
 
-        pub.getAndDisplayPosts = function() {
-            //Starting loading animation
-            $('#load-more').show();
-            //Get posts and add success callback using then
-            getPosts().then(function() {
-                //Stop loading animation on success
-                 $('#load-more').hide();
-            });
-        };
+                pub.getAndDisplayPosts = function() {
+                    //Starting loading animation
+                    $('#load-more').show();
+                    //Get posts and add success callback using then
+                    getPosts().then(function() {
+                        //Stop loading animation on success
+                        $('#load-more').hide();
+                    });
+                };
 
-        function getPosts() {
-            //Get posts via ajax
-            return $.ajax({
-                type: "get",
-                url: "/sell/get_posts_by_page",
-                dataType: "json",
-                data: {
-                    pageNum: pageNum
+                function getPosts() {
+                    //Get posts via ajax
+                    return $.ajax({
+                        type: "get",
+                        url: "/sell/get_posts_by_page",
+                        dataType: "json",
+                        data: {
+                            pageNum: pageNum
+                        }
+                    }).then(function(data) {
+                        displayPosts(data);
+                    });
                 }
-            }).then(function(data) {
-                displayPosts(data);
-            });
-        }
 
-        function displayPosts(posts) {
-            var postList = $("#postList");
-            var i = 0, len = posts.length;
-            if (len == 0) {
-                hasMore = false;
-                $('#load-more').hide();
-            }
-            //process posts data
-            for (; i < len; i++) {
-              var d = new Date(posts[i]["date_published"]);
-              var template = '<li><a href="/detail/sell/' + posts[i]['post_id'] + '"><span><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" /> ' +
-                posts[i]["title"] + '<br/>$' + posts[i]["price"] + '</span>    <span>' +
-                '</span><span style="float: right; ">' +
-               + d.getMonth() + '-' + d.getDate() + '</span></a></li>' 
-            postList.append(template);
-            }
-            postList.listview("refresh");
-        }
-        return pub;
-    }(jQuery));
+                function displayPosts(posts) {
+                    var postList = $("#postList");
+                    var i = 0,
+                        len = posts.length;
+                    if (len == 0) {
+                        hasMore = false;
+                        $('#load-more').hide();
+                    }
+                    //process posts data
+                    for (; i < len; i++) {
+                        var d = new Date(posts[i]["date_published"]);
+                        var template = '<li><a href="/detail/sell/' + posts[i]['post_id'] + '"><span><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" /> ' +
+                            posts[i]["title"] + '<br/>$' + posts[i]["price"] + '</span>    <span>' +
+                            '</span><span style="float: right; ">' + +d.getMonth() + '-' + d.getDate() + '</span></a></li>'
+                        postList.append(template);
+                    }
+                    postList.listview("refresh");
+                }
+                return pub;
+            }(jQuery));
 
-    $(document).live('pageshow', function() {
-        postLoader.init();
-        postLoader.getAndDisplayPosts();
-    });
-
-
-    $(document).scroll(function() {
-        if ($(document).height() > $(window).height() && hasMore) {
-            if ($(window).scrollTop() >= $(document).height() - $(window).height() - 100) {
-                pageNum++;
+            $(document).live('pageshow', function() {
+                postLoader.init();
                 postLoader.getAndDisplayPosts();
-            }
-        }
-    });
-    </script>
-    </div>
-    <div id="load-more" style="vertical-align:middle; text-align:center; display:none"><img width="50px" height="50px" src="/static/images/general/loading_green.gif"/>
-    </div>
-    <div data-role="footer" data-position="fixed">
-        <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_sell_posts/footer.png" />
-    </div>
+            });
+
+
+            $(document).scroll(function() {
+                if ($(document).height() > $(window).height() && hasMore) {
+                    if ($(window).scrollTop() >= $(document).height() - $(window).height() - 100) {
+                        pageNum++;
+                        postLoader.getAndDisplayPosts();
+                    }
+                }
+            });
+            </script>
+        </div>
+        <div id="load-more" style="vertical-align:middle; text-align:center; display:none">
+            <img width="50px" height="50px" src="/static/images/general/loading_green.gif" />
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <img style="width:100%;height:100%; max-width: 680px;" src="/static/images/nearby_sell_posts/footer.png" />
+        </div>
     </div>
 
 </body>

@@ -10,6 +10,7 @@ from datetime import datetime
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 from django.core.serializers.json import DjangoJSONEncoder
+from sell.sell_post_util import SellPostUtil
 
 def index(request):
     return HttpResponse('sell');
@@ -41,6 +42,28 @@ def get_posts_by_page(request):
         return HttpResponse(data)
     else:
         raise Http404
+
+def follow_post(request):
+    if request.is_ajax:
+        check_wx_id(request)
+        wx_id = request.session['wx_id']
+        user = get_user(wx_id)
+
+        sell_post_util = SellPostUtil()
+        post_id = request.GET.get('post_id')
+        post = sell_post_util.get_post(post_id)
+
+        follow_option = request.GET.get('follow_option')
+        if follow_option == 'follow':
+            sell_post_util.follow_post(user, post)
+            return HttpResponse("{}")
+        elif follow_option == 'unfollow':
+            sell_post_util.unfollow_post(user, post)
+            return HttpResponse("{}")
+        else:
+            raise Http500
+    else:
+        raise Http500
 
 def get_sell_post_summary(post):
     if isinstance(post, SellPost):
