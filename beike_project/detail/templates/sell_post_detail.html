@@ -1,71 +1,130 @@
 <!DOCTYPE HTML>
 <html lang="zh">
-	<head>
-		<meta name="viewport" content = "width=device-width ,  user-scalable=no">
-		<meta charset="UTF-8">
-		<link rel="stylesheet" type="text/css" href="/static/detail.css">
-		<script src="/static/detail.js"></script>
-		<link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
-        <script src="/static/jquery/jquery-1.8.3.js "></script>
-        <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
-		<script src="/static/lodash.js"></script>
-		<script type="text/javascript" src="/static/s3upload.js"></script>
-	</head>
-	<body>
-		<h3>{{post.title}} [${{post.price}}] </h3>
-		<div class="post_meta">
-			on {{post.date_published}}  by {{post.user.name}}</br>
-			in {{post.user.address.city}}
-		</div>
-		{% if post.image_urls %}
-			{% load string_utils %}
-			{% for url in post.image_urls|split:";" %}
-				<div class="post_image">
-					<img src= {{url}}  height="200" width="200">
-				</div>
-			{% endfor%}
-		{% endif%}
-		<div class="post_body">
-			{{post.content|safe|linebreaks}}
-		</div>
-		{% if comments %}
-		    <p>{{comments|length}} Comments:</p>
-			{% if wx_id == post.user.wx_id %}
-				{% for comment in comments %}
-				    <div class="comment">
-					<div class="body">{{ comment.content|linebreaks }}</div>
-					{% if comment.image_urls %}
-						{% load string_utils %}
-						{% for url in comment.image_urls|split:";" %}
-						<div class="comment_image">
-							<img src= {{url}}  height="150" width="150">
-						</div>
-						{% endfor%}
-					{% endif%}
-				    </div>
-				{% endfor %}
-			{% else %}
-				<p>Sorry. Only post publisher can see the content</p>
-			{% endif %}
-		{% endif %}
-	
-		<div id="addc">Add a comment</div>
-		<form action="add_comment/" method="POST">{% csrf_token %}
-		    <div id="comment_form">
-			<p>{{ comment_form.content|linebreaks }}</p>
-		    </div>
-		{% if post.is_buy %}
-			<div id="div_image1">
-				<input type="file" id="image1" onchange="image_s3_upload(this.id,'{{user_id}}');">
-				<input type="hidden" id="image_name1"  value="">
-				<p id="progress1">
-				<p id="status1">
-				<div id="preview1"></div>
-			</div>
-			<input type="hidden" id="image_names" name="image_names"  value="">
-		{% endif %}
-		{% csrf_token %}
-		<div id="submit"><input type="submit" value="Submit"></div>
-		</form>
-	</body>
+
+<head>
+    <meta name="viewport" content="width=device-width ,  user-scalable=no">
+    <meta charset="UTF-8">
+    <!-- jquery library -->
+    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
+    <script src="/static/jquery/jquery-1.8.3.js "></script>
+    <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+
+    <!--js library for s3 upload-->
+    <script src="/static/lodash.js"></script>
+    <script type="text/javascript" src="/static/s3upload.js"></script>
+    <script src="/static/exif.js"></script>
+    <script src="/static/binaryajax.js"></script>
+
+    <!-- beike customized css and js -->
+    <link rel="stylesheet" type="text/css" href="/static/mystyle.css">
+    <link rel="stylesheet" type="text/css" href="/static/buy.css">
+    <link rel="stylesheet" type="text/css" href="/static/sell.css">
+    <script src="/static/buy.js"></script>
+    <script src="/static/sell.js"></script>
+</head>
+
+<body>
+    <div data-role="page" id="main-page">
+        <div data-role="header">
+            <img id='header' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/header.png'>
+        </div>
+        <div data_role="content">
+            <div class="ui-grid-solo">
+                <div class="ui-block-a">
+                    {{post.title}}
+                </div>
+            </div>
+            {% if post.image_urls %} {% load string_utils %} {% for url in post.image_urls|split:";" %}
+            <div class="ui-grid-solo">
+                <img src={{ url }} height="100" width="100">
+            </div>
+            {% endfor%} {% endif%}
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    <img id='dollar_img' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/dollar.png'>
+                </div>
+                <div class="ui-block-b">
+                    {{post.price}}
+                </div>
+            </div>
+            <div class="ui-grid-solo">
+                {{post.user.address.city}}
+            </div>
+
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    发布人
+                </div>
+                <div class="ui-block-b">
+                    {{post.user.name}}
+                </div>
+            </div>
+
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    发布日期
+                </div>
+                <div class="ui-block-b">
+                    {% load string_utils %} {{post.date_published|get_time}}
+                </div>
+            </div>
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    详细描述
+                </div>
+                <div class="ui-block-b">
+                    {{post.content}}
+                </div>
+            </div>
+            <label for="follow-post">关注此贴:</label>
+            <select name="follow-post" id="follow-post" data-role="slider">
+                <option value="unfollow" {% if not is_followed %} selected {% endif %}>不关注</option>
+                <option value="follow" {% if is_followed %} selected {% endif %}>关注中</option>
+            </select>
+        </div>
+        <div>
+            <input type="hidden" id="post_id" value={{post.id}}>
+        </div>
+        <div>
+            <input type="hidden" id="wx_id" value={{wx_id}}>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <div style="background-image: url(/static/images/navigation/footer-background.png);">
+                <div style="display: inline-block; padding: 20px 0px 0px 20px">
+                    <img height="30" width="30" src='/static/images/navigation/	homepage.png' />
+                </div>
+                <div style="display: inline-block; padding: 20px 0px 0px 40px">
+                    <img height="40" width="40" src='/static/images/navigation/buy_form.png' />
+                </div>
+                <div style="display: inline-block;">
+                    <img height="40" width="40" src='/static/images/navigation/sell_form.png' />
+                </div>
+                <div style="display: inline-block;">
+                    <img height="40" width="40" src='/static/images/navigation/buy_posts.png' />
+                </div>
+                <div style="display: inline-block;">
+                    <img height="40" width="40" src='/static/images/navigation/sell_posts.png' />
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+        var wx_id = $("#wx_id").val();
+        var post_id = $("#post_id").val();
+        $("#follow-post").on('slidestop', function(event) {
+            var follow_option = $("#follow-post").val();
+            return $.ajax({
+                type: "get",
+                url: "/sell/follow_post",
+                dataType: "json",
+                data: {
+                    wx_id: wx_id,
+                    post_id: post_id,
+                    follow_option: follow_option
+                }
+            }).then(function(data) {});
+        });
+        </script>
+    </div>
+</body>
+
 </html>

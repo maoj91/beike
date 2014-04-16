@@ -1,77 +1,121 @@
 <!DOCTYPE HTML>
 <html lang="zh">
-	<head>
-		<meta name="viewport" content = "width=device-width ,  user-scalable=no">
-		<meta charset="UTF-8">
-		<link rel="stylesheet" type="text/css" href="/static/detail.css">
-		<script src="/static/detail.js"></script>
-		<link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
-        <script src="/static/jquery/jquery-1.8.3.js "></script>
-        <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
-		<script src="/static/lodash.js"></script>
-		<script type="text/javascript" src="/static/s3upload.js"></script>
-	</head>
-	<body>
-	    <div data-role="page" id="main-page">
-	    	<div>
-           		<img id='header' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/header.png'>
-        	</div>
-        	<div>
-				<div class='title'>
-					<h3 id='title_content'>{{post.title}}</h3>
-				</div>
 
-				<div class='price_wrapper'>
-					<img id='dollar_img' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/dollar.png'>
-					<div class='price'>
-						{{post.min_price}} ~ {{post.max_price}}
-					</div>
-				</div>
-				<div class='location'>
-					{{post.user.address.city}}
-				</div>	
+<head>
+    <meta name="viewport" content="width=device-width ,  user-scalable=no">
+    <meta charset="UTF-8">
+    <!-- jquery library -->
+    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
+    <script src="/static/jquery/jquery-1.8.3.js "></script>
+    <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
 
-				<div class='condition'>
-					<img id='condition_img' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/condition.png'>
-				</div>
-				<ul>
-					<li>
-						<div class='description_title'>
-							发布人
-						</div>
-						<div class='description_content'>
-							{{post.user.name}}</br>
-						</div>
-					</li>
-					<li>
-						<div class='description_title'>
-							发布日期
-						</div>
-						<div class='description_content'>
-							{% load string_utils %}
-							{{post.date_published|get_time}}</br>
-						</div>
-					</li>
-		            <li>
-						<div class='description_title'>
-							详细描述
-						</div>
-						<div class='description_content'>
-							{{post.content}}</br>
-						</div>
-					</li>
+    <!--js library for s3 upload-->
+    <script src="/static/lodash.js"></script>
+    <script type="text/javascript" src="/static/s3upload.js"></script>
+    <script src="/static/exif.js"></script>
+    <script src="/static/binaryajax.js"></script>
 
-					<li>
-						<div class='description_title'>
-							卖家电话
-						</div>
-						<div class='description_phone'>
-							{{post.user.home_phone}}
-						</div>
-						<img id='phone' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/phone.png'>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</body>
+    <!-- beike customized css and js -->
+    <link rel="stylesheet" type="text/css" href="/static/mystyle.css">
+    <link rel="stylesheet" type="text/css" href="/static/buy.css">
+    <link rel="stylesheet" type="text/css" href="/static/sell.css">
+    <script src="/static/buy.js"></script>
+    <script src="/static/sell.js"></script>
+</head>
+
+<body>
+    <div data-role="page" id="main-page">
+        <div data-role="header">
+            <img src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/header.png'>
+        </div>
+        <div data_role="content">
+            <div class="ui-grid-solo">
+                <div class="ui-block-a">
+                    {{post.title}}
+                </div>
+            </div>
+
+            <div class='ui-grid-b'>
+                <div class="ui-block-a">
+                    <img id='dollar_img' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/dollar.png'>{{post.min_price}} ~ {{post.max_price}}
+                </div>
+                <div class='ui-block-b'>
+                    <div class="ui-grid-solo">
+                        <div class="ui-block-a">发布人:</div>
+                        <div class="ui-block-a">发布时间:</div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-grid-solo">
+                {{post.user.address.city}}
+            </div>
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    详细描述:
+                </div>
+                <div class="ui-block-b">
+                    {{post.content}}
+                </div>
+            </div>
+
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    联系方式:
+                </div>
+                <div class="ui-block-b">
+                    {{post.user.email}}
+                </div>
+            </div>
+
+            <label for="follow-post">关注此贴:</label>
+            <select name="follow-post" id="follow-post" data-role="slider">
+                <option value="unfollow" {% if not is_followed %} selected {% endif %}>不关注</option>
+                <option value="follow" {% if is_followed %} selected {% endif %}>关注中</option>
+            </select>
+        </div>
+        <div>
+            <input type="hidden" id="post_id" value={{post.id}}>
+        </div>
+        <div>
+            <input type="hidden" id="wx_id" value={{wx_id}}>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <div style="background-image: url(/static/images/navigation/footer-background.png);">
+                <div style="display: inline-block; padding: 20px 0px 0px 20px">
+                    <img height="30" width="30" src='/static/images/navigation/homepage.png' />
+                </div>
+                <div style="display: inline-block; padding: 20px 0px 0px 40px">
+                    <img height="40" width="40" src='/static/images/navigation/buy_form.png' />
+                </div>
+                <div style="display: inline-block;">
+                    <img height="40" width="40" src='/static/images/navigation/sell_form.png' />
+                </div>
+                <div style="display: inline-block;">
+                    <img height="40" width="40" src='/static/images/navigation/buy_posts.png' />
+                </div>
+                <div style="display: inline-block;">
+                    <img height="40" width="40" src='/static/images/navigation/sell_posts.png' />
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+        var wx_id = $("#wx_id").val();
+        var post_id = $("#post_id").val();
+        $("#follow-post").on('slidestop', function(event) {
+            var follow_option = $("#follow-post").val();
+            return $.ajax({
+                type: "get",
+                url: "/buy/follow_post",
+                dataType: "json",
+                data: {
+                    wx_id: wx_id,
+                    post_id: post_id,
+                    follow_option: follow_option
+                }
+            }).then(function(data) {});
+        });
+        </script>
+    </div>
+</body>
+
 </html>
