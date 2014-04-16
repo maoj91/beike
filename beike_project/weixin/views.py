@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.http import HttpResponse
 from django.template import RequestContext, Template
 from django.views.decorators.csrf import csrf_exempt
@@ -49,11 +50,15 @@ def responseMsg(request):
 	msgType  = msg['MsgType']
 	user_id = msg['FromUserName']
 	content = msg.get('Content','content')
-	if msgType is 'event':
-		# url = 'http://54.204.4.250/?wx_id='+user_id
-		# return handleEvent(msg,url)
-		print msg
-	if msgType is 'text':		
+	print msgType 
+	if msgType == 'event':
+		eventType  = msg['Event']
+		if eventType == 'unsubscribe':
+			print msg
+		if eventType == 'subscribe':
+			url = 'http://54.204.4.250/?wx_id='+user_id
+			return handleEvent(msg,url)
+	if msgType == 'text':		
 		url = 'http://54.204.4.250/?wx_id='+user_id
 		return handleText(msg,url)
 
@@ -71,7 +76,7 @@ def handleText(msg,url):
 	fromUserName = msg['FromUserName']
 	toUserName = msg['ToUserName']
 	queryStr = msg.get('Content','You have input nothing~')
-	title = "欢迎来到千贝!"
+	title = "Thanks for your input!"
 	description = "Click on this article to main page."
 	picUrl = "https://s3-us-west-2.amazonaws.com/beike-s3/beike_main.jpg"
 	extTpl = extTpl % (fromUserName,toUserName,str(int(time.time())),title,description,picUrl,url)
