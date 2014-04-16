@@ -45,17 +45,19 @@ def checkSignature(request):
 
 def responseMsg(request):
 	rawStr = smart_str(request.body)
-	msg = paraseMsgXml(ET.fromstring(rawStr))
+	msg = parseInputMsg(ET.fromstring(rawStr))
+	msgType  = msg['MsgType']
 	user_id = msg['FromUserName']
 	content = msg.get('Content','content')
-	url = ''
-	# if not is_user_exist(user_id):
-	# 	url='http://54.204.4.250/me/get_info/?wx_id='+user_id
-	# else:
-	url = 'http://54.204.4.250/?wx_id='+user_id
-	return getReplyXml(msg,url)
+	if msgType is 'event':
+		# url = 'http://54.204.4.250/?wx_id='+user_id
+		# return handleEvent(msg,url)
+		print msg
+	if msgType is 'text':		
+		url = 'http://54.204.4.250/?wx_id='+user_id
+		return handleText(msg,url)
 
-def paraseMsgXml(rootElem):
+def parseInputMsg(rootElem):
 	msg = {}
 	if rootElem.tag == 'xml':
 		for child in rootElem:
@@ -63,13 +65,25 @@ def paraseMsgXml(rootElem):
 	return msg
 
 
-def getReplyXml(msg,url):
+def handleText(msg,url):
 	extTpl ="<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>1</ArticleCount><Articles><item><Title><![CDATA[%s]]></Title><Description><![CDATA[%s]]></Description><PicUrl><![CDATA[%s]]></PicUrl><Url><![CDATA[%s]]></Url></item></Articles></xml>"
 
 	fromUserName = msg['FromUserName']
 	toUserName = msg['ToUserName']
 	queryStr = msg.get('Content','You have input nothing~')
-	title = "Welcome to beike!"
+	title = "欢迎来到千贝!"
+	description = "Click on this article to main page."
+	picUrl = "https://s3-us-west-2.amazonaws.com/beike-s3/beike_main.jpg"
+	extTpl = extTpl % (fromUserName,toUserName,str(int(time.time())),title,description,picUrl,url)
+	return extTpl
+
+def handleEvent(msg,url):
+	extTpl ="<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>1</ArticleCount><Articles><item><Title><![CDATA[%s]]></Title><Description><![CDATA[%s]]></Description><PicUrl><![CDATA[%s]]></PicUrl><Url><![CDATA[%s]]></Url></item></Articles></xml>"
+
+	fromUserName = msg['FromUserName']
+	toUserName = msg['ToUserName']
+	queryStr = msg.get('Content','You have input nothing~')
+	title = "欢迎来到千贝!"
 	description = "Click on this article to main page."
 	picUrl = "https://s3-us-west-2.amazonaws.com/beike-s3/beike_main.jpg"
 	extTpl = extTpl % (fromUserName,toUserName,str(int(time.time())),title,description,picUrl,url)

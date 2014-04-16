@@ -167,6 +167,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'buy': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
     }
 }
 
