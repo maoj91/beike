@@ -1,0 +1,35 @@
+
+.ui-listview li {
+    margin: 10px;
+    border-radius: 0.25em;
+    background:#ffffff !important;
+    border:none;
+    border-bottom: 1px;
+    border-top: 1px solid #eeeeee;
+    border-top: 0;
+    margin-bottom: 10px !important;
+}
+.ui-listview {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.ui-block-a, .ui-block-b { padding-top: 20px !important }
+.ui-listview-inset > .ui-li-static,
+.ui-listview-inset > .ui-li-divider,
+.ui-listview-inset > li > a.ui-btn {
+	border-right-width: 1px;
+	border-left-width: 1px;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+    
+}
+.vertical-li {
+    min-height: 150px;
+    max-width:150px;
+}
+.horizontal-li {
+    min-height: 100px;
+    max-width:150px;
+}
+

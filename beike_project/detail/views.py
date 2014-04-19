@@ -13,6 +13,9 @@ from buy.buy_post_util import *
 from sell.sell_post_util import *
 from data.views import get_user
 import datetime
+import logging
+
+logger = logging.getLogger(__name__)
 
 @csrf_exempt
 def add_comment_buy(request, post_id):
