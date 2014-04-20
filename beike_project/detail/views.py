@@ -12,6 +12,7 @@ from beike_project.views import check_wx_id
 from buy.buy_post_util import *
 from sell.sell_post_util import *
 from data.views import get_user
+from sell.image_util import ImageMetadata
 import datetime
 import logging
 
@@ -66,9 +67,11 @@ def sell_post_detail(request,offset):
     except ValueError:
         raise Http404()
     post = SellPost.objects.get(id=offset)
+    image_list = ImageMetadata.deserialize_list(post.image_urls)
     sell_post_util = SellPostUtil()
     is_followed = sell_post_util.is_post_followed_by_user(user, post)
-    return render_to_response('sell_post_detail.html', {'post':post, 'is_followed': is_followed, 'wx_id':wx_id})
+    return render_to_response('sell_post_detail.html', {'post':post, 'image_list': image_list,
+        'is_followed': is_followed, 'wx_id':wx_id})
 
 def buy_post_detail(request,offset):
     check_wx_id(request)

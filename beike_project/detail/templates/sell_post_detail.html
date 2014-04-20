@@ -34,11 +34,13 @@
                     {{post.title}}
                 </div>
             </div>
-            {% if post.image_urls %} {% load string_utils %} {% for url in post.image_urls|split:";" %}
-            <div class="ui-grid-solo">
-                <img src={{ url }} height="100" width="100">
-            </div>
-            {% endfor%} {% endif%}
+      
+            {% for image_metadata in image_list %}
+                <div class="ui-grid-solo">
+                <img src={{ image_metadata.image_url }} height="100" width="100">
+                </div>
+            {% endfor%}
+
             <div class="ui-grid-a">
                 <div class="ui-block-a">
                     <img id='dollar_img' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/dollar.png'>
