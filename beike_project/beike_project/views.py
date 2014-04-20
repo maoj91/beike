@@ -13,7 +13,7 @@ def index(request):
 			 wx_id = request.session['wx_id']
 		if key is None:
 			 key = request.session['key']		
-		if wx_id is None || key is None:
+		if wx_id is None or key is None:
 			raise Http404
 		else:
 			request.session['wx_id'] = wx_id
@@ -25,6 +25,6 @@ def index(request):
 				city = user.address.city 
 		        return render_to_response('index.html',{'user':user, 'city':city})
 
-def check_wx_id(request):
+def validate_user(request):
 	if request.session['wx_id'] is None or request.session['wx_id'] == '':
 		raise Http404
