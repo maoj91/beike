@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from data.models import SellPost,User,Category,Condition
 from data.views import get_user, get_category
 from django.forms.formsets import formset_factory
-from beike_project.views import check_wx_id
+from beike_project.views import validate_user
 from datetime import datetime 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
@@ -21,7 +21,7 @@ def index(request):
     return HttpResponse('sell');
 
 def all_list(request):
-    check_wx_id(request)
+    validate_user(request)
     wx_id = request.session['wx_id']
     return render_to_response('sell.html', {'user_id':wx_id })
 
@@ -50,7 +50,7 @@ def get_posts_by_page(request):
 
 def follow_post(request):
     if request.is_ajax:
-        check_wx_id(request)
+        validate_user(request)
         wx_id = request.session['wx_id']
         user = get_user(wx_id)
 
@@ -84,7 +84,7 @@ def get_sell_post_summary(post):
         raise ValueError("Argument should be an SellPost instance.")
 
 def form(request):
-    check_wx_id(request)
+    validate_user(request)
     wx_id = request.session['wx_id']
     #retrieve all the categories
     categories = Category.objects.all();
@@ -92,7 +92,7 @@ def form(request):
 
 
 def form_submit(request):
-    check_wx_id(request)
+    validate_user(request)
     wx_id = request.session['wx_id']
     error = ''
     if request.method == 'POST':

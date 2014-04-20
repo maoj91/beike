@@ -7,7 +7,8 @@ from data.views import is_user_exist
 from data.views import get_user
 from data.views import is_user_has_email
 from data.views import set_user_email
-from data.models import User
+from data.utils import getValidationKey
+from data.models import User, UserValidation
 
 import xml.etree.ElementTree as ET
 import urllib,urllib2,time,hashlib
@@ -50,16 +51,17 @@ def responseMsg(request):
 	msgType  = msg['MsgType']
 	user_id = msg['FromUserName']
 	content = msg.get('Content','content')
+	validation_key = getValidationKey(user_id)
 	print msgType 
 	if msgType == 'event':
 		eventType  = msg['Event']
 		if eventType == 'unsubscribe':
 			print msg
 		if eventType == 'subscribe':
-			url = 'http://54.204.4.250/?wx_id='+user_id
+			url = 'http://54.204.4.250/?wx_id='+user_id+'&key='+validation_key
 			return handleEvent(msg,url)
 	if msgType == 'text':		
-		url = 'http://54.204.4.250/?wx_id='+user_id
+		url = 'http://54.204.4.250/?wx_id='+user_id+'&key='+validation_key
 		return handleText(msg,url)
 
 def parseInputMsg(rootElem):
