@@ -6,14 +6,14 @@ from django.template import RequestContext
 from data.models import BuyPost, SellPost
 from data.models import User
 from data.views import get_user, get_buy_posts
-from beike_project.views import check_wx_id
+from beike_project.views import validate_user
 import datetime
 from buy.buy_post_util import BuyPostUtil
 from sell.sell_post_util import SellPostUtil
 from data.views import get_user
 
 def my_list(request):
-    check_wx_id(request)
+    validate_user(request)
     wx_id = request.session['wx_id']
     user = get_user(wx_id)
 
