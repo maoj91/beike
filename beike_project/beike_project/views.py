@@ -25,6 +25,6 @@ def index(request):
 				city = user.address.city 
 		        return render_to_response('index.html',{'user':user, 'city':city})
 
-def check_wx_id(request):
+def validate_user(request):
 	if request.session['wx_id'] is None or request.session['wx_id'] == '':
 		raise Http404
