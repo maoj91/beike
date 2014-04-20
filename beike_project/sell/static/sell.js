@@ -5,23 +5,20 @@ var isUploading = false;
 //position of the current image 
 var currentPosition = 0;
 var currentCondition = 1;
-var currentImageOrientation = 1;
 
-function get_set_image_orientation_info(file_dom_id){
+function getImageDimensionInfo(file_dom_id){
+	    var imgInfo = {}
 		//get and set orientation info
 		var fileId = "#"+file_dom_id
 		var file = $(fileId)[0].files[0];
 		var fr   = new FileReader;
 		fr.onloadend = function() {
 			var exif = EXIF.readFromBinaryFile(new BinaryFile(this.result));
-			var currentImageWidth = exif.PixelXDimension;
-			var currentImageHeight = exif.PixelYDimension;
-			if(currentImageWidth > 0 && currentImageHeight > 0){
-				currentImageOrientation = currentImageHeight.toFixed(2)/currentImageWidth.toFixed(2);
-			}
+			imgInfo['width'] =  exif.PixelXDimension;
+			imgInfo['height'] =  exif.PixelYDimension;
 		};
 		fr.readAsBinaryString(file);
-
+		return imgInfo
 }
 
 function get_image_name_prefix(user_id){
@@ -32,8 +29,11 @@ function get_image_name_prefix(user_id){
 
 function image_s3_upload(file_dom_id,user_id){
 	if (!isUploading && imageNum<3){
-		get_set_image_orientation_info(file_dom_id);
+		//retrieve the image information. e.g. width, height
+		var imgInfo = getImageDimensionInfo(file_dom_id);
+		//retrieve the image prefix for S3 upload
 		var image_name_prefix = get_image_name_prefix(user_id);
+		//upload it to s3
 		var s3upload = new S3Upload({
 			file_dom_selector: file_dom_id,
 			s3_sign_put_url: '/s3/sign/',
@@ -45,9 +45,13 @@ function image_s3_upload(file_dom_id,user_id){
 			},
 			onFinishS3Put: function(url) {
 				imageNum = imageNum + 1;
-				var current_name = $('#image_name'+imageNum).val(url);	
+				//set the url in the hidden input
+				$('#image_url' + imageNum).val(url);
+				$('#image_width' + imageNum).val(imgInfo['width']);
+				$('#image_height' + imageNum).val(imgInfo['height']);
 				$('#upload_status').hide();
-				selectImage(imageNum);
+				//populate the image information in HTML for form submit
+				selectImage(imageNum, imgInfo);
 				isUploading = false;
 			},
 			onError: function(status) {
@@ -59,7 +63,7 @@ function image_s3_upload(file_dom_id,user_id){
 	}
 }
 
-function selectImage(i){
+function selectImage(i, imgInfo){
 	if(i<=imageNum){
 		currentPosition = i;
 		//cleaer all border
@@ -71,11 +75,15 @@ function selectImage(i){
 				$('#current_image').removeClass('landscape_image');
 				$('#current_image').removeClass('potrait_image');
 		}else{
-			var url = $('#image_name'+currentPosition).val();
+			var url = $('#image_url'+currentPosition).val();
 			$('#preview'+currentPosition).attr('src',url);
 			$('#preview'+currentPosition).css("border","1px solid black");
 			$('#current_image').attr('src',url);
-			if(currentImageOrientation >= 1){
+			var imgOrientation = 1;
+			if(imgInfo['width'] > 0 && imgInfo['height'] > 0){
+				imgOrientation = imgInfo['width'].toFixed(2)/imgInfo['height'].toFixed(2);
+			}
+			if(imgOrientation >= 1){
 				$('#current_image').removeClass('landscape_image');
 				$('#current_image').removeClass('potrait_image');
 				$('#current_image').addClass('potrait_image');
@@ -145,9 +153,9 @@ function validateForm(){
 	var title = $('[name="title"]').val();
 	var price = $('[name="price"]').val();
 	var content = $('[name="content"]').val();
-	var image1 = $('[name="image_name1"]').val();
-	var image2 = $('[name="image_name2"]').val();
-	var image3 = $('[name="image_name3"]').val();
+	var image1 = $('[name="image1_url"]').val();
+	var image2 = $('[name="image2_url"]').val();
+	var image3 = $('[name="image3_url"]').val();
 
 	if(!title){
 		msg = '输入项不能为空';
