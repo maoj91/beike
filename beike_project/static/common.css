@@ -14,7 +14,7 @@
     -webkit-box-shadow: none;
     box-shadow: none;
 }
-.ui-block-a, .ui-block-b { padding-top: 20px !important }
+.ui-block-a, .ui-block-b { padding-top: 10px !important }
 .ui-listview-inset > .ui-li-static,
 .ui-listview-inset > .ui-li-divider,
 .ui-listview-inset > li > a.ui-btn {
@@ -22,14 +22,18 @@
 	border-left-width: 1px;
 	border-top-width: 1px;
 	border-bottom-width: 1px;
-    
+    padding: .5em .5em;
 }
 .vertical-li {
     min-height: 150px;
     max-width:150px;
+    vertical-align: middle;
+    padding: 0;
 }
 .horizontal-li {
     min-height: 100px;
     max-width:150px;
+    vertical-align: middle;
+    padding: 0;
 }
 

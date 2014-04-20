@@ -33,12 +33,12 @@
             <img style="width:100%;height:100%;" src="/static/images/nearby_sell_posts/header.png" />
         </div>
         <div id="sell-list" data-role="main">
-            <div class="ui-grid-a" style="max-width: 400px;">
-                <div class="ui-block-a" style="width:45%; margin-right: 10px">
+            <div class="ui-grid-a">
+                <div class="ui-block-a" style="width:48%; margin-left: 5px; margin-right: 2.5px">
                     <ul id="post-list-a" data-role="listview" data-theme="c" data-inset="true">
                     </ul>
                 </div>
-                <div class="ui-block-b" style="width:45%;">
+                <div class="ui-block-b" style="width:48%; margin-left: 2.5px;">
                     <ul id="post-list-b" data-role="listview" data-theme="c" data-inset="true">
                     </ul>
                 </div>
@@ -48,7 +48,6 @@
             <img width="50px" height="50px" src="/static/images/general/loading_green.gif" />
         </div>
         <div data-role="footer" data-position="fixed">
-            <img style="width:100%;height:100%; " src="/static/images/nearby_sell_posts/footer.png" />
         </div>
         <script type="text/javascript">
         var pageNum = 1;
@@ -114,21 +113,23 @@
                         isHorizontal = false;
                     }
                     var image_width, image_height
+                    var max_width = 135
+                    var max_height = 180
                     if (isHorizontal) {
-                        if (image_info['width'] < 140) {
+                        if (image_info['width'] < max_width) {
                             image_width = image_info['width']
                             image_height = image_info['height']
                         } else {
-                            image_width = 140
-                            image_height = 140 * (image_info['height']/image_info['width']);
+                            image_width = max_width
+                            image_height = max_width * (image_info['height']/image_info['width']);
                         }
                     } else {
-                        if (image_info['height'] < 200) {
+                        if (image_info['height'] < max_height) {
                             image_width = image_info['width']
                             image_height = image_info['height']
                         } else {
-                            image_height = 200
-                            image_width = 200 * (image_info['width']/image_info['height']);
+                            image_height = max_height
+                            image_width = max_height * (image_info['width']/image_info['height']);
 
                         }
                     }
@@ -137,9 +138,10 @@
                         displayCss = "vertical-li"
                     }
                     var template = '<li class="' + displayCss + '"><div><div><img src="' + 
-                            image_info['image_url']
-                            + '" width = "' + image_width + '" height = "' + image_height + '" /></div><a href="/detail/sell/' + posts[i]['post_id'] + '"><span><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" /> ' +
-                            posts[i]["title"] + '<br/>$' + posts[i]["price"] + '</span></a></div></li>';
+                            image_info['image_url'] + '" width = "' + image_width +
+                            '" height = "' + image_height + '" /></div><a href="/detail/sell/' +
+                            posts[i]['post_id'] + '"><div><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" /> ' +
+                            posts[i]["title"] + '</div><div>$' + posts[i]["price"] + '</div></a></div></li>';
 
                     if (i % 2 === 0) {
                         listA.append(template);
