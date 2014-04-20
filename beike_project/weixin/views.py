@@ -59,9 +59,11 @@ def responseMsg(request):
 			print msg
 		if eventType == 'subscribe':
 			url = 'http://54.204.4.250/?wx_id='+user_id+'&key='+validation_key
+			print url
 			return handleEvent(msg,url)
 	if msgType == 'text':		
 		url = 'http://54.204.4.250/?wx_id='+user_id+'&key='+validation_key
+		print url
 		return handleText(msg,url)
 
 def parseInputMsg(rootElem):
