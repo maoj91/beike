@@ -102,13 +102,48 @@
                 }
                 //process posts data
                 for (i = 0; i < len; i++) {
-                    if (i % 2 === 0) {
-                        var template = '<li class="vertical-li"><div><a href="/detail/sell/' + posts[i]['post_id'] + '"><span><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" /> ' +
-                            posts[i]["title"] + '<br/>$' + posts[i]["price"] + '</span></a></div></li>'
-                        listA.append(template);
+                    var image_info_list = jQuery.parseJSON(posts[i]["image_info"]);
+                    if (image_info_list.length > 0) {
+                        //only display the first image
+                        image_info = image_info_list[0];
                     } else {
-                        var template = '<li class="horizontal-li"><div><a href="/detail/sell/' + posts[i]['post_id'] + '"><span><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" /> ' +
-                            posts[i]["title"] + '<br/>$' + posts[i]["price"] + '</span> </a></div></li>'
+                        image_info = undefined
+                    }
+                    var isHorizontal = true
+                    if (image_info['height'] > image_info['width']) {
+                        isHorizontal = false;
+                    }
+                    var image_width, image_height
+                    if (isHorizontal) {
+                        if (image_info['width'] < 140) {
+                            image_width = image_info['width']
+                            image_height = image_info['height']
+                        } else {
+                            image_width = 140
+                            image_height = 140 * (image_info['height']/image_info['width']);
+                        }
+                    } else {
+                        if (image_info['height'] < 200) {
+                            image_width = image_info['width']
+                            image_height = image_info['height']
+                        } else {
+                            image_height = 200
+                            image_width = 200 * (image_info['width']/image_info['height']);
+
+                        }
+                    }
+                    var displayCss = "horizontal-li";
+                    if (!isHorizontal) {
+                        displayCss = "vertical-li"
+                    }
+                    var template = '<li class="' + displayCss + '"><div><div><img src="' + 
+                            image_info['image_url']
+                            + '" width = "' + image_width + '" height = "' + image_height + '" /></div><a href="/detail/sell/' + posts[i]['post_id'] + '"><span><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" /> ' +
+                            posts[i]["title"] + '<br/>$' + posts[i]["price"] + '</span></a></div></li>';
+
+                    if (i % 2 === 0) {
+                        listA.append(template);
+                    } else {           
                         listB.append(template);
                     }
                 }

@@ -76,6 +76,7 @@ def get_sell_post_summary(post):
             'post_id': post.id,
             'title': post.title,
             'price': post.price,
+            'image_info': post.image_urls,
             'date_published': post.date_published,
         }
         return sell_post_summary

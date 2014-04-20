@@ -37,7 +37,7 @@
       
             {% for image_metadata in image_list %}
                 <div class="ui-grid-solo">
-                <img src={{ image_metadata.image_url }} height="100" width="100">
+                <img src={{ image_metadata.image_url }} height={{image_metadata.height}} width={{image_metadata.width}}>
                 </div>
             {% endfor%}
 
