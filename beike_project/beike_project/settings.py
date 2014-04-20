@@ -139,7 +139,7 @@ SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 # more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
             'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
@@ -148,7 +148,6 @@ LOGGING = {
             'format': '%(levelname)s %(message)s'
         },
     },
-
     'handlers': {
         'null': {
             'level': 'DEBUG',
@@ -158,16 +157,38 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
+
         },
 
     },
     'loggers': {
+        'django': {
+            'handlers': ['console'],      
+            'propagate': True,
+            'level': 'INFO',
+        },
         'django.request': {
             'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': False,
+            'level': 'INFO',
+            'propagate': True,
         },
+        'detail': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'sell': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'buy': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        }
     }
+
 }
 
 if 'test' in sys.argv:
