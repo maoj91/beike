@@ -27,15 +27,15 @@ def index(request):
 		        return render_to_response('index.html',{'user':user, 'city':city})
 
 def validate_user(request):
-	debug_key = 'test1234'
 	wx_id = request.session['wx_id']
 	key = request.session['key']
 	if wx_id is None or wx_id  == '':
 		raise Http404
 	if key is None or key == '':
 		raise Http404
-	stored_key = UserValidation.objects.get(user_id=wx_id)
-	if stored_key is None:
-		raise Http404
-	if key != debug_key and key != stored_key.key:
+	if UserValidation.objects.filter(user_id=wx_id).exists():
+		stored_key = UserValidation.objects.get(user_id=wx_id)
+		if key!=stored_key.key:
+			raise Http404
+	else:
 		raise Http404

@@ -48,3 +48,5 @@ select 'South Lake Union', id, null, '98109' from data_city where name='Seattle'
 
 insert into data_address (street_line_1, street_line_2, city_id, zip_code, latlon)
 select '535 Terry Ave N', 'Apt 100', id, '98109', null from data_city where name='Seattle';
+
+insert into data_uservalidation(user_id,key) values ('test1234','test1234');
