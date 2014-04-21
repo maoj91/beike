@@ -13,7 +13,7 @@ def index(request):
 			 wx_id = request.session['wx_id']
 		if key is None:
 			 key = request.session['key']		
-		if wx_id is None || key is None:
+		if wx_id is None or key is None:
 			raise Http404
 		else:
 			request.session['wx_id'] = wx_id

@@ -8,11 +8,9 @@ import random
 
 
 def getValidationKey(user_id):
-	# if user id exists
-	validationKey = UserValidation.objects.get(user_id=user_id)
-	if validationKey: 
-		return validationKey
-	# if user id not exist
+	is_key_exist = UserValidation.objects.filter(user_id=user_id).exists()
+	if is_key_exist: 
+		return UserValidation.objects.get(user_id=user_id).key
 	else: 
 		validationKey = id_generator()
 		userValidation = UserValidation()
