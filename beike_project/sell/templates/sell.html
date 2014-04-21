@@ -134,9 +134,9 @@
                     if (!isHorizontal) {
                         displayCss = "vertical-li"
                     }
-                    var template = '<li class="' + displayCss + '"><div style="vertical-align: middle;"><div><img src="' + 
-                            image_info['image_url'] + '" width="100%" height="100%"/></div><a href="/detail/sell/' +
-                            posts[i]['post_id'] + '"><div><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" /> ' +
+                    var template = '<li class="' + displayCss + '"><div><a href="/detail/sell/' +
+                            posts[i]['post_id'] + '"><div><img src="' + 
+                            image_info['image_url'] + '" width="100%" height="100%"/></div><div><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" />' +
                             posts[i]["title"] + '</div><div>$' + posts[i]["price"] + '</div></a></div></li>';
 
                     if (i % 2 === 0) {
