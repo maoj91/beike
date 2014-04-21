@@ -5,14 +5,14 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from data.models import User,Country,State,City,District,Address,Notification,Privacy
 from data.views import create_user,is_email_valid
-from beike_project.views import check_wx_id
+from beike_project.views import validate_user
 from geolocation import get_location_by_latlong, get_location_by_zipcode    
 import json, logging
 from django.core.serializers.json import DjangoJSONEncoder
 
 
 def index(request):
-    check_wx_id(request)
+    validate_user(request)
     wx_id = request.session['wx_id']
     user = User.objects.get(wx_id=wx_id)
     states = State.objects.values('name')
@@ -27,7 +27,7 @@ def get_info(request):
     #     raise Http404
     # else:
     #     request.session['wx_id'] = wx_id
-    check_wx_id(request)
+    validate_user(request)
     wx_id = request.session['wx_id']
     cities = City.objects.all()
     return render_to_response('get_info.html',{'user_id':wx_id,'cities':cities,'default_city':'Seattle'},RequestContext(request))
@@ -66,7 +66,7 @@ def get_name(request):
     return render_to_response('get_name.html')
 
 def create(request):
-    check_wx_id(request)
+    validate_user(request)
     wx_id = request.session['wx_id']
     cities = City.objects.all()
     default_city = cities[0]
@@ -92,7 +92,7 @@ def create(request):
 
 
 def save_profile(request):
-    check_wx_id(request)
+    validate_user(request)
     wx_id = request.session['wx_id']
     user = User.objects.get(wx_id=wx_id)
     error = ""
@@ -149,7 +149,7 @@ def get_city_district(geolocation):
     return cityDistrict
     
 def save_notification(request):
-    check_wx_id(request)
+    validate_user(request)
     wx_id = request.session['wx_id']
     user = User.objects.get(wx_id=wx_id)
     error = ""
@@ -164,7 +164,7 @@ def save_notification(request):
     return HttpResponseRedirect('/me/',{'user':user,'error':error})
 
 def save_privacy(request):
-    check_wx_id(request)
+    validate_user(request)
     wx_id = request.session['wx_id']
     user = User.objects.get(wx_id=wx_id)
     error = ""

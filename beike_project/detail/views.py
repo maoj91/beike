@@ -8,7 +8,7 @@ from data.views import get_user
 from detail.forms import CommentForm
 import smtplib
 from email.mime.text import MIMEText
-from beike_project.views import check_wx_id
+from beike_project.views import validate_user
 from buy.buy_post_util import *
 from sell.sell_post_util import *
 from data.views import get_user
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 @csrf_exempt
 def add_comment_buy(request, post_id):
-    check_wx_id(request)
+    validate_user(request)
     wx_id = request.session['wx_id']
     if request.method == 'POST':
         form = CommentForm(request.POST)
@@ -40,7 +40,7 @@ def add_comment_buy(request, post_id):
     return HttpResponseRedirect("/detail/"+post_id)
 
 def add_comment_sell(request,post_id):
-    check_wx_id(request)
+    validate_user(request)
     wx_id = request.session['wx_id']
     if request.method == 'POST':
         form = CommentForm(request.POST)
@@ -59,7 +59,7 @@ def add_comment_sell(request,post_id):
     return HttpResponseRedirect("/detail/"+post_id)
 
 def sell_post_detail(request,offset):
-    check_wx_id(request)
+    validate_user(request)
     wx_id = request.session['wx_id']
     user = get_user(wx_id)
     try:
@@ -74,7 +74,7 @@ def sell_post_detail(request,offset):
         'is_followed': is_followed, 'wx_id':wx_id})
 
 def buy_post_detail(request,offset):
-    check_wx_id(request)
+    validate_user(request)
     wx_id = request.session['wx_id']
     user = get_user(wx_id)
     try:

@@ -74,6 +74,12 @@ class User(models.Model):
 	def __unicode__(self):
 		return self.name
 
+class UserValidation(models.Model):
+	user_id = models.CharField(max_length= 255, unique=True)
+	key = models.CharField(max_length= 50)
+	def __unicode__(self):
+		return self.user_id+","+self.key
+
 class Category(models.Model):
 	name = models.CharField(max_length=255)
 	def __unicode__(self):

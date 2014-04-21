@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from data.models import BuyPost,User,Category, District
 from data.views import get_user, get_category, get_district
 from datetime import datetime
-from beike_project.views import check_wx_id
+from beike_project.views import validate_user
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 from django.core.serializers.json import DjangoJSONEncoder
@@ -15,7 +15,7 @@ from django.contrib.gis.measure import D
 
 
 def all_list(request):
-    check_wx_id(request)
+    validate_user(request)
     wx_id = request.session['wx_id']
     return render_to_response('buy.html', {'user_id':wx_id })
 
@@ -66,7 +66,7 @@ def get_buy_post_summary(post, origin):
 
 def follow_post(request):
     if request.is_ajax:
-        check_wx_id(request)
+        validate_user(request)
         wx_id = request.session['wx_id']
         user = get_user(wx_id)
 
@@ -87,14 +87,14 @@ def follow_post(request):
         raise Http500
 
 def form(request):
-    check_wx_id(request)
+    validate_user(request)
     wx_id = request.session['wx_id']
     categories = Category.objects.all()
     districts = District.objects.all()
     return render_to_response('buy_form.html',{'categories':categories, 'districts':districts},RequestContext(request))
 
 def form_submit(request):
-    check_wx_id(request)
+    validate_user(request)
     wx_id = request.session['wx_id']
     user = User.objects.get(wx_id=wx_id)
     if request.method == 'POST':
