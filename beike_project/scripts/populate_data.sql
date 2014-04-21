@@ -7,9 +7,6 @@ insert into data_condition (name, description) values ('AlmostNew', 'Item is alm
 insert into data_condition (name, description) values ('Used', 'Item is used.');
 insert into data_condition (name, description) values ('Refurbished', 'Item is refurbished.');
 
-insert into data_followedreason (name, description) values ('Comment', 'User commented on the post');
-insert into data_followedreason (name, description) values ('Follow', 'User manually followed the post');	
-
 insert into data_notification (name, description)
 values ('EmailNotification', 'Notify me by sending me an email' );
 insert into data_notification (name, description)
@@ -51,3 +48,5 @@ select 'South Lake Union', id, null, '98109' from data_city where name='Seattle'
 
 insert into data_address (street_line_1, street_line_2, city_id, zip_code, latlon)
 select '535 Terry Ave N', 'Apt 100', id, '98109', null from data_city where name='Seattle';
+
+insert into data_uservalidation(user_id,key) values ('test1234','test1234');
