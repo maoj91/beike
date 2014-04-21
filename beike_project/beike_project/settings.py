@@ -3,6 +3,7 @@ import os,sys
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+POSTGIS_VERSION = ( 2, 1 )
 
 BASE_DIR = '' 
 
