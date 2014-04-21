@@ -15,6 +15,7 @@ from data.models import Comment
 from data.models import FollowedSellPost
 from data.models import FollowedBuyPost
 from data.models import AWS
+from data.models import UserValidation
 
 admin.site.register(Country)
 admin.site.register(State)
@@ -32,3 +33,4 @@ admin.site.register(Comment)
 admin.site.register(FollowedSellPost)
 admin.site.register(FollowedBuyPost)
 admin.site.register(AWS)
+admin.site.register(UserValidation)
