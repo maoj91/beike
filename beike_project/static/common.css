@@ -1,4 +1,54 @@
+/* CSS for signup page */
+#bkgd{
+    margin:0;
+    padding:0;
+    background:url(https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/green_bkgd.png) center center fixed no-repeat;
+    -moz-background-size: 100% 100%;
+    background-size: 100% 100%;
+}
 
+#logo{
+    margin-top:3em;
+    margin-left:5em;
+}
+
+.signup-outer {
+    width: 100%;
+    text-align: center;
+}
+
+.signup-inner {
+    display: inline-block;
+}
+
+/* CSS for index page */
+.head_text_left{
+    float:left;
+    margin-top: 0.4em;
+}
+
+.head_text_right{
+    float:right;
+    margin-top: 0.4em;
+}
+
+.main-button{
+    width: 50%;
+    margin-left:27%;
+    margin-right:7%;
+    margin-top:5%
+}
+
+/* CSS for buypost creation page */
+#phone_number_div{
+    display: none;
+}
+
+#qq_number_div{
+    display: none;
+}
+
+/* CSS for element ul and li. Mainly for nearby-sellpost and nearby-buypost page */
 .ui-listview li {
     margin: 10px;
     border-radius: 0.25em;

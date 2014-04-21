@@ -16,9 +16,7 @@
     <script src="/static/binaryajax.js"></script>
 
     <!-- beike customized css and js -->
-    <link rel="stylesheet" type="text/css" href="/static/mystyle.css">
-    <link rel="stylesheet" type="text/css" href="/static/me.css">
-    <link rel="stylesheet" type="text/css" href="/static/buy.css">
+    <link rel="stylesheet" type="text/css" href="/static/common.css">
     <link rel="stylesheet" type="text/css" href="/static/sell.css">
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
@@ -73,32 +71,32 @@
     <div data-role="page">
 
     <div id='bkgd'>
-        <div class='outer'>
-            <img id='logo' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/logo.png'>
+        <div class='signup-outer'>
+            <img id='logo' class='signup-inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/logo.png'>
         </div>
         {% if error %}
-        <div class='outer'>
+        <div class='signup-outer'>
             <p>{{error}}</p>
         </div>
         {% endif %}
 
         <form action="/me/create/" method="post" enctype="multipart/form-data">{% csrf_token %}
-            <div class='outer'>
-                <input size="20" id='email' class='inner' type="email" name="user_email" placeholder="请输入常用邮箱" />
+            <div class='signup-outer'>
+                <input size="20" id='email' type="email" name="user_email" placeholder="请输入常用邮箱" />
                 </br>
             </div>
-            <div class='outer'>
+            <div class='signup-outer'>
                 <img id='dots' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/dots.png'>
             </div>
-            <div class='outer'>
+            <div class='signup-outer'>
                 <a href="#jump_to">
-                    <img id='arrow' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/arrow.png'>
+                    <img id='arrow' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/arrow.png'>
                 </a>
             </div>
-            <div class='outer'>
+            <div class='signup-outer'>
                 <p>下方选择城市</p>
             </div>
-            <div class='outer' id='my_city_div'>
+            <div class='signup-outer' id='my_city_div'>
                 <img id='my_city_img' src='{{default_city.image_selected_url}}'>
                 <div id='my_city_name'>{{default_city.name}}</div>
             </div>
@@ -113,7 +111,7 @@
                 <input id="zipcode" name="zipcode"></input>
                 <a href="#" id="getzipcode" data-role="button" data-icon="check">获取城市</a>
             </div>
-            <div class='outer'>
+            <div class='signup-outer'>
                 <input type="image" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/start.png">
             </div>
         </form>

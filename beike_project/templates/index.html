@@ -8,7 +8,7 @@
     <!-- jquery library -->
     <script src="/static/jquery/jquery-1.8.3.js "></script>
     <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
-     <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
+    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
     <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
     <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
 
@@ -20,60 +20,62 @@
     <script src="/static/binaryajax.js"></script>
 
     <!-- beike customized css and js -->
-    <link rel="stylesheet" type="text/css" href="/static/mystyle.css">
-    <link rel="stylesheet" type="text/css" href="/static/me.css">
-    <link rel="stylesheet" type="text/css" href="/static/buy.css">
+    <link rel="stylesheet" type="text/css" href="/static/common.css">
     <link rel="stylesheet" type="text/css" href="/static/sell.css">
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
 </head>
 
 <body>
-    <div class="ui-grid-a">
-        <div class="ui-block-a">
-            <div class="ui-body ui-body-d" style="height:20px">
-                <img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/city.png" style="float:left">
-                <div class="head_text">&nbsp{{city}}</div>
+    <div data-role="page">
+        <div data-role="main">
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    <img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/city.png" style="float:left">
+                    <div class="head_text_left">&nbsp{{city}}</div>
+                </div>
+                <div class="ui-block-b">
+                    <div class="head_text_right">&nbsp{{user.name}}</div>
+                    <img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/user.png" style="float:right">
+                </div>
             </div>
-        </div>
-        <div class="ui-block-b">
-            <div class="ui-body ui-body-d" style="height:20px; float:right">
-                <div class="head_text_right">&nbsp{{user.name}}</div>
-                <img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/user.png" style="float:right">
+
+            <div class="ui-grid-solo">
+                <img width="100%" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/logo.png" />
             </div>
-        </div>
-    </div>
 
-    <div style="margin: 0 0 -.25em 0">
-        <img width="100%" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/logo.png" />
-    </div>
-
-
-
-    <div class="ui-grid-b">
-        <div class="ui-block-a">
-            <a href="/buy/form">
-                <img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/buy.png'>
-        </div>
-        <div class="ui-block-b">
-            <a href="/sell/form">
-                <img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/sell.png'>
-        </div>
-        <div class="ui-block-c">
-            <a href="/history/">
-                <img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/my.png'>
-        </div>
-        <div class="ui-block-a">
-            <a href="/sell/all_list/">
-                <img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/nearby.png'>
-        </div>
-        <div class="ui-block-b">
-            <a data-ajax="false" href="/buy/all_list/">
-                <img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/request.png'>
-        </div>
-        <div class="ui-block-c">
-            <a href="/me/">
-                <img id='button' class='inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/help.png'>
+            <div class="ui-grid-b">
+                <div class="ui-block-a">
+                    <a href="/buy/form">
+                        <img class='main-button' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/buy.png'/>
+                    </a>
+                </div>
+                <div class="ui-block-b">
+                    <a href="/sell/form">
+                        <img class='main-button' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/sell.png'/>
+                    </a>
+                </div>
+                <div class="ui-block-c">
+                    <a href="/history/">
+                        <img class='main-button' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/my.png'/>
+                    </a>
+                </div>
+                <div class="ui-block-a">
+                    <a href="/sell/all_list/">
+                        <img class='main-button' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/nearby.png'/>
+                    </a>
+                </div>
+                <div class="ui-block-b">
+                    <a href="/buy/all_list/">
+                        <img class='main-button' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/request.png'/>
+                    </a>
+                </div>
+                <div class="ui-block-c">
+                    <a href="/me/">
+                        <img class='main-button' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/help.png'/>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </body>
