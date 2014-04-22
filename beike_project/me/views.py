@@ -22,11 +22,13 @@ def index(request):
     return render_to_response('me.html',{'user':user,'states':states,'cities':cities,'notifications':notifications,'privacies':privacies},RequestContext(request))
 
 def get_info(request):
-    # wx_id = request.GET.get('wx_id')
-    # if wx_id is None:
-    #     raise Http404
-    # else:
-    #     request.session['wx_id'] = wx_id
+    wx_id = request.GET.get('wx_id')
+    key = request.GET.get('key')
+    if wx_id and key:
+        request.session['wx_id'] = wx_id
+        request.session['key'] = key
+    else:
+        raise Http500
     validate_user(request)
     wx_id = request.session['wx_id']
     cities = City.objects.all()

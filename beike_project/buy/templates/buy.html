@@ -134,6 +134,7 @@
             }).done(function(position) {
                 current_position = position;
                 postLoader.getAndDisplayPosts(position);
+                pageNum++;
             }).fail(function() {
                 console.log("getCurrentPosition call failed")
             }).always(function() {
@@ -145,9 +146,9 @@
         $(document).scroll(function() {
             if ($(document).height() > $(window).height() && hasMore) {
                 if ($(window).scrollTop() >= $(document).height() - $(window).height() - 100) {
-                    pageNum++;
                     if (typeof current_position !== 'undefined') {
                         postLoader.getAndDisplayPosts(current_position);
+                        pageNum++;
                     }
                 }
             }
