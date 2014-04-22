@@ -18,7 +18,6 @@
 
     <!-- beike customized css and js -->
     <link rel="stylesheet" type="text/css" href="/static/common.css">
-    <link rel="stylesheet" type="text/css" href="/static/sell.css">
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
 
@@ -26,13 +25,14 @@
 
 <body>
     <div data-role="page">
+        <link rel="stylesheet" type="text/css" href="/static/sell.css">
         <div data-role="header" data-position="fixed">
             <img style="width:100%;height:100%;" src="/static/images/nearby_sell_posts/header.png" />
         </div>
         <div id="sell-list" data-role="main">
             <div class="ui-grid-a">
                 <div class="ui-block-a">
-                    <ul id="post-list-a" data-role="listview" data-theme="c" data-inset="true">
+                    <ul id="post-list-a" data-role="listview" data-theme="c" data-inset="true" class="post-ui-listview">
                     </ul>
                 </div>
                 <div class="ui-block-b">
