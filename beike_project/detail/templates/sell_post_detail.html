@@ -32,10 +32,10 @@
                     {{post.title}}
                 </div>
             </div>
-      
+            {% load mathfilters %}
             {% for image_metadata in image_list %}
                 <div class="ui-grid-solo">
-                <img src={{ image_metadata.image_url }} height={{image_metadata.height}} width={{image_metadata.width}}>
+                <img src={{ image_metadata.image_url }} height=200 width={{image_metadata.width|div:image_metadata.height|mul:200}}>
                 </div>
             {% endfor%}
 
