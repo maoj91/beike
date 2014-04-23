@@ -1,3 +1,42 @@
+/* CSS for element ul and li. Mainly for nearby-sellpost and nearby-buypost page */
+.ui-listview li {
+    margin: 10px;
+    border-radius: 0.25em;
+    background:#ffffff !important;
+    border:none;
+    border-bottom: 1px;
+    border-top: 1px solid #eeeeee;
+    border-top: 0;
+    margin-bottom: 10px !important;
+}
+.ui-listview {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.ui-block-a, .ui-block-b { padding-top: 10px !important }
+.ui-listview-inset > .ui-li-static,
+.ui-listview-inset > .ui-li-divider,
+.ui-listview-inset > li > a.ui-btn {
+    border-right-width: 1px;
+    border-left-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    padding: .5em .5em;
+}
+.vertical-li {
+    min-height: 150px;
+    max-width:150px;
+    margin: 5px !important;
+}
+.horizontal-li {
+    min-height: 100px;
+    max-width:150px;
+    margin: 5px !important;
+}
+
+
+
 #current_image_div {
     position: relative;
     width:100%;
@@ -123,5 +162,3 @@
 .slider-scale-div5 {
     left: 100%;
 }
-
-

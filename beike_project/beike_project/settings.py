@@ -3,6 +3,7 @@ import os,sys
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+POSTGIS_VERSION = ( 2, 1 )
 
 BASE_DIR = '' 
 
@@ -116,6 +117,7 @@ INSTALLED_APPS = (
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
     'django.contrib.gis',
+    'mathfilters',
 	# Uncomment the next line to enable the admin:
 	'django.contrib.admin',
 	# Uncomment the next line to enable admin documentation:

@@ -18,10 +18,6 @@
 
     <!-- beike customized css and js -->
     <link rel="stylesheet" type="text/css" href="/static/common.css">
-    <link rel="stylesheet" type="text/css" href="/static/mystyle.css">
-    <link rel="stylesheet" type="text/css" href="/static/me.css">
-    <link rel="stylesheet" type="text/css" href="/static/buy.css">
-    <link rel="stylesheet" type="text/css" href="/static/sell.css">
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
 
@@ -29,16 +25,17 @@
 
 <body>
     <div data-role="page">
+        <link rel="stylesheet" type="text/css" href="/static/sell.css">
         <div data-role="header" data-position="fixed">
             <img style="width:100%;height:100%;" src="/static/images/nearby_sell_posts/header.png" />
         </div>
         <div id="sell-list" data-role="main">
             <div class="ui-grid-a">
-                <div class="ui-block-a" style="width:48%; margin-left: 5px; margin-right: 2.5px">
-                    <ul id="post-list-a" data-role="listview" data-theme="c" data-inset="true">
+                <div class="ui-block-a">
+                    <ul id="post-list-a" data-role="listview" data-theme="c" data-inset="true" class="post-ui-listview">
                     </ul>
                 </div>
-                <div class="ui-block-b" style="width:48%; margin-left: 2.5px;">
+                <div class="ui-block-b">
                     <ul id="post-list-b" data-role="listview" data-theme="c" data-inset="true">
                     </ul>
                 </div>
@@ -53,6 +50,7 @@
         var pageNum = 1;
         var current_position;
         var hasMore = true;
+        var slot_pos = 0;
 
         var postLoader = (function($, undefined) {
             var pub = {};
@@ -107,6 +105,7 @@
                         image_info = image_info_list[0];
                     } else {
                         image_info = undefined
+                        continue;
                     }
                     var isHorizontal = true
                     if (image_info['height'] > image_info['width']) {
@@ -137,17 +136,17 @@
                     if (!isHorizontal) {
                         displayCss = "vertical-li"
                     }
-                    var template = '<li class="' + displayCss + '"><div><div><img src="' + 
-                            image_info['image_url'] + '" width = "' + image_width +
-                            '" height = "' + image_height + '" /></div><a href="/detail/sell/' +
-                            posts[i]['post_id'] + '"><div><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" /> ' +
+                    var template = '<li class="' + displayCss + '"><div><a href="/detail/sell/' +
+                            posts[i]['post_id'] + '"><div><img src="' + 
+                            image_info['image_url'] + '" width="100%" height="100%"/></div><div><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" />' +
                             posts[i]["title"] + '</div><div>$' + posts[i]["price"] + '</div></a></div></li>';
 
-                    if (i % 2 === 0) {
+                    if (slot_pos % 2 === 0) {
                         listA.append(template);
                     } else {           
                         listB.append(template);
                     }
+                    slot_pos++;
                 }
                 listA.listview("refresh");
                 listB.listview("refresh");
@@ -168,6 +167,7 @@
             }).done(function(position) {
                 current_position = position;
                 postLoader.getAndDisplayPosts(position);
+                pageNum++;
             }).fail(function() {
                 console.log("getCurrentPosition call failed")
             }).always(function() {
@@ -179,9 +179,9 @@
         $(document).scroll(function() {
             if ($(document).height() > $(window).height() && hasMore) {
                 if ($(window).scrollTop() >= $(document).height() - $(window).height() - 100) {
-                    pageNum++;
                     if (typeof current_position !== 'undefined') {
                         postLoader.getAndDisplayPosts(current_position);
+                        pageNum++;
                     }
                 }
             }

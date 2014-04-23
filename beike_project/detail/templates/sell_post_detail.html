@@ -16,9 +16,7 @@
     <script src="/static/binaryajax.js"></script>
 
     <!-- beike customized css and js -->
-    <link rel="stylesheet" type="text/css" href="/static/mystyle.css">
-    <link rel="stylesheet" type="text/css" href="/static/buy.css">
-    <link rel="stylesheet" type="text/css" href="/static/sell.css">
+    <link rel="stylesheet" type="text/css" href="/static/common.css">
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
 </head>
@@ -34,10 +32,10 @@
                     {{post.title}}
                 </div>
             </div>
-      
+            {% load mathfilters %}
             {% for image_metadata in image_list %}
                 <div class="ui-grid-solo">
-                <img src={{ image_metadata.image_url }} height={{image_metadata.height}} width={{image_metadata.width}}>
+                <img src={{ image_metadata.image_url }} height=200 width={{image_metadata.width|div:image_metadata.height|mul:200}}>
                 </div>
             {% endfor%}
 
