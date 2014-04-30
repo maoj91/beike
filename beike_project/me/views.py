@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from django.http import Http404,HttpResponse
+from django.http import Http404, HttpResponse
+from django.core.exceptions import ValidationError
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
@@ -44,6 +45,14 @@ def get_city_by_latlong(request):
         return HttpResponse(json.dumps(city_district, cls=DjangoJSONEncoder))
     else:
         raise Http404
+
+def get_latlong_by_zipcode(request):
+    if request.is_ajax():
+        zipcode = request.GET.get('zipcode')
+        geolocation = get_location_by_zipcode(zipcode)
+        return HttpResponse(json.dumps({'latitude': geolocation.latitude, 'longitude': geolocation.longitude}, cls=DjangoJSONEncoder))
+    else:
+        raise ValidationError("Operation is not allowed")
 
 def get_zipcode_by_latlong(request):
     if request.is_ajax():
