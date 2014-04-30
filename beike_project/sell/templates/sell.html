@@ -29,7 +29,15 @@
         <div data-role="header" data-position="fixed">
             <img style="width:100%; float:left;display:inline" src="/static/images/nearby_sell_posts/header.png" />
         </div>
-        <div id="sell-list" data-role="main" >
+
+        <div id="sell-list" data-role="main">
+            <div data-role="fieldcontain">
+                <form action="#" method="post" enctype="multipart/form-data" onsubmit="return refreshSellPosts();">
+                    <label for="name">Zipcode:</label>
+                    <input type="text" name="zipcode" id="zipcode" value="" />
+                    <input type="submit" value="Submit" id="submit_btn">
+                </form>
+            </div>
             <div class="ui-grid-a">
                 <div class="ui-block-a">
                     <ul id="post-list-a" data-role="listview" data-theme="c" data-inset="true" class="post-ui-listview">
@@ -48,7 +56,7 @@
         </div>
         <script type="text/javascript">
         var pageNum = 1;
-        var current_position;
+        var current_position = {};
         var hasMore = true;
         var slot_pos = 0;
 
@@ -72,6 +80,13 @@
                 });
             };
 
+            pub.clearPosts = function() {
+                var listA = $("#post-list-a");
+                listA.empty();
+                var listB = $("#post-list-b");
+                listB.empty();
+            }
+
             function getPosts(position) {
                 //Get posts via ajax
                 return $.ajax({
@@ -80,8 +95,8 @@
                     dataType: "json",
                     data: {
                         pageNum: pageNum,
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude
+                        latitude: position['latitude'],
+                        longitude: position['longitude']
                     }
                 }).then(function(data) {
                     displayPosts(data);
@@ -120,7 +135,7 @@
                             image_height = image_info['height']
                         } else {
                             image_width = max_width
-                            image_height = max_width * (image_info['height']/image_info['width']);
+                            image_height = max_width * (image_info['height'] / image_info['width']);
                         }
                     } else {
                         if (image_info['height'] < max_height) {
@@ -128,7 +143,7 @@
                             image_height = image_info['height']
                         } else {
                             image_height = max_height
-                            image_width = max_height * (image_info['width']/image_info['height']);
+                            image_width = max_height * (image_info['width'] / image_info['height']);
 
                         }
                     }
@@ -137,13 +152,13 @@
                         displayCss = "vertical-li"
                     }
                     var template = '<li class="' + displayCss + '"><div><a href="/detail/sell/' +
-                            posts[i]['post_id'] + '"><div><img src="' + 
-                            image_info['image_url'] + '" width="100%" height="100%"/></div><div><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" />' +
-                            posts[i]["title"] + '</div><div>$' + posts[i]["price"] + '</div></a></div></li>';
+                        posts[i]['post_id'] + '"><div><img src="' +
+                        image_info['image_url'] + '" width="100%" height="100%"/></div><div><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" />' +
+                        posts[i]["title"] + '</div><div>$' + posts[i]["price"] + '</div></a></div></li>';
 
                     if (slot_pos % 2 === 0) {
                         listA.append(template);
-                    } else {           
+                    } else {
                         listB.append(template);
                     }
                     slot_pos++;
@@ -165,7 +180,9 @@
             getCurrentPositionDeferred({
                 enableHighAccuracy: true
             }).done(function(position) {
-                current_position = position;
+                // current_position = position;
+                current_position['latitude'] = position.coords.latitude;
+                current_position['longitude'] = position.coords.longitude;
                 postLoader.getAndDisplayPosts(position);
                 pageNum++;
             }).fail(function() {
@@ -186,6 +203,29 @@
                 }
             }
         });
+
+        function refreshSellPosts() {
+            var zipcode = $('#zipcode').val();
+            $.ajax({
+                type: "get",
+                url: "/me/get_info/get_latlong_by_zipcode",
+                dataType: "json",
+                data: {
+                    zipcode: zipcode
+                }
+            }).then(function(latlon) {
+                // var latlon = jQuery.parseJSON(data);
+                current_position['latitude'] = latlon['latitude'];
+                current_position['longitude'] = latlon['longitude'];
+                //clear the posts and reset pageNum
+                postLoader.clearPosts();
+                pageNum = 1;
+                hasMore = true;
+                postLoader.getAndDisplayPosts(current_position);
+                pageNum++;
+            });
+            return false;
+        }
         </script>
     </div>
 
