@@ -29,8 +29,12 @@ def get_posts_by_page(request):
     if request.is_ajax():
         page_num = request.GET.get('pageNum')
         sell_list = SellPost.objects.order_by('-date_published')
+        latitude = request.GET.get('latitude')
+        longitude = request.GET.get('longitude')
+        origin = Point(float(longitude), float(latitude), srid=4326)
+        query_set = SellPost.objects.distance(origin).order_by('distance')
         #TO-DO: make the record count configurable
-        paginator = Paginator(sell_list, 6)
+        paginator = Paginator(query_set, 6)
         try:
             sell_posts = paginator.page(page_num)
         except PageNotAnInteger:

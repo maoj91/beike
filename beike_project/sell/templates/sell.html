@@ -183,7 +183,7 @@
                 // current_position = position;
                 current_position['latitude'] = position.coords.latitude;
                 current_position['longitude'] = position.coords.longitude;
-                postLoader.getAndDisplayPosts(position);
+                postLoader.getAndDisplayPosts(current_position);
                 pageNum++;
             }).fail(function() {
                 console.log("getCurrentPosition call failed")
