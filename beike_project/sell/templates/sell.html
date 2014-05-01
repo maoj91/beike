@@ -176,6 +176,7 @@
         };
 
         $(document).live('pageshow', function() {
+            pageNum = 1;
             postLoader.init();
             getCurrentPositionDeferred({
                 enableHighAccuracy: true
