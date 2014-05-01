@@ -12,6 +12,7 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.gis.geos import Point
 from sell.sell_post_util import SellPostUtil
+from django.contrib.gis.measure import D
 from sell.image_util import ImageMetadata
 import logging
 
@@ -46,7 +47,7 @@ def get_posts_by_page(request):
         print sell_posts
         sell_post_summaries = []
         for post in sell_posts:
-            sell_post_summaries.append(get_sell_post_summary(post))
+            sell_post_summaries.append(get_sell_post_summary(post, origin))
         data = json.dumps(sell_post_summaries, cls=DjangoJSONEncoder)
         return HttpResponse(data)
     else:
@@ -74,14 +75,18 @@ def follow_post(request):
     else:
         raise Http500
 
-def get_sell_post_summary(post):
+def get_sell_post_summary(post, origin):
     if isinstance(post, SellPost):
+        # transform to srid 32760
+        origin.transform(32760)
+        post.latlon.transform(32760)
         sell_post_summary = {
             'post_id': post.id,
             'title': post.title,
             'price': post.price,
             'image_info': post.image_urls,
             'date_published': post.date_published,
+            'distance': "{0:.2f}".format(D(m = origin.distance(post.latlon)).mi)
         }
         return sell_post_summary
     else:
