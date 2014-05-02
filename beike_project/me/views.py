@@ -9,6 +9,7 @@ from beike_project.views import validate_user
 from geolocation import get_location_by_latlong, get_location_by_zipcode    
 import json, logging
 from django.core.serializers.json import DjangoJSONEncoder
+from data.image_util import ImageMetadata
 
 
 def index(request):
@@ -22,13 +23,6 @@ def index(request):
     return render_to_response('me.html',{'user':user,'states':states,'cities':cities,'notifications':notifications,'privacies':privacies},RequestContext(request))
 
 def get_info(request):
-    # wx_id = request.GET.get('wx_id')
-    # key = request.GET.get('key')
-    # if wx_id and key:
-    #     request.session['wx_id'] = wx_id
-    #     request.session['key'] = key
-    # else:
-    #     raise Http500
     validate_user(request)
     wx_id = request.session['wx_id']
     cities = City.objects.all()
@@ -91,6 +85,17 @@ def create(request):
             return render_to_response('get_info.html',{'wx_id':wx_id,'cities':cities,'default_city':default_city,'error':error},RequestContext(request))
     else: 
         raise Http404
+
+def update_profile_image(request):
+    validate_user(request)
+    wx_id = request.session['wx_id']
+    user = User.objects.get(wx_id=wx_id)
+    error = ""
+    if request.method == 'POST':
+        image_info = get_image_info(request)
+        user.image_url = image_info
+        user.save()
+    return HttpResponseRedirect('/me/',{'user':user,'error':error})
 
 
 def save_profile(request):
@@ -188,4 +193,16 @@ def validate_profile(user_name,user_email,address_city,address_state):
         error = "请检查您的输入"
     #validate more
     return error
+
+
+def get_image_info(request):
+    image_list = []
+    # process image
+    image_url = request.POST.get('image_url')
+    image_width = request.POST.get('image_width')
+    image_height = request.POST.get('image_height')
+    if image_url and image_width and image_height:
+        image = ImageMetadata(image_url, image_width, image_height)
+        image_list.append(image)
+    return ImageMetadata.serialize_list(image_list)
     

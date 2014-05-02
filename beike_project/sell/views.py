@@ -12,7 +12,7 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.gis.geos import Point
 from sell.sell_post_util import SellPostUtil
-from sell.image_util import ImageMetadata
+from data.image_util import ImageMetadata
 import logging
 
 logger = logging.getLogger(__name__)
