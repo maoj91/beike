@@ -26,7 +26,18 @@
 	</div>
 	<div data-role="content">
         <div id="current_image_div">
-                <img id="current_image">          
+        			
+        		{% if image %}	
+	                {% for key, value in image.items %} 
+	                	{% if key == 'image_url' %}
+	                		<img id="current_image" src='{{value}}'>
+						{% elif key == 'width' %}
+						{% elif key == 'height' %}
+	                	{% endif %}
+	                	
+					{% endfor %}    
+                {% endif %}
+
                     <div class="hidden_file">
                         <input type="file" id="image1" data-clear-btn="false" name="image" accept="image/*" onchange="image_s3_upload(this.id,'{{user.wx_id}}');" capture>
                     </div>
@@ -109,9 +120,24 @@
     </div>
 
     <script type="text/javascript">
+ //    function displayUserImage(image_info_string) {
+	// 	var image_info_list = jQuery.parseJSON(image_info_string);
+	//     if (image_info_list.length > 0) {
+	//         //only display the first image
+	// 		image_info = image_info_list[0];
+	// 	} else {
+	// 		image_info = undefined;
+	// 	}
+	// 	var isHorizontal = true;
+	// 	if (image_info['height'] > image_info['width']) {
+	// 		isHorizontal = false;
+	// 	}
+	// 	$('#current_image').attr("src",image_info['image_url']);
+	// };
+
         $(document).ready(function() {
             initiatePage();
-            displayUserImage("{{user.image_url}}");
+            // displayUserImage(image_info_string);
         });
     </script>
 </div>

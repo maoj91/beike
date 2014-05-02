@@ -93,19 +93,6 @@ function initiatePage(){
 	});
 }
 
-function displayUserImage(image_info_string) {
-	var image_info_list = jQuery.parseJSON(image_info_string);
-    if (image_info_list.length > 0) {
-        //only display the first image
-		image_info = image_info_list[0];
-	} else {
-		image_info = undefined;
-	}
-	var isHorizontal = true;
-	if (image_info['height'] > image_info['width']) {
-		isHorizontal = false;
-	}
-	$('#current_image').attr("src",image_info['image_url']);
-};
+
 
 

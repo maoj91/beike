@@ -20,7 +20,8 @@ def index(request):
     cities = City.objects.all()
     notifications = Notification.objects.values('description')
     privacies = Privacy.objects.values('description')
-    return render_to_response('me.html',{'user':user,'states':states,'cities':cities,'notifications':notifications,'privacies':privacies},RequestContext(request))
+    image = json.loads(user.image_url)[0]
+    return render_to_response('me.html',{'user':user,'image':image,'states':states,'cities':cities,'notifications':notifications,'privacies':privacies},RequestContext(request))
 
 def get_info(request):
     validate_user(request)
@@ -95,7 +96,10 @@ def update_profile_image(request):
         image_info = get_image_info(request)
         user.image_url = image_info
         user.save()
-    return HttpResponseRedirect('/me/',{'user':user,'error':error})
+        image = json.loads(image_info)[0]
+        return HttpResponseRedirect('/me/',{'user':user,'error':error,'image':image})
+    else: 
+        raise Http404
 
 
 def save_profile(request):
@@ -109,6 +113,8 @@ def save_profile(request):
         address_city = request.POST.get('address_city','')
         address_state = request.POST.get('address_state','')
         error = validate_profile(user_name,user_email,address_city,address_state)
+
+
         if(error == ""):
             user.name = user_name
             user.email = user_email
