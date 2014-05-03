@@ -11,12 +11,14 @@ import datetime
 from buy.buy_post_util import BuyPostUtil
 from sell.sell_post_util import SellPostUtil
 from data.views import get_user
+import json, logging
 
-def my_list(request):
+def index(request):
     validate_user(request)
     wx_id = request.session['wx_id']
     user = get_user(wx_id)
-
+    image = json.loads(user.image_url)[0]
+    
     buy_post_util = BuyPostUtil()
     sell_post_util = SellPostUtil()
 
@@ -26,8 +28,8 @@ def my_list(request):
     followed_sell_posts = sell_post_util.get_followed_posts(user)
     followed_buy_posts = buy_post_util.get_followed_posts(user)
 
-    return render_to_response('history.html',
-    	{'sell_posts':sell_posts, 'buy_posts':buy_posts,
+    return render_to_response('mine.html',
+    	{'image':image,'sell_posts':sell_posts, 'buy_posts':buy_posts,
     	 'followed_sell_posts':followed_sell_posts, 'followed_buy_posts':followed_buy_posts,
     	 'user_id':wx_id },
     	RequestContext(request))

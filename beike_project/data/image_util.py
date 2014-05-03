@@ -35,3 +35,11 @@ class ImageMetadata(object):
 			img_md_list.append(img_md)
 		return img_md_list
 	deserialize_list = staticmethod(deserialize_list)
+
+def get_default_image():
+    image_list = []
+    default_image_url = 'https://s3-us-west-2.amazonaws.com/beike-s3/static/img/default_profile_img.png'
+    image = ImageMetadata(default_image_url, 1, 1)
+    image_list.append(image)
+    return ImageMetadata.serialize_list(image_list)
+

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.gis.db import models
+from data.image_util import get_default_image
 
 class Country(models.Model):
 	name = models.CharField(max_length=255)
@@ -55,8 +56,9 @@ class Address(models.Model):
 	city = models.ForeignKey(City)
 	zip_code = models.CharField(max_length=255, null=True)
 	latlon = models.PointField(help_text='Point(longitude, latitude)', null=True)
-	def __unicode__(self):
-		return self.street_line_1 + ',' + self.street_line_2 + ',' + self.zip_code
+	# def __unicode__(self):
+	# 	return self.street_line_1 + ',' + self.street_line_2 + ',' + self.zip_code
+
 
 class User(models.Model):
 	name = models.CharField(max_length=255, default='张三')
@@ -70,7 +72,7 @@ class User(models.Model):
 	address = models.ForeignKey(Address,blank=True, null=True)
 	notification = models.ForeignKey(Notification, default=get_default_notification)
 	privacy = models.ForeignKey(Privacy, default= get_default_privacy)
-	image_url = models.CharField(max_length= 255, null=True)
+	image_url = models.CharField(max_length= 255, null=True, default = get_default_image())
 	def __unicode__(self):
 		return self.name
 

@@ -41,7 +41,7 @@
                     <div class="hidden_file">
                         <input type="file" id="image1" data-clear-btn="false" name="image" accept="image/*" onchange="image_s3_upload(this.id,'{{user.wx_id}}');" capture>
                     </div>
-                <p id="upload_status">test</p>
+                <p id="upload_status">status</p>
                 <form action="/me/update_profile_image/" method="post" enctype="multipart/form-data">{% csrf_token %}
 					<input type="hidden" id="image_url" name="image_url" value="">
 	                <input type="hidden" id="image_width" name="image_width" value="">

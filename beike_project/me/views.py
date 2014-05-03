@@ -94,9 +94,10 @@ def update_profile_image(request):
     error = ""
     if request.method == 'POST':
         image_info = get_image_info(request)
+        image_list = json.loads(image_info)
+        image = image_list[0]        
         user.image_url = image_info
         user.save()
-        image = json.loads(image_info)[0]
         return HttpResponseRedirect('/me/',{'user':user,'error':error,'image':image})
     else: 
         raise Http404
@@ -207,6 +208,7 @@ def get_image_info(request):
     image_url = request.POST.get('image_url')
     image_width = request.POST.get('image_width')
     image_height = request.POST.get('image_height')
+    print image_url
     if image_url and image_width and image_height:
         image = ImageMetadata(image_url, image_width, image_height)
         image_list.append(image)
