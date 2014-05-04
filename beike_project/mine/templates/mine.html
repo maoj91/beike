@@ -23,6 +23,7 @@
 
 <body>
     <div data-role="page" id="main-page" data-theme="a">
+        <link rel="stylesheet" type="text/css" href="/static/mine.css">
         <div data-role="header" data-position="fixed">
             <img id='header' src=''>
         </div>
@@ -32,7 +33,7 @@
                     {% for key, value in image.items %} 
                         {% if key == 'image_url' %}
                         <a href="/me/">
-                            <img class='main-button' src='{{value}}' style="width=50px;height=50px;"/>
+                            <img id='profile_image' src='{{value}}' style="width=50px;height=50px;"/>
                         </a>
                         {% elif key == 'width' %}
                         {% elif key == 'height' %}
