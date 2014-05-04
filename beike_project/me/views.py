@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from data.models import User,Country,State,City,District,Address,Privacy
-from data.views import create_user,is_email_valid
+from data.views import create_user,is_email_valid, is_name_valid
 from beike_project.views import validate_user
 from geolocation import get_location_by_latlong, get_location_by_zipcode    
 import json, logging
@@ -80,17 +80,21 @@ def create(request):
     if request.method == 'POST':
         city_id = request.POST.get('city_id','')    
         email = request.POST.get('user_email','')
+        name = request.POST.get('user_name','')
         default_city = cities.get(id=city_id)
         email_valid_type = is_email_valid(email)
-        if email_valid_type ==0:
+        name_valid_type = is_name_valid(name)
+        if email_valid_type ==0 and email_valid_type==0:
             print wx_id + " " + email + " " + city_id
-            create_user(wx_id,email,city_id)
+            create_user(wx_id,name,email,city_id)
             return HttpResponseRedirect('/')
         else: 
+            if email_valid_type == 1: 
+                error += 'User name can not be empty.'
             if email_valid_type == 1:
-                error = 'Email is not valid. Please try again.' 
+                error += 'Email is not valid. Please try again.' 
             if email_valid_type == 2: 
-                error = 'Email already exist.'
+                error += 'Email already exist.'
             return render_to_response('get_info.html',{'wx_id':wx_id,'cities':cities,'default_city':default_city,'error':error},RequestContext(request))
     else: 
         raise Http404
