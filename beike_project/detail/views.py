@@ -70,8 +70,9 @@ def sell_post_detail(request,offset):
     image_list = ImageMetadata.deserialize_list(post.image_urls)
     sell_post_util = SellPostUtil()
     is_followed = sell_post_util.is_post_followed_by_user(user, post)
+    is_owner = user.id == post.user.id
     return render_to_response('sell_post_detail.html', {'post':post, 'image_list': image_list,
-        'is_followed': is_followed, 'wx_id':wx_id})
+        'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner})
 
 def buy_post_detail(request,offset):
     validate_user(request)

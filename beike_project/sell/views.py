@@ -1,5 +1,6 @@
 from django.http import Http404,HttpResponse
 from django.template import RequestContext
+from django.core.exceptions import ValidationError
 from django.shortcuts import render,render_to_response
 from django.http import HttpResponseRedirect
 from data.models import SellPost,User,Category,Condition
@@ -51,7 +52,7 @@ def get_posts_by_page(request):
         data = json.dumps(sell_post_summaries, cls=DjangoJSONEncoder)
         return HttpResponse(data)
     else:
-        raise Http404
+        raise ValidationError("Request not supported")
 
 def follow_post(request):
     if request.is_ajax:
@@ -71,9 +72,37 @@ def follow_post(request):
             sell_post_util.unfollow_post(user, post)
             return HttpResponse("{}")
         else:
-            raise Http500
+            raise ValidationError("Operation not supported")
     else:
-        raise Http500
+        raise ValidationError("Request not supported")
+
+def open_close_post(request):
+    if request.is_ajax:
+        validate_user(request)
+        wx_id = request.session['wx_id']
+        user = get_user(wx_id)
+
+        sell_post_util = SellPostUtil()
+        post_id = request.GET.get('post_id')
+        post = sell_post_util.get_post(post_id)
+
+        if user.id == post.user.id:
+            operation = request.GET.get('operation')
+            if operation == 'open':
+                post.is_open = True
+                post.save()
+                return HttpResponse("{}")
+            elif operation == 'close':
+                post.is_open = False
+                post.save()
+                return HttpResponse("{}")
+            else:
+                raise ValidationError("Operation not supported")
+        else:
+            raise ValidationError("No permission to open or close the sell post")
+
+    else:
+        raise ValidationError("Request not supported")
 
 def get_sell_post_summary(post, origin):
     if isinstance(post, SellPost):
