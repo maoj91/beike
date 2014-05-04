@@ -83,21 +83,6 @@
 				<input type="submit" id="save_profile" value="Save">
 			</form>
 		</div>
-		<div id="notification">
-			<p>--------------- 通知设置 ----------------</p>
-			<form action="/me/save_notification/" method="post" enctype="multipart/form-data">{% csrf_token %}
-			当前选项：
-				<select name="notification">
-				{% for notification in notifications %}
-					{% if notification.description == user.notification.description %}
-						<option value="{{notification.description}}" selected>{{notification.description}}</option>
-					{% else %}
-						<option value="{{notification.description}}">{{notification.description}}</option>
-					{% endif %}
-				{% endfor %}
-				</select></br>
-			<input type="submit" id="save_notification" value="Save">
-		</div>
 		<div id="privacy">
 			</form>
 			<p>--------------- 隐私设置 ----------------</p>

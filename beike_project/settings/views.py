@@ -2,7 +2,7 @@
 from django.http import Http404,HttpResponse
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
-from data.models import User,State,City,Area,Notification
+from data.models import User,State,City,Area
 from django.views.decorators.csrf import csrf_exempt
 
 def index(request,user_id):
@@ -10,8 +10,7 @@ def index(request,user_id):
 	states = State.objects.values('name')
 	current_state = user.area.state_or_region
 	cities = City.objects.filter(state__name=current_state)
-	notifications = Notification.objects.values('description')
-	return render_to_response('settings.html',{'user':user,'states':states,'cities':cities,'notifications':notifications})
+	return render_to_response('settings.html',{'user':user,'states':states,'cities':cities})
 
 @csrf_exempt
 def save_profile(request,user_id):

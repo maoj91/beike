@@ -32,20 +32,11 @@ class District(models.Model):
 	def __unicode__(self):
 		return self.name
 
-class Notification(models.Model):
-	name = models.CharField(max_length = 255)
-	description = models.CharField(max_length = 1000)
-	def __unicode__(self):
-		return self.name
-
 class Privacy(models.Model):
 	name = models.CharField(max_length = 255)
 	description = models.CharField(max_length = 1000)
 	def __unicode__(self):
 		return self.name
-
-def get_default_notification():
-	return Notification.objects.get(id=1)
 
 def get_default_privacy():
 	return Privacy.objects.get(id=1)
@@ -70,7 +61,6 @@ class User(models.Model):
 	home_phone = models.CharField(max_length=255, null=True)
 	email = models.EmailField(max_length=255, null= True, unique= True)
 	address = models.ForeignKey(Address,blank=True, null=True)
-	notification = models.ForeignKey(Notification, default=get_default_notification)
 	privacy = models.ForeignKey(Privacy, default= get_default_privacy)
 	image_url = models.CharField(max_length= 255, null=True, default = get_default_image())
 	def __unicode__(self):

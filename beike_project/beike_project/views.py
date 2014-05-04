@@ -1,7 +1,7 @@
 from django.http import Http404,HttpResponse
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
-from data.models import User,State,City,Notification,Privacy,UserValidation
+from data.models import User,State,City,Privacy,UserValidation
 from data.views import is_user_exist
 
 def index(request):

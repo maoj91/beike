@@ -3,7 +3,7 @@ from django.http import Http404,HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
-from data.models import User,Country,State,City,District,Address,Notification,Privacy
+from data.models import User,Country,State,City,District,Address,Privacy
 from data.views import create_user,is_email_valid
 from beike_project.views import validate_user
 from geolocation import get_location_by_latlong, get_location_by_zipcode    
@@ -18,10 +18,9 @@ def index(request):
     user = User.objects.get(wx_id=wx_id)
     states = State.objects.values('name')
     cities = City.objects.all()
-    notifications = Notification.objects.values('description')
     privacies = Privacy.objects.values('description')
     image = json.loads(user.image_url)[0]
-    return render_to_response('me.html',{'user':user,'image':image,'states':states,'cities':cities,'notifications':notifications,'privacies':privacies},RequestContext(request))
+    return render_to_response('me.html',{'user':user,'image':image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
 
 def get_info(request):
     validate_user(request)
@@ -162,20 +161,6 @@ def get_city_district(geolocation):
         'lv1_district_id': lv1_district.id, 'lv1_district_name': lv1_district.name}
     return cityDistrict
     
-def save_notification(request):
-    validate_user(request)
-    wx_id = request.session['wx_id']
-    user = User.objects.get(wx_id=wx_id)
-    error = ""
-    if request.method == 'POST':
-        nt_description = request.POST.get('notification','')
-        notification = Notification.objects.get(description=nt_description) 
-        if notification is None:
-            error = 'Can not find notification'
-        if(error == ""):
-            user.notification = notification
-            user.save()
-    return HttpResponseRedirect('/me/',{'user':user,'error':error})
 
 def save_privacy(request):
     validate_user(request)

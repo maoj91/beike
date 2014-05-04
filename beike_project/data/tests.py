@@ -16,8 +16,6 @@ class DataModelBootstrap:
         #create basic objects
         book_category = Category.objects.create(name="Book")
         furniture_category = Category.objects.create(name="Furniture")
-        email_noti = Notification.objects.create(name="email")
-        phone_noti = Notification.objects.create(name="phone")
         public = Privacy.objects.create(name="public")
         private = Privacy.objects.create(name="private")
         new_condition = Condition.objects.create(name = "New")
@@ -39,7 +37,7 @@ class DataModelBootstrap:
         my_user = User.objects.create(name="Leon", gender=0, wx_id="test1234",
             qq_number=None, mobile_phone=None,
             home_phone=None, email="test1234@gmail.com",
-            address=user_address, notification=email_noti, privacy=private,
+            address=user_address,  privacy=private,
             image_url=None)
 
         #create buy post1
