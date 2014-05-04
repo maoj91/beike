@@ -65,11 +65,19 @@
                 </div>
             </div>
 
+            {% if is_owner %}
+            <label for="open-close-post">关闭此贴:</label>
+             <select name="open-close-post" id="open-close-post" data-role="slider">
+                <option value="open">待售</option>
+                <option value="close">已售</option>
+             </select>
+            {% else %}
             <label for="follow-post">关注此贴:</label>
             <select name="follow-post" id="follow-post" data-role="slider">
                 <option value="unfollow" {% if not is_followed %} selected {% endif %}>不关注</option>
                 <option value="follow" {% if is_followed %} selected {% endif %}>关注中</option>
             </select>
+            {% endif %}
         </div>
         <div>
             <input type="hidden" id="post_id" value={{post.id}}>
@@ -109,6 +117,19 @@
                     wx_id: wx_id,
                     post_id: post_id,
                     follow_option: follow_option
+                }
+            }).then(function(data) {});
+        });
+        $("#open-close-post").on('slidestop', function(event) {
+            var operation = $("#open-close-post").val();
+            return $.ajax({
+                type: "get",
+                url: "/buy/open_close_post",
+                dataType: "json",
+                data: {
+                    wx_id: wx_id,
+                    post_id: post_id,
+                    operation: operation
                 }
             }).then(function(data) {});
         });
