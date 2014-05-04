@@ -1,5 +1,6 @@
 from django.http import Http404,HttpResponse
 from django.template import RequestContext
+from django.core.exceptions import ValidationError
 from django.shortcuts import render,render_to_response
 from django.http import HttpResponseRedirect
 from data.models import SellPost,User,Category,Condition
@@ -13,6 +14,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.gis.geos import Point
 from sell.sell_post_util import SellPostUtil
 from data.image_util import ImageMetadata
+from django.contrib.gis.measure import D
 import logging
 
 logger = logging.getLogger(__name__)
@@ -29,8 +31,12 @@ def get_posts_by_page(request):
     if request.is_ajax():
         page_num = request.GET.get('pageNum')
         sell_list = SellPost.objects.order_by('-date_published')
+        latitude = request.GET.get('latitude')
+        longitude = request.GET.get('longitude')
+        origin = Point(float(longitude), float(latitude), srid=4326)
+        query_set = SellPost.objects.distance(origin).order_by('distance')
         #TO-DO: make the record count configurable
-        paginator = Paginator(sell_list, 6)
+        paginator = Paginator(query_set, 6)
         try:
             sell_posts = paginator.page(page_num)
         except PageNotAnInteger:
@@ -42,11 +48,11 @@ def get_posts_by_page(request):
         print sell_posts
         sell_post_summaries = []
         for post in sell_posts:
-            sell_post_summaries.append(get_sell_post_summary(post))
+            sell_post_summaries.append(get_sell_post_summary(post, origin))
         data = json.dumps(sell_post_summaries, cls=DjangoJSONEncoder)
         return HttpResponse(data)
     else:
-        raise Http404
+        raise ValidationError("Request not supported")
 
 def follow_post(request):
     if request.is_ajax:
@@ -66,18 +72,50 @@ def follow_post(request):
             sell_post_util.unfollow_post(user, post)
             return HttpResponse("{}")
         else:
-            raise Http500
+            raise ValidationError("Operation not supported")
     else:
-        raise Http500
+        raise ValidationError("Request not supported")
 
-def get_sell_post_summary(post):
+def open_close_post(request):
+    if request.is_ajax:
+        validate_user(request)
+        wx_id = request.session['wx_id']
+        user = get_user(wx_id)
+
+        sell_post_util = SellPostUtil()
+        post_id = request.GET.get('post_id')
+        post = sell_post_util.get_post(post_id)
+
+        if user.id == post.user.id:
+            operation = request.GET.get('operation')
+            if operation == 'open':
+                post.is_open = True
+                post.save()
+                return HttpResponse("{}")
+            elif operation == 'close':
+                post.is_open = False
+                post.save()
+                return HttpResponse("{}")
+            else:
+                raise ValidationError("Operation not supported")
+        else:
+            raise ValidationError("No permission to open or close the sell post")
+
+    else:
+        raise ValidationError("Request not supported")
+
+def get_sell_post_summary(post, origin):
     if isinstance(post, SellPost):
+        # transform to srid 32760
+        origin.transform(32760)
+        post.latlon.transform(32760)
         sell_post_summary = {
             'post_id': post.id,
             'title': post.title,
             'price': post.price,
             'image_info': post.image_urls,
             'date_published': post.date_published,
+            'distance': "{0:.2f}".format(D(m = origin.distance(post.latlon)).mi)
         }
         return sell_post_summary
     else:

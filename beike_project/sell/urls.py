@@ -8,4 +8,5 @@ urlpatterns = patterns('',
 	url(r'^form_submit/$',views.form_submit),
 	url(r'^get_posts_by_page/$',views.get_posts_by_page),
 	url(r'^follow_post/$',views.follow_post),
+	url(r'^open_close_post/$',views.open_close_post),
 )

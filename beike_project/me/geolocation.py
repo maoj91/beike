@@ -10,6 +10,7 @@ def get_location_by_latlong(latitude, longitude):
         location = Geolocation()
         location.latitude = google_location['geometry']['location']['lat']
         location.longitude = google_location['geometry']['location']['lng']
+
         address_components = google_location['address_components']
         for component in address_components:
             if 'street_number' in component['types']:
@@ -46,6 +47,8 @@ def get_location_by_zipcode(zipcode):
         google_location = results.raw[0]
         print google_location
         location = Geolocation()
+        location.latitude = google_location['geometry']['location']['lat']
+        location.longitude = google_location['geometry']['location']['lng']
         address_components = google_location['address_components']
         for component in address_components:
             if 'neighborhood' in component['types']:

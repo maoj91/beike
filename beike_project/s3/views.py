@@ -19,7 +19,7 @@ def sign(request):
     S3_BUCKET = 'beike-s3'
     object_name = request.GET.get('s3_object_name')
     mime_type = request.GET.get('s3_object_type')
-    expires = int(time.time()+10)
+    expires = int(time.time() + 10000)
     amz_headers = "x-amz-acl:public-read"
 
     put_request = "PUT\n\n%s\n%d\n%s\n/%s/%s" % (mime_type, expires, amz_headers, S3_BUCKET, object_name)
