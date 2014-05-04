@@ -9,7 +9,5 @@ DROP TABLE data_state CASCADE;
 DROP TABLE data_country CASCADE;
 DROP TABLE data_category CASCADE;
 DROP TABLE data_privacy CASCADE;
-DROP TABLE data_notification CASCADE;
 DROP TABLE data_condition CASCADE;
-DROP TABLE data_followedreason CASCADE;
 DROP TABLE data_uservalidation CASCADE;

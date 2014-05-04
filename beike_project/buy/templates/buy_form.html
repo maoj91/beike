@@ -10,7 +10,6 @@
     <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
 
     <!--js library for s3 upload-->
-    <script src="/static/lodash.js"></script>
     <script type="text/javascript" src="/static/s3upload.js"></script>
     <script src="/static/exif.js"></script>
     <script src="/static/binaryajax.js"></script>
@@ -21,7 +20,7 @@
     <script src="/static/sell.js"></script>
 </head>
 
-<body onload="initiatePage()">
+<body>
     <div data-role="page" id="main-page" data-theme="a">
         <div data-role="header" data-position="fixed">
             <img id='header' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/04/header.png'>
@@ -139,6 +138,7 @@
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
             }
+            initiatePage();
         });
         </script>
     </div>

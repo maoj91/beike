@@ -18,13 +18,12 @@ class BuyBootstrap:
         pass
     def boot(self):
         DataModelBootstrap().boot()
-        email_noti = Notification.objects.get(name="email")
         pubicPermission = Privacy.objects.get(name="public")
         book_category = Category.objects.get(name="Book")
         other_user = User.objects.create(name="Other", gender=0, wx_id="test1000",
             qq_number=None, mobile_phone=None,
             home_phone=None, email="test1000@gmail.com",
-            address=None, notification=email_noti, privacy=pubicPermission,
+            address=None, privacy=pubicPermission,
             image_url=None)
         tokyo_post = BuyPost.objects.create(title = "Tokyo book",date_published = datetime.datetime.now(),
             open_until = None, content = "Tokyo book", category = book_category,

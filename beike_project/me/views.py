@@ -3,12 +3,13 @@ from django.http import Http404,HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
-from data.models import User,Country,State,City,District,Address,Notification,Privacy
+from data.models import User,Country,State,City,District,Address,Privacy
 from data.views import create_user,is_email_valid
 from beike_project.views import validate_user
 from geolocation import get_location_by_latlong, get_location_by_zipcode    
 import json, logging
 from django.core.serializers.json import DjangoJSONEncoder
+from data.image_util import ImageMetadata
 
 
 def index(request):
@@ -17,18 +18,11 @@ def index(request):
     user = User.objects.get(wx_id=wx_id)
     states = State.objects.values('name')
     cities = City.objects.all()
-    notifications = Notification.objects.values('description')
     privacies = Privacy.objects.values('description')
-    return render_to_response('me.html',{'user':user,'states':states,'cities':cities,'notifications':notifications,'privacies':privacies},RequestContext(request))
+    image = json.loads(user.image_url)[0]
+    return render_to_response('me.html',{'user':user,'image':image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
 
 def get_info(request):
-    # wx_id = request.GET.get('wx_id')
-    # key = request.GET.get('key')
-    # if wx_id and key:
-    #     request.session['wx_id'] = wx_id
-    #     request.session['key'] = key
-    # else:
-    #     raise Http500
     validate_user(request)
     wx_id = request.session['wx_id']
     cities = City.objects.all()
@@ -92,6 +86,21 @@ def create(request):
     else: 
         raise Http404
 
+def update_profile_image(request):
+    validate_user(request)
+    wx_id = request.session['wx_id']
+    user = User.objects.get(wx_id=wx_id)
+    error = ""
+    if request.method == 'POST':
+        image_info = get_image_info(request)
+        image_list = json.loads(image_info)
+        image = image_list[0]        
+        user.image_url = image_info
+        user.save()
+        return HttpResponseRedirect('/me/',{'user':user,'error':error,'image':image})
+    else: 
+        raise Http404
+
 
 def save_profile(request):
     validate_user(request)
@@ -104,6 +113,8 @@ def save_profile(request):
         address_city = request.POST.get('address_city','')
         address_state = request.POST.get('address_state','')
         error = validate_profile(user_name,user_email,address_city,address_state)
+
+
         if(error == ""):
             user.name = user_name
             user.email = user_email
@@ -150,20 +161,6 @@ def get_city_district(geolocation):
         'lv1_district_id': lv1_district.id, 'lv1_district_name': lv1_district.name}
     return cityDistrict
     
-def save_notification(request):
-    validate_user(request)
-    wx_id = request.session['wx_id']
-    user = User.objects.get(wx_id=wx_id)
-    error = ""
-    if request.method == 'POST':
-        nt_description = request.POST.get('notification','')
-        notification = Notification.objects.get(description=nt_description) 
-        if notification is None:
-            error = 'Can not find notification'
-        if(error == ""):
-            user.notification = notification
-            user.save()
-    return HttpResponseRedirect('/me/',{'user':user,'error':error})
 
 def save_privacy(request):
     validate_user(request)
@@ -188,4 +185,17 @@ def validate_profile(user_name,user_email,address_city,address_state):
         error = "请检查您的输入"
     #validate more
     return error
+
+
+def get_image_info(request):
+    image_list = []
+    # process image
+    image_url = request.POST.get('image_url')
+    image_width = request.POST.get('image_width')
+    image_height = request.POST.get('image_height')
+    print image_url
+    if image_url and image_width and image_height:
+        image = ImageMetadata(image_url, image_width, image_height)
+        image_list.append(image)
+    return ImageMetadata.serialize_list(image_list)
     

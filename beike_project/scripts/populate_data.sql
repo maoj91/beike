@@ -7,10 +7,6 @@ insert into data_condition (name, description) values ('AlmostNew', 'Item is alm
 insert into data_condition (name, description) values ('Used', 'Item is used.');
 insert into data_condition (name, description) values ('Refurbished', 'Item is refurbished.');
 
-insert into data_notification (name, description)
-values ('EmailNotification', 'Notify me by sending me an email' );
-insert into data_notification (name, description)
-values ('NoNotification', 'Do not notify me');
 
 insert into data_privacy (name, description)
 values ('Public', 'Everyone can see my profile.');
