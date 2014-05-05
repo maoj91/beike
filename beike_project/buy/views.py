@@ -26,7 +26,7 @@ def get_posts_by_page(request):
         longitude = request.GET.get('longitude')
         origin = Point(float(longitude), float(latitude), srid=4326)
         #TO-DO, filter more based on city or distance
-        query_set = BuyPost.objects.distance(origin).order_by('distance')
+        query_set = BuyPost.objects.filter(is_open=True).distance(origin).order_by('distance')
         #TO-DO: make the record count configurable
         paginator = Paginator(query_set, 6)
 
@@ -128,7 +128,7 @@ def form_submit(request):
         new_post.category = get_category(category_id)
         new_post.content = content
         new_post.save()
-        return HttpResponseRedirect('/history/')
+        return HttpResponseRedirect('/mine/')
     else: 
         raise Http404
 
@@ -144,4 +144,32 @@ def get_contact(phone_checked,email_checked,qq_checked,phone_number,email,qq_num
         }
         return json.dumps(contact, cls=DjangoJSONEncoder)
 
+
+def open_close_post(request):
+    if request.is_ajax:
+        validate_user(request)
+        wx_id = request.session['wx_id']
+        user = get_user(wx_id)
+
+        buy_post_util = BuyPostUtil()
+        post_id = request.GET.get('post_id')
+        post = buy_post_util.get_post(post_id)
+
+        if user.id == post.user.id:
+            operation = request.GET.get('operation')
+            if operation == 'open':
+                post.is_open = True
+                post.save()
+                return HttpResponse("{}")
+            elif operation == 'close':
+                post.is_open = False
+                post.save()
+                return HttpResponse("{}")
+            else:
+                raise ValidationError("Operation not supported")
+        else:
+            raise ValidationError("No permission to open or close the sell post")
+
+    else:
+        raise ValidationError("Request not supported")
 

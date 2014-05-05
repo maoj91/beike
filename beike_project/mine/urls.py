@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
-from history import views
+from mine import views
 
 urlpatterns = patterns('',
-	url(r'^$',views.my_list),
+	url(r'^$',views.index),
 )

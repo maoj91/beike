@@ -4,7 +4,6 @@ from data.models import State
 from data.models import City
 from data.models import District
 from data.models import User
-from data.models import Notification
 from data.models import Privacy
 from data.models import Address
 from data.models import Category
@@ -22,7 +21,6 @@ admin.site.register(State)
 admin.site.register(City)
 admin.site.register(District)
 admin.site.register(User)
-admin.site.register(Notification)
 admin.site.register(Privacy)
 admin.site.register(Address)
 admin.site.register(Category)

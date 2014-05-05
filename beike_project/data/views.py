@@ -75,10 +75,11 @@ def is_user_has_email(user_id):
     else:
         return True
 
-def create_user(user_id,email,city_id):
+def create_user(user_id,user_name,email,city_id):
     if not is_user_exist(user_id):
         user = User()
         user.wx_id = user_id
+        user.name = user_name
         user.gender = 3
         address = Address()
         city = City.objects.get(pk=city_id)
@@ -100,4 +101,11 @@ def is_email_valid(email):
         type = 1
     if User.objects.filter(email=email):
         type = 2
+    return type
+
+
+def is_name_valid(name):
+    type = 0
+    if name is None:
+        type = 1
     return type

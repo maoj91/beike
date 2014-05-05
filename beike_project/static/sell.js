@@ -14,8 +14,17 @@ function getImageDimensionInfo(file_dom_id){
 		var fr   = new FileReader;
 		fr.onloadend = function() {
 			var exif = EXIF.readFromBinaryFile(new BinaryFile(this.result));
-			imgInfo['width'] =  exif.PixelXDimension;
-			imgInfo['height'] =  exif.PixelYDimension;
+			if(typeof exif.PixelXDimension != 'undefined'){
+				imgInfo['width'] =  exif.PixelXDimension;
+			} else {
+				imgInfo['width'] = 1
+			}
+
+			if(typeof exif.PixelXDimension != 'undefined'){
+				imgInfo['height'] =  exif.PixelYDimension;
+			} else {
+				imgInfo['height'] = 1
+			}		
 		};
 		fr.readAsBinaryString(file);
 		return imgInfo

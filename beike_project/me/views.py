@@ -4,12 +4,13 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
-from data.models import User,Country,State,City,District,Address,Notification,Privacy
-from data.views import create_user,is_email_valid
+from data.models import User,Country,State,City,District,Address,Privacy
+from data.views import create_user,is_email_valid, is_name_valid
 from beike_project.views import validate_user
 from geolocation import get_location_by_latlong, get_location_by_zipcode    
 import json, logging
 from django.core.serializers.json import DjangoJSONEncoder
+from data.image_util import ImageMetadata
 
 
 def index(request):
@@ -18,18 +19,11 @@ def index(request):
     user = User.objects.get(wx_id=wx_id)
     states = State.objects.values('name')
     cities = City.objects.all()
-    notifications = Notification.objects.values('description')
     privacies = Privacy.objects.values('description')
-    return render_to_response('me.html',{'user':user,'states':states,'cities':cities,'notifications':notifications,'privacies':privacies},RequestContext(request))
+    image = json.loads(user.image_url)[0]
+    return render_to_response('me.html',{'user':user,'image':image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
 
 def get_info(request):
-    # wx_id = request.GET.get('wx_id')
-    # key = request.GET.get('key')
-    # if wx_id and key:
-    #     request.session['wx_id'] = wx_id
-    #     request.session['key'] = key
-    # else:
-    #     raise Http500
     validate_user(request)
     wx_id = request.session['wx_id']
     cities = City.objects.all()
@@ -50,7 +44,7 @@ def get_latlong_by_zipcode(request):
     if request.is_ajax():
         zipcode = request.GET.get('zipcode')
         geolocation = get_location_by_zipcode(zipcode)
-        return HttpResponse(json.dumps({'latitude': geolocation.latitude, 'longitude': geolocation.longitude}, cls=DjangoJSONEncoder))
+        return HttpResponse(json.dumps({'latitude': geolocation.latitude, 'longitude': geolocation.longitude, 'city': geolocation.city}, cls=DjangoJSONEncoder))
     else:
         raise ValidationError("Operation is not allowed")
 
@@ -60,7 +54,7 @@ def get_zipcode_by_latlong(request):
         longitude = float(request.GET.get('longitude'))
         print("latitude: " + request.GET.get('latitude') + ", longitude: " + request.GET.get('longitude'))
         geolocation = get_location_by_latlong(latitude, longitude)
-        return HttpResponse(json.dumps({'zipcode': geolocation.zipcode}, cls=DjangoJSONEncoder))
+        return HttpResponse(json.dumps({'zipcode': geolocation.zipcode, 'city': geolocation.city}, cls=DjangoJSONEncoder))
     else:
         raise Http404
 
@@ -86,18 +80,37 @@ def create(request):
     if request.method == 'POST':
         city_id = request.POST.get('city_id','')    
         email = request.POST.get('user_email','')
+        name = request.POST.get('user_name','')
         default_city = cities.get(id=city_id)
         email_valid_type = is_email_valid(email)
-        if email_valid_type ==0:
+        name_valid_type = is_name_valid(name)
+        if email_valid_type ==0 and email_valid_type==0:
             print wx_id + " " + email + " " + city_id
-            create_user(wx_id,email,city_id)
+            create_user(wx_id,name,email,city_id)
             return HttpResponseRedirect('/')
         else: 
+            if email_valid_type == 1: 
+                error += 'User name can not be empty.'
             if email_valid_type == 1:
-                error = 'Email is not valid. Please try again.' 
+                error += 'Email is not valid. Please try again.' 
             if email_valid_type == 2: 
-                error = 'Email already exist.'
+                error += 'Email already exist.'
             return render_to_response('get_info.html',{'wx_id':wx_id,'cities':cities,'default_city':default_city,'error':error},RequestContext(request))
+    else: 
+        raise Http404
+
+def update_profile_image(request):
+    validate_user(request)
+    wx_id = request.session['wx_id']
+    user = User.objects.get(wx_id=wx_id)
+    error = ""
+    if request.method == 'POST':
+        image_info = get_image_info(request)
+        image_list = json.loads(image_info)
+        image = image_list[0]        
+        user.image_url = image_info
+        user.save()
+        return HttpResponseRedirect('/me/',{'user':user,'error':error,'image':image})
     else: 
         raise Http404
 
@@ -113,6 +126,8 @@ def save_profile(request):
         address_city = request.POST.get('address_city','')
         address_state = request.POST.get('address_state','')
         error = validate_profile(user_name,user_email,address_city,address_state)
+
+
         if(error == ""):
             user.name = user_name
             user.email = user_email
@@ -159,20 +174,6 @@ def get_city_district(geolocation):
         'lv1_district_id': lv1_district.id, 'lv1_district_name': lv1_district.name}
     return cityDistrict
     
-def save_notification(request):
-    validate_user(request)
-    wx_id = request.session['wx_id']
-    user = User.objects.get(wx_id=wx_id)
-    error = ""
-    if request.method == 'POST':
-        nt_description = request.POST.get('notification','')
-        notification = Notification.objects.get(description=nt_description) 
-        if notification is None:
-            error = 'Can not find notification'
-        if(error == ""):
-            user.notification = notification
-            user.save()
-    return HttpResponseRedirect('/me/',{'user':user,'error':error})
 
 def save_privacy(request):
     validate_user(request)
@@ -197,4 +198,17 @@ def validate_profile(user_name,user_email,address_city,address_state):
         error = "请检查您的输入"
     #validate more
     return error
+
+
+def get_image_info(request):
+    image_list = []
+    # process image
+    image_url = request.POST.get('image_url')
+    image_width = request.POST.get('image_width')
+    image_height = request.POST.get('image_height')
+    print image_url
+    if image_url and image_width and image_height:
+        image = ImageMetadata(image_url, image_width, image_height)
+        image_list.append(image)
+    return ImageMetadata.serialize_list(image_list)
     
