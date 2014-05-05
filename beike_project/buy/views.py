@@ -128,7 +128,7 @@ def form_submit(request):
         new_post.category = get_category(category_id)
         new_post.content = content
         new_post.save()
-        return HttpResponseRedirect('/history/')
+        return HttpResponseRedirect('/mine/')
     else: 
         raise Http404
 

@@ -150,7 +150,7 @@ def form_submit(request):
         new_post.latlon = Point(float(longitude), float(latitude))
         new_post.image_urls = get_image_info(request)
         new_post.save()
-        return HttpResponseRedirect('/history/')
+        return HttpResponseRedirect('/mine/')
     else:
         raise Http500
 
