@@ -80,8 +80,8 @@
             {% if is_owner %}
             <label for="open-close-post">关闭此贴:</label>
              <select name="open-close-post" id="open-close-post" data-role="slider">
-                <option value="open">待售</option>
-                <option value="close">已售</option>
+                <option value="open"{% if is_open %} selected {% endif %}>待售</option>
+                <option value="close"{% if not is_open %} selected {% endif %}>已售</option>
              </select>
             {% else %}
             <label for="follow-post">关注此贴:</label>

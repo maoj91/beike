@@ -70,8 +70,9 @@ def sell_post_detail(request,offset):
     image_list = ImageMetadata.deserialize_list(post.image_urls)
     sell_post_util = SellPostUtil()
     is_followed = sell_post_util.is_post_followed_by_user(user, post)
+    is_open = post.is_open
     is_owner = user.id == post.user.id
-    return render_to_response('sell_post_detail.html', {'post':post, 'image_list': image_list,
+    return render_to_response('sell_post_detail.html', {'post':post, 'is_open':is_open, 'image_list': image_list,
         'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner})
 
 def buy_post_detail(request,offset):
@@ -85,8 +86,9 @@ def buy_post_detail(request,offset):
     post = BuyPost.objects.get(id=offset)
     buy_post_util = BuyPostUtil()
     is_followed = buy_post_util.is_post_followed_by_user(user, post)
+    is_open = post.is_open
     is_owner = user.id == post.user.id
-    return render_to_response('buy_post_detail.html', {'post':post, 'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner})
+    return render_to_response('buy_post_detail.html', {'post':post, 'is_open':is_open,'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner})
 
 def sendEmail(comment):
     post = comment.post
