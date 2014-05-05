@@ -23,8 +23,18 @@
 
 <body>
     <div data-role="page" id="main-page">
-        <div data-role="header">
-            <img src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/header.png'>
+       <div data-role="header" data-position="fixed">
+            <div style="background-color: rgb(35,192,148);">
+                <div class="ui-grid-b">
+                    <div class="ui-block-a">
+                    </div>
+                    <div class="ui-block-b">
+                        <p style = "text-align:center; color:white">需求</p>
+                    </div>
+                    <div class="ui-block-a">
+                    </div>
+                </div>
+            </div>
         </div>
         <div data_role="content">
             <div class="ui-grid-solo">
@@ -77,23 +87,35 @@
         <div>
             <input type="hidden" id="wx_id" value={{wx_id}}>
         </div>
-        <div data-role="footer" data-position="fixed">
-            <div style="background-image: url(/static/images/navigation/footer-background.png);">
-                <div style="display: inline-block; padding: 20px 0px 0px 20px">
-                    <img height="30" width="30" src='/static/images/navigation/homepage.png' />
-                </div>
-                <div style="display: inline-block; padding: 20px 0px 0px 40px">
-                    <img height="40" width="40" src='/static/images/navigation/buy_form.png' />
-                </div>
-                <div style="display: inline-block;">
-                    <img height="40" width="40" src='/static/images/navigation/sell_form.png' />
-                </div>
-                <div style="display: inline-block;">
-                    <img height="40" width="40" src='/static/images/navigation/buy_posts.png' />
-                </div>
-                <div style="display: inline-block;">
-                    <img height="40" width="40" src='/static/images/navigation/sell_posts.png' />
-                </div>
+         <div data-role="footer" data-position="fixed">
+            <div style="background-color: rgb(35,192,148);">
+                <div class="ui-grid-d">
+                    <div class="ui-block-a">
+                        <a href="/">
+                            <img height="40" width="40" style = "padding:12px 5px 5px 12px;" src='/static/images/navigation/homepage_clicked.png' />
+                        </a>
+                    </div>
+                    <div class="ui-block-b">
+                        <a href="/sell/form">
+                            <img height="50" width="40" style = "padding:5px;" src='/static/images/navigation/buy_form_clicked.png' />
+                        </a>
+                    </div>
+                    <div class="ui-block-c">
+                        <a href="/sell/form">
+                            <img height="50" width="40" style = "padding:5px;" src='/static/images/navigation/sell_form_clicked.png' />
+                        </a>
+                    </div>
+                    <div class="ui-block-d">
+                        <a href="/sell/form">
+                            <img height="50" width="50" style = "padding:5px;" src='/static/images/navigation/buy_posts_clicked.png' />
+                        </a>
+                    </div>
+                    <div class="ui-block-e">
+                        <a href="/sell/form">
+                            <img height="50" width="50" style = "padding:5px;" src='/static/images/navigation/sell_posts_clicked.png' />
+                        </a>
+                    </div>
+                </div>    
             </div>
         </div>
         <script type="text/javascript">

@@ -14,7 +14,6 @@
     -webkit-box-shadow: none;
     box-shadow: none;
 }
-.ui-block-a, .ui-block-b { padding-top: 10px !important }
 .ui-listview-inset > .ui-li-static,
 .ui-listview-inset > .ui-li-divider,
 .ui-listview-inset > li > a.ui-btn {
@@ -117,9 +116,7 @@
 .form-label {
     color:#00CED1;
 }
-.ui-block-a {
-    padding-top: 20px;
-}
+
 
 .hiddenfile {
     width: 0px;
