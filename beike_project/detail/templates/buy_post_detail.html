@@ -49,7 +49,7 @@
                 </div>
                 <div class='ui-block-b'>
                     <div class="ui-grid-solo">
-                        <div class="ui-block-a">发布人:</div>
+                        <div class="ui-block-a">发布人: {{post.user.name}}</div>
                         <div class="ui-block-a">发布时间:</div>
                     </div>
                 </div>
@@ -70,8 +70,22 @@
                 <div class="ui-block-a">
                     联系方式:
                 </div>
-                <div class="ui-block-b">
-                    {{post.user.email}}
+                <div class="ui-grid-b">
+                    <div class="ui-grid-solo">
+                    {% if phone_checked%}
+                        <a href="tel:{{phone}}">{{phone}}</a> (电话)
+                    {% endif%}
+                    </div>
+                    <div class="ui-grid-solo">
+                    {% if email_checked%}
+                    <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}" target="_top">{{email}}</a> (Email)
+                    {% endif%}
+                    </div>
+                    <div class="ui-grid-solo">
+                    {% if qq_checked%}
+                        {{qq}} (QQ或微信号)
+                    {% endif%}
+                    </div>
                 </div>
             </div>
 

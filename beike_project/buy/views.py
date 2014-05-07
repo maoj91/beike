@@ -113,12 +113,11 @@ def form_submit(request):
         phone_number = request.POST.get('phone_number','')
         email = user.email
         qq_number = request.POST.get('qq_number','')
-        contact = get_contact(phone_checked,email_checked,qq_checked,phone_number,email,qq_number)
 
         new_post = BuyPost()
         new_post.id = None
         new_post.is_open = True
-        new_post.preferred_contacts = json.loads(contact)
+        new_post.preferred_contacts = get_contact(phone_checked,email_checked,qq_checked,phone_number,email,qq_number)
         new_post.date_published = datetime.now()
         new_post.title = title
         new_post.min_price = min_price
@@ -142,7 +141,7 @@ def get_contact(phone_checked,email_checked,qq_checked,phone_number,email,qq_num
             'email': email,
             'qq_number': qq_number,
         }
-        return json.dumps(contact, cls=DjangoJSONEncoder)
+        return json.dumps(contact)
 
 
 def open_close_post(request):
