@@ -88,6 +88,29 @@
                     {{post.content}}
                 </div>
             </div>
+
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    联系方式:
+                </div>
+                <div class="ui-grid-b">
+                    <div class="ui-grid-solo">
+                    {% if phone_checked%}
+                        <a href="tel:{{phone}}">{{phone}}</a> (电话)
+                    {% endif%}
+                    </div>
+                    <div class="ui-grid-solo">
+                    {% if email_checked%}
+                    <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}" target="_top">{{email}}</a> (Email)
+                    {% endif%}
+                    </div>
+                    <div class="ui-grid-solo">
+                    {% if qq_checked%}
+                        {{qq}} (QQ或微信号)
+                    {% endif%}
+                    </div>
+                </div>
+            </div>
             
             {% if is_owner %}
             <label for="open-close-post">关闭此贴:</label>

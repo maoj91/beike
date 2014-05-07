@@ -11,6 +11,7 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.gis.geos import Point
 from buy.buy_post_util import BuyPostUtil
+from data.data_util import get_contact
 from django.contrib.gis.measure import D
 
 
@@ -89,9 +90,10 @@ def follow_post(request):
 def form(request):
     validate_user(request)
     wx_id = request.session['wx_id']
+    user = User.objects.get(wx_id=wx_id)
     categories = Category.objects.all()
     districts = District.objects.all()
-    return render_to_response('buy_form.html',{'categories':categories, 'districts':districts},RequestContext(request))
+    return render_to_response('buy_form.html',{'user':user, 'categories':categories, 'districts':districts},RequestContext(request))
 
 def form_submit(request):
     validate_user(request)
@@ -111,7 +113,7 @@ def form_submit(request):
         email_checked = request.POST.get('email-checked', 'off')
         qq_checked = request.POST.get('qq-checked', 'off')
         phone_number = request.POST.get('phone_number','')
-        email = user.email
+        email = request.POST.get('email','')
         qq_number = request.POST.get('qq_number','')
 
         new_post = BuyPost()
@@ -123,26 +125,21 @@ def form_submit(request):
         new_post.min_price = min_price
         new_post.max_price = max_price
         new_post.latlon = latlon
-        new_post.user = get_user(wx_id)
+        new_post.user = user
         new_post.category = get_category(category_id)
         new_post.content = content
         new_post.save()
+
+        if user.mobile_phone is None: 
+            user.mobile_phone = phone_number
+            user.save()
+        if user.qq_number is None: 
+            user.qq_number = qq_number
+            user.save()    
+
         return HttpResponseRedirect('/mine/')
     else: 
         raise Http404
-
-# this could be shared by sell post
-def get_contact(phone_checked,email_checked,qq_checked,phone_number,email,qq_number):
-        contact = {
-            'phone_checked': phone_checked,
-            'email_checked': email_checked,
-            'qq_checked': qq_checked,
-            'phone_number': phone_number,
-            'email': email,
-            'qq_number': qq_number,
-        }
-        return json.dumps(contact)
-
 
 def open_close_post(request):
     if request.is_ajax:

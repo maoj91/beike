@@ -1,20 +1,5 @@
 function initiatePage(){
-	setOpenUntil();
-}
-
-//3 months from now by default 
-function setOpenUntil(){
-	var date = new Date();
-	var day = date.getDate();
-	var currentMonth = date.getMonth() + 1;
-	var month = date.getMonth() + 4;
-	var year = date.getFullYear();
-	if (month < 10) month = "0" + month;
-	if (day < 10) day = "0" + day;
-	var currentDate = year + "-" + currentMonth + "-" + day;
-	var defaultDate = year + "-" + month + "-" + day;
-	$('#open_until_date').attr("value",defaultDate);
-	$('#open_until_date').attr("min",currentDate);
+	// $('#email-checked').prop( "checked", true).checkboxradio('refresh');
 }
 
 function validateBuyForm(){
@@ -76,24 +61,7 @@ function isValidInteger(str){
 }
 
 
-function phoneContactChange(){
-	var isChecked = $('#phone-checked').prop( "checked" );
-	if(isChecked){
-		$('#phone_number_div').show();
-	} else {
-		$('#phone_number_div').hide();
-	}
-}
 
-
-function qqContactChange(){
-	var isChecked = $('#qq-checked').prop( "checked" );
-	if(isChecked){
-		$('#qq_number_div').show();
-	} else {
-		$('#qq_number_div').hide();
-	}
-}
 
 
 

@@ -34,8 +34,16 @@ def sell_post_detail(request,offset):
     is_followed = sell_post_util.is_post_followed_by_user(user, post)
     is_open = post.is_open
     is_owner = user.id == post.user.id
+    contact = json.loads(post.preferred_contacts)
+    phone_checked = contact['phone_checked'] == 'on'
+    email_checked = contact['email_checked'] == 'on'
+    qq_checked = contact['qq_checked'] == 'on' 
+    phone = contact['phone_number']
+    email = contact['email']
+    qq = contact['qq_number']
     return render_to_response('sell_post_detail.html', {'post':post, 'is_open':is_open, 'image_list': image_list,
-        'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner})
+        'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner,'phone_checked':phone_checked,'email_checked':email_checked,'qq_checked':qq_checked,'phone':phone,
+        'email':email,'qq':qq})
 
 def buy_post_detail(request,offset):
     validate_user(request)
@@ -59,4 +67,4 @@ def buy_post_detail(request,offset):
     qq = contact['qq_number']
     return render_to_response('buy_post_detail.html', {'post':post, 'is_open':is_open,'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner,
         'phone_checked':phone_checked,'email_checked':email_checked,'qq_checked':qq_checked,'phone':phone,
-        'email':email,'qq':qq,})
+        'email':email,'qq':qq})
