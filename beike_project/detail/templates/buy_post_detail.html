@@ -73,12 +73,12 @@
                 <div class="ui-grid-b">
                     <div class="ui-grid-solo">
                     {% if phone_checked%}
-                        <a href="tel:{{phone}}">{{phone}}</a> (电话)
+                        <a href="tel:{{phone}}" data-role="button">{{phone}}</a> (电话)
                     {% endif%}
                     </div>
                     <div class="ui-grid-solo">
                     {% if email_checked%}
-                    <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}" target="_top">{{email}}</a> (Email)
+                    <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}" data-role="button">{{email}}</a> (Email)
                     {% endif%}
                     </div>
                     <div class="ui-grid-solo">
