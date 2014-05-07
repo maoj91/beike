@@ -5,6 +5,7 @@ import time, operator
 from django.db.models import Q
 from data.models import User,Address,City,Category, Condition, District, BuyPost, SellPost
 from validate_email import validate_email
+from django.contrib.gis.geos import Point
 
 # SellPost
 def get_sell_posts(category, title, min_price, max_price, district_id):
@@ -75,15 +76,18 @@ def is_user_has_email(user_id):
     else:
         return True
 
-def create_user(user_id,user_name,email,city_id):
+def create_user(user_id, user_name, email, city_id, zipcode, latitude, longitude):
     if not is_user_exist(user_id):
         user = User()
         user.wx_id = user_id
         user.name = user_name
-        user.gender = 3
+        user.gender = 0
+        # create address
         address = Address()
         city = City.objects.get(pk=city_id)
         address.city = city
+        address.zip_code = zipcode
+        address.latlon = Point(float(longitude), float(latitude), srid=4326)
         address.save()
         user.address = address
         user.email = email

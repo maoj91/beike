@@ -33,16 +33,35 @@
                 longitude: longitude
             }
         }).then(function(data) {
-            console.log(data);
             $("#city").text(data.city_name);
             $("#city_id").val(data.city_id);
             $("#district").text(data.lv1_district_name);
+            $("#zipcode").val(data.zipcode);
+            $("#latitude").val(latitude);
+            $("#longitude").val(longitude);
         });
     }
 
+    function getCurrentPositionDeferred(options) {
+        var deferred = $.Deferred();
+        navigator.geolocation.getCurrentPosition(deferred.resolve, deferred.reject, options);
+        return deferred.promise();
+    };
+
     $(document).ready(function() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
+            // navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
+            getCurrentPositionDeferred({
+                enableHighAccuracy: true
+            }).done(function(position) {
+                getLatitudeLongtitude(position)
+            }).fail(function() {
+                console.log("getCurrentPositionDeferred call failed")
+            }).always(function() {
+                //do nothing
+            });
+        } else {
+            alert("not enabled.")
         }
     });
 
@@ -60,6 +79,8 @@
                 console.log(data);
                 $("#city").text(data.city_name);
                 $("#district").text(data.lv1_district_name);
+                $("#latitude").val(data.latitude);
+                $("#longitude").val(data.longitude);
             });
         }
     });
@@ -69,57 +90,48 @@
 <body>
     <div data-role="page">
 
-    <div id='bkgd'>
-        <div class='signup-outer'>
-            <img id='logo' class='signup-inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/logo.png'>
-        </div>
-        {% if error %}
-        <div class='signup-outer'>
-            <p>{{error}}</p>
-        </div>
-        {% endif %}
+        <div id='bkgd'>
+            <div class='signup-outer'>
+                <img id='logo' class='signup-inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/logo.png'>
+            </div>
+            {% if error %}
+            <div class='signup-outer'>
+                <p>{{error}}</p>
+            </div>
+            {% endif %}
 
-        <form action="/me/create/" method="post" enctype="multipart/form-data">{% csrf_token %}
-            <div class='signup-outer'>
-                <input size="20" id='name' name="user_name" placeholder="请输入用户名" />
-                </br>
-            </div>
-            <div class='signup-outer'>
-                <input size="20" id='email' type="email" name="user_email" placeholder="请输入常用邮箱" />
-                </br>
-            </div>
-            <div class='signup-outer'>
-                <img id='dots' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/dots.png'>
-            </div>
-            <div class='signup-outer'>
-                <a href="#jump_to">
-                    <img id='arrow' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/arrow.png'>
-                </a>
-            </div>
-            <div class='signup-outer'>
-                <p>下方选择城市</p>
-            </div>
-            <div class='signup-outer' id='my_city_div'>
-                <img id='my_city_img' src='{{default_city.image_selected_url}}'>
-                <div id='my_city_name'>{{default_city.name}}</div>
-            </div>
-            <A NAME="jump_to" />
-            <div style="text-align: center;">
-                <label>当前所在城市:</label>
-                <div style="display:block" id='city' name='city'></div>
-                <input type="hidden" id="city_id" name="city_id" value=""/>
-                <label>当前所在区:</label>
-                <div style="display:block" id='district' name='district'></div>
-                <div>如果你不想从这座城市开始，请输入一个指定邮编:</div>
-                <input id="zipcode" name="zipcode"></input>
-                <a href="#" id="getzipcode" data-role="button" data-icon="check">获取城市</a>
-            </div>
-            <div class='signup-outer'>
-                <input type="image" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/start.png">
-            </div>
-        </form>
+            <form action="/me/create/" method="post" enctype="multipart/form-data">{% csrf_token %}
+                <div class='signup-outer'>
+                    <input size="20" id='name' name="user_name" placeholder="请输入用户名" />
+                    </br>
+                </div>
+                <div class='signup-outer'>
+                    <input size="20" id='email' type="email" name="user_email" placeholder="请输入常用邮箱" />
+                    </br>
+                </div>
+
+                <div class='signup-outer' id='my_city_div'>
+                    <img id='my_city_img' src='{{default_city.image_selected_url}}'>
+                    <div id='my_city_name'>{{default_city.name}}</div>
+                </div>
+                <div class='signup-outer' style="text-align: center;">
+                    <label>当前所在城市:</label>
+                    <div style="display:block" id='city' name='city'></div>
+                    <input type="hidden" id="city_id" name="city_id" value="" />
+                    <label>当前所在区:</label>
+                    <div style="display:block" id='district' name='district'></div>
+                    <div>如果你不想从这座城市开始，请输入一个指定邮编:</div>
+                    <input id="zipcode" name="zipcode"></input>
+                    <a href="#" id="getzipcode" data-role="button" data-icon="check">获取城市</a>
+                    <input type="hidden" name="latitude" id="latitude"/>
+                    <input type="hidden" name="longitude" id="longitude"/>
+                </div>
+                <div class='signup-outer'>
+                    <input type="image" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/start.png">
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 </body>
 
 </html>
