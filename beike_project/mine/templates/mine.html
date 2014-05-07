@@ -22,111 +22,154 @@
 </head>
 
 <body>
-    <div data-role="page" id="main-page" data-theme="a">
+    <div data-role="page" id="main-page" data-theme="a" data-fullscreen="true">
         <link rel="stylesheet" type="text/css" href="/static/mine.css">
         <div data-role="header" data-position="fixed">
-            <img id='header' src=''>
-        </div>
-        <div class="ui-grid-solo">
-                
-                {% if image %}  
-                    {% for key, value in image.items %} 
-                        {% if key == 'image_url' %}
-                        <a href="/me/">
-                            <img id='profile_image' src='{{value}}' style="width=50px;height=50px;"/>
-                        </a>
-                        {% elif key == 'width' %}
-                        {% elif key == 'height' %}
-                        {% endif %}
-                        
-                    {% endfor %}    
-                {% endif %}
-        </div>
-        <div data-role="collapsible-set">
-            <div style="margin: 0 0 -.25em 0">
-                <img src="/static/images/my_account/my_posts.png" />
+            <div style="background-color: rgb(35,192,148);">
+                <div class="ui-grid-b">
+                    <div class="ui-block-a">
+                    </div>
+                    <div class="ui-block-b">
+                        <p style = "text-align:center; color:white">我的</p>
+                    </div>
+                    <div class="ui-block-a">
+                    </div>
+                </div>
             </div>
-            <div data-role="collapsible" data-collapsed="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
+        </div>
+        <div data-role="content">
+            <div class="ui-grid-solo">
+                    
+                    {% if image %}  
+                        {% for key, value in image.items %} 
+                            {% if key == 'image_url' %}
+                            <a href="/me/">
+                                <img id='profile_image' src='{{value}}' style="width=50px;height=50px;"/>
+                            </a>
+                            {% elif key == 'width' %}
+                            {% elif key == 'height' %}
+                            {% endif %}
+                            
+                        {% endfor %}    
+                    {% endif %}
+            </div>
+            <div data-role="collapsible-set">
+                <div style="margin: 0 0 -.25em 0">
+                    <img src="/static/images/my_account/my_posts.png" />
+                </div>
+                <div data-role="collapsible" data-collapsed="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
 
-                <h4>
-                    <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_buy_posts.png" />我要卖</h4>
-                <ul data-role="listview" data-inset="false">
-                    {% for post in sell_posts %}
-                    <li>
-                        <a href="/detail/sell/{{post.id}}">
-                            <h3>{{post.title}} [${{post.price}}]</h3>
-                            <div class="post_meta">
-                                on {{post.date_published}} by {{post.user.name}}</br>
-                                in {{post.user.city}}, {{post.user.state}}
-                            </div>
-                            <div class="post_body">
-                                {{post.content|safe|linebreaks}}
-                            </div>
-                        </a>
-                    </li>
-                    {% endfor %}
+                    <h4>
+                        <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_buy_posts.png" />我要卖</h4>
                     <ul data-role="listview" data-inset="false">
+                        {% for post in sell_posts %}
+                        <li>
+                            <a href="/detail/sell/{{post.id}}">
+                                <h3>{{post.title}} [${{post.price}}]</h3>
+                                <div class="post_meta">
+                                    on {{post.date_published}} by {{post.user.name}}</br>
+                                    in {{post.user.city}}, {{post.user.state}}
+                                </div>
+                                <div class="post_body">
+                                    {{post.content|safe|linebreaks}}
+                                </div>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    <ul data-role="listview" data-inset="false">
+                </div>
+
+                <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
+                    <h4>
+                        <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_buy_posts.png" />我要买</h4>
+                    <ul data-role="listview" data-inset="false">
+                        {% for post in buy_posts %}
+                        <li>
+                            <a href="/detail/buy/{{post.id}}">
+                                <h2>{{post.title}} [${{post.min_price}} - ${{post.max_price}}]</h2>
+                                <p class="post_meta">
+                                    on {{post.date_published}} by {{post.user.name}} {{post.content}}
+                                </p>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
 
-            <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
-                <h4>
-                    <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_buy_posts.png" />我要买</h4>
-                <ul data-role="listview" data-inset="false">
-                    {% for post in buy_posts %}
-                    <li>
-                        <a href="/detail/buy/{{post.id}}">
-                            <h2>{{post.title}} [${{post.min_price}} - ${{post.max_price}}]</h2>
-                            <p class="post_meta">
-                                on {{post.date_published}} by {{post.user.name}} {{post.content}}
-                            </p>
-                        </a>
-                    </li>
-                    {% endfor %}
-                </ul>
+            <div data-role="collapsible-set">
+                <div style="margin: 0 0 -.25em 0">
+                    <img src="/static/images/my_account/my_posts.png" />
+                </div>
+                <div data-role="collapsible" data-collapsed="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
+
+                    <h4>
+                        <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_buy_posts.png" />关注物品</h4>
+                    <ul data-role="listview" data-inset="false">
+                        {% for post in followed_sell_posts %}
+                        <li>
+                            <a href="/detail/sell/{{post.id}}">
+                                <h3>{{post.title}} [${{post.price}}]</h3>
+                                <div class="post_meta">
+                                    on {{post.date_published}} by {{post.user.name}}</br>
+                                    in {{post.user.city}}, {{post.user.state}}
+                                </div>
+                                <div class="post_body">
+                                    {{post.content|safe|linebreaks}}
+                                </div>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
+                    <h4>
+                        <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_buy_posts.png" />关注需求</h4>
+                    <ul data-role="listview" data-inset="false">
+                        {% for post in followed_buy_posts %}
+                        <li>
+                            <a href="/detail/buy/{{post.id}}">
+                                <h2>{{post.title}} [${{post.min_price}} - ${{post.max_price}}]</h2>
+                                <p class="post_meta">
+                                    on {{post.date_published}} by {{post.user.name}} {{post.content}}
+                                </p>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
-
-        <div data-role="collapsible-set">
-            <div style="margin: 0 0 -.25em 0">
-                <img src="/static/images/my_account/my_posts.png" />
-            </div>
-            <div data-role="collapsible" data-collapsed="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
-
-                <h4>
-                    <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_buy_posts.png" />关注物品</h4>
-                <ul data-role="listview" data-inset="false">
-                    {% for post in followed_sell_posts %}
-                    <li>
-                        <a href="/detail/sell/{{post.id}}">
-                            <h3>{{post.title}} [${{post.price}}]</h3>
-                            <div class="post_meta">
-                                on {{post.date_published}} by {{post.user.name}}</br>
-                                in {{post.user.city}}, {{post.user.state}}
-                            </div>
-                            <div class="post_body">
-                                {{post.content|safe|linebreaks}}
-                            </div>
+        <div data-role="footer" data-position="fixed">
+            <div style="background-color: rgb(35,192,148);">
+                <div class="ui-grid-d">
+                    <div class="ui-block-a">
+                        <a href="/">
+                            <img height="30" width="30" style = "padding:12px 5px 5px 12px;" src='/static/images/navigation/homepage_clicked.png' />
                         </a>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
-                <h4>
-                    <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_buy_posts.png" />关注需求</h4>
-                <ul data-role="listview" data-inset="false">
-                    {% for post in followed_buy_posts %}
-                    <li>
-                        <a href="/detail/buy/{{post.id}}">
-                            <h2>{{post.title}} [${{post.min_price}} - ${{post.max_price}}]</h2>
-                            <p class="post_meta">
-                                on {{post.date_published}} by {{post.user.name}} {{post.content}}
-                            </p>
+                    </div>
+                    <div class="ui-block-b">
+                        <a href="/buy/form">
+                            <img height="40" width="32" style = "padding:5px;" src='/static/images/navigation/buy_form_clicked.png' />
                         </a>
-                    </li>
-                    {% endfor %}
-                </ul>
+                    </div>
+                    <div class="ui-block-c">
+                        <a href="/sell/form">
+                            <img height="40" width="32" style = "padding:5px;" src='/static/images/navigation/sell_form_clicked.png' />
+                        </a>
+                    </div>
+                    <div class="ui-block-d">
+                        <a href="/buy/all_list">
+                            <img height="40" width="40" style = "padding:5px;" src='/static/images/navigation/buy_posts_clicked.png' />
+                        </a>
+                    </div>
+                    <div class="ui-block-e">
+                        <a href="/sell/all_list">
+                            <img height="40" width="40" style = "padding:5px;" src='/static/images/navigation/sell_posts_clicked.png' />
+                        </a>
+                    </div>
+                </div>    
             </div>
         </div>
     </div>
