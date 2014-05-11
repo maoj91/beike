@@ -52,8 +52,8 @@
                 <div id="slider" class="swipe">
                     <div class="swipe-wrap">
                         {% for image_metadata in image_list %}
-                            <div width="600" height="350">
-                                <img src="{{ image_metadata.image_url }}" width="100%">
+                            <div width="600" height="300">
+                                <img src="{{ image_metadata.image_url }}" width="100%" max-height="100%">
                             </div>
                         {% endfor%}
                     </div>
@@ -203,6 +203,7 @@
                 }
             }).then(function(data) {});
         });
+
         $(document).ready(function() {
             Slider = $('#slider').Swipe({
                 auto: 3000,
