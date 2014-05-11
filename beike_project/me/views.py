@@ -11,6 +11,7 @@ from geolocation import get_location_by_latlong, get_location_by_zipcode
 import json, logging
 from django.core.serializers.json import DjangoJSONEncoder
 from data.image_util import ImageMetadata
+from django.contrib.gis.geos import Point
 
 
 def index(request):
@@ -38,13 +39,14 @@ def get_city_by_latlong(request):
         city_district = get_city_district(geolocation)
         return HttpResponse(json.dumps(city_district, cls=DjangoJSONEncoder))
     else:
-        raise Http404
+        raise ValidationError("Operation is not allowed")
 
-def get_latlong_by_zipcode(request):
+def get_latlon_by_zipcode(request):
     if request.is_ajax():
         zipcode = request.GET.get('zipcode')
         geolocation = get_location_by_zipcode(zipcode)
-        return HttpResponse(json.dumps({'latitude': geolocation.latitude, 'longitude': geolocation.longitude, 'city': geolocation.city}, cls=DjangoJSONEncoder))
+        return HttpResponse(json.dumps({'latitude': geolocation.latitude, 'longitude': geolocation.longitude,
+            'city': geolocation.city}, cls=DjangoJSONEncoder))
     else:
         raise ValidationError("Operation is not allowed")
 
@@ -73,20 +75,22 @@ def get_name(request):
 def create(request):
     validate_user(request)
     wx_id = request.session['wx_id']
-    cities = City.objects.all()
-    default_city = cities[0]
     error = ''
     email_valid_type = 0;
     if request.method == 'POST':
-        city_id = request.POST.get('city_id','')    
-        email = request.POST.get('user_email','')
-        name = request.POST.get('user_name','')
-        default_city = cities.get(id=city_id)
+        city_id = request.POST.get('city_id')
+        zipcode = request.POST.get('zipcode')
+        latitude = request.POST.get('latitude')
+        longitude = request.POST.get('longitude')  
+        print "latitude: " + latitude
+        print "longitude" + longitude
+        email = request.POST.get('user_email')
+        name = request.POST.get('user_name')
         email_valid_type = is_email_valid(email)
         name_valid_type = is_name_valid(name)
         if email_valid_type ==0 and email_valid_type==0:
             print wx_id + " " + email + " " + city_id
-            create_user(wx_id,name,email,city_id)
+            create_user(wx_id, name, email, city_id, zipcode, latitude, longitude)
             return HttpResponseRedirect('/')
         else: 
             if email_valid_type == 1: 
@@ -171,7 +175,8 @@ def get_city_district(geolocation):
             lv1_district.save()
 
     cityDistrict={'city_id': city.id, 'city_name': city.name,
-        'lv1_district_id': lv1_district.id, 'lv1_district_name': lv1_district.name}
+        'lv1_district_id': lv1_district.id, 'lv1_district_name': lv1_district.name,
+        'zipcode': geolocation.zipcode, 'latitude': geolocation.latitude, 'longitude': geolocation.longitude}
     return cityDistrict
     
 

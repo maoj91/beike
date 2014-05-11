@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
-from data.models import SellPost, BuyPost, User, Comment
+from data.models import SellPost, BuyPost, User
 from data.views import get_user
 from detail.forms import CommentForm
 import smtplib
@@ -15,48 +15,10 @@ from data.views import get_user
 from sell.image_util import ImageMetadata
 import datetime
 import logging
+import json
 
 logger = logging.getLogger(__name__)
 
-@csrf_exempt
-def add_comment_buy(request, post_id):
-    validate_user(request)
-    wx_id = request.session['wx_id']
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            content = cd['content']
-        comment = Comment()
-
-        comment.buy_post = BuyPost.objects.get(id=post_id)
-        comment.user = User.objects.get(wx_id=wx_id)
-        comment.content = content
-        comment.date_published = datetime.datetime.now()
-        
-        comment.image_urls = request.POST.get('image_names','') 
-        comment.save()
-        sendEmail(comment)
-    return HttpResponseRedirect("/detail/"+post_id)
-
-def add_comment_sell(request,post_id):
-    validate_user(request)
-    wx_id = request.session['wx_id']
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            content = cd['content']
-        comment = Comment()
-        comment.sell_post = SellPost.objects.get(id=post_id)
-        comment.user = User.objects.get(wx_id=wx_id)
-        comment.content = content
-        comment.date_published = datetime.datetime.now()
-        
-        comment.image_urls = request.POST.get('image_names','') 
-        comment.save()
-        sendEmail(comment)
-    return HttpResponseRedirect("/detail/"+post_id)
 
 def sell_post_detail(request,offset):
     validate_user(request)
@@ -72,8 +34,16 @@ def sell_post_detail(request,offset):
     is_followed = sell_post_util.is_post_followed_by_user(user, post)
     is_open = post.is_open
     is_owner = user.id == post.user.id
+    contact = json.loads(post.preferred_contacts)
+    phone_checked = contact['phone_checked'] == 'on'
+    email_checked = contact['email_checked'] == 'on'
+    qq_checked = contact['qq_checked'] == 'on' 
+    phone = contact['phone_number']
+    email = contact['email']
+    qq = contact['qq_number']
     return render_to_response('sell_post_detail.html', {'post':post, 'is_open':is_open, 'image_list': image_list,
-        'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner})
+        'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner,'phone_checked':phone_checked,'email_checked':email_checked,'qq_checked':qq_checked,'phone':phone,
+        'email':email,'qq':qq})
 
 def buy_post_detail(request,offset):
     validate_user(request)
@@ -88,43 +58,13 @@ def buy_post_detail(request,offset):
     is_followed = buy_post_util.is_post_followed_by_user(user, post)
     is_open = post.is_open
     is_owner = user.id == post.user.id
-    return render_to_response('buy_post_detail.html', {'post':post, 'is_open':is_open,'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner})
-
-def sendEmail(comment):
-    post = comment.post
-    commenter = post.user
-    publisher = post.user   
-    to = post.user.email
-    subject = "[Beike]New reply for:"+post.title
-    content = "<br/>You have new reply for your post:"+post.title+"<br/>"+comment.content  
-    send_email(to,subject,content)
-
-def send_email(to,subject,text):
-    message = """From: <fromEmail>
-To: <toEmail>
-MIME-Version: 1.0
-Content-type: text/html
-Subject: subject_template
-
-content_template
-"""
-    message = message.replace("fromEmail","beike")
-    message = message.replace("toEmail",to)
-    message = message.replace("subject_template",subject)
-    message = message.replace("content_template",text)
-    gmail_user = "homeinshell@gmail.com"
-    gmail_pwd = "shellinhome"
-    FROM = "homeinshell@gmail.com"
-    TO = to
-    result = False
-    try:
-            server = smtplib.SMTP("smtp.gmail.com",587)
-            server.ehlo()
-            server.starttls()
-            server.login(gmail_user,gmail_pwd)
-            server.sendmail(FROM,TO,message)
-            server.close()
-            result = True
-    except:
-            result = False
-    return result
+    contact = json.loads(post.preferred_contacts)
+    phone_checked = contact['phone_checked'] == 'on'
+    email_checked = contact['email_checked'] == 'on'
+    qq_checked = contact['qq_checked'] == 'on' 
+    phone = contact['phone_number']
+    email = contact['email']
+    qq = contact['qq_number']
+    return render_to_response('buy_post_detail.html', {'post':post, 'is_open':is_open,'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner,
+        'phone_checked':phone_checked,'email_checked':email_checked,'qq_checked':qq_checked,'phone':phone,
+        'email':email,'qq':qq})

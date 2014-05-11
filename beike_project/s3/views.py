@@ -10,7 +10,7 @@ import hashlib
 import urllib
 import json
 import os
-from django.utils import simplejson
+import json
 
 @csrf_exempt
 def sign(request):

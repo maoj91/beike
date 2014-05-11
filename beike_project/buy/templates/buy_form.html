@@ -16,6 +16,7 @@
 
     <!-- beike customized css and js -->
     <link rel="stylesheet" type="text/css" href="/static/common.css">
+    <script src="/static/common.js"></script>
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
 </head>
@@ -115,7 +116,7 @@
                                 <label for="phone-checked">
                                     <img src="/static/images/general/mobile.png" style="width: 30px; height: 30px" />
                                 </label>
-                                <input type="checkbox" name="email-checked" id="email-checked" />
+                                <input type="checkbox" name="email-checked" id="email-checked" onchange="emailContactChange()" />
                                 <label for="email-checked">
                                     <img src="/static/images/general/email.png" style="width: 30px; height: 30px" />
                                 </label>
@@ -126,11 +127,27 @@
                             </fieldset>
                         </div>
                         <div id="phone_number_div">
-                            <input type="text" name="phone_number" placeholder="手机号码">
+                            {% if user.mobile_phone %}
+                                <input type="text" name="phone_number" placeholder="{{user.mobile_phone}}" value="{{user.mobile_phone}}">
+                            {% else %}
+                                <input type="text" name="phone_number" placeholder="手机号码" value="">
+                            {% endif %}
                             <p id="phone_required" style="color: red;"></p>
                         </div>
+                        <div id="email_div">
+                            {% if user.email %}
+                                <input type="text" name="email" placeholder="{{user.email}}" value="{{user.email}}">
+                            {% else %}
+                                <input type="text" name="email" placeholder="Email" value="">
+                            {% endif %}
+                            <p id="email_required" style="color: red;"></p>
+                        </div>
                         <div id="qq_number_div">
-                            <input type="text" name="qq_number" placeholder="QQ号码">
+                            {% if user.qq_number %}
+                                <input type="text" name="qq_number" placeholder="{{user.qq_number}}" value="{{user.qq_number}}">
+                            {% else %}
+                                <input type="text" name="qq_number" placeholder="微信或QQ号" value="">
+                            {% endif %}
                             <p id="qq_required" style="color: red;"></p>
                         </div>
                     </div>
