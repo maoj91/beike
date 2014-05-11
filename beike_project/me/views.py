@@ -110,7 +110,7 @@ def update_profile_image(request):
     error = ""
     if request.method == 'POST':
         image_info = get_image_info(request)
-        image_list = json.loads(image_info)
+        image_list = json.dumps(image_info)
         image = image_list[0]        
         user.image_url = image_info
         user.save()
