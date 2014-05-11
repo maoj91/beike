@@ -163,6 +163,7 @@ def open_close_post(request):
                 return HttpResponse("{}")
             elif operation == 'close':
                 post.is_open = False
+                post.date_closed = datetime.now()
                 post.save()
                 return HttpResponse("{}")
             else:

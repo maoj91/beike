@@ -84,7 +84,6 @@ def open_close_post(request):
         sell_post_util = SellPostUtil()
         post_id = request.GET.get('post_id')
         post = sell_post_util.get_post(post_id)
-
         if user.id == post.user.id:
             operation = request.GET.get('operation')
             if operation == 'open':
@@ -93,6 +92,7 @@ def open_close_post(request):
                 return HttpResponse("{}")
             elif operation == 'close':
                 post.is_open = False
+                post.date_closed = datetime.now()
                 post.save()
                 return HttpResponse("{}")
             else:
@@ -135,6 +135,7 @@ def form_submit(request):
     if request.method == 'POST':
         new_post = SellPost()
         new_post.date_published = datetime.now()
+        new_post.date_closed = datetime.now()
         new_post.user = get_user(wx_id)
         #get image urls 
         category_id = int(request.POST.get('category',''))
