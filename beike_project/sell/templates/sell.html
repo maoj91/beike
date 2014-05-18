@@ -202,6 +202,13 @@
                 }
                 listA.listview("refresh");
                 listB.listview("refresh");
+                if (len == 0) {
+                    hasMore = false;
+                    $('#load-more').hide();
+                } else {
+                    hasMore = true;
+                    pageNum++;
+                }
             }
             return pub;
         }(jQuery));
@@ -215,6 +222,7 @@
         $(document).live('pageshow', function() {
             pageNum = 1;
             postLoader.init();
+            postLoader.clearPosts();
             getCurrentPositionDeferred({
                 enableHighAccuracy: true
             }).done(function(position) {
@@ -222,7 +230,6 @@
                 current_position['latitude'] = position.coords.latitude;
                 current_position['longitude'] = position.coords.longitude;
                 postLoader.getAndDisplayPosts(current_position);
-                pageNum++;
             }).fail(function() {
                 console.log("getCurrentPosition call failed")
             }).always(function() {
@@ -235,8 +242,8 @@
             if ($(document).height() > $(window).height() && hasMore) {
                 if ($(window).scrollTop() >= $(document).height() - $(window).height() - 100) {
                     if (typeof current_position !== 'undefined') {
+                        hasMore = false;
                         postLoader.getAndDisplayPosts(current_position);
-                        pageNum++;
                     }
                 }
             }
@@ -258,9 +265,8 @@
                 //clear the posts and reset pageNum
                 postLoader.clearPosts();
                 pageNum = 1;
-                hasMore = true;
+                hasMore = false;
                 postLoader.getAndDisplayPosts(current_position);
-                pageNum++;
             });
             return false;
         }

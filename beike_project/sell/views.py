@@ -36,7 +36,7 @@ def get_posts_by_page(request):
         origin = Point(float(longitude), float(latitude), srid=4326)
         query_set = SellPost.objects.filter(is_open=True).distance(origin).order_by('distance')
         #TO-DO: make the record count configurable
-        paginator = Paginator(query_set, 6)
+        paginator = Paginator(query_set, 10)
         try:
             sell_posts = paginator.page(page_num)
         except PageNotAnInteger:
@@ -45,7 +45,7 @@ def get_posts_by_page(request):
         except EmptyPage:
             # if page is out of range, deliever the last page
             sell_posts = {}
-        print sell_posts
+
         sell_post_summaries = []
         for post in sell_posts:
             sell_post_summaries.append(get_sell_post_summary(post, origin))
@@ -106,9 +106,16 @@ def open_close_post(request):
 
 def get_sell_post_summary(post, origin):
     if isinstance(post, SellPost):
-        # transform to srid 32760
-        origin.transform(32760)
-        post.latlon.transform(32760)
+        # transform to srid 900913
+        try:
+            origin.transform(900913)
+        except Exception, E:
+            raise Exception('%s: latlon was: %s' % (E, origin.latlon))
+        try:
+            post.latlon.transform(900913)
+        except Exception, E:
+            raise Exception('%s: latlon was: %s' % (E, post.latlon))
+        
         sell_post_summary = {
             'post_id': post.id,
             'title': post.title,
