@@ -2,29 +2,33 @@
 <html lang="zh">
 
 <head>
-    <meta name="viewport" content="width=device-width ,  user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
-
     <!-- jquery library -->
+    <script type="text/javascript" src="/static/jquery/jquery-1.8.3.js "></script>
+    <script type="text/javascript" src="/static/jquery/jquery.mobile-1.4.2.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
-    <script src="/static/jquery/jquery-1.8.3.js "></script>
-    <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
+    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
+
 
     <!--js library for s3 upload-->
-    <script src="/static/lodash.js"></script>
     <script type="text/javascript" src="/static/s3upload.js"></script>
-    <script src="/static/exif.js"></script>
-    <script src="/static/binaryajax.js"></script>
+    <script type="text/javascript" src="/static/exif.js"></script>
+    <script type="text/javascript" src="/static/binaryajax.js"></script>
 
     <!-- beike customized css and js -->
-    <link rel="stylesheet" type="text/css" href="/static/common.css">
+    <link rel="stylesheet" href="/static/common.css">
+    <link rel="stylesheet" href="/static/swipe-normalize.css">
+    <link rel="stylesheet" href="/static/swipe.css">
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
-
+    <script src="/static/swipe.js"></script>
+    <title>千贝科技</title>
 </head>
 
 <body>
-    <div data-role="page" data-fullscreen="true">
+    <div id="nearby-sellpost" data-role="page" data-fullscreen="true">
         <link rel="stylesheet" type="text/css" href="/static/sell.css">
         <div data-role="header" data-position="fixed" style="background-color: rgb(35,192,148);" >
             <div class="ui-grid-b">
@@ -69,22 +73,22 @@
                         </a>
                     </div>
                     <div class="ui-block-b">
-                        <a href="/buy/form">
+                        <a href="/buy/form/">
                             <img height="40" width="32" style = "padding:5px;" src='/static/images/navigation/buy_form_clicked.png' />
                         </a>
                     </div>
                     <div class="ui-block-c">
-                        <a href="/sell/form">
+                        <a href="/sell/form/">
                             <img height="40" width="32" style = "padding:5px;" src='/static/images/navigation/sell_form_clicked.png' />
                         </a>
                     </div>
                     <div class="ui-block-d">
-                        <a href="/buy/all_list">
+                        <a href="/buy/all_list/">
                             <img height="40" width="40" style = "padding:5px;" src='/static/images/navigation/buy_posts_clicked.png' />
                         </a>
                     </div>
                     <div class="ui-block-e">
-                        <a href="/sell/all_list">
+                        <a href="/sell/all_list/">
                             <img height="40" width="40" style = "padding:5px;" src='/static/images/navigation/sell_posts_clicked.png' />
                         </a>
                     </div>
@@ -219,13 +223,13 @@
             return deferred.promise();
         };
 
-        $(document).live('pageshow', function() {
+        $("#nearby-sellpost").live('pageshow', function() {
             pageNum = 1;
-            postLoader.init();
-            postLoader.clearPosts();
             getCurrentPositionDeferred({
                 enableHighAccuracy: true
             }).done(function(position) {
+                postLoader.init();
+                postLoader.clearPosts();
                 // current_position = position;
                 current_position['latitude'] = position.coords.latitude;
                 current_position['longitude'] = position.coords.longitude;
