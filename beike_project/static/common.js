@@ -26,5 +26,11 @@ function qqContactChange(){
 	}
 }
 
+function getCurrentPositionDeferred(options) {
+    var deferred = $.Deferred();
+    navigator.geolocation.getCurrentPosition(deferred.resolve, deferred.reject, options);
+    return deferred.promise();
+};
+
 
 
