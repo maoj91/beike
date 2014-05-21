@@ -243,10 +243,6 @@ var sellPostLoader = (function($, undefined) {
         var listB = $("#post-list-b");
         var i = 0,
             len = posts.length;
-        if (len == 0) {
-            hasMoreSellPost = false;
-            $('#load-more').hide();
-        }
         //process posts data
         for (i = 0; i < len; i++) {
             var image_info_list = jQuery.parseJSON(posts[i]["image_info"]);

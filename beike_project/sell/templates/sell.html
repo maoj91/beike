@@ -108,6 +108,16 @@
                 }
             }
         });
+        $(document).on("scrollstop", function() {
+            if ($(document).height() > $(window).height() && hasMoreSellPost) {
+                if ($(window).scrollTop() >= $(document).height() - $(window).height() - 200) {
+                    if (typeof sellPostCurLatLon !== 'undefined') {
+                        hasMoreSellPost = false;
+                        sellPostLoader.getAndDisplayPosts(sellPostCurLatLon);
+                    }
+                }
+            }
+        });
         </script>
 
     </div>

@@ -36,7 +36,7 @@ def get_posts_by_page(request):
         origin = Point(float(longitude), float(latitude), srid=4326)
         query_set = SellPost.objects.filter(is_open=True).distance(origin).order_by('distance')
         #TO-DO: make the record count configurable
-        paginator = Paginator(query_set, 10)
+        paginator = Paginator(query_set, 8)
         try:
             sell_posts = paginator.page(page_num)
         except PageNotAnInteger:
