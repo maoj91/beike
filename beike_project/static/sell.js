@@ -211,7 +211,7 @@ var sellPostLoader = (function($, undefined) {
         //Get posts and add success callback using then
         getPosts(position).then(function() {
             //Stop loading animation on success
-            $('#load-more').hide();
+            // $('#load-more').hide();
         });
     };
 
