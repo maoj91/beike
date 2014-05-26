@@ -1,53 +1,59 @@
+.field-label-inner-div {
+    padding: 15px 0 15px 0;
+    color:#00CED1;
+}
 /* CSS for signup page */
-#bkgd{
+ #bkgd {
     margin:0;
     padding:0;
     background:url(https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/green_bkgd.png) center center fixed no-repeat;
     -moz-background-size: 100% 100%;
     background-size: 100% 100%;
 }
-
-#logo{
+#logo {
     margin-top:3em;
     margin-left:5em;
 }
-
 .signup-outer {
     width: 100%;
     text-align: center;
 }
-
 .signup-inner {
     display: inline-block;
 }
-
 /* CSS for index page */
-.head_text_left{
+ .head_text_left {
     float:left;
     margin-top: 0.4em;
 }
-
-.head_text_right{
+.head_text_right {
     float:right;
     margin-top: 0.4em;
 }
-
-.main-button{
+.main-button {
     width: 50%;
     margin-left:27%;
     margin-right:7%;
     margin-top:5%
 }
-
 /* CSS for buypost creation page */
-#phone_number_div{
+#phone_number_div {
     display: none;
 }
-
-#email_div{
+#email_div {
     display: none;
 }
-
-#qq_number_div{
+#qq_number_div {
     display: none;
+}
+label.error {
+    color: red;
+    font-size: 16px;
+    line-height: 1.4;
+    padding-top: .5em;
+    vertical-align: top;
+    font-weight:bold;
+    width: 100%;
+    float: left;
+    display:block;
 }

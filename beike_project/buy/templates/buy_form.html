@@ -6,6 +6,7 @@
     <!-- jquery library -->
     <script type="text/javascript" src="/static/jquery/jquery-1.8.3.js "></script>
     <script type="text/javascript" src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+    <script type="text/javascript" src="/static/jquery/jquery.validate.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
     <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
     <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
@@ -28,14 +29,14 @@
 </head>
 
 <body>
-    <div data-role="page" id="main-page" data-theme="a" data-fullscreen="true">
+    <div data-role="page" id="buy-form" data-theme="a" data-fullscreen="true">
         <div data-role="header" data-position="fixed">
             <div style="background-color: rgb(35,192,148);">
                 <div class="ui-grid-b">
                     <div class="ui-block-a">
                     </div>
                     <div class="ui-block-b">
-                        <p style = "text-align:center; color:white">我要买</p>
+                        <p style="text-align:center; color:white">我要买</p>
                     </div>
                     <div class="ui-block-a">
                     </div>
@@ -44,11 +45,19 @@
         </div>
 
         <div data-role="content">
-            <form action="/buy/form_submit/" method="post" enctype="multipart/form-data" onsubmit="return validateBuyForm()">
+            <form action="/buy/form_submit/" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="ui-grid-a">
                     <div class="ui-block-a" style="width:20%;">
-                        <label for="category" class="form-label">类别</label>
+                        <div class="field-label-inner-div">标题</div>
+                    </div>
+                    <div class="ui-block-b" style="width:80%">
+                        <input type="text" name="title" id="title" placeholder="请输入标题" data-rule-required="true" data-rule-content="true" data-msg-required="请输入标题" />
+                    </div>
+                </div>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:20%;">
+                        <div class="field-label-inner-div">类别</div>
                     </div>
                     <div class="ui-block-b" style="width:80%;">
                         <select name='category' id="category">
@@ -58,27 +67,19 @@
                         </select>
                     </div>
                 </div>
-                <div class="ui-grid-a">
-                    <div class="ui-block-a" style="width:20%;">
-                        <label for="title" class="form-label">标题</label>
-                    </div>
-                    <div class="ui-block-b" style="width:80%">
-                        <input type="text" name="title" id="title" placeholder="请输入标题" />
-                    </div>
-                </div>
 
                 <div class="ui-grid-c">
                     <div class="ui-block-a" style="width:20%;">
-                        <label class="form-label">价格</label>
+                        <div class="field-label-inner-div">价格</div>
                     </div>
                     <div class="ui-block-b" style="width:35%;">
-                        <input type="number" name="min_price" placeholder="最低">
+                        <input type="number" id="min_price" name="min_price" placeholder="最低" data-rule-required="true" data-rule-content="true" data-msg-required="请输入最低价格">
                     </div>
                     <div class="ui-block-c" style="width:10%;">
 
                     </div>
                     <div class="ui-block-d" style="width:35%;">
-                        <input type="number" name="max_price" placeholder="最高">
+                        <input type="number" id="max_price" name="max_price" placeholder="最高" data-rule-required="true" data-rule-content="true" data-msg-required="请输入最高价格">
                     </div>
                 </div>
 
@@ -86,8 +87,8 @@
 
                 <div class="ui-grid-solo">
                     <div class="ui-block-a">
-                        <label class="form-label">详细描述</label>
-                        <textarea name="content" placeholder="描述颜色、大小、形状、新旧等需求"></textarea>
+                        <div class="field-label-inner-div">详细描述</div>
+                        <textarea name="content" placeholder="描述颜色、大小、形状、新旧等需求" data-rule-required="true" data-rule-content="true" data-msg-required="请输入详细描述"></textarea>
                     </div>
                 </div>
 
@@ -98,25 +99,25 @@
 
                 <div class="ui-grid-c">
                     <div class="ui-block-a" style="width:20%;">
-                        <label class="form-label">邮编</label>
+                        <div class="field-label-inner-div">邮编</div>
                     </div>
                     <div class="ui-block-b" style="width:35%;">
                         <input type="text" name="zipcode" id="zipcode" placeholder="zipcode">
                     </div>
-                    <div class="ui-block-c" id="city" style="width:35%;">
-                        <div name="city" id="city"></div>
+                    <div class="ui-block-c" style="width:25%;">
+                        <div name="city" id="city" class="field-label-inner-div"></div>
                     </div>
-                    <div class="ui-block-d" style="width:10%;">
+                    <div class="ui-block-d" style="width:20%;">
                         <a href="" data-role="button" onclick="getLocationByZipcode(); return false;">更新</a>
                     </div>
                 </div>
 
                 <div class="ui-grid-a">
                     <div class="ui-block-a" style="width:20%;">
-                        <label id="prefer-contact" class="form-label">联系方式</label>
+                        <div id="prefer-contact" class="field-label-inner-div">联系方式</div>
                     </div>
                     <div class="ui-block-b" style="width:80%;">
-                        <div data-role="fieldcontain">
+                        <div data-role="fieldcontain" style="display:inline">
                             <fieldset data-role="controlgroup" data-type="horizontal">
                                 <input type="checkbox" name="phone-checked" id="phone-checked" onchange="phoneContactChange()" />
                                 <label for="phone-checked">
@@ -132,30 +133,18 @@
                                 </label>
                             </fieldset>
                         </div>
-                        <div id="phone_number_div">
-                            {% if user.mobile_phone %}
-                                <input type="text" name="phone_number" placeholder="{{user.mobile_phone}}" value="{{user.mobile_phone}}">
-                            {% else %}
-                                <input type="text" name="phone_number" placeholder="手机号码" value="">
-                            {% endif %}
-                            <p id="phone_required" style="color: red;"></p>
+
+
+                        <div id="phone_number_div" data-role="fieldcontain">
+                            <input type="text" name="phone_number" placeholder="手机号码" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入电话号码" />
                         </div>
-                        <div id="email_div">
-                            {% if user.email %}
-                                <input type="text" name="email" placeholder="{{user.email}}" value="{{user.email}}">
-                            {% else %}
-                                <input type="text" name="email" placeholder="Email" value="">
-                            {% endif %}
-                            <p id="email_required" style="color: red;"></p>
+                        <div id="email_div" data-role="fieldcontain">
+                            <input type="text" name="email" placeholder="请输入email" value="{{user.email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
                         </div>
-                        <div id="qq_number_div">
-                            {% if user.qq_number %}
-                                <input type="text" name="qq_number" placeholder="{{user.qq_number}}" value="{{user.qq_number}}">
-                            {% else %}
-                                <input type="text" name="qq_number" placeholder="微信或QQ号" value="">
-                            {% endif %}
-                            <p id="qq_required" style="color: red;"></p>
+                        <div id="qq_number_div" data-role="fieldcontain">
+                            <input type="text" name="qq_number" placeholder="微信或QQ号" value="{{user.qq_number}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入微信或QQ号" />
                         </div>
+
                     </div>
                 </div>
                 <div>
@@ -168,30 +157,30 @@
                 <div class="ui-grid-d">
                     <div class="ui-block-a">
                         <a href="/">
-                            <img height="30" width="30" style = "padding:12px 5px 5px 12px;" src='/static/images/navigation/homepage_clicked.png' />
+                            <img height="30" width="30" style="padding:12px 5px 5px 12px;" src='/static/images/navigation/homepage_clicked.png' />
                         </a>
                     </div>
                     <div class="ui-block-b">
                         <a href="/buy/form/">
-                            <img height="40" width="32" style = "padding:5px;" src='/static/images/navigation/buy_form_clicked.png' />
+                            <img height="40" width="32" style="padding:5px;" src='/static/images/navigation/buy_form_clicked.png' />
                         </a>
                     </div>
                     <div class="ui-block-c">
                         <a href="/sell/form/">
-                            <img height="40" width="32" style = "padding:5px;" src='/static/images/navigation/sell_form_clicked.png' />
+                            <img height="40" width="32" style="padding:5px;" src='/static/images/navigation/sell_form_clicked.png' />
                         </a>
                     </div>
                     <div class="ui-block-d">
                         <a href="/buy/all_list/">
-                            <img height="40" width="40" style = "padding:5px;" src='/static/images/navigation/buy_posts_clicked.png' />
+                            <img height="40" width="40" style="padding:5px;" src='/static/images/navigation/buy_posts_clicked.png' />
                         </a>
                     </div>
                     <div class="ui-block-e">
                         <a href="/sell/all_list/">
-                            <img height="40" width="40" style = "padding:5px;" src='/static/images/navigation/sell_posts_clicked.png' />
+                            <img height="40" width="40" style="padding:5px;" src='/static/images/navigation/sell_posts_clicked.png' />
                         </a>
                     </div>
-                </div>    
+                </div>
             </div>
         </div>
         <script type="text/javascript">
@@ -255,6 +244,8 @@
             initiatePage();
         });
         </script>
+
+
     </div>
 </body>
 
