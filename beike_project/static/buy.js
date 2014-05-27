@@ -95,13 +95,5 @@ $(document).delegate("#nearby-buypost", "pageinit", function() {
 });
 
 $(document).delegate("#buy-form", "pageinit", function(event) {
-    $('form').validate({
-        errorPlacement: function(error, element) {
-            if (element.is('select')) {
-                error.insertAfter(element.parents('div.ui-select'));
-            } else {
-                error.insertAfter(element);
-            }
-        }
-    });
+    $('form').validate();
 });
