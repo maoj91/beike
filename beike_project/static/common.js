@@ -1,7 +1,7 @@
 function phoneContactChange() {
     var isChecked = $('#phone-checked').prop("checked");
     if (isChecked) {
-        $('#phone_number_div').css('display', 'block');
+        $('#phone_number_div').css('display', 'inline');
     } else {
         $('#phone_number_div').css('display', 'none');
     }
@@ -11,7 +11,7 @@ function phoneContactChange() {
 function emailContactChange() {
     var isChecked = $('#email-checked').prop("checked");
     if (isChecked) {
-        $('#email_div').css('display', 'block');
+        $('#email_div').css('display', 'inline');
     } else {
         $('#email_div').css('display', 'none');
     }
@@ -20,7 +20,7 @@ function emailContactChange() {
 function qqContactChange() {
     var isChecked = $('#qq-checked').prop("checked");
     if (isChecked) {
-        $('#qq_number_div').css('display', 'block');
+        $('#qq_number_div').css('display', 'inline');
     } else {
         $('#qq_number_div').css('display', 'none');
     }

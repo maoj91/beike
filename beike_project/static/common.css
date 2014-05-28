@@ -48,12 +48,12 @@
 }
 label.error {
     color: red;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1.4;
     padding-top: .5em;
     vertical-align: top;
     font-weight:bold;
     width: 100%;
     float: left;
-    display:block;
+    display: block;
 }
