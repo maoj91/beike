@@ -147,7 +147,7 @@
                         <div id="phone_number_div" class="ui-grid-a">
                             <div class="ui-block-a" style="width:0"></div>
                             <div class="ui-block-b" style="width:100%">
-                            {% if user.mobile_phone %}
+                            {% if user.mobile_phone and user.mobile_phone != " " %}
                               <input type="text" name="phone_number" placeholder="手机号码" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入电话号码" />
                             {% else %}
                               <input type="text" name="phone_number" placeholder="手机号码" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
@@ -157,7 +157,7 @@
                         <div id="email_div" class="ui-grid-a">
                             <div class="ui-block-a" style="width:0"></div>
                             <div class="ui-block-b" style="width:100%">
-                            {% if user.email %}
+                            {% if user.email and user.email != " " %}
                               <input type="text" name="email" placeholder="Email" value="{{user.email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
                             {% else %}
                               <input type="text" name="email" placeholder="Email" data-rule-required="true" data-rule-content="true" data-msg-required="请输入Email" />
@@ -167,7 +167,7 @@
                         <div id="qq_number_div" class="ui-grid-a">
                             <div class="ui-block-a" style="width:0"></div>
                             <div class="ui-block-b" style="width:100%">
-                            {% if user.qq_number %}
+                            {% if user.qq_number and user.qq_number != " " %}
                               <input type="text" name="qq_number" placeholder="微信或QQ号" value="{{user.qq_number}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入微信或QQ号" />
                             {% else %}
                               <input type="text" name="qq_number" placeholder="微信或QQ号" data-rule-required="true" data-rule-content="true" data-msg-required="请输入微信或QQ号" />
