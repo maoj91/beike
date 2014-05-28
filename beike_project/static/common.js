@@ -31,3 +31,7 @@ function getCurrentPositionDeferred(options) {
     navigator.geolocation.getCurrentPosition(deferred.resolve, deferred.reject, options);
     return deferred.promise();
 };
+
+$.validator.addMethod("digitonly", function(value) {
+  return /^\d+$/.test(value);
+}, "只能包含数字");

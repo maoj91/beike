@@ -95,5 +95,10 @@ $(document).delegate("#nearby-buypost", "pageinit", function() {
 });
 
 $(document).delegate("#buy-form", "pageinit", function(event) {
-    $('form').validate();
+    $('form').validate({
+        rules:{
+            phone_number: "digitonly",
+            qq_number: "digitonly"
+        }
+    });
 });
