@@ -21,113 +21,103 @@
     <script src="/static/sell.js"></script>
 
     <script type="text/javascript">
-    function getLatitudeLongtitude(position) {
-        var latitude = position.coords.latitude;
-        var longitude = position.coords.longitude;
-        $.ajax({
-            type: "get",
-            url: "get_city_by_latlong",
-            dataType: "json",
-            data: {
-                latitude: latitude,
-                longitude: longitude
-            }
-        }).then(function(data) {
-            $("#city").text(data.city_name);
-            $("#city_id").val(data.city_id);
-            $("#district").text(data.lv1_district_name);
-            $("#zipcode").val(data.zipcode);
-            $("#latitude").val(latitude);
-            $("#longitude").val(longitude);
-        });
-    }
-
-    function getCurrentPositionDeferred(options) {
-        var deferred = $.Deferred();
-        navigator.geolocation.getCurrentPosition(deferred.resolve, deferred.reject, options);
-        return deferred.promise();
-    };
-
-    $(document).ready(function() {
-        if (navigator.geolocation) {
-            // navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
-            getCurrentPositionDeferred({
-                enableHighAccuracy: true
-            }).done(function(position) {
-                getLatitudeLongtitude(position)
-            }).fail(function() {
-                console.log("getCurrentPositionDeferred call failed")
-            }).always(function() {
-                //do nothing
-            });
-        } else {
-            alert("not enabled.")
-        }
-    });
-
-    $(document).on("click", "#getzipcode", function() {
-        var zipcode = $('#zipcode').val();
-        if (zipcode) {
+        function getLatitudeLongtitude(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
             $.ajax({
                 type: "get",
-                url: "get_city",
+                url: "get_city_by_latlong",
                 dataType: "json",
                 data: {
-                    zipcode: zipcode,
+                    latitude: latitude,
+                    longitude: longitude
                 }
             }).then(function(data) {
-                console.log(data);
                 $("#city").text(data.city_name);
+                $("#city_id").val(data.city_id);
                 $("#district").text(data.lv1_district_name);
-                $("#latitude").val(data.latitude);
-                $("#longitude").val(data.longitude);
+                $("#zipcode").val(data.zipcode);
+                $("#latitude").val(latitude);
+                $("#longitude").val(longitude);
             });
         }
-    });
+
+        function getCurrentPositionDeferred(options) {
+            var deferred = $.Deferred();
+            navigator.geolocation.getCurrentPosition(deferred.resolve, deferred.reject, options);
+            return deferred.promise();
+        };
+
+        $(document).ready(function() {
+            if (navigator.geolocation) {
+                // navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
+                getCurrentPositionDeferred({
+                    enableHighAccuracy: true
+                }).done(function(position) {
+                    getLatitudeLongtitude(position)
+                }).fail(function() {
+                    console.log("getCurrentPositionDeferred call failed")
+                }).always(function() {
+                    //do nothing
+                });
+            } else {
+                alert("not enabled.")
+            }
+        });
+
+        $(document).on("click", "#getzipcode", function() {
+            var zipcode = $('#zipcode').val();
+            if (zipcode) {
+                $.ajax({
+                    type: "get",
+                    url: "get_city",
+                    dataType: "json",
+                    data: {
+                        zipcode: zipcode,
+                    }
+                }).then(function(data) {
+                    console.log(data);
+                    $("#city").text(data.city_name);
+                    $("#district").text(data.lv1_district_name);
+                    $("#latitude").val(data.latitude);
+                    $("#longitude").val(data.longitude);
+                });
+            }
+        });
     </script>
 </head>
 
 <body>
     <div data-role="page">
 
-        <div id='bkgd'>
-            <div class='signup-outer'>
-                <img id='logo' class='signup-inner' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/logo.png'>
-            </div>
-            {% if error %}
-            <div class='signup-outer'>
-                <p>{{error}}</p>
-            </div>
-            {% endif %}
-
+        <div data-role="content" style="padding: 0">
             <form action="/me/create/" method="post" enctype="multipart/form-data">{% csrf_token %}
-                <div class='signup-outer'>
-                    <input size="20" id='name' name="user_name" placeholder="请输入用户名" />
-                    </br>
+                <div class="ui-grid-solo" style="background-color: rgb(35,192,148);">
+                    <div class="ui-grid-solo">
+                        <div class="ui-block-a" style="text-align: center; width: 100% !important;">
+                            <img style="width: 250px; height: 180px;" src="/static/images/signup/logo.png" />
+                        </div>
+                    </div>
+                    <div class="ui-grid-solo">
+                        <input type="text" id='user_name' name="user_name" placeholder="用户名:"/>
+                    </div>
+                    <div>
+                        <input id='user_email' type="email" name="user_email" placeholder="邮箱:" />
+                    </div>
                 </div>
-                <div class='signup-outer'>
-                    <input size="20" id='email' type="email" name="user_email" placeholder="请输入常用邮箱" />
-                    </br>
-                </div>
-
-                <div class='signup-outer' id='my_city_div'>
-                    <img id='my_city_img' src='{{default_city.image_selected_url}}'>
-                    <div id='my_city_name'>{{default_city.name}}</div>
-                </div>
-                <div class='signup-outer' style="text-align: center;">
-                    <label>当前所在城市:</label>
-                    <div style="display:block" id='city' name='city'></div>
-                    <input type="hidden" id="city_id" name="city_id" value="" />
-                    <label>当前所在区:</label>
-                    <div style="display:block" id='district' name='district'></div>
-                    <div>如果你不想从这座城市开始，请输入一个指定邮编:</div>
-                    <input id="zipcode" name="zipcode"></input>
-                    <a href="#" id="getzipcode" data-role="button" data-icon="check">获取城市</a>
-                    <input type="hidden" name="latitude" id="latitude"/>
-                    <input type="hidden" name="longitude" id="longitude"/>
-                </div>
-                <div class='signup-outer'>
-                    <input type="image" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/start.png">
+                <div class="ui-grid-solo" style="background-color: rgb(135,192,148);">
+                    <div class="ui-grid-solo" style="text-align: center; width: 100% !important;">
+                        <img style="width: 80px; height: 100px;" src="/static/images/signup/location_icon.png" />
+                        <div style="display:block" id='city' name='city'></div>
+                        <input type="hidden" id="city_id" name="city_id" value="" />
+                        <input id="zipcode" name="zipcode" placeholder="若您不在上方城市，请输入正确的zip code" />
+                        <a href="#" id="getzipcode" data-role="button" data-icon="check">获取城市</a>
+                    </div>
+                    <input type="hidden" name="latitude" id="latitude" />
+                    <input type="hidden" name="longitude" id="longitude" />
+                    <div class="ui-grid-solo" style="text-align: center; width: 100% !important;">
+                        <input type="image" style="width: 100px; length: 100px;" src="/static/images/signup/start.png" />
+                    </div>
                 </div>
             </form>
         </div>
