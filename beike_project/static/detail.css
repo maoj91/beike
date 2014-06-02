@@ -1,7 +1,7 @@
             #image_gallery
             {
-                height:340px;
-                width: 500px;
+                height:500;
+                width: 340;
                 overflow:hidden;
                 position:relative;
                 border : 1px solid black;
@@ -24,7 +24,7 @@
                 -webkit-transform: translate3d(0px,0px,0px); 
             }
 
-            #imgs img
+/*            #imgs img
             {
                 position: absolute;
                 margin: auto;
@@ -32,17 +32,17 @@
                 left: 0;
                 right: 0;
                 bottom: 0;
-            }
+            }*/
 
-            /*#imgs img*/
-            .img_span
+            #imgs img
+            /*.img_span*/
             {
                 padding:0px;
                 margin:0px;
 
 
                 width:500px;
-                height:340px;
+                height:200px;
 
                 /*apply a transfor to kick in the hardware acceleration.  Without this, the first time we add the transform you get odd rendering of the divs (half missing) */
                 -webkit-transform: translate3d(0px,0px,0px); 
