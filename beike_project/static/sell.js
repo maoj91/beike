@@ -258,7 +258,7 @@ var sellPostLoader = (function($, undefined) {
                 isHorizontal = false;
             }
             var image_width, image_height
-            var max_width = 135
+            var max_width = document.body.clientWidth*0.4
             var max_height = 180
             if (isHorizontal) {
                 if (image_info['width'] < max_width) {
@@ -284,7 +284,7 @@ var sellPostLoader = (function($, undefined) {
             }
             var template = '<li class="' + displayCss + '"><div><a href="/detail/sell/' +
                 posts[i]['post_id'] + '"><div><img src="' +
-                image_info['image_url'] + '" width="100%" height="100%"/></div><div><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" />' +
+                image_info['image_url'] + '" width="' + image_width + '" height="' + image_height + '"/></div><div><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" />' +
                 posts[i]["title"] + '</div><div>$' + posts[i]["price"] + '</div><div>距离你 ' + posts[i]["distance"] + ' miles</div></a></div></li>';
 
             if (slot_pos % 2 === 0) {
@@ -303,6 +303,7 @@ var sellPostLoader = (function($, undefined) {
             hasMoreSellPost = true;
             sellPostPageNum++;
         }
+
     }
     return pub;
 }(jQuery));
