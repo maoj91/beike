@@ -33,7 +33,7 @@
         <style>
             #image_gallery
             {
-                height:200px;
+                height:340px;
                 width:100%;
                 overflow:hidden;
                 position:relative;
@@ -58,8 +58,18 @@
                 -webkit-transform: translate3d(0px,0px,0px); 
             }
 
-
             #imgs img
+            {
+                position: absolute;
+                margin: auto;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
+
+            /*#imgs img*/
+            .img_span
             {
                 padding:0px;
                 margin:0px;
@@ -71,6 +81,7 @@
                 /*apply a transfor to kick in the hardware acceleration.  Without this, the first time we add the transform you get odd rendering of the divs (half missing) */
                 -webkit-transform: translate3d(0px,0px,0px); 
             }
+
         </style>
 </head>
 
@@ -204,7 +215,7 @@
             <div id="image_gallery">
                 <div id="imgs">
                         {% for image_metadata in image_list %}
-                            <span width="500px" height="100%">
+                            <span class="img_span" width="500px" height="100%">
                                 <img src="{{ image_metadata.image_url }}">
                             </span>
                         {% endfor%}
