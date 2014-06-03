@@ -18,9 +18,9 @@
     <!-- beike customized css and js -->
     <link rel="stylesheet" href="/static/common.css">
     <link rel="stylesheet" href="/static/detail.css">
-    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
+    <script src="/static/common.js"></script>
     <script type="text/javascript" src="/static/jquery.touchSwipe.min.js"></script>
 </head>
 
@@ -52,7 +52,7 @@
 
             <script id='code_1'>
 
-                var IMG_WIDTH = 500;
+                var IMG_WIDTH = 200;
                 var currentImg=0;
                 var maxImages={{image_num}};
                 var speed=500;
@@ -140,9 +140,9 @@
             <div id="image_gallery">
                 <div id="imgs">
                         {% for image_metadata in image_list %}
-                            <!-- <span class="img_span" width="500px" height="100%"> -->
+                            <span class="img_span">
                                 <img src="{{ image_metadata.image_url }}">
-                            <!-- </span> -->
+                            </span>
                         {% endfor%}
                 </div>
             </div>          
