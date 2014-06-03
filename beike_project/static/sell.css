@@ -25,12 +25,12 @@
 }
 .vertical-li {
     min-height: 150px;
-    max-width:150px;
+    max-width:90%;
     margin: 5px !important;
 }
 .horizontal-li {
     min-height: 100px;
-    max-width:150px;
+    max-width:90%;
     margin: 5px !important;
 }
 
