@@ -17,11 +17,11 @@
 
     <!-- beike customized css and js -->
     <link rel="stylesheet" href="/static/common.css">
-    <link rel="stylesheet" href="/static/detail.css">
+    <link rel="stylesheet" href="/static/swipe-normalize.css">
+    <link rel="stylesheet" href="/static/swipe.css">
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
-    <script src="/static/common.js"></script>
-    <script type="text/javascript" src="/static/jquery.touchSwipe.min.js"></script>
+    <script src="/static/swipe.js"></script>
 </head>
 
 <body>
@@ -41,118 +41,26 @@
         </div>
 
 
-        <div data-role="content" id="content" >
-
-
-            <div class="ui-grid-solo">
-
-                <script id='code_1'>
-
-                // var IMG_WIDTH = 280;
-                var IMG_WIDTH = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-                var currentImg=0;
-                var maxImages={{image_num}};
-                var speed=500;
-
-                var imgs;
-
-                var swipeOptions=
-                {
-                    triggerOnTouchEnd : true,   
-                    swipeStatus : swipeStatus,
-                    allowPageScroll:"vertical",
-                    threshold:75            
-                }
-
-                $(function()
-                {               
-                    imgs = $("#imgs");
-                    imgs.swipe( swipeOptions );
-                });
-
-
-                /**
-                * Catch each phase of the swipe.
-                * move : we drag the div.
-                * cancel : we animate back to where we were
-                * end : we animate to the next image
-                */          
-                function swipeStatus(event, phase, direction, distance)
-                {
-                    //If we are moving before swipe, and we are going Lor R in X mode, or U or D in Y mode then drag.
-                    if( phase=="move" && (direction=="left" || direction=="right") )
-                    {
-                        var duration=0;
-
-                        if (direction == "left")
-                            scrollImages((IMG_WIDTH * currentImg) + distance, duration);
-
-                        else if (direction == "right")
-                            scrollImages((IMG_WIDTH * currentImg) - distance, duration);
-
-                    }
-
-                    else if ( phase == "cancel")
-                    {
-                        scrollImages(IMG_WIDTH * currentImg, speed);
-                    }
-
-                    else if ( phase =="end" )
-                    {
-                        if (direction == "right")
-                            previousImage()
-                        else if (direction == "left")           
-                            nextImage()
-                    }
-                }
-
-
-
-                function previousImage()
-                {
-                    currentImg = Math.max(currentImg-1, 0);
-                    scrollImages( IMG_WIDTH * currentImg, speed);
-                }
-
-                function nextImage()
-                {
-                    currentImg = Math.min(currentImg+1, maxImages-1);
-                    scrollImages( IMG_WIDTH * currentImg, speed);
-                }
-
-                /**
-                * Manuallt update the position of the imgs on drag
-                */
-                function scrollImages(distance, duration)
-                {
-                    imgs.css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
-
-                    //inverse the number we set in the css
-                    var value = (distance<0 ? "" : "-") + Math.abs(distance).toString();
-
-                    imgs.css("-webkit-transform", "translate3d("+value +"px,0px,0px)");
-                }
-                </script>
-
-                <div id="image_gallery">
-                    <div id="imgs">
-                        {% for image_metadata in image_list %}
-                        <span class="img_span">
-                            <img src="{{ image_metadata.image_url }}">
-                        </span>
-                        {% endfor%}
-                    </div>
-                </div>          
-
-            </div>
-
+        <div data-role="content" id="content">
             <div class="ui-grid-solo">
                 <div class="ui-block-a">
                     {{post.title}}
                 </div>
             </div>
-
-
+            {% load mathfilters %}
+            <div class="demo-wrapper">
+                <div id="slider" class="swipe">
+                    <div class="swipe-wrap">
+                        {% for image_metadata in image_list %}
+                            <div width="100%" height="200px">
+                                <img src="{{ image_metadata.image_url }}" width="100%" height="100%">
+                            </div>
+                        {% endfor%}
+                    </div>
+                    <span class="nav prev">Prev</span>
+                    <span class="nav next">Next</span>
+                </div>
+            </div>
 
             <div class="ui-grid-a">
                 <div class="ui-block-a">
@@ -198,29 +106,29 @@
                 </div>
                 <div class="ui-grid-b">
                     <div class="ui-grid-solo">
-                        {% if phone_checked%}
+                    {% if phone_checked%}
                         <a href="tel:{{phone}}" data-role="button">{{phone}}</a> (电话)
-                        {% endif%}
+                    {% endif%}
                     </div>
                     <div class="ui-grid-solo">
-                        {% if email_checked%}
-                        <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}" data-role="button">{{email}}</a> (Email)
-                        {% endif%}
+                    {% if email_checked%}
+                    <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}" data-role="button">{{email}}</a> (Email)
+                    {% endif%}
                     </div>
                     <div class="ui-grid-solo">
-                        {% if qq_checked%}
+                    {% if qq_checked%}
                         {{qq}} (QQ或微信号)
-                        {% endif%}
+                    {% endif%}
                     </div>
                 </div>
             </div>
             
             {% if is_owner %}
             <label for="open-close-post">关闭此贴:</label>
-            <select name="open-close-post" id="open-close-post" data-role="slider">
+             <select name="open-close-post" id="open-close-post" data-role="slider">
                 <option value="open"{% if is_open %} selected {% endif %}>待售</option>
                 <option value="close"{% if not is_open %} selected {% endif %}>已售</option>
-            </select>
+             </select>
             {% else %}
             <label for="follow-post">关注此贴:</label>
             <select name="follow-post" id="follow-post" data-role="slider">
@@ -296,6 +204,17 @@
             }).then(function(data) {});
         });
 
+        
+
+        $(document).ready(function(){  
+            Slider  = $('#slider').Swipe({
+                auto: 3000,
+                continuous: true
+            }).data('Swipe');
+
+            $('.next').on('click', Slider.next);
+            $('.prev').on('click', Slider.prev);
+        });
         </script>
     </div>
 </body>

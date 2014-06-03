@@ -30,7 +30,6 @@ def sell_post_detail(request,offset):
         raise Http404()
     post = SellPost.objects.get(id=offset)
     image_list = ImageMetadata.deserialize_list(post.image_urls)
-    image_num = len(image_list)
     sell_post_util = SellPostUtil()
     is_followed = sell_post_util.is_post_followed_by_user(user, post)
     is_open = post.is_open
@@ -42,7 +41,7 @@ def sell_post_detail(request,offset):
     phone = contact['phone_number']
     email = contact['email']
     qq = contact['qq_number']
-    return render_to_response('sell_post_detail.html', {'post':post, 'is_open':is_open, 'image_list': image_list, 'image_num':image_num,
+    return render_to_response('sell_post_detail.html', {'post':post, 'is_open':is_open, 'image_list': image_list,
         'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner,'phone_checked':phone_checked,'email_checked':email_checked,'qq_checked':qq_checked,'phone':phone,
         'email':email,'qq':qq})
 
