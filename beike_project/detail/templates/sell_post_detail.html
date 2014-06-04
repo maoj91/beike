@@ -48,7 +48,6 @@
 
                 <script id='code_1'>
 
-                // var IMG_WIDTH = 280;
                 var IMG_WIDTH = (window.innerWidth > 0) ? window.innerWidth : screen.width;
                 var currentImg=0;
                 var maxImages={{image_num}};
@@ -106,18 +105,40 @@
                     }
                 }
 
+                function selectImage(i){
+                    var diff = i - currentImg;
+                    if(i>currentImg && i<=maxImages-1){
+                        for(var j=0;j<diff;j++){
+                            nextImage();
+                        }
+                    } else if(i>=0 && i<currentImg){
+                        for(var j=0;j<-diff;j++){
+                            previousImage();
+                        }
+                    }
+                }
 
+                function selectThumbnail(i){
+                    if(i>=0 && i<=maxImages-1){
+                        for(var j=0;j<=maxImages-1;j++){
+                            $("#thumbnail_span"+j).addClass("thumbnail_not_selected");
+                        }
+                        $("#thumbnail_span"+i).removeClass("thumbnail_not_selected");
+                    }
+                }
 
                 function previousImage()
                 {
                     currentImg = Math.max(currentImg-1, 0);
                     scrollImages( IMG_WIDTH * currentImg, speed);
+                    selectThumbnail(currentImg);
                 }
 
                 function nextImage()
                 {
                     currentImg = Math.min(currentImg+1, maxImages-1);
                     scrollImages( IMG_WIDTH * currentImg, speed);
+                    selectThumbnail(currentImg);
                 }
 
                 /**
@@ -142,7 +163,14 @@
                         </span>
                         {% endfor%}
                     </div>
-                </div>          
+                </div>   
+                <div id="image_thumbnails">
+                    {% for image_metadata in image_list %}
+                    <span class="thumbnail_span" id="thumbnail_span{{forloop.counter0}}" onclick='selectImage({{forloop.counter0}})'>
+                        <img src="{{ image_metadata.image_url }}">
+                    </span>
+                    {% endfor%}
+                </div>           
 
             </div>
 
@@ -294,6 +322,10 @@
                     operation: operation
                 }
             }).then(function(data) {});
+        });
+
+        $(document).ready(function() { 
+            selectThumbnail(0);
         });
 
         </script>
