@@ -17,11 +17,11 @@
 
     <!-- beike customized css and js -->
     <link rel="stylesheet" href="/static/common.css">
-    <link rel="stylesheet" href="/static/detail.css">
+    <link rel="stylesheet" href="/static/swipe-normalize.css">
+    <link rel="stylesheet" href="/static/swipe.css">
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
-    <script src="/static/common.js"></script>
-    <script type="text/javascript" src="/static/jquery.touchSwipe.min.js"></script>
+    <script src="/static/swipe.js"></script>
 </head>
 
 <body>
@@ -41,9 +41,7 @@
         </div>
 
 
-        <div data-role="content" id="content" >
-
-
+        <div data-role="content" id="content">
             <div class="ui-grid-solo">
 
                 <script id='code_1'>
@@ -158,9 +156,9 @@
                 <div id="image_gallery">
                     <div id="imgs">
                         {% for image_metadata in image_list %}
-                        <span class="img_span">
-                            <img src="{{ image_metadata.image_url }}">
-                        </span>
+                            <div width="100%" height="200px">
+                                <img src="{{ image_metadata.image_url }}" width="100%" height="100%">
+                            </div>
                         {% endfor%}
                     </div>
                 </div>   
@@ -179,8 +177,6 @@
                     {{post.title}}
                 </div>
             </div>
-
-
 
             <div class="ui-grid-a">
                 <div class="ui-block-a">
@@ -226,29 +222,29 @@
                 </div>
                 <div class="ui-grid-b">
                     <div class="ui-grid-solo">
-                        {% if phone_checked%}
+                    {% if phone_checked%}
                         <a href="tel:{{phone}}" data-role="button">{{phone}}</a> (电话)
-                        {% endif%}
+                    {% endif%}
                     </div>
                     <div class="ui-grid-solo">
-                        {% if email_checked%}
-                        <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}" data-role="button">{{email}}</a> (Email)
-                        {% endif%}
+                    {% if email_checked%}
+                    <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}" data-role="button">{{email}}</a> (Email)
+                    {% endif%}
                     </div>
                     <div class="ui-grid-solo">
-                        {% if qq_checked%}
+                    {% if qq_checked%}
                         {{qq}} (QQ或微信号)
-                        {% endif%}
+                    {% endif%}
                     </div>
                 </div>
             </div>
             
             {% if is_owner %}
             <label for="open-close-post">关闭此贴:</label>
-            <select name="open-close-post" id="open-close-post" data-role="slider">
+             <select name="open-close-post" id="open-close-post" data-role="slider">
                 <option value="open"{% if is_open %} selected {% endif %}>待售</option>
                 <option value="close"{% if not is_open %} selected {% endif %}>已售</option>
-            </select>
+             </select>
             {% else %}
             <label for="follow-post">关注此贴:</label>
             <select name="follow-post" id="follow-post" data-role="slider">
@@ -327,7 +323,7 @@
         $(document).ready(function() { 
             selectThumbnail(0);
         });
-
+        
         </script>
     </div>
 </body>
