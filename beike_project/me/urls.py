@@ -12,5 +12,6 @@ urlpatterns = patterns('',
 	url(r'^get_info/get_city$', views.get_city_by_zipcode),
 	url(r'^get_info/get_zipcode_by_latlong$', views.get_zipcode_by_latlong),
 	url(r'^get_info/get_latlong_by_zipcode$', views.get_latlon_by_zipcode),
+	url(r'^get_info/check_email$', views.check_email),
 	url(r'^create/$', views.create),
 )

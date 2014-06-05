@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width ,  user-scalable=no">
     <meta charset="UTF-8">
     <!-- jquery library -->
-    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
     <script src="/static/jquery/jquery-1.8.3.js "></script>
     <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+    <script type="text/javascript" src="/static/jquery/jquery.validate.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
 
     <!--js library for s3 upload-->
     <script src="/static/lodash.js"></script>
@@ -87,11 +88,31 @@
                 });
             }
         });
+
+        $(document).delegate("#signup", "pageinit", function(event) {
+            $('form').validate({
+                rules: {
+                    user_email: {
+                        required: true,
+                        email: true,
+                        remote: {
+                            url: "check_email",
+                            type: "post"
+                        }
+                    }
+                },
+                messages: {
+                    user_email: {
+                        remote: "该email已经被使用"
+                    }
+                }
+            });
+        });
     </script>
 </head>
 
 <body>
-    <div data-role="page">
+    <div id="signup" data-role="page">
 
         <div data-role="content" style="padding: 0">
             <form action="/me/create/" method="post" enctype="multipart/form-data">{% csrf_token %}
@@ -101,11 +122,11 @@
                             <img style="width: 250px; height: 180px;" src="/static/images/signup/logo.png" />
                         </div>
                     </div>
-                    <div class="ui-grid-solo">
-                        <input type="text" id='user_name' name="user_name" placeholder="用户名:"/>
+                    <div class="ui-grid-solo" style="text-align: center; width: 100% !important;">
+                        <input type="text" id='user_name' name="user_name" placeholder="用户名:" data-rule-required="true" data-rule-content="true" data-msg-required="请输入用户名" />
                     </div>
-                    <div>
-                        <input id='user_email' type="email" name="user_email" placeholder="邮箱:" />
+                    <div class="ui-grid-solo" style="text-align: center; width: 100% !important;">
+                        <input id='user_email' type="email" name="user_email" placeholder="邮箱:" data-rule-required="true" data-rule-content="true" data-msg-required="请输入邮箱" />
                     </div>
                 </div>
                 <div class="ui-grid-solo" style="background-color: rgb(135,192,148);">
@@ -113,7 +134,7 @@
                         <img style="width: 80px; height: 100px;" src="/static/images/signup/location_icon.png" />
                         <div style="display:block" id='city' name='city'></div>
                         <input type="hidden" id="city_id" name="city_id" value="" />
-                        <input id="zipcode" name="zipcode" placeholder="若您不在上方城市，请输入正确的zip code" />
+                        <input id="zipcode" name="zipcode" placeholder="若您不在上方城市，请输入正确的zip code" data-rule-required="true" data-rule-content="true" data-msg-required="请输入zipcode" />
                         <a href="#" id="getzipcode" data-role="button" data-icon="check">获取城市</a>
                     </div>
                     <input type="hidden" name="latitude" id="latitude" />

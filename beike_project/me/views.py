@@ -12,6 +12,7 @@ import json, logging
 from django.core.serializers.json import DjangoJSONEncoder
 from data.image_util import ImageMetadata
 from django.contrib.gis.geos import Point
+from django.views.decorators.csrf import csrf_exempt
 
 
 def index(request):
@@ -71,6 +72,19 @@ def get_city_by_zipcode(request):
 
 def get_name(request):
     return render_to_response('get_name.html')
+
+@csrf_exempt
+def check_email(request):
+    if request.method == 'POST':
+        email = request.POST.get('user_email')
+        user = User.objects.filter(email = email)
+        if user:
+            return HttpResponse('false')
+        else:
+            return HttpResponse('true')
+    else:
+        raise Http500
+
 
 def create(request):
     validate_user(request)
@@ -139,6 +153,7 @@ def save_profile(request):
             user.address.state_or_region = address_state
             user.save()
     return HttpResponseRedirect('/me/',{'user':user,'error':error})
+
 
 def get_city_district(geolocation):
     # create the country if it does not yet exist DB
