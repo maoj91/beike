@@ -122,8 +122,10 @@
                     if(i>=0 && i<=maxImages-1){
                         for(var j=0;j<=maxImages-1;j++){
                             $("#thumbnail_span"+j).addClass("thumbnail_not_selected");
+                            // $("#thumbnail_span"+i).removeClass("thumbnail_selected");
                         }
                         $("#thumbnail_span"+i).removeClass("thumbnail_not_selected");
+                        $("#thumbnail_span"+i).addClass("thumbnail_selected");
                     }
                 }
 
