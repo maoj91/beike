@@ -9,11 +9,17 @@
     border-top: 0;
     margin-bottom: 10px !important;
 }
+
 .ui-listview {
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
     box-shadow: none;
 }
+
+.ui-block-a, .ui-block-b {
+    padding-top: 10px !important;
+}
+
 .ui-listview-inset > .ui-li-static,
 .ui-listview-inset > .ui-li-divider,
 .ui-listview-inset > li > a.ui-btn {
@@ -23,38 +29,53 @@
     border-bottom-width: 1px;
     padding: .5em .5em;
 }
+
+.ui-mobile .ui-page .ui-slider-input,
+.ui-mobile .ui-dialog .ui-slider-input {
+    display : none;
+}
+
 .vertical-li {
     min-height: 150px;
-    max-width:90%;
+    max-width:150px;
     margin: 5px !important;
 }
+
 .horizontal-li {
     min-height: 100px;
-    max-width:90%;
+    max-width:150px;
     margin: 5px !important;
 }
 
-
-
-#current_image_div {
-    position: relative;
-    width:100%;
-    height:12em;
+/* header banner */
+#header img {
+    width: 100%;
+    float: left;
+    display: inline;
 }
+
+/* upload image */
+#current_image_div {
+    border: 2px solid gray;
+    position: relative;
+    height: 300px;
+    text-align: center;
+}
+
 .potrait_image {
     height: 100%;
-    width: auto;
-    margin-left:auto;
-    margin-right:auto;
+    text-align: center;
 }
+
 .landscape_image {
-    width:100%;
-    height:100%;
+    width: 100%;
+    vertical-align: middle;
 }
+
 #upload_status {
     position: absolute;
     width: 100%;
-    height:100%;
+    height: 100%;
     left: 0;
     bottom: 0;
     margin:0;
@@ -62,71 +83,104 @@
     background: rgba(0, 0, 0, 0.5);
     color: #FFF;
     font-family: arial;
-    font-size: 10px;
+    font-size: 8px;
     font-weight: bold;
-}
-#button_and_thumbnails {
-    width:100%;
-    height:3em;
 }
 
 .hidden_file {
     width: 0px;
     height: 0px;
+    overflow: hidden;
     display:none;
 }
 
-#choose_file{
-    max-width:100%;
-    max-height:100%;
+/* upload image controls */
+#button_and_thumbnails {
+    height: 70px;
+    background-color: rgb(171,171,171);
+
 }
 
-#delete_img {
-    max-width:100%;
-    max-height:100%;
+#image-section {
+    width: 80%;
+    float: left;
 }
 
-#thumbnails {
-    overflow: hidden;
-    height:100%;
+.delete_image_buttons {
+    position: absolute;
+    text-align: center;
+    width: 33%;
+    height: 10px;
+    margin-top: -8px;
 }
-#preview1 {
-    width:5em;
-    height:100%;
+
+.delete_image_buttons p {
+    color: white;
+    display: none;
+    background-color: #23C094;
+    font-size: 10px;
 }
-#preview2 {
-    width:5em;
-    height:100%;
+
+#choose_file {
+    width: 20%;
+    float: left;
 }
-#preview3 {
-    width:5em;
-    height:100%;
+
+#choose_file img {
+    width: 100%;
+    height: 60px;
+    padding-top: 10px;
+    text-align: center;
 }
+
+.img_controls {
+    height: 70px;
+    width: 33%;
+    float: left;
+}
+
+.img_previews {
+    margin-top: 10px;
+    height: 60px;
+}
+
+.img_previews img {
+    width: 100%;
+    height: 100%;
+    border-left: 1px solid gray;
+}
+
+#down-arrow {
+    text-align: center;
+    margin-top: -1px;
+}
+
+#down-arrow img {
+    height: 100%;
+    text-align: center;
+}
+
+/* form items */
+.sell-form .form-labels {
+    margin-top: 16px;
+    float: left;
+    width: 20%;
+    color: #23C094;
+}
+
+.sell-form .form-labels label {
+//    font-weight: bold;
+}
+
+.sell-form .form-contents {
+    float: left;
+    width: 80%;
+}
+
+/* condition slider */
 .condition {
     float:left;
     width:16.6%;
-}
-#validate_msg {
-    color: red;
-    float: left;
-    margin-left: 1em;
-    margin-bottom: 2em;
-}
-
-.form-label {
-    color:#00CED1;
-}
-
-
-.hiddenfile {
-    width: 0px;
-    height: 0px;
-    overflow: hidden;
-}
-
-.ui-mobile .ui-page .ui-slider-input,
-.ui-mobile .ui-dialog .ui-slider-input {
-    display : none;
 }
 
 .ui-slider-track {
@@ -137,7 +191,7 @@
     position:absolute;
     display: inline-block;
     top: 0;
-    color: #00CED1;
+    color: #23C094;
 }
 
 .slider-scale-div1 {
@@ -158,4 +212,26 @@
 
 .slider-scale-div5 {
     left: 100%;
+}
+
+.sell-form .form-labels-up {
+    margin-top: 16px;
+    color: #23C094;
+}
+
+.sell-form .form-contents-bottom {
+
+}
+
+#validate_msg {
+    color: red;
+    float: left;
+//    margin-left: 1em;
+    margin-bottom: 2em;
+}
+
+/* footer image links */
+.footer-items {
+    height: 60px;
+    padding: 10px 12px;
 }
