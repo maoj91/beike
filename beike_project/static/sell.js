@@ -6,16 +6,40 @@ var isUploading = false;
 var currentPosition = 0;
 var currentCondition = 1;
 
-function get_image_name_prefix(user_id){
-    var currentTime = Date.now();   
-    var prefix = user_id+"/"+currentTime;
+function getImageDimensionInfo(file_dom_id) {
+    var imgInfo = {}
+    //get and set orientation info
+    var fileId = "#" + file_dom_id
+    var file = $(fileId)[0].files[0];
+    var fr = new FileReader;
+    fr.onloadend = function() {
+        var exif = EXIF.readFromBinaryFile(new BinaryFile(this.result));
+        if (typeof exif.PixelXDimension != 'undefined') {
+            imgInfo['width'] = exif.PixelXDimension;
+        } else {
+            imgInfo['width'] = 1
+        }
+
+        if (typeof exif.PixelXDimension != 'undefined') {
+            imgInfo['height'] = exif.PixelYDimension;
+        } else {
+            imgInfo['height'] = 1
+        }
+    };
+    fr.readAsBinaryString(file);
+    return imgInfo
+}
+
+function get_image_name_prefix(user_id) {
+    var currentTime = Date.now();
+    var prefix = user_id + "/" + currentTime;
     return prefix;
 }
 
-function image_s3_upload(file_dom_id,user_id){
-    if (!isUploading && imageNum<3){
+function image_s3_upload(file_dom_id, user_id) {
+    if (!isUploading && imageNum < 3) {
         //retrieve the image information. e.g. width, height
-        var imgInfo = {};
+        var imgInfo = getImageDimensionInfo(file_dom_id);
         //retrieve the image prefix for S3 upload
         var image_name_prefix = get_image_name_prefix(user_id);
         //upload it to s3
@@ -29,23 +53,15 @@ function image_s3_upload(file_dom_id,user_id){
                 isUploading = true;
             },
             onFinishS3Put: function(url) {
-                var imageObj = new Image();
-                imageObj.src = url;
-                imageObj.onload = function (){
-                    currentPosition = currentPosition + 1;
-                    imageNum = imageNum + 1;
-                    imgInfo['width'] = imageObj.width;
-                    imgInfo['height'] = imageObj.height;
-                    //set the url in the hidden input
-                    $('#image_url' + imageNum).val(url);
-                    $('#image_width' + imageNum).val(imgInfo['width']);
-                    $('#image_height' + imageNum).val(imgInfo['height']);
-                    $('#upload_status').hide();
-                    //populate the image information in HTML for form submit
-                    selectImage(imageNum, imgInfo);
-                    isUploading = false;
-                };
-
+                imageNum = imageNum + 1;
+                //set the url in the hidden input
+                $('#image_url' + imageNum).val(url);
+                $('#image_width' + imageNum).val(imgInfo['width']);
+                $('#image_height' + imageNum).val(imgInfo['height']);
+                $('#upload_status').hide();
+                //populate the image information in HTML for form submit
+                selectImage(imageNum, imgInfo);
+                isUploading = false;
             },
             onError: function(status) {
                 $('#upload_status').html('Upload error: ' + status);
@@ -59,25 +75,22 @@ function image_s3_upload(file_dom_id,user_id){
 function selectImage(i, imgInfo) {
     if (i <= imageNum) {
         currentPosition = i;
-        var imgInfo = {};
-        imgInfo['width'] = $('#image_width' + currentPosition).attr('value');
-        imgInfo['height'] = $('#image_height' + currentPosition).attr('value');
-        // cleaer all delete buttons
-        for (var j = 1; j <= 3; j ++) {
-            $('#delete_img' + j).hide();
+        //cleaer all border
+        for (var j = 1; j <= 3; j++) {
+            $('#preview' + j).css("border", "none");
         }
-        if (0 == i) {
+        if (i == 0) {
             $('#current_image').attr('src', '');
             $('#current_image').removeClass('landscape_image');
             $('#current_image').removeClass('potrait_image');
         } else {
             var url = $('#image_url' + currentPosition).val();
             $('#preview' + currentPosition).attr('src', url);
-            $('#delete_img' + currentPosition).show();
+            $('#preview' + currentPosition).css("border", "1px solid black");
             $('#current_image').attr('src', url);
             var imgOrientation = 1;
-            if(imgInfo['width'] > 0 && imgInfo['height'] > 0){
-                imgOrientation = imgInfo['width'] < imgInfo['height'];
+            if (imgInfo['width'] > 0 && imgInfo['height'] > 0) {
+                imgOrientation = imgInfo['width'].toFixed(2) / imgInfo['height'].toFixed(2);
             }
             if (imgOrientation >= 1) {
                 $('#current_image').removeClass('landscape_image');
@@ -94,30 +107,34 @@ function selectImage(i, imgInfo) {
 
 function deleteImage() {
     for (var j = currentPosition; j < imageNum; j++) {
-        var nextIndex = j+1;
-        var url = $('#image_url' + nextIndex).val();
-        $('#image_url' + j).val(url);
+        var nextIndex = j + 1;
+        var url = $('#image_name' + nextIndex).val();
+        $('#image_name' + j).val(url);
         $('#preview' + j).attr('src', url);
+
     }
-    $('#image_url' + imageNum).val('');
+    $('#image_name' + imageNum).val('');
     $('#preview' + imageNum).attr('src', '');
-    if(currentPosition == imageNum){
+    if (currentPosition == imageNum) {
         selectImage(imageNum - 1);
-    }else{
+    } else {
         selectImage(currentPosition);
     }
     imageNum--;
-    if(0 == imageNum) {
-        $("#delete_image_button").hide();
-    }
 }
 
-function selectCondition(i){
+function selectCondition(i) {
+    //cleaer all border
+    for (var j = 1; j <= 6; j++) {
+        $('#condition' + j).css("border", "none");
+    }
+    $('#condition' + i).css("border", "1px solid black");
     $('#my_condition').val(i);
 }
 
 //3 months from now by default 
-function setOpenUntil(){
+
+function setOpenUntil() {
     var date = new Date();
     var day = date.getDate();
     var currentMonth = date.getMonth() + 1;
@@ -127,20 +144,20 @@ function setOpenUntil(){
     if (day < 10) day = "0" + day;
     var currentDate = year + "-" + currentMonth + "-" + day;
     var defaultDate = year + "-" + month + "-" + day;
-    $('#open_until_date').attr("value",defaultDate);
-    $('#open_until_date').attr("min",currentDate);
+    $('#open_until_date').attr("value", defaultDate);
+    $('#open_until_date').attr("min", currentDate);
 }
 
-function initiatePage(){
+function initiatePage() {
     selectCondition(1);
     setOpenUntil();
-    $("#choose_file img").click(function(e){
+    $("#choose_file").click(function(e) {
         e.preventDefault();
         $("input[type=file]").trigger("click");
     });
 }
 
-function validateForm(){
+function validateForm() {
     var msg = '';
     var isValid = false;
     var title = $('[name="title"]').val();
@@ -150,24 +167,184 @@ function validateForm(){
     var image2 = $('[name="image2_url"]').val();
     var image3 = $('[name="image3_url"]').val();
 
-    if(!title){
+    if (!title) {
         msg = '输入项不能为空';
-    } else if(!price){
+    } else if (!price) {
         msg = '输入项不能为空';
-    } else if(!content){
+    } else if (!content) {
         msg = '输入项不能为空';
-    } else if(!isValidInteger(price)){
+    } else if (!isValidInteger(price)) {
         msg = '请检查您输入的价格';
-    } else if(image1=="" && image2=="" && image3==""){
+    } else if (image1 == "" && image2 == "" && image3 == "") {
         msg = '请至少上传一张图片';
     } else {
         isValid = true;
     }
     //TODO:need to validate phone number, price
-    $('#validate_msg').html(msg);   
+    $('#validate_msg').html(msg);
     return isValid;
 }
 
-function isValidInteger(str){
-    return (!isNaN(str)) && (str.indexOf(".")==-1); 
+function isValidInteger(str) {
+    return (!isNaN(str)) && (str.indexOf(".") == -1);
 }
+
+/* Sell posts dynamic loading */
+var sellPostPageNum = 1;
+var sellPostCurLatLon = {};
+var hasMoreSellPost = true;
+var slot_pos = 0;
+
+var sellPostLoader = (function($, undefined) {
+    var pub = {};
+    pub.init = function() {
+        //Refresh the posts when scrolling to the bottom
+        $(window).live("hitBottom",
+            function() {
+                pub.getAndDisplayPosts();
+            });
+    };
+
+    pub.getAndDisplayPosts = function(position) {
+        //Starting loading animation
+        $('#load-more').show();
+        //Get posts and add success callback using then
+        getPosts(position).then(function() {
+            //Stop loading animation on success
+            // $('#load-more').hide();
+        });
+    };
+
+    pub.clearPosts = function() {
+        var listA = $("#post-list-a");
+        listA.empty();
+        var listB = $("#post-list-b");
+        listB.empty();
+    }
+
+    function getPosts(position) {
+        //Get posts via ajax
+        return $.ajax({
+            type: "get",
+            url: "/sell/get_posts_by_page",
+            dataType: "json",
+            data: {
+                pageNum: sellPostPageNum,
+                latitude: position['latitude'],
+                longitude: position['longitude']
+            }
+        }).then(function(data) {
+            displayPosts(data);
+        });
+    }
+
+    function displayPosts(posts) {
+        var listA = $("#post-list-a");
+        var listB = $("#post-list-b");
+        var i = 0,
+            len = posts.length;
+        //process posts data
+        for (i = 0; i < len; i++) {
+            var image_info_list = jQuery.parseJSON(posts[i]["image_info"]);
+            if (image_info_list.length > 0) {
+                //only display the first image
+                image_info = image_info_list[0];
+            } else {
+                image_info = undefined
+                continue;
+            }
+            var isHorizontal = true
+            if (image_info['height'] > image_info['width']) {
+                isHorizontal = false;
+            }
+            var image_width, image_height
+            var max_width = document.body.clientWidth*0.4
+            var max_height = 180
+            if (isHorizontal) {
+                if (image_info['width'] < max_width) {
+                    image_width = image_info['width']
+                    image_height = image_info['height']
+                } else {
+                    image_width = max_width
+                    image_height = max_width * (image_info['height'] / image_info['width']);
+                }
+            } else {
+                if (image_info['height'] < max_height) {
+                    image_width = image_info['width']
+                    image_height = image_info['height']
+                } else {
+                    image_height = max_height
+                    image_width = max_height * (image_info['width'] / image_info['height']);
+
+                }
+            }
+            var displayCss = "horizontal-li";
+            if (!isHorizontal) {
+                displayCss = "vertical-li"
+            }
+            var template = '<li class="' + displayCss + '"><div><a href="/detail/sell/' +
+                posts[i]['post_id'] + '"><div><img src="' +
+                image_info['image_url'] + '" width="' + image_width + '" height="' + image_height + '"/></div><div><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" />' +
+                posts[i]["title"] + '</div><div>$' + posts[i]["price"] + '</div><div>距离你 ' + posts[i]["distance"] + ' miles</div></a></div></li>';
+
+            if (slot_pos % 2 === 0) {
+                listA.append(template);
+            } else {
+                listB.append(template);
+            }
+            slot_pos++;
+        }
+        listA.listview("refresh");
+        listB.listview("refresh");
+        if (len == 0) {
+            hasMoreSellPost = false;
+            $('#load-more').hide();
+        } else {
+            hasMoreSellPost = true;
+            sellPostPageNum++;
+        }
+
+    }
+    return pub;
+}(jQuery));
+
+$(document).delegate("#nearby-sellpost", "pageinit", function() {
+    sellPostPageNum = 1;
+    getCurrentPositionDeferred({
+        enableHighAccuracy: true
+    }).done(function(position) {
+        sellPostLoader.init();
+        sellPostLoader.clearPosts();
+        // current_position = position;
+        sellPostCurLatLon['latitude'] = position.coords.latitude;
+        sellPostCurLatLon['longitude'] = position.coords.longitude;
+        sellPostLoader.getAndDisplayPosts(sellPostCurLatLon);
+    }).fail(function() {
+        console.log("getCurrentPosition call failed")
+    }).always(function() {
+        //do nothing
+    });
+});
+
+function refreshSellPosts() {
+    var zipcode = $('#zipcode').val();
+    $.ajax({
+        type: "get",
+        url: "/me/get_info/get_latlong_by_zipcode",
+        dataType: "json",
+        data: {
+            zipcode: zipcode
+        }
+    }).then(function(latlon) {
+        // var latlon = jQuery.parseJSON(data);
+        sellPostCurLatLon['latitude'] = latlon['latitude'];
+        sellPostCurLatLon['longitude'] = latlon['longitude'];
+        //clear the posts and reset pageNum
+        sellPostLoader.clearPosts();
+        sellPostPageNum = 1;
+        hasMoreSellPost = false;
+        sellPostLoader.getAndDisplayPosts(sellPostCurLatLon);
+    });
+    return false;
+}
+/***************/
