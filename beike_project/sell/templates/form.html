@@ -8,9 +8,11 @@
 
     <script src="/static/jquery/jquery-1.8.3.js "></script>
     <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+    <script type="text/javascript" src="/static/jquery/jquery.validate.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
     <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
     <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
+
 
     <!--js library for s3 upload-->
     <script type="text/javascript" src="/static/s3upload.js"></script>
@@ -18,163 +20,124 @@
     <script type="text/javascript" src="/static/binaryajax.js"></script>
 
     <!-- beike customized css and js -->
-    <link rel="stylesheet" type="text/css" href="/static/common.css">
-    <script type="text/javascript" src="/static/buy.js"></script>
-    <script type="text/javascript" src="/static/sell.js"></script>
+    <link rel="stylesheet" href="/static/common.css">
+    <link rel="stylesheet" href="/static/detail.css">
+    <script src="/static/buy.js"></script>
+    <script src="/static/sell.js"></script>
     <script src="/static/common.js"></script>
-    <title>我要卖</title>
+    <script type="text/javascript" src="/static/jquery.touchSwipe.min.js"></script>
 </head>
 
 <body>
-    <div data-role="page" id="main-page" data-theme="a">
+    <div data-role="page" id="main-page" data-theme="a" data-fullscreen="true">
         <link rel="stylesheet" type="text/css" href="/static/sell.css">
-        <div id='header' data-role="header" data-position="fixed">
-            <img src='/static/images/navigation/buy_form_header.png'>
+        <div data-role="header" data-position="fixed">
+            <div style="background-color: rgb(35,192,148);">
+                <div class="ui-grid-b">
+                    <div class="ui-block-a">
+                    </div>
+                    <div class="ui-block-b">
+                        <p style="text-align:center; color:white">我要卖</p>
+                    </div>
+                    <div class="ui-block-a">
+                    </div>
+                </div>
+            </div>
         </div>
         <div data-role="content">
-            <div id="current_image_div" class="ui-grid-solo" style="background-color: rgb(171,171,171);">
-                <img id="current_image">
-                <p id="upload_status">
-            </div>
-            <div id="button_and_thumbnails" class="ui-grid-solo">
-                <div id="choose_file">
-                    <img src='/static/images/sell_post/upload.png'>
+            <div class="ui-grid-solo" style="max-width: 400px;">
+                <div id="current_image_div" class="ui-grid-solo" style="min-height: 250px;">
+                    <img id="current_image">
+                    <p id="upload_status">
                 </div>
+                <div id="button_and_thumbnails" class="ui-grid-d" style>
 
-                <div class="hidden_file">
-                    <input type="file" id="image1" data-clear-btn="false" name="image" accept="image/*" onchange="image_s3_upload(this.id,'{{user_id}}');" capture>
-                </div>
-
-                <div id="image-section">
-                    <div class="img_controls">
-                        <div class="delete_image_buttons" onclick="deleteImage()">
-                            <p id="delete_img1">X</p>
-                        </div>
-                        <div class="img_previews">
-                            <img id="preview1" onclick="selectImage(1)">
+                    <div class="ui-block-a" style="padding: 0">
+                        <img id="choose_file" src='/static/images/sell_post/upload.png'>
+                        <div class="hidden_file">
+                            <input type="file" id="image1" data-clear-btn="false" name="image" accept="image/*" onchange="image_s3_upload(this.id,'{{user_id}}');" capture>
                         </div>
                     </div>
-                
-
-                    <div class="img_controls">
-                        <div class="delete_image_buttons" onclick="deleteImage()">
-                            <p id="delete_img2">X</p>
-                        </div>
-                        <div class="img_previews">
-                            <img id="preview2" onclick="selectImage(2)">
-                        </div>
+                    <div class="ui-block-b" onclick="deleteImage()">
+                        <img style="width: 100%; height: 100%" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/delete_pic.png">
                     </div>
-                
-                    <div class="img_controls">
-                        <div class="delete_image_buttons" onclick="deleteImage()">
-                            <p id="delete_img3">X</p>
-                        </div>
-                        <div class="img_previews">
-                            <img id="preview3" onclick="selectImage(3)">
-                        </div>
+                    <div class="ui-block-c">
+                        <img id="preview1" onclick="selectImage(1)">
+                    </div>
+                    <div class="ui-block-d">
+                        <img id="preview2" onclick="selectImage(2)">
+                    </div>
+                    <div class="ui-block-e">
+                        <img id="preview3" onclick="selectImage(3)">
                     </div>
                 </div>
             </div>
 
-            <div class="ui-grid-solo" id="down-arrow">
-                <a href="#start-form" data-ajax="false"><img src="/static/images/sell_post/down_arrow.png"></a>
-            </div>
-
-            <form action="/sell/form_submit/" method="post" enctype="multipart/form-data" onsubmit="return validateForm();" name="sell-form">
+            <form action="/sell/form_submit/" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
                 {% csrf_token %}
                 <input type="hidden" id="image_url1" name="image_url1" value="">
                 <input type="hidden" id="image_width1" name="image_width1" value="">
                 <input type="hidden" id="image_height1" name="image_height1" value="">
 
-                <input type="hidden" id="image_url2" name="image_url2" value="">
-                <input type="hidden" id="image_width2" name="image_width2" value="">
-                <input type="hidden" id="image_height2" name="image_height2" value="">
+                <input type="hidden" id="image_url1" name="image_url2" value="">
+                <input type="hidden" id="image_width1" name="image_width2" value="">
+                <input type="hidden" id="image_height1" name="image_height2" value="">
 
-                <input type="hidden" id="image_url3" name="image_url3" value="">
-                <input type="hidden" id="image_width3" name="image_width3" value="">
-                <input type="hidden" id="image_height3" name="image_height3" value="">
+                <input type="hidden" id="image_url1" name="image_url3" value="">
+                <input type="hidden" id="image_width1" name="image_width3" value="">
+                <input type="hidden" id="image_height1" name="image_height3" value="">
 
                 <input type="hidden" id="image_orientation1" name="image_orientation1" value="">
                 <input type="hidden" id="image_orientation2" name="image_orientation2" value="">
                 <input type="hidden" id="image_orientation3" name="image_orientation3" value="">
 
 
-
-
-
-
-
-
-                <div class="ui-grid-solo ui-corner-all sell-form">
-                    <div class="ui-block-a form-labels">
-                        <label for="title"><a id="start-form">标题</a></label>
+                <div class="ui-grid-a ui-corner-all">
+                    <div class="ui-block-a" style="width:20%;">
+                        <label for="category" class="form-label">物品类别</label>
                     </div>
-                    <div class="ui-block-b form-contents">
-                        <input type="text" name="title" id="title" placeholder="请输入标题" data-rule-required="true" data-rule-content="true" data-msg-required="请输入标题" />
-                    </div>
-                </div>
-
-
-                <div class="ui-grid-solo ui-corner-all sell-form">
-                    <div class="ui-block-a form-labels">
-                        <label for="category">类别</label>
-                    </div>
-                    <div class="ui-block-b form-contents">
+                    <div class="ui-block-b" style="width:80%;">
                         <select name='category' id="category">
                             {% for category in categories %}
                             <option value={{ category.id }}>{{category.name}}</option>
                             {% endfor %}
                         </select>
                     </div>
+
+                    <div class="ui-block-a" style="width:20%;">
+                        <label for="title" class="form-label">物品名称</label>
+                    </div>
+                    <div class="ui-block-b" style="width:80%">
+                        <input type="text" name="title" id="title" placeholder="请输入标题" />
+                    </div>
+
+
+                    <div class="ui-block-a" style="width:20%;">
+                        <label class="form-label">出售价格</label>
+                    </div>
+                    <div class="ui-block-b" style="width:80%;">
+                        <input type="number" name="price" placeholder="请标价">
+                    </div>
                 </div>
 
-                <div class="ui-grid-solo ui-corner-all sell-form">
-                    <div class="ui-block-a form-labels">
-                        <label>价格</label>
-                    </div>
-                    <div class="ui-block-b form-contents">
-                        <input type="number" name="price" placeholder="请标价" data-rule-required="true" data-rule-content="true" data-msg-required="请输入价格">
-                    </div>
-                </div>
-<!--
-                <div class="ui-grid-solo ui-corner-all sell-form">
+                <div class="ui-grid-solo ui-corner-all">
                     <div style="position: relative; margin: 5px 30px 30px 10px">
-                        <div class="slider-scale-common slider-scale-div1">旧</div>
-                        <div class="slider-scale-common slider-scale-div2">25%</div>
-                        <div class="slider-scale-common slider-scale-div3">50%</div>
-                        <div class="slider-scale-common slider-scale-div4">75%</div>
-                        <div class="slider-scale-common slider-scale-div5">新</div>
+                        <div class="slider-scale-common slider-scale-div1">全新</div>
+                        <div class="slider-scale-common slider-scale-div2">九成新</div>
+                        <div class="slider-scale-common slider-scale-div3">七成新</div>
+                        <div class="slider-scale-common slider-scale-div4">五成新</div>
+                        <div class="slider-scale-common slider-scale-div5">旧</div>
                     </div>
                     <input data-highlight="true" type="range" name="condition-slider" id="condition-slider" value="5" min="0" max="4" step="1" />
                     <input type="hidden" id="my_condition" name="my_condition" value=1>
                 </div>
--->
-                <div class="ui-grid-solo ui-corner-all sell-form">
-                    <div class="ui-block-a form-labels">
-                        <label>邮编</label>
-                    </div>
-                    <div class="ui-block-b form-contents" style="width:40%;">
-                        <input type="text" name="zipcode" id="zipcode" placeholder="zipcode">
-                    </div>
-                    <div class="ui-block-c form-contents" style="width:40%;padding-top:5px;">
-                        <a href="" data-role="button" onclick="getLocationByZipcode(); return false;">更新</a>
-                    </div>
-                </div class="ui-grid-a">
 
-                <div class="ui-grid-solo ui-corner-all sell-form">
-                    <div class="ui-block-a form-labels">
-                        <label>城市</label>
-                    </div>
-                    <div class="ui-block-b form-contents" style="margin-top:16px;">
-                        <div name="city" id="city"></div>
-                    </div>
-                </div>
 
-                <div class="ui-grid-solo sell-form">
-                    <div class="ui-block-a form-labels" style="margin-top:30px;">
-                        <label id="prefer-contact">联系我</label>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:20%;">
+                        <label id="prefer-contact" class="form-label">联系方式</label>
                     </div>
-                    <div class="ui-block-b form-contents">
+                    <div class="ui-block-b" style="width:80%;">
                         <div data-role="fieldcontain">
                             <fieldset data-role="controlgroup" data-type="horizontal">
                                 <input type="checkbox" name="phone-checked" id="phone-checked" onchange="phoneContactChange()" />
@@ -191,70 +154,31 @@
                                 </label>
                             </fieldset>
                         </div>
-
-                        <!--Use ui-grid-a because I cannot resolve the jquery validation css issue-->
-                        <!--error message was always displayed inside the next input-->
-                        <!--TO-DO: fix this issue and use just a single div-->
-                        <div id="phone_number_div" class="ui-grid-a">
-                            <div class="ui-block-a" style="width:0"></div>
-                            <div class="ui-block-b" style="width:100%">
-                            {% if user.mobile_phone and user.mobile_phone != " " %}
-                              <input type="text" id= "phone_number" name="phone_number" placeholder="手机号码" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入电话号码" />
-                            {% else %}
-                              <input type="text" id= "phone_number" name="phone_number" placeholder="手机号码" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
-                            {% endif %}
-                            </div>
+                        <div id="phone_number_div">
+                            {% if user.mobile_phone %}
+                            <input type="text" name="phone_number" placeholder="{{user.mobile_phone}}" value="{{user.mobile_phone}}">{% else %}
+                            <input type="text" name="phone_number" placeholder="手机号码" value="">{% endif %}
+                            <p id="phone_required" style="color: red;"></p>
                         </div>
-                        <div id="email_div" class="ui-grid-a">
-                            <div class="ui-block-a" style="width:0"></div>
-                            <div class="ui-block-b" style="width:100%">
-                            {% if user.email and user.email != " " %}
-                              <input type="text" id="email" name="email" placeholder="Email" value="{{user.email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
-                            {% else %}
-                              <input type="text" id="email" name="email" placeholder="Email" data-rule-required="true" data-rule-content="true" data-msg-required="请输入Email" />
-                            {% endif %}
-                            </div>
+                        <div id="email_div">
+                            {% if user.email %}
+                            <input type="text" name="email" placeholder="{{user.email}}" value="{{user.email}}">{% else %}
+                            <input type="text" name="email" placeholder="Email" value="">{% endif %}
+                            <p id="email_required" style="color: red;"></p>
                         </div>
-                        <div id="qq_number_div" class="ui-grid-a">
-                            <div class="ui-block-a" style="width:0"></div>
-                            <div class="ui-block-b" style="width:100%">
-                            {% if user.qq_number and user.qq_number != " " %}
-                              <input type="text" id="qq_number" name="qq_number" placeholder="微信或QQ号" value="{{user.qq_number}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入微信或QQ号" />
-                            {% else %}
-                              <input type="text" id="qq_number" name="qq_number" placeholder="微信或QQ号" data-rule-required="true" data-rule-content="true" data-msg-required="请输入微信或QQ号" />
-                            {% endif %}
-                            </div>
+                        <div id="qq_number_div">
+                            {% if user.qq_number %}
+                            <input type="text" name="qq_number" placeholder="{{user.qq_number}}" value="{{user.qq_number}}">{% else %}
+                            <input type="text" name="qq_number" placeholder="微信或QQ号" value="">{% endif %}
+                            <p id="qq_required" style="color: red;"></p>
                         </div>
-                        
                     </div>
                 </div>
 
-                <div class="ui-grid-solo sell-form">
-                    <div class="ui-block-solo form-labels-up">
-                        <div style="float:left;">我要说</div>
-                        <div style="float:right;">
-                            <span id="currentCount">0</span>
-                            <span>/ 300</span>
-                        </div>
-                    </div>
-                    <div class="ui-block-solo form-contents-bottom">
-                        <textarea maxlength="300" name="content" style="width:100%" onkeyup="textCounter(this)" placeholder="描述颜色、大小、形状、新旧等需求" data-rule-required="true" data-rule-content="true" data-msg-required="请输入详细描述"></textarea>
-                    </div>
+                <div class="ui-grid-solo">
+                    <label for="content" class="form-label">其他描述</label>
+                    <textarea cols="30" rows="20" name="content"></textarea>
                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 <div>
                     <input type="hidden" name="latitude" id="latitude"></input>
@@ -263,6 +187,7 @@
 
                 <div class="ui-grid-solo">
                     <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png">
+                    <p id="validate_msg"></p>
                 </div>
 
             </form>
@@ -270,45 +195,38 @@
 
 
         <div data-role="footer" data-position="fixed">
-            <div style="background-color: #23C094;">
+            <div style="background-color: rgb(35,192,148);">
                 <div class="ui-grid-d">
-                    <div class="ui-block-a footer-items">
+                    <div class="ui-block-a">
                         <a href="/">
-                            <img height="40" width="40" src='/static/images/navigation/homepage_clicked.png' />
+                            <img height="30" width="30" style="padding:12px 5px 5px 12px;" src='/static/images/navigation/homepage_clicked.png' />
                         </a>
                     </div>
-                    <div class="ui-block-b footer-items">
-                        <a href="/buy/form">
-                            <img height="40" width="32" src='/static/images/navigation/buy_form_clicked.png' />
+                    <div class="ui-block-b">
+                        <a href="/buy/form/">
+                            <img height="40" width="32" style="padding:5px;" src='/static/images/navigation/buy_form_clicked.png' />
                         </a>
                     </div>
-                    <div class="ui-block-c footer-items">
-                        <a href="/sell/form">
-                            <img height="40" width="32" src='/static/images/navigation/sell_form_clicked.png' />
+                    <div class="ui-block-c">
+                        <a href="/sell/form/">
+                            <img height="40" width="32" style="padding:5px;" src='/static/images/navigation/sell_form_clicked.png' />
                         </a>
                     </div>
-                    <div class="ui-block-d footer-items">
-                        <a href="/buy/all_list">
-                            <img height="40" width="40" src='/static/images/navigation/buy_posts_clicked.png' />
+                    <div class="ui-block-d">
+                        <a href="/buy/all_list/">
+                            <img height="40" width="40" style="padding:5px;" src='/static/images/navigation/buy_posts_clicked.png' />
                         </a>
                     </div>
-                    <div class="ui-block-e footer-items">
-                        <a href="/sell/all_list">
-                            <img height="40" width="40" src='/static/images/navigation/sell_posts_clicked.png' />
+                    <div class="ui-block-e">
+                        <a href="/sell/all_list/">
+                            <img height="40" width="40" style="padding:5px;" src='/static/images/navigation/sell_posts_clicked.png' />
                         </a>
                     </div>
-                </div>    
+                </div>
             </div>
         </div>
-
         <script type="text/javascript">
-        function textCounter(val) {
-            var len = val.value.length;
-            $('#currentCount').text(len);
-        }
-        
-
-        function getLocationByLatLon(position) {
+        function getLatitudeLongtitude(position) {
             var latitude = position.coords.latitude;
             var longitude = position.coords.longitude;
             $("#latitude").val(latitude);
@@ -322,48 +240,13 @@
                     longitude: longitude
                 }
             }).then(function(data) {
-                $('#zipcode').val(data['zipcode']);
-                $('#city').text(data['city']);
                 console.log(data);
             });
         }
-
-        function getLocationByZipcode() {
-            var zipcode = $("#zipcode").val();
-            $.ajax({
-                type: "get",
-                url: "/me/get_info/get_latlong_by_zipcode",
-                dataType: "json",
-                data: {
-                    zipcode: zipcode
-                }
-            }).then(function(data) {
-                console.log(data);
-                $('#city').text(data['city']);
-                $('#latitude').val(data['latitude']);
-                $('#longitude').val(data['longitude']);
-            });
-        }
-
-        function getCurrentPositionDeferred(options) {
-            var deferred = $.Deferred();
-            navigator.geolocation.getCurrentPosition(deferred.resolve, deferred.reject, options);
-            return deferred.promise();
-        };
 
         $(document).ready(function() {
             if (navigator.geolocation) {
-                getCurrentPositionDeferred({
-                    enableHighAccuracy: true
-                }).done(function(position) {
-                    getLocationByLatLon(position)
-                }).fail(function() {
-                    console.log("getCurrentPosition call failed")
-                }).always(function() {
-                    //do nothing
-                });
-            } else {
-                alert("geolocation is disabled.")
+                navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
             }
             initiatePage();
         });
