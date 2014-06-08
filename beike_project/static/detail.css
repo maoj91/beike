@@ -93,3 +93,52 @@
     background-color: gray;
     opacity: .7;
 }
+
+
+#sell_icon{
+    width:20px;
+    height: 20px;
+}
+
+#bookmark{
+    width:30px;
+    height: 30px;
+}
+
+#currency_icon{
+    width:20px;
+    height: 20px;
+    margin-left: 5px;
+    margin-top: 7px;
+}
+
+#condition{
+    width:30px;
+    height: 30px;
+    margin:auto;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 2px;
+}
+
+.contact_icon{
+    display:inline;
+    float:left;
+    width:50px;
+    height:50px;
+    margin: 5px;
+}
+
+
+
+#content{
+    padding: 10px;
+}
+
+#date{
+    float:right;
+}
+
+#contacts{
+    margin: auto;
+}
