@@ -46,7 +46,7 @@
         <div data-role="content" id="content" >
 
 
-            <div class="ui-grid-solo">
+            <div>
 
                 <script id='code_1'>
 
@@ -124,7 +124,6 @@
                     if(i>=0 && i<=maxImages-1){
                         for(var j=0;j<=maxImages-1;j++){
                             $("#thumbnail_span"+j).addClass("thumbnail_not_selected");
-                            // $("#thumbnail_span"+i).removeClass("thumbnail_selected");
                         }
                         $("#thumbnail_span"+i).removeClass("thumbnail_not_selected");
                         $("#thumbnail_span"+i).addClass("thumbnail_selected");
@@ -178,7 +177,6 @@
 
             </div>
 
-
             <div class="ui-grid-b" style="padding:10px;width=100%;">
                 <div class="ui-block-a" style="width:10%">
                     <img id='sell_icon' src='/static/images/detail/sell_icon.png'>
@@ -198,7 +196,28 @@
                 <img id='currency_icon' src='/static/images/detail/currency_icon.png'>
                 {{post.price}}
             </div>
+            <div class="ui-block-b" style="width:30%;height:40px;border-top:2px solid gray;border-bottom:2px solid gray;text-align: center;">
+               <img id='condition' src='/static/images/detail/condition_new.png'> 
+           </div>
+       </div>
 
+       <div class="ui-grid-a" style="padding-top:10px;padding-bottom:10px;">
+        <div class="ui-block-a" style="width:70%;height:40px;">
+            <img id='location_icon' src='/static/images/detail/location_icon.png'>
+            {{post.user.address.city}}
+        </div>
+        <div class="ui-block-b" style="width:30%;height:40px;text-align: center;">
+            {{post.category.name}}
+        </div>
+    </div>
+
+    <div class="ui-grid-solo" id="content">
+        {{post.content}}
+    </div>
+
+    <div class="ui-grid-solo" id="date">
+        {% load string_utils %} {{post.date_published|get_time}}
+    </div>
 
     <div style="clear:both;margin-left:5%;margin-right:5%;height:2px;background-color:gray;"></div>
 
@@ -214,17 +233,6 @@
         </div>
     </div>
 
-            <div class="ui-grid-a">
-                <div class="ui-block-a">
-                    <img id='dollar_img' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/07/dollar.png'>
-                </div>
-                <div class="ui-block-b">
-                    {{post.price}}
-                </div>
-            </div>
-            <div class="ui-grid-solo">
-                {{post.user.address.city}}
-            </div>
 
 <!--     <div class="ui-grid-a">
         <div class="ui-block-a">
@@ -269,134 +277,65 @@
                     <img height="30" width="30" style = "padding:12px 5px 5px 12px;" src='/static/images/navigation/homepage_clicked.png' />
                 </a>
             </div>
-
-            <div class="ui-grid-a">
-                <div class="ui-block-a">
-                    发布日期
-                </div>
-                <div class="ui-block-b">
-                    {% load string_utils %} {{post.date_published|get_time}}
-                </div>
+            <div class="ui-block-b">
+                <a href="/buy/form">
+                    <img height="40" width="32" style = "padding:5px;" src='/static/images/navigation/buy_form_clicked.png' />
+                </a>
             </div>
-            <div class="ui-grid-a">
-                <div class="ui-block-a">
-                    详细描述
-                </div>
-                <div class="ui-block-b">
-                    {{post.content}}
-                </div>
+            <div class="ui-block-c">
+                <a href="/sell/form">
+                    <img height="40" width="32" style = "padding:5px;" src='/static/images/navigation/sell_form_clicked.png' />
+                </a>
             </div>
-
-            <div class="ui-grid-a">
-                <div class="ui-block-a">
-                    联系方式:
-                </div>
-                <div class="ui-grid-b">
-                    <div class="ui-grid-solo">
-                        {% if phone_checked%}
-                        <a href="tel:{{phone}}" data-role="button">{{phone}}</a> (电话)
-                        {% endif%}
-                    </div>
-                    <div class="ui-grid-solo">
-                        {% if email_checked%}
-                        <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}" data-role="button">{{email}}</a> (Email)
-                        {% endif%}
-                    </div>
-                    <div class="ui-grid-solo">
-                        {% if qq_checked%}
-                        {{qq}} (QQ或微信号)
-                        {% endif%}
-                    </div>
-                </div>
+            <div class="ui-block-d">
+                <a href="/buy/all_list">
+                    <img height="40" width="40" style = "padding:5px;" src='/static/images/navigation/buy_posts_clicked.png' />
+                </a>
             </div>
-            
-            {% if is_owner %}
-            <label for="open-close-post">关闭此贴:</label>
-            <select name="open-close-post" id="open-close-post" data-role="slider">
-                <option value="open"{% if is_open %} selected {% endif %}>待售</option>
-                <option value="close"{% if not is_open %} selected {% endif %}>已售</option>
-            </select>
-            {% else %}
-            <label for="follow-post">关注此贴:</label>
-            <select name="follow-post" id="follow-post" data-role="slider">
-                <option value="unfollow" {% if not is_followed %} selected {% endif %}>不关注</option>
-                <option value="follow" {% if is_followed %} selected {% endif %}>关注中</option>
-            </select>
-            {% endif %}
-        </div>
-        <div>
-            <input type="hidden" id="post_id" value={{post.id}}>
-        </div>
-        <div>
-            <input type="hidden" id="wx_id" value={{wx_id}}>
-        </div>
-        <div data-role="footer" data-position="fixed">
-            <div style="background-color: rgb(35,192,148);">
-                <div class="ui-grid-d">
-                    <div class="ui-block-a">
-                        <a href="/">
-                            <img height="30" width="30" style = "padding:12px 5px 5px 12px;" src='/static/images/navigation/homepage_clicked.png' />
-                        </a>
-                    </div>
-                    <div class="ui-block-b">
-                        <a href="/buy/form">
-                            <img height="40" width="32" style = "padding:5px;" src='/static/images/navigation/buy_form_clicked.png' />
-                        </a>
-                    </div>
-                    <div class="ui-block-c">
-                        <a href="/sell/form">
-                            <img height="40" width="32" style = "padding:5px;" src='/static/images/navigation/sell_form_clicked.png' />
-                        </a>
-                    </div>
-                    <div class="ui-block-d">
-                        <a href="/buy/all_list">
-                            <img height="40" width="40" style = "padding:5px;" src='/static/images/navigation/buy_posts_clicked.png' />
-                        </a>
-                    </div>
-                    <div class="ui-block-e">
-                        <a href="/sell/all_list">
-                            <img height="40" width="40" style = "padding:5px;" src='/static/images/navigation/sell_posts_clicked.png' />
-                        </a>
-                    </div>
-                </div>    
+            <div class="ui-block-e">
+                <a href="/sell/all_list">
+                    <img height="40" width="40" style = "padding:5px;" src='/static/images/navigation/sell_posts_clicked.png' />
+                </a>
             </div>
-        </div>
-        <script type="text/javascript">
-        var wx_id = $("#wx_id").val();
-        var post_id = $("#post_id").val();
-        $("#follow-post").on('slidestop', function(event) {
-            var follow_option = $("#follow-post").val();
-            return $.ajax({
-                type: "get",
-                url: "/sell/follow_post",
-                dataType: "json",
-                data: {
-                    wx_id: wx_id,
-                    post_id: post_id,
-                    follow_option: follow_option
-                }
-            }).then(function(data) {});
-        });
-        $("#open-close-post").on('slidestop', function(event) {
-            var operation = $("#open-close-post").val();
-            return $.ajax({
-                type: "get",
-                url: "/sell/open_close_post",
-                dataType: "json",
-                data: {
-                    wx_id: wx_id,
-                    post_id: post_id,
-                    operation: operation
-                }
-            }).then(function(data) {});
-        });
-
-        $(document).ready(function() { 
-            selectThumbnail(0);
-        });
-
-        </script>
+        </div>    
     </div>
+</div>
+<script type="text/javascript">
+var wx_id = $("#wx_id").val();
+var post_id = $("#post_id").val();
+$("#follow-post").on('slidestop', function(event) {
+    var follow_option = $("#follow-post").val();
+    return $.ajax({
+        type: "get",
+        url: "/sell/follow_post",
+        dataType: "json",
+        data: {
+            wx_id: wx_id,
+            post_id: post_id,
+            follow_option: follow_option
+        }
+    }).then(function(data) {});
+});
+$("#open-close-post").on('slidestop', function(event) {
+    var operation = $("#open-close-post").val();
+    return $.ajax({
+        type: "get",
+        url: "/sell/open_close_post",
+        dataType: "json",
+        data: {
+            wx_id: wx_id,
+            post_id: post_id,
+            operation: operation
+        }
+    }).then(function(data) {});
+});
+
+$(document).ready(function() { 
+    selectThumbnail(0);
+});
+
+</script>
+</div>
 </body>
 
 </html>
