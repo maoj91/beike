@@ -175,25 +175,33 @@
             </div>
 
             <div class="ui-grid-a" style="width:100%;">
-                <div class="ui-block-a" style="width:90%">
-                    <img id='sell_icon' src='/static/images/detail/sell_icon.png'>
-                    {{post.title}}
+                <div class="ui-block-a" style="width:90%;padding:10px;">
+                    <img id='sell_icon' src='/static/images/detail/sell_icon.png' style="vertical-align:middle;">
+                    <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.title}}</p>
                 </div>
                 <div class="ui-block-b" style="width:10%">
                     {% if not is_owner %}
-                    <img id='bookmark' src='/static/images/detail/not_bookmarked.png'> 
+                    <img id='bookmark' src='/static/images/detail/not_bookmarked.png' style="vertical-align:middle;"> 
                     {% endif %}
                 </div>
             </div>
 
-            <div class="ui-grid-a" style="padding-top:10px;padding-bottom:10px;">
+            <div class="ui-grid-a" style="padding:10px;">
                 <div class="ui-block-a" style="width:70%;height:40px;border-top:2px solid gray;border-bottom:2px solid gray;border-right:2px solid gray;">
-                    <img id='currency_icon' src='/static/images/detail/currency_icon.png'>
-                    {{post.price}}
+                    <img id='currency_icon' src='/static/images/detail/currency_icon.png' style="vertical-align:middle;">
+                    <p style="display:inline;vertical-align:middle;">{{post.price}}</p>
                 </div>
                 <div class="ui-block-b" style="width:30%;height:40px;border-top:2px solid gray;border-bottom:2px solid gray;text-align: center;">
-                 <img id='condition' src='/static/images/detail/condition_new.png'> 
-             </div>
+                    {% if post.item_condition.name == 'New' %}
+                        <img id='condition' src='/static/images/detail/condition_new.png'> 
+                    {% elif post.item_condition.name == 'AlmostNew' %}
+                        <img id='condition' src='/static/images/detail/condition_nine.png'> 
+                    {% elif post.item_condition.name == 'Used' %}
+                        <img id='condition' src='/static/images/detail/condition_seven.png'> 
+                    {% elif post.item_condition.name == 'Refurbished' %}
+                        <img id='condition' src='/static/images/detail/condition_old.png'> 
+                    {% endif %}
+                </div>
          </div>
 
          <div class="ui-grid-a" style="padding-top:10px;padding-bottom:10px;">
@@ -206,11 +214,11 @@
             </div>
         </div>
 
-        <div class="ui-grid-solo" id="content">
+        <div class="ui-grid-solo" id="content" style="margin-left:5%;margin-bottom:10px;">
             {{post.content}}
         </div>
 
-        <div class="ui-grid-solo" id="date">
+        <div class="ui-grid-solo" id="date" style="margin-right:5%;">
             {% load string_utils %} {{post.date_published|get_time}}
         </div>
 
@@ -239,7 +247,7 @@
     <div style="clear:both;"></div>
 
 
-    <div style='width:100%;display:table;margin:0;'>
+    <div style='width:100%;display:table;margin-left:0;margin-right:0;margin-top:20px;'>
         <img id="map" src="">
     </div>
 
