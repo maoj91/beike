@@ -89,85 +89,106 @@
             }
         });
 
-        $(document).delegate("#signup", "pageinit", function(event) {
-            $('form').validate({
+        function validateUserInfo() {
+            $('#user_info_form').validate({
                 rules: {
                     user_email: {
                         required: true,
                         email: true,
                         remote: {
                             url: "check_email",
-                            type: "post"
+                            type: "post",
+                            async: false
                         }
                     }
                 },
                 messages: {
                     user_email: {
+                        email: "该email格式不对",
                         remote: "该email已经被使用"
                     }
                 }
             });
-        });
+            $('#username_input').val($('#username').val());
+            $('#email_input').val($('#user_email').val());
+            return $('#user_info_form').valid();
+        }
     </script>
 </head>
 
 <body>
-    <div id="signup" data-role="page">
 
-        <div data-role="content" style="padding: 0">
-            <form action="/me/create/" method="post" enctype="multipart/form-data">{% csrf_token %}
-                <div class="ui-grid-solo" style="background-color: rgb(47,189,133);">
-                    <div class="ui-grid-solo">
-                        <div class="ui-block-a" style="text-align: center; width: 100% !important;">
-                            <img style="width: 250px; height: 180px;" src="/static/images/signup/logo.png" />
-                        </div>
-                    </div>
-                    <div class="ui-grid-b">
-                        <div class="ui-block-a" style="width: 10%"></div>
-                        <div class="ui-block-b" style="width: 80%;">
-                            <input type="text" id='user_name' name="user_name" placeholder="用户名:" data-rule-required="true" data-rule-content="true" data-msg-required="请输入用户名" />
-                        </div>
-                        <div class="ui-block-c" style="width: 10%"></div>
-                    </div>
-                    <div class="ui-grid-b">
-                        <div class="ui-block-a" style="width: 10%"></div>
-                        <div class="ui-block-b" style="width: 80%">
-                            <input id='user_email' type="email" name="user_email" placeholder="邮箱:" data-rule-required="true" data-rule-content="true" data-msg-required="请输入邮箱" />
-                        </div>
-                        <div class="ui-block-c" style="width: 10%"></div>
-                    </div>
+    <div style="background-color: rgb(47,189,133);" data-role="page" id="user_info">
+        <form id="user_info_form">
+            <div class="ui-grid-solo">
+                <div class="ui-block-a" style="text-align: center; width: 100% !important;">
+                    <img style="width: 250px; height: 180px;" src="/static/images/signup/logo.png" />
                 </div>
-                <div class="ui-grid-solo" style="background-color: rgb(204,227,221);">
-                    <div class="ui-grid-solo" style="text-align: center; width: 100% !important;">
-                        <img style="width: 80px; height: 100px;" src="/static/images/signup/location_icon.png" />
-                        <div id='city' name='city'></div>
-                    </div>
-                    <div class="ui-grid-solo">
-                        <input type="hidden" id="city_id" name="city_id" value="" />
-                        <input type="hidden" id="zipcode" name="zipcode" />
-                        <div class="ui-grid-b">
-                            <div class="ui-block-a" style="width: 10%"></div>
-                            <div class="ui-block-b" style="width: 80%">
-                                <input id="zipcode_input" name="zipcode_input" placeholder="手动输入正确的zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="请输入zipcode" />
-                            </div>
-                            <div class="ui-block-c" style="width: 10%"></div>
-                        </div>
-                        <div class="ui-grid-b">
-                            <div class="ui-block-a" style="width: 10%"></div>
-                            <div class="ui-block-b" style="width: 80%">
-                                <a href="#" id="getzipcode" data-role="button" data-icon="check">获取城市</a>
-                            </div>
-                            <div class="ui-block-c" style="width: 10%"></div>
-                        </div>
-                    </div>
-                    <input type="hidden" name="latitude" id="latitude" />
-                    <input type="hidden" name="longitude" id="longitude" />
-                    <div class="ui-grid-solo" style="text-align: center; width: 100% !important;">
-                        <input type="image" style="width: 100px; length: 100px;" src="/static/images/signup/start.png" />
-                    </div>
+            </div>
+            <div class="ui-grid-b">
+                <div class="ui-block-a" style="width: 10%"></div>
+                <div class="ui-block-b" style="width: 80%;">
+                    <input type="text" id='username' name="username" placeholder="用户名:" data-rule-required="true" data-rule-content="true" data-msg-required="请输入用户名" />
                 </div>
-            </form>
+                <div class="ui-block-c" style="width: 10%"></div>
+            </div>
+            <div class="ui-grid-b">
+                <div class="ui-block-a" style="width: 10%"></div>
+                <div class="ui-block-b" style="width: 80%">
+                    <input id='user_email' type="email" name="user_email" placeholder="邮箱:" data-rule-required="true" data-rule-content="true" data-msg-required="请输入邮箱" />
+                </div>
+                <div class="ui-block-c" style="width: 10%"></div>
+            </div>
+            <div class="ui-grid-b">
+                <div class="ui-block-a" style="width: 10%"></div>
+                <div class="ui-block-b" style="width: 80%">
+                    <a href="#user_location" data-role="button" onclick="return validateUserInfo();">下一步</a>
+                </div>
+                <div class="ui-block-c" style="width: 10%"></div>
+            </div>
+        </form>
+    </div>
+
+    <div style="background-color: rgb(204,227,221);" data-role="page" id="user_location">
+        <div class="ui-grid-b">
+            <div class="ui-block-a" style="width: 10%"></div>
+            <div class="ui-block-b" style="width: 80%"><a href="#user_info" data-role="button">上一步</a>
+            </div>
+            <div class="ui-block-c" style="width: 10%"></div>
         </div>
+        <form id="user_info_form" action="/me/create/" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <div class="ui-grid-solo" style="text-align: center; width: 100% !important;">
+                <img style="width: 80px; height: 100px;" src="/static/images/signup/location_icon.png" />
+                <div id='city' name='city'></div>
+            </div>
+            <input type="hidden" id="username_input" name="username_input"/>
+            <input type="hidden" id="email_input" name="email_input"/>
+            <div class="ui-grid-solo">
+                <input type="hidden" id="city_id" name="city_id" value="" />
+                <input type="hidden" id="zipcode" name="zipcode" />
+                <div class="ui-grid-b">
+                    <div class="ui-block-a" style="width: 10%"></div>
+                    <div class="ui-block-b" style="width: 80%">
+                        <input id="zipcode_input" name="zipcode_input" placeholder="手动输入正确的zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="请输入zipcode" />
+                    </div>
+                    <div class="ui-block-c" style="width: 10%"></div>
+                </div>
+                <div class="ui-grid-b">
+                    <div class="ui-block-a" style="width: 10%"></div>
+                    <div class="ui-block-b" style="width: 80%">
+                        <a href="#" id="getzipcode" data-role="button" data-icon="check">获取城市</a>
+                    </div>
+                    <div class="ui-block-c" style="width: 10%"></div>
+                </div>
+            </div>
+            <input type="hidden" name="latitude" id="latitude" />
+            <input type="hidden" name="longitude" id="longitude" />
+            <div class="ui-grid-solo" style="text-align: center; width: 100% !important;">
+                <input type="image" style="width: 100px; length: 100px;" src="/static/images/signup/start.png" />
+            </div>
+        </form>
+    </div>
+
     </div>
 </body>
 

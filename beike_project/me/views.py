@@ -98,8 +98,8 @@ def create(request):
         longitude = request.POST.get('longitude')  
         print "latitude: " + latitude
         print "longitude" + longitude
-        email = request.POST.get('user_email')
-        name = request.POST.get('user_name')
+        email = request.POST.get('email_input')
+        name = request.POST.get('username_input')
         email_valid_type = is_email_valid(email)
         name_valid_type = is_name_valid(name)
         if email_valid_type ==0 and email_valid_type==0:
