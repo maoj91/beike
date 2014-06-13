@@ -29,6 +29,8 @@ def sell_post_detail(request,offset):
     except ValueError:
         raise Http404()
     post = SellPost.objects.get(id=offset)
+    lat = "{0:.6f}".format(post.latlon.coords[1])
+    lon = "{0:.6f}".format(post.latlon.coords[0])
     image_list = ImageMetadata.deserialize_list(post.image_urls)
     image_num = len(image_list)
     sell_post_util = SellPostUtil()
@@ -42,7 +44,7 @@ def sell_post_detail(request,offset):
     phone = contact['phone_number']
     email = contact['email']
     qq = contact['qq_number']
-    return render_to_response('sell_post_detail.html', {'post':post, 'is_open':is_open, 'image_list': image_list, 'image_num':image_num,
+    return render_to_response('sell_post_detail.html', {'post':post,'lat':lat,'lon':lon,'is_open':is_open, 'image_list': image_list, 'image_num':image_num,
         'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner,'phone_checked':phone_checked,'email_checked':email_checked,'qq_checked':qq_checked,'phone':phone,
         'email':email,'qq':qq})
 

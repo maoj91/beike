@@ -44,10 +44,7 @@
 
 
         <div data-role="content" id="content" >
-
-
             <div>
-
                 <script id='code_1'>
 
                 var IMG_WIDTH = (window.innerWidth > 0) ? window.innerWidth : screen.width;
@@ -177,62 +174,67 @@
 
             </div>
 
-            <div class="ui-grid-b" style="padding:10px;width=100%;">
-                <div class="ui-block-a" style="width:10%">
-                    <img id='sell_icon' src='/static/images/detail/sell_icon.png'>
+            <div class="ui-grid-a" style="width:100%;">
+                <div class="ui-block-a" style="width:90%;padding:10px;">
+                    <img id='sell_icon' src='/static/images/detail/sell_icon.png' style="vertical-align:middle;">
+                    <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.title}}</p>
                 </div>
-                <div class="ui-block-b" style="width:80%">
-                    {{post.title}}
-                </div>
-                <div class="ui-block-c" style="width:10%">
+                <div class="ui-block-b" style="width:10%">
                     {% if not is_owner %}
-                   <img id='bookmark' src='/static/images/detail/not_bookmarked.png'> 
-                   {% endif %}
-               </div>
-           </div>
-
-           <div class="ui-grid-a" style="padding-top:10px;padding-bottom:10px;">
-            <div class="ui-block-a" style="width:70%;height:40px;border-top:2px solid gray;border-bottom:2px solid gray;border-right:2px solid gray;">
-                <img id='currency_icon' src='/static/images/detail/currency_icon.png'>
-                {{post.price}}
+                    <img id='bookmark' src='/static/images/detail/not_bookmarked.png' style="vertical-align:middle;"> 
+                    {% endif %}
+                </div>
             </div>
-            <div class="ui-block-b" style="width:30%;height:40px;border-top:2px solid gray;border-bottom:2px solid gray;text-align: center;">
-               <img id='condition' src='/static/images/detail/condition_new.png'> 
-           </div>
-       </div>
 
-       <div class="ui-grid-a" style="padding-top:10px;padding-bottom:10px;">
-        <div class="ui-block-a" style="width:70%;height:40px;">
-            <img id='location_icon' src='/static/images/detail/location_icon.png'>
-            {{post.user.address.city}}
+            <div class="ui-grid-a" style="padding:10px;">
+                <div class="ui-block-a" style="width:70%;height:40px;border-top:2px solid gray;border-bottom:2px solid gray;border-right:2px solid gray;">
+                    <img id='currency_icon' src='/static/images/detail/currency_icon.png' style="vertical-align:middle;">
+                    <p style="display:inline;vertical-align:middle;">{{post.price}}</p>
+                </div>
+                <div class="ui-block-b" style="width:30%;height:40px;border-top:2px solid gray;border-bottom:2px solid gray;text-align: center;">
+                    {% if post.item_condition.name == 'New' %}
+                        <img id='condition' src='/static/images/detail/condition_new.png'> 
+                    {% elif post.item_condition.name == 'AlmostNew' %}
+                        <img id='condition' src='/static/images/detail/condition_nine.png'> 
+                    {% elif post.item_condition.name == 'Used' %}
+                        <img id='condition' src='/static/images/detail/condition_seven.png'> 
+                    {% elif post.item_condition.name == 'Refurbished' %}
+                        <img id='condition' src='/static/images/detail/condition_old.png'> 
+                    {% endif %}
+                </div>
+         </div>
+
+         <div class="ui-grid-a" style="padding-top:10px;padding-bottom:10px;">
+            <div class="ui-block-a" style="width:70%;height:40px;">
+                <img id='location_icon' src='/static/images/detail/location_icon.png'>
+                {{post.user.address.city}}
+            </div>
+            <div class="ui-block-b" style="width:30%;height:40px;text-align: center;">
+                {{post.category.name}}
+            </div>
         </div>
-        <div class="ui-block-b" style="width:30%;height:40px;text-align: center;">
-            {{post.category.name}}
+
+        <div class="ui-grid-solo" id="content" style="margin-left:5%;margin-bottom:10px;">
+            {{post.content}}
         </div>
-    </div>
 
-    <div class="ui-grid-solo" id="content">
-        {{post.content}}
-    </div>
-
-    <div class="ui-grid-solo" id="date">
-        {% load string_utils %} {{post.date_published|get_time}}
-    </div>
-
-    <div style="clear:both;margin-left:5%;margin-right:5%;height:2px;background-color:gray;"></div>
-
-    <div style="width:100%;height:60px;">
-        <div id="contacts" style="display:table;height:100%;margin: 0 auto; padding: 5px;">
-            <a href="sms:{{phone}}"><img class="contact_icon" src='/static/images/detail/sms.png'></a>
-            {% if phone_checked%}
-            <a href="tel:{{phone}}"><img class="contact_icon" src='/static/images/detail/phone.png'></a>            
-            {% endif%}
-            {% if email_checked%}
-            <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}"><img class="contact_icon"src='/static/images/detail/email.png'></a>
-            {% endif%}
+        <div class="ui-grid-solo" id="date" style="margin-right:5%;">
+            {% load string_utils %} {{post.date_published|get_time}}
         </div>
-    </div>
 
+        <div style="clear:both;margin-left:5%;margin-right:5%;height:2px;background-color:gray;"></div>
+
+        <div style="width:100%;height:60px;">
+            <div id="contacts" style="display:table;height:100%;margin: 0 auto; padding: 5px;">
+                <a href="sms:{{phone}}"><img class="contact_icon" src='/static/images/detail/sms.png'></a>
+                {% if phone_checked%}
+                <a href="tel:{{phone}}"><img class="contact_icon" src='/static/images/detail/phone.png'></a>            
+                {% endif%}
+                {% if email_checked%}
+                <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}"><img class="contact_icon"src='/static/images/detail/email.png'></a>
+                {% endif%}
+            </div>
+        </div>
 
 <!--     <div class="ui-grid-a">
         <div class="ui-block-a">
@@ -242,13 +244,12 @@
             {{post.user.name}}
         </div>
     </div> -->
-
-
-
-
-
-
     <div style="clear:both;"></div>
+
+
+    <div style='width:100%;display:table;margin-left:0;margin-right:0;margin-top:20px;'>
+        <img id="map" src="">
+    </div>
 
     {% if is_owner %}
     <select name="open-close-post" id="open-close-post" data-role="slider">
@@ -330,9 +331,20 @@ $("#open-close-post").on('slidestop', function(event) {
     }).then(function(data) {});
 });
 
+function showPosition() {
+    var latlonStr = {{lat}}+","+{{lon}};
+    var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+    var height = 200;
+    var img_url = "http://maps.googleapis.com/maps/api/staticmap?center="+latlonStr+"&zoom=14&size="+width+"x"+height+"&sensor=false";
+    $("#map").attr("src",img_url);
+}
+
 $(document).ready(function() { 
     selectThumbnail(0);
+    showPosition();
 });
+
+
 
 </script>
 </div>
