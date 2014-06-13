@@ -231,7 +231,8 @@
                 <a href="tel:{{phone}}"><img class="contact_icon" src='/static/images/detail/phone.png'></a>            
                 {% endif%}
                 {% if email_checked%}
-                <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}"><img class="contact_icon"src='/static/images/detail/email.png'></a>
+                <a id="email_link" href="mailto:{{email}}?Subject=回复帖子：{{post.title}}"></a>
+                <img class="contact_icon"src='/static/images/detail/email.png' onclick="sendEmail()">
                 {% endif%}
             </div>
         </div>
@@ -339,10 +340,16 @@ function showPosition() {
     $("#map").attr("src",img_url);
 }
 
+function sendEmail(){
+    window.location.href = $("#email_link").attr('href');
+}
+
 $(document).ready(function() { 
     selectThumbnail(0);
     showPosition();
 });
+
+
 
 
 
