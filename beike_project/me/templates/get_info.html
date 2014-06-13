@@ -5,16 +5,19 @@
     <meta name="viewport" content="width=device-width ,  user-scalable=no">
     <meta charset="UTF-8">
     <!-- jquery library -->
+
     <script src="/static/jquery/jquery-1.8.3.js "></script>
     <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
     <script type="text/javascript" src="/static/jquery/jquery.validate.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
+    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
+    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
+
 
     <!--js library for s3 upload-->
-    <script src="/static/lodash.js"></script>
     <script type="text/javascript" src="/static/s3upload.js"></script>
-    <script src="/static/exif.js"></script>
-    <script src="/static/binaryajax.js"></script>
+    <script type="text/javascript" src="/static/exif.js"></script>
+    <script type="text/javascript" src="/static/binaryajax.js"></script>
 
     <!-- beike customized css and js -->
     <link rel="stylesheet" href="/static/common.css">
@@ -120,9 +123,9 @@
 
     <div style="background-color: rgb(47,189,133);" data-role="page" id="user_info">
         <form id="user_info_form">
-            <div class="ui-grid-solo">
-                <div class="ui-block-a" style="text-align: center; width: 100% !important;">
-                    <img style="width: 250px; height: 180px;" src="/static/images/signup/logo.png" />
+            <div class="ui-grid-solo" style="height: 200px;">
+                <div class="ui-block-a" style="text-align: center; margin: 30px 0 0 0">
+                    <img style="width: 200px; height: 100px;" src="/static/images/signup/logo.png" />
                 </div>
             </div>
             <div class="ui-grid-b">
@@ -146,24 +149,31 @@
                 </div>
                 <div class="ui-block-c" style="width: 10%"></div>
             </div>
+            <div class="ui-grid-b">
+                <div class="ui-block-a" style="width: 10%"></div>
+                <div class="ui-block-b" style="width: 80%; text-align: center;">
+                    <img src="/static/images/signup/step1_logo.png" />
+                </div>
+                <div class="ui-block-c" style="width: 10%"></div>
+            </div>
         </form>
     </div>
 
     <div style="background-color: rgb(204,227,221);" data-role="page" id="user_location">
-        <div class="ui-grid-b">
+        <div class="ui-grid-b" style="margin: 10px 0 0 0">
             <div class="ui-block-a" style="width: 10%"></div>
             <div class="ui-block-b" style="width: 80%"><a href="#user_info" data-role="button">上一步</a>
             </div>
             <div class="ui-block-c" style="width: 10%"></div>
         </div>
         <form id="user_info_form" action="/me/create/" method="post" enctype="multipart/form-data">{% csrf_token %}
-            <div class="ui-grid-solo" style="text-align: center; width: 100% !important;">
-                <img style="width: 80px; height: 100px;" src="/static/images/signup/location_icon.png" />
+            <div class="ui-grid-solo" style="text-align: center; margin: 20px 0 30px 0;">
+                <img style="width: 120px; height: 50px" src="/static/images/signup/location_icon.png" />
                 <div id='city' name='city'></div>
             </div>
-            <input type="hidden" id="username_input" name="username_input"/>
-            <input type="hidden" id="email_input" name="email_input"/>
-            <div class="ui-grid-solo">
+            <input type="hidden" id="username_input" name="username_input" />
+            <input type="hidden" id="email_input" name="email_input" />
+            <div class="ui-grid-solo" style="margin: 30px 0 30px 0;">
                 <input type="hidden" id="city_id" name="city_id" value="" />
                 <input type="hidden" id="zipcode" name="zipcode" />
                 <div class="ui-grid-b">
@@ -183,8 +193,19 @@
             </div>
             <input type="hidden" name="latitude" id="latitude" />
             <input type="hidden" name="longitude" id="longitude" />
-            <div class="ui-grid-solo" style="text-align: center; width: 100% !important;">
-                <input type="image" style="width: 100px; length: 100px;" src="/static/images/signup/start.png" />
+            <div class="ui-grid-b" style="margin: 30px 0 10px 0;">
+                <div class="ui-block-a" style="width: 10%"></div>
+                <div class="ui-block-b" style="width: 80%">
+                    <input type="submit" value="开始体验" style="color: rgb(47,189,133);"></input>
+                </div>
+                <div class="ui-block-c" style="width: 10%"></div>
+            </div>
+            <div class="ui-grid-b">
+                <div class="ui-block-a" style="width: 10%"></div>
+                <div class="ui-block-b" style="width: 80%; text-align: center;">
+                    <img src="/static/images/signup/step2_logo.png" />
+                </div>
+                <div class="ui-block-c" style="width: 10%"></div>
             </div>
         </form>
     </div>
