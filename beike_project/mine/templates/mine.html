@@ -47,7 +47,7 @@
                         {% for key, value in image.items %} 
                             {% if key == 'image_url' %}
                             <a href="/me/">
-                                <img id='profile_image' src='{{value}}' style="width=50px;height=50px;"/>
+                                <img id='profile_image' src='{{value}}' style="max-width:100px;max-height:100px;"/>
                             </a>
                             {% elif key == 'width' %}
                             {% elif key == 'height' %}

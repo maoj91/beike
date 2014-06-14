@@ -44,9 +44,11 @@ def sell_post_detail(request,offset):
     phone = contact['phone_number']
     email = contact['email']
     qq = contact['qq_number']
+    user_image = ImageMetadata.deserialize_list(user.image_url)[0]
+    print(user_image)
     return render_to_response('sell_post_detail.html', {'post':post,'lat':lat,'lon':lon,'is_open':is_open, 'image_list': image_list, 'image_num':image_num,
         'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner,'phone_checked':phone_checked,'email_checked':email_checked,'qq_checked':qq_checked,'phone':phone,
-        'email':email,'qq':qq})
+        'email':email,'qq':qq,'user_image':user_image,'user':user})
 
 def buy_post_detail(request,offset):
     validate_user(request)
