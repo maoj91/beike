@@ -115,7 +115,7 @@
     <div id="signup" data-role="page">
 
         <div style="padding: 0">
-            <form action="/me/create/" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <form action="/user/create/" method="post" enctype="multipart/form-data">{% csrf_token %}
                 <div class="ui-grid-solo" style="background-color: rgb(47,189,133);" data-role="content" >
                     <div class="ui-grid-solo">
                         <div class="ui-block-a" style="text-align: center; width: 100% !important;">

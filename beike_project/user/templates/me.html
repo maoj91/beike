@@ -46,7 +46,7 @@
                         <input type="file" id="image1" data-clear-btn="false" name="image" accept="image/*" onchange="image_s3_upload(this.id,'{{user.wx_id}}');" capture>
                     </div>
                 <p id="upload_status">status</p>
-                <form action="/me/update_profile_image/" method="post" enctype="multipart/form-data">{% csrf_token %}
+                <form action="/user/update_profile_image/" method="post" enctype="multipart/form-data">{% csrf_token %}
 					<input type="hidden" id="image_url" name="image_url" value="">
 	                <input type="hidden" id="image_width" name="image_width" value="">
 	                <input type="hidden" id="image_height" name="image_height" value="">
@@ -62,7 +62,7 @@
 		</div>
 		<div id="profile">
 			<p>--------------- 个人资料 ----------------</p>
-			<form action="/me/save_profile/" method="post" enctype="multipart/form-data">{% csrf_token %}
+			<form action="/user/save_profile/" method="post" enctype="multipart/form-data">{% csrf_token %}
 				用户名：<input type="text" name="user_name" placeholder={{user.name}} value={{user.name}}></br>
 				邮箱：<input type="text" name="user_email" placeholder={{user.email}} value={{user.email}}></br>
 				地区：<select name="area_city">
@@ -90,7 +90,7 @@
 		<div id="privacy">
 			</form>
 			<p>--------------- 隐私设置 ----------------</p>
-			<form action="/me/save_privacy/" method="post" enctype="multipart/form-data">{% csrf_token %}
+			<form action="/user/save_privacy/" method="post" enctype="multipart/form-data">{% csrf_token %}
 				当前选项：<select name="privacy">
 				{% for privacy in privacies %}
 					{% if privacy.description == user.privacy.description %}

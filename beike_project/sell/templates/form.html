@@ -233,7 +233,7 @@
             $("#longitude").val(longitude);
             $.ajax({
                 type: "get",
-                url: "/me/get_info/get_zipcode_by_latlong",
+                url: "/user/get_info/get_zipcode_by_latlong",
                 dataType: "json",
                 data: {
                     latitude: latitude,

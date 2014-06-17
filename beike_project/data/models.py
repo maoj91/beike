@@ -64,6 +64,7 @@ class User(models.Model):
 	privacy = models.ForeignKey(Privacy, default= get_default_privacy)
 	image_url = models.CharField(max_length= 255, null=True, default = get_default_image())
 	date_created = models.DateTimeField(auto_now_add=True)
+	about = models.CharField(max_length=4000, null=True)
 	def __unicode__(self):
 		return self.name
 

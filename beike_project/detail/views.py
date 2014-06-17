@@ -37,6 +37,8 @@ def sell_post_detail(request,offset):
     is_followed = sell_post_util.is_post_followed_by_user(user, post)
     is_open = post.is_open
     is_owner = user.id == post.user.id
+    post_user = User.objects.get(id=post.user.id)
+    post_user_id = post.user.id
     contact = json.loads(post.preferred_contacts)
     phone_checked = contact['phone_checked'] == 'on'
     email_checked = contact['email_checked'] == 'on'
@@ -44,11 +46,11 @@ def sell_post_detail(request,offset):
     phone = contact['phone_number']
     email = contact['email']
     qq = contact['qq_number']
-    user_image = ImageMetadata.deserialize_list(user.image_url)[0]
-    print(user_image)
+    user_image = ImageMetadata.deserialize_list(post.user.image_url)[0]
+    
     return render_to_response('sell_post_detail.html', {'post':post,'lat':lat,'lon':lon,'is_open':is_open, 'image_list': image_list, 'image_num':image_num,
         'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner,'phone_checked':phone_checked,'email_checked':email_checked,'qq_checked':qq_checked,'phone':phone,
-        'email':email,'qq':qq,'user_image':user_image,'user':user})
+        'email':email,'qq':qq,'user_image':user_image})
 
 def buy_post_detail(request,offset):
     validate_user(request)

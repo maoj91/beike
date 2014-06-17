@@ -1,9 +1,9 @@
 from django.conf.urls import patterns, url
 from data.models import User
-from me import views
+from user import views
 
 urlpatterns = patterns('',
-	url(r'^$', views.index),
+	url(r'^(\d+)/$', views.index),
 	url(r'^save_profile/$', views.save_profile),
 	url(r'^save_privacy/$', views.save_privacy),
 	url(r'^update_profile_image/$', views.update_profile_image),

@@ -330,7 +330,7 @@ function refreshSellPosts() {
     var zipcode = $('#zipcode').val();
     $.ajax({
         type: "get",
-        url: "/me/get_info/get_latlong_by_zipcode",
+        url: "/user/get_info/get_latlong_by_zipcode",
         dataType: "json",
         data: {
             zipcode: zipcode
