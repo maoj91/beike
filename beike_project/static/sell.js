@@ -1,4 +1,3 @@
-
 var imageCount = 0;
 var imageMaxNum = 3;
 var currentImageIndex = 0;
@@ -350,16 +349,41 @@ $(document).delegate("#nearby-sellpost", "pageinit", function() {
     });
 });
 
+function getLatitudeLongtitude(position) {
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    $("#latitude").val(latitude);
+    $("#longitude").val(longitude);
+    $.ajax({
+        type: "get",
+        url: "/me/get_info/get_zipcode_by_latlong",
+        dataType: "json",
+        data: {
+            latitude: latitude,
+            longitude: longitude
+        }
+    }).then(function(data) {
+        console.log(data);
+    });
+}
+
+$(document).ready(function() {
+
+});
+
 var deviceWidth;
 $(document).delegate("#sellpost-form", "pageinit", function() {
     deviceWidth = $(window).width() * 0.90;
     $('#image-uploader').css('width', deviceWidth);
     $('form').validate({
-        rules:{
+        rules: {
             phone_number: "digitonly",
             qq_number: "digitonly"
         }
     });
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
+    }
 });
 
 function refreshSellPosts() {

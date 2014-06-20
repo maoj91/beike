@@ -30,7 +30,6 @@
 
 <body>
     <div data-role="page" id="sellpost-form" data-theme="a" data-fullscreen="true">
-        <script src="/static/sell.js"></script>
         <div data-role="header" data-position="fixed">
             <div style="background-color: rgb(35,192,148);">
                 <div class="ui-grid-b">
@@ -245,32 +244,6 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-        function getLatitudeLongtitude(position) {
-            var latitude = position.coords.latitude;
-            var longitude = position.coords.longitude;
-            $("#latitude").val(latitude);
-            $("#longitude").val(longitude);
-            $.ajax({
-                type: "get",
-                url: "/me/get_info/get_zipcode_by_latlong",
-                dataType: "json",
-                data: {
-                    latitude: latitude,
-                    longitude: longitude
-                }
-            }).then(function(data) {
-                console.log(data);
-            });
-        }
-
-        $(document).ready(function() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
-            }
-            initiatePage();
-        });
-    </script>
 
     </div>
 </body>
