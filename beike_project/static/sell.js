@@ -373,6 +373,12 @@ $(document).ready(function() {
 
 var deviceWidth;
 $(document).delegate("#sellpost-form", "pageinit", function() {
+    imageCount = 0;
+    currentImageIndex = 0;
+    isUploading = false;
+    for (var i = 0; i < imageMaxNum; i++) {
+        imagesInfo[i] = null;
+    }
     deviceWidth = $(window).width() * 0.90;
     $('#image-uploader').css('width', deviceWidth);
     $('form').validate({
