@@ -28,7 +28,7 @@ def index(request,offset):
     cities = City.objects.all()
     privacies = Privacy.objects.values('description')
     image = json.loads(user.image_url)[0]
-    return render_to_response('me.html',{'user':user,'image':image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
+    return render_to_response('me.html',{'user':user,'is_owner':is_owner,'image':image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
 
 def get_info(request):
     validate_user(request)
