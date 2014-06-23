@@ -182,25 +182,25 @@ def get_image_info(request):
     image_list = []
 
     # process image1
-    image_url1 = request.POST.get('image_url1')
-    image_width1 = request.POST.get('image_width1')
-    image_height1 = request.POST.get('image_height1')
+    image_url1 = request.POST.get('image_url0')
+    image_width1 = request.POST.get('image_width0')
+    image_height1 = request.POST.get('image_height0')
     if image_url1 and image_width1 and image_height1:
         image1 = ImageMetadata(image_url1, image_width1, image_height1)
         image_list.append(image1)
 
     # process image2
-    image_url2 = request.POST.get('image_url2')
-    image_width2 = request.POST.get('image_width2')
-    image_height2 = request.POST.get('image_height2')
+    image_url2 = request.POST.get('image_url1')
+    image_width2 = request.POST.get('image_width1')
+    image_height2 = request.POST.get('image_height1')
     if image_url2 and image_width2 and image_height2:
         image2 = ImageMetadata(image_url2, image_width2, image_height2)
         image_list.append(image2)
 
     # process image3
-    image_url3 = request.POST.get('image_url3')
-    image_width3 = request.POST.get('image_width3')
-    image_height3 = request.POST.get('image_height3')
+    image_url3 = request.POST.get('image_url2')
+    image_width3 = request.POST.get('image_width2')
+    image_height3 = request.POST.get('image_height2')
     if image_url3 and image_width3 and image_height3:
         image3 = ImageMetadata(image_url3, image_width3, image_height3)
         image_list.append(image3)

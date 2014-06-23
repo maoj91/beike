@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <!-- jquery library -->
-
-    <script src="/static/jquery/jquery-1.8.3.js "></script>
-    <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+    <script type="text/javascript" src="/static/jquery/jquery-1.8.3.js "></script>
+    <script type="text/javascript" src="/static/jquery/jquery.mobile-1.4.2.js"></script>
     <script type="text/javascript" src="/static/jquery/jquery.validate.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
     <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
@@ -22,6 +21,7 @@
     <!-- beike customized css and js -->
     <link rel="stylesheet" href="/static/common.css">
     <link rel="stylesheet" href="/static/detail.css">
+    <link rel="stylesheet" href="/static/sell.css">
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
     <script src="/static/common.js"></script>
@@ -29,8 +29,7 @@
 </head>
 
 <body>
-    <div data-role="page" id="main-page" data-theme="a" data-fullscreen="true">
-        <link rel="stylesheet" type="text/css" href="/static/sell.css">
+    <div data-role="page" id="sellpost-form" data-theme="a" data-fullscreen="true">
         <div data-role="header" data-position="fixed">
             <div style="background-color: rgb(35,192,148);">
                 <div class="ui-grid-b">
@@ -45,56 +44,67 @@
             </div>
         </div>
         <div data-role="content">
-            <div class="ui-grid-solo" style="max-width: 400px;">
-                <div id="current_image_div" class="ui-grid-solo" style="min-height: 250px;">
-                    <img id="current_image">
-                    <p id="upload_status">
-                </div>
-                <div id="button_and_thumbnails" class="ui-grid-d" style>
 
-                    <div class="ui-block-a" style="padding: 0">
-                        <img id="choose_file" src='/static/images/sell_post/upload.png'>
-                        <div class="hidden_file">
-                            <input type="file" id="image1" data-clear-btn="false" name="image" accept="image/*" onchange="image_s3_upload(this.id,'{{user_id}}');" capture>
-                        </div>
+            <div class="ui-grid-solo" id="image-uploader" style="max-width: 600px; height: 320px">
+                <div class="ui-grid-solo" style="width: 100%; height: 260px; background-color:grey;">
+                    <div id="current_image" style="background-repeat: no-repeat;">
+                        <img style="display: none" id="delete_icon" width="30px" height="30px" src="/static/images/sell_post/delete-icon.png" onclick="deleteCurrentImage()" />
+                        <p id="upload_status"></p>
                     </div>
-                    <div class="ui-block-b" onclick="deleteImage()">
-                        <img style="width: 100%; height: 100%" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/delete_pic.png">
+                </div>
+
+                <div id="image_thumbnails_div" class="ui-grid-c" style="width: 100%; max-width: 300px; height: 60px;">
+                    <div class="ui-block-a" style="width: 25%;">
+                        <label for="post_image">
+                            <img src='/static/images/sell_post/upload.png' style="width: 100%; height: 100%;">
+                        </label>
+                        <input style="display:none;" type="file" id="post_image" name="post_image" accept="image/*" onchange="image_s3_upload(this.id,'{{user_id}}');" onclick="return moreImagesAllowed();" />
                     </div>
-                    <div class="ui-block-c">
-                        <img id="preview1" onclick="selectImage(1)">
+
+
+                    <div class="ui-block-b" style="width: 25%;">
+                        <img style="width: 100%; height: 100%" id="preview0" onclick="displayImage(0)">
                     </div>
-                    <div class="ui-block-d">
-                        <img id="preview2" onclick="selectImage(2)">
+                    <div class="ui-block-c" style="width: 25%;">
+                        <img style="width: 100%; height: 100%" id="preview1" onclick="displayImage(1)">
                     </div>
-                    <div class="ui-block-e">
-                        <img id="preview3" onclick="selectImage(3)">
+                    <div class="ui-block-d" style="width: 25%;">
+                        <img style="width: 100%; height: 100%" id="preview2" onclick="displayImage(2)">
                     </div>
                 </div>
             </div>
 
-            <form action="/sell/form_submit/" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
+            <form action="/sell/form_submit/" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <input type="hidden" id="image_url1" name="image_url1" value="">
-                <input type="hidden" id="image_width1" name="image_width1" value="">
-                <input type="hidden" id="image_height1" name="image_height1" value="">
+                <input type="hidden" id="image_url0" name="image_url0" />
+                <input type="hidden" id="image_width0" name="image_width0" />
+                <input type="hidden" id="image_height0" name="image_height0" />
 
-                <input type="hidden" id="image_url1" name="image_url2" value="">
-                <input type="hidden" id="image_width1" name="image_width2" value="">
-                <input type="hidden" id="image_height1" name="image_height2" value="">
+                <input type="hidden" id="image_url1" name="image_url1" />
+                <input type="hidden" id="image_width1" name="image_width1" />
+                <input type="hidden" id="image_height1" name="image_height1" />
 
-                <input type="hidden" id="image_url1" name="image_url3" value="">
-                <input type="hidden" id="image_width1" name="image_width3" value="">
-                <input type="hidden" id="image_height1" name="image_height3" value="">
+                <input type="hidden" id="image_url2" name="image_url2" />
+                <input type="hidden" id="image_width2" name="image_width2" />
+                <input type="hidden" id="image_height2" name="image_height2" />
 
-                <input type="hidden" id="image_orientation1" name="image_orientation1" value="">
-                <input type="hidden" id="image_orientation2" name="image_orientation2" value="">
-                <input type="hidden" id="image_orientation3" name="image_orientation3" value="">
+                <input type="hidden" id="image_orientation0" name="image_orientation0" />
+                <input type="hidden" id="image_orientation1" name="image_orientation1" />
+                <input type="hidden" id="image_orientation2" name="image_orientation2" />
 
 
-                <div class="ui-grid-a ui-corner-all">
+                <div class="ui-grid-a">
                     <div class="ui-block-a" style="width:20%;">
-                        <label for="category" class="form-label">物品类别</label>
+                        <div class="field-label-inner-div">标题</div>
+                    </div>
+                    <div class="ui-block-b" style="width:80%">
+                        <input type="text" name="title" id="title" placeholder="请输入标题" data-rule-required="true" data-rule-content="true" data-msg-required="请输入标题" />
+                    </div>
+                </div>
+
+                <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:20%;">
+                        <div class="field-label-inner-div">类别</div>
                     </div>
                     <div class="ui-block-b" style="width:80%;">
                         <select name='category' id="category">
@@ -103,22 +113,18 @@
                             {% endfor %}
                         </select>
                     </div>
+                </div>
 
+
+                <div class="ui-grid-a">
                     <div class="ui-block-a" style="width:20%;">
-                        <label for="title" class="form-label">物品名称</label>
-                    </div>
-                    <div class="ui-block-b" style="width:80%">
-                        <input type="text" name="title" id="title" placeholder="请输入标题" />
-                    </div>
-
-
-                    <div class="ui-block-a" style="width:20%;">
-                        <label class="form-label">出售价格</label>
+                        <div class="field-label-inner-div">价格</div>
                     </div>
                     <div class="ui-block-b" style="width:80%;">
-                        <input type="number" name="price" placeholder="请标价">
+                        <input type="number" name="price" placeholder="请标价" data-rule-required="true" data-rule-content="true" data-msg-required="请输入价格">
                     </div>
                 </div>
+
 
                 <div class="ui-grid-solo ui-corner-all">
                     <div style="position: relative; margin: 5px 30px 30px 10px">
@@ -128,17 +134,28 @@
                         <div class="slider-scale-common slider-scale-div4">五成新</div>
                         <div class="slider-scale-common slider-scale-div5">旧</div>
                     </div>
-                    <input data-highlight="true" type="range" name="condition-slider" id="condition-slider" value="5" min="0" max="4" step="1" />
-                    <input type="hidden" id="my_condition" name="my_condition" value=1>
+                    <input data-highlight="true" type="range" name="condition-slider" id="condition-slider" value="0" min="0" max="4" step="1" />
+                    <input type="hidden" id="my_condition" name="my_condition" value=0>
                 </div>
 
+                <div class="ui-grid-solo">
+                    <div class="ui-block-a">
+                        <div class="field-label-inner-div">详细描述</div>
+                        <textarea name="content" placeholder="描述颜色、大小、形状、新旧等需求" data-rule-required="true" data-rule-content="true" data-msg-required="请输入详细描述"></textarea>
+                    </div>
+                </div>
+
+                <div>
+                    <input type="hidden" name="latitude" id="latitude"></input>
+                    <input type="hidden" name="longitude" id="longitude"></input>
+                </div>
 
                 <div class="ui-grid-a">
                     <div class="ui-block-a" style="width:20%;">
-                        <label id="prefer-contact" class="form-label">联系方式</label>
+                        <div id="prefer-contact" class="field-label-inner-div">联系方式</div>
                     </div>
                     <div class="ui-block-b" style="width:80%;">
-                        <div data-role="fieldcontain">
+                        <div data-role="fieldcontain" style="display:inline">
                             <fieldset data-role="controlgroup" data-type="horizontal">
                                 <input type="checkbox" name="phone-checked" id="phone-checked" onchange="phoneContactChange()" />
                                 <label for="phone-checked">
@@ -154,103 +171,79 @@
                                 </label>
                             </fieldset>
                         </div>
-                        <div id="phone_number_div">
-                            {% if user.mobile_phone %}
-                            <input type="text" name="phone_number" placeholder="{{user.mobile_phone}}" value="{{user.mobile_phone}}">{% else %}
-                            <input type="text" name="phone_number" placeholder="手机号码" value="">{% endif %}
-                            <p id="phone_required" style="color: red;"></p>
+
+
+                        <!--Use ui-grid-a because I cannot resolve the jquery validation css issue-->
+                        <!--error message was always displayed inside the next input-->
+                        <!--TO-DO: fix this issue and use just a single div-->
+                        <div id="phone_number_div" class="ui-grid-a">
+                            <div class="ui-block-a" style="width:0"></div>
+                            <div class="ui-block-b" style="width:100%">
+                                {% if user.mobile_phone and user.mobile_phone != " " %}
+                                <input type="text" id="phone_number" name="phone_number" placeholder="手机号码" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入电话号码" />{% else %}
+                                <input type="text" id="phone_number" name="phone_number" placeholder="手机号码" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />{% endif %}
+                            </div>
                         </div>
-                        <div id="email_div">
-                            {% if user.email %}
-                            <input type="text" name="email" placeholder="{{user.email}}" value="{{user.email}}">{% else %}
-                            <input type="text" name="email" placeholder="Email" value="">{% endif %}
-                            <p id="email_required" style="color: red;"></p>
+                        <div id="email_div" class="ui-grid-a">
+                            <div class="ui-block-a" style="width:0"></div>
+                            <div class="ui-block-b" style="width:100%">
+                                {% if user.email and user.email != " " %}
+                                <input type="text" id="email" name="email" placeholder="Email" value="{{user.email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />{% else %}
+                                <input type="text" id="email" name="email" placeholder="Email" data-rule-required="true" data-rule-content="true" data-msg-required="请输入Email" />{% endif %}
+                            </div>
                         </div>
-                        <div id="qq_number_div">
-                            {% if user.qq_number %}
-                            <input type="text" name="qq_number" placeholder="{{user.qq_number}}" value="{{user.qq_number}}">{% else %}
-                            <input type="text" name="qq_number" placeholder="微信或QQ号" value="">{% endif %}
-                            <p id="qq_required" style="color: red;"></p>
+                        <div id="qq_number_div" class="ui-grid-a">
+                            <div class="ui-block-a" style="width:0"></div>
+                            <div class="ui-block-b" style="width:100%">
+                                {% if user.qq_number and user.qq_number != " " %}
+                                <input type="text" id="qq_number" name="qq_number" placeholder="微信或QQ号" value="{{user.qq_number}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入微信或QQ号" />{% else %}
+                                <input type="text" id="qq_number" name="qq_number" placeholder="微信或QQ号" data-rule-required="true" data-rule-content="true" data-msg-required="请输入微信或QQ号" />{% endif %}
+                            </div>
                         </div>
+
                     </div>
                 </div>
 
-                <div class="ui-grid-solo">
-                    <label for="content" class="form-label">其他描述</label>
-                    <textarea cols="30" rows="20" name="content"></textarea>
-                </div>
-
                 <div>
-                    <input type="hidden" name="latitude" id="latitude"></input>
-                    <input type="hidden" name="longitude" id="longitude"></input>
-                </div>
-
-                <div class="ui-grid-solo">
                     <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png">
-                    <p id="validate_msg"></p>
                 </div>
 
             </form>
         </div>
+    </div>
 
 
-        <div data-role="footer" data-position="fixed">
-            <div style="background-color: rgb(35,192,148);">
-                <div class="ui-grid-d">
-                    <div class="ui-block-a">
-                        <a href="/">
-                            <img height="30" width="30" style="padding:12px 5px 5px 12px;" src='/static/images/navigation/homepage_clicked.png' />
-                        </a>
-                    </div>
-                    <div class="ui-block-b">
-                        <a href="/buy/form/">
-                            <img height="40" width="32" style="padding:5px;" src='/static/images/navigation/buy_form_clicked.png' />
-                        </a>
-                    </div>
-                    <div class="ui-block-c">
-                        <a href="/sell/form/">
-                            <img height="40" width="32" style="padding:5px;" src='/static/images/navigation/sell_form_clicked.png' />
-                        </a>
-                    </div>
-                    <div class="ui-block-d">
-                        <a href="/buy/all_list/">
-                            <img height="40" width="40" style="padding:5px;" src='/static/images/navigation/buy_posts_clicked.png' />
-                        </a>
-                    </div>
-                    <div class="ui-block-e">
-                        <a href="/sell/all_list/">
-                            <img height="40" width="40" style="padding:5px;" src='/static/images/navigation/sell_posts_clicked.png' />
-                        </a>
-                    </div>
+    <div data-role="footer" data-position="fixed">
+        <div style="background-color: rgb(35,192,148);">
+            <div class="ui-grid-d">
+                <div class="ui-block-a">
+                    <a href="/">
+                        <img height="30" width="30" style="padding:12px 5px 5px 12px;" src='/static/images/navigation/homepage_clicked.png' />
+                    </a>
+                </div>
+                <div class="ui-block-b">
+                    <a href="/buy/form/">
+                        <img height="40" width="32" style="padding:5px;" src='/static/images/navigation/buy_form_clicked.png' />
+                    </a>
+                </div>
+                <div class="ui-block-c">
+                    <a href="/sell/form/">
+                        <img height="40" width="32" style="padding:5px;" src='/static/images/navigation/sell_form_clicked.png' />
+                    </a>
+                </div>
+                <div class="ui-block-d">
+                    <a href="/buy/all_list/">
+                        <img height="40" width="40" style="padding:5px;" src='/static/images/navigation/buy_posts_clicked.png' />
+                    </a>
+                </div>
+                <div class="ui-block-e">
+                    <a href="/sell/all_list/">
+                        <img height="40" width="40" style="padding:5px;" src='/static/images/navigation/sell_posts_clicked.png' />
+                    </a>
                 </div>
             </div>
         </div>
-        <script type="text/javascript">
-        function getLatitudeLongtitude(position) {
-            var latitude = position.coords.latitude;
-            var longitude = position.coords.longitude;
-            $("#latitude").val(latitude);
-            $("#longitude").val(longitude);
-            $.ajax({
-                type: "get",
-                url: "/user/get_info/get_zipcode_by_latlong",
-                dataType: "json",
-                data: {
-                    latitude: latitude,
-                    longitude: longitude
-                }
-            }).then(function(data) {
-                console.log(data);
-            });
-        }
-
-        $(document).ready(function() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
-            }
-            initiatePage();
-        });
-        </script>
+    </div>
 
     </div>
 </body>
