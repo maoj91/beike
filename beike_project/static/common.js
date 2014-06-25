@@ -1,28 +1,48 @@
-function phoneContactChange() {
-    var isChecked = $('#phone-checked').prop("checked");
-    if (isChecked) {
-        $('#phone_number_div').css('display', 'inline');
-    } else {
+var emailChecked;
+
+var isEmailChecked = false;
+var isPhoneChecked = false;
+var isQQChecked = false;
+
+function clickPhoneContact() {
+    if (isPhoneChecked) {
+        $('#phone-icon').show();
+        $('#phone-icon-clicked').hide();
         $('#phone_number_div').css('display', 'none');
+        isPhoneChecked = false;
+    } else {
+        $('#phone-icon').hide();
+        $('#phone-icon-clicked').show();
+        $('#phone_number_div').css('display', 'inline');
+        isPhoneChecked = true;
     }
 }
 
-
-function emailContactChange() {
-    var isChecked = $('#email-checked').prop("checked");
-    if (isChecked) {
-        $('#email_div').css('display', 'inline');
-    } else {
+function clickEmailContact() {
+    if (isEmailChecked) {
+        $('#email-icon').show();
+        $('#email-icon-clicked').hide();
         $('#email_div').css('display', 'none');
+        isEmailChecked = false;
+    } else {
+        $('#email-icon').hide();
+        $('#email-icon-clicked').show();
+        $('#email_div').css('display', 'inline');
+        isEmailChecked = true;
     }
 }
 
-function qqContactChange() {
-    var isChecked = $('#qq-checked').prop("checked");
-    if (isChecked) {
-        $('#qq_number_div').css('display', 'inline');
-    } else {
+function clickQQContact() {
+    if (isQQChecked) {
+        $('#qq-icon').show();
+        $('#qq-icon-clicked').hide();
         $('#qq_number_div').css('display', 'none');
+        isQQChecked = false;
+    } else {
+        $('#qq-icon').hide();
+        $('#qq-icon-clicked').show();
+        $('#qq_number_div').css('display', 'inline');
+        isQQChecked = true;
     }
 }
 
@@ -33,5 +53,5 @@ function getCurrentPositionDeferred(options) {
 };
 
 $.validator.addMethod("digitonly", function(value) {
-  return /^\d+$/.test(value);
+    return /^\d+$/.test(value);
 }, "只能包含数字");
