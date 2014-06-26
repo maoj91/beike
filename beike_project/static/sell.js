@@ -357,10 +357,6 @@ function getLatitudeLongtitude(position) {
     });
 }
 
-$(document).ready(function() {
-
-});
-
 var deviceWidth;
 $(document).delegate("#sellpost-form", "pageinit", function() {
     imageCount = 0;
