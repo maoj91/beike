@@ -31,7 +31,7 @@ def index(request):
     return render_to_response('mine.html',
     	{'image':image,'sell_posts':sell_posts, 'buy_posts':buy_posts,
     	 'followed_sell_posts':followed_sell_posts, 'followed_buy_posts':followed_buy_posts,
-    	 'user_id':wx_id },
+    	 'user_id':wx_id,'user':user },
     	RequestContext(request))
 
 
