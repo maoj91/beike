@@ -202,16 +202,6 @@ function setOpenUntil() {
     $('#open_until_date').attr("min", currentDate);
 }
 
-function initiatePage() {
-    selectCondition(1);
-    setOpenUntil();
-    $("#choose_file").click(function(e) {
-        e.preventDefault();
-        $("input[type=file]").trigger("click");
-    });
-}
-
-
 /* Sell posts dynamic loading */
 var sellPostPageNum = 1;
 var sellPostCurLatLon = {};
@@ -367,10 +357,6 @@ function getLatitudeLongtitude(position) {
     });
 }
 
-$(document).ready(function() {
-
-});
-
 var deviceWidth;
 $(document).delegate("#sellpost-form", "pageinit", function() {
     imageCount = 0;
@@ -387,6 +373,9 @@ $(document).delegate("#sellpost-form", "pageinit", function() {
             qq_number: "digitonly"
         }
     });
+    isEmailChecked = false;
+    isPhoneChecked = false;
+    isQQChecked = false;
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
     }

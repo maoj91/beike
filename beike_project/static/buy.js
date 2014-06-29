@@ -101,4 +101,7 @@ $(document).delegate("#buy-form", "pageinit", function(event) {
             qq_number: "digitonly"
         }
     });
+    isEmailChecked = false;
+    isPhoneChecked = false;
+    isQQChecked = false;
 });

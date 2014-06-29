@@ -23,8 +23,8 @@
     <link rel="stylesheet" href="/static/detail.css">
     <link rel="stylesheet" href="/static/sell.css">
     <script src="/static/buy.js"></script>
-    <script src="/static/sell.js"></script>
     <script src="/static/common.js"></script>
+    <script src="/static/sell.js"></script>
     <script type="text/javascript" src="/static/jquery.touchSwipe.min.js"></script>
 </head>
 
@@ -44,7 +44,6 @@
             </div>
         </div>
         <div data-role="content">
-
             <div class="ui-grid-solo" id="image-uploader" style="max-width: 600px; height: 320px">
                 <div class="ui-grid-solo" style="width: 100%; height: 260px; background-color:grey;">
                     <div id="current_image" style="background-repeat: no-repeat;">
@@ -155,7 +154,7 @@
                         <div id="prefer-contact" class="field-label-inner-div">联系方式</div>
                     </div>
                     <div class="ui-block-b" style="width:80%;">
-                        <div data-role="fieldcontain" style="display:inline">
+                        <!--                         <div data-role="fieldcontain" style="display:inline">
                             <fieldset data-role="controlgroup" data-type="horizontal">
                                 <input type="checkbox" name="phone-checked" id="phone-checked" onchange="phoneContactChange()" />
                                 <label for="phone-checked">
@@ -170,8 +169,22 @@
                                     <img src="/static/images/general/weixin.jpg" style="width: 30px; height: 30px" />
                                 </label>
                             </fieldset>
-                        </div>
+                        </div> -->
 
+                        <div class="ui-grid-b">
+                            <div class="ui-block-a">
+                                <img style="display:block;" id="email-icon" onclick="clickEmailContact();" src="/static/images/general/email_icon.png" />
+                                <img style="display:none;" id="email-icon-clicked" onclick="clickEmailContact();" src="/static/images/general/email_icon_clicked.png" />
+                            </div>
+                            <div class="ui-block-b">
+                                <img style="display:block;" id="phone-icon" onclick="clickPhoneContact();" src="/static/images/general/phone_icon.png" />
+                                <img style="display:none;" id="phone-icon-clicked" onclick="clickPhoneContact();" src="/static/images/general/phone_icon_clicked.png" />
+                            </div>
+                            <div class="ui-block-c">
+                                <img style="display:block;" id="qq-icon" onclick="clickQQContact();" src="/static/images/general/qq_icon.png" />
+                                <img style="display:none;" id="qq-icon-clicked" onclick="clickQQContact();" src="/static/images/general/qq_icon_clicked.png" />
+                            </div>
+                        </div>
 
                         <!--Use ui-grid-a because I cannot resolve the jquery validation css issue-->
                         <!--error message was always displayed inside the next input-->
