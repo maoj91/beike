@@ -20,10 +20,11 @@
     <!-- beike customized css and js -->
     <link rel="stylesheet" href="/static/common.css">
     <link rel="stylesheet" href="/static/detail.css">
+    <link rel="stylesheet" href="/static/sell.css">
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
     <script src="/static/common.js"></script>
-    <script type="text/javascript" src="/static/jquery.touchSwipe.min.js"></script>
+    <script src="/static/jquery.touchSwipe.min.js"></script>
 </head>
 
 <body>
@@ -171,7 +172,6 @@
                     </span>
                     {% endfor%}
                 </div>           
-
             </div>
 
             <div class="ui-grid-a" style="width:100%;">
@@ -241,7 +241,7 @@
                 </div>
             </div>
 
-    <div style="clear:both;text-align:center;margin-top:20px;">
+    <div style="clear:both;text-align:center;margin-top:20px;border-top:solid gray 1px;padding:2px;">
         物品所在位置                    
         <img id='location_icon' src='/static/images/detail/location_icon.png' style="max-width:15px;max-height:15px;">
         {{post.user.address.city}}
@@ -291,13 +291,9 @@
                 <!-- find this post about how to align an element vertically center in a div: http://stackoverflow.com/questions/7273338/how-to-vertically-align-an-image-inside-div-->
                 <div class="ui-block-b" style="width:50%;height:60px;text-align:center;display:inline-block;vertical-align: middle;">
                     <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
-                    <input type="image" value="修改" id="edit_btn" src="/static/images/detail/edit.png" style="max-width:80px;vertical-align: middle;">
+                    <a href="/detail/sell/{{post.id}}/edit/"><input type="image" value="修改" id="edit_btn" src="/static/images/detail/edit.png" style="max-width:80px;vertical-align: middle;"></a>
                 </div>
             </div>
-
-
-
-
     {% else %}
     <select name="follow-post" id="follow-post" data-role="slider">
         <option value="unfollow" {% if not is_followed %} selected {% endif %}>不收藏</option>
@@ -384,9 +380,6 @@ $(document).ready(function() {
     selectThumbnail(0);
     showPosition();
 });
-
-
-
 </script>
 </div>
 </body>

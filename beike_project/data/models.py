@@ -82,6 +82,7 @@ class Category(models.Model):
 class Condition(models.Model):
 	name = models.CharField(max_length=255)
 	description = models.CharField(max_length=1000)
+	value = models.IntegerField(null=True,default=0)
 	def __unicode__(self):
 		return self.name
 
