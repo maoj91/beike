@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="/static/common.css">
     <link rel="stylesheet" href="/static/detail.css">
     <link rel="stylesheet" href="/static/sell.css">
+    <link rel="stylesheet" href="/static/mine.css">
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
     <script src="/static/common.js"></script>
@@ -226,7 +227,7 @@
                 <div class="ui-grid-solo">
                     <div class="ui-block-a">
                         <div class="field-label-inner-div">详细描述</div>
-                        <textarea name="content" value="{{post.content}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入详细描述"></textarea>
+                        <textarea name="content" value="{{post.content}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入详细描述">{{post.content}}</textarea>
                     </div>
                 </div>
                 <div>

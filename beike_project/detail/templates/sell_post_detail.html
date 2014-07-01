@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="/static/common.css">
     <link rel="stylesheet" href="/static/detail.css">
     <link rel="stylesheet" href="/static/sell.css">
+    <link rel="stylesheet" href="/static/mine.css">
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
     <script src="/static/common.js"></script>
@@ -300,7 +301,7 @@
         <option value="follow" {% if is_followed %} selected {% endif %}>收藏</option>
     </select>
     {% endif %}
-</div>
+
 <div>
     <input type="hidden" id="post_id" value={{post.id}}>
 </div>
@@ -377,6 +378,7 @@ function showPosition() {
 }
 
 $(document).ready(function() { 
+    alert("test");
     selectThumbnail(0);
     showPosition();
 });

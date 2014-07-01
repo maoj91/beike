@@ -5,7 +5,7 @@ insert into data_category (name) values ('Other');
 insert into data_condition (name, description,value) values ('New', 'Item is new.',0);
 insert into data_condition (name, description,value) values ('AlmostNew', 'Item is almost new.',1);
 insert into data_condition (name, description,value) values ('Used', 'Item is used.',2);
-insert into data_condition (name, description,value) values ('Refurbished', 'Item is refurbished.',3);
+insert into data_condition (name, description,value) values ('Refurbished', 'Item old.',4);
 
 
 insert into data_privacy (name, description)
