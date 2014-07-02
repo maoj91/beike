@@ -46,7 +46,7 @@
                         <input type="file" id="image1" data-clear-btn="false" name="image" accept="image/*" onchange="image_s3_upload(this.id,'{{user.wx_id}}');" capture>
                     </div>
                 <p id="upload_status">status</p>
-                <form action="/me/update_profile_image/" method="post" enctype="multipart/form-data">{% csrf_token %}
+                <form action="/user/update_profile_image/" method="post" enctype="multipart/form-data">{% csrf_token %}
 					<input type="hidden" id="image_url" name="image_url" value="">
 	                <input type="hidden" id="image_width" name="image_width" value="">
 	                <input type="hidden" id="image_height" name="image_height" value="">
@@ -62,7 +62,7 @@
 		</div>
 		<div id="profile">
 			<p>--------------- 个人资料 ----------------</p>
-			<form action="/me/save_profile/" method="post" enctype="multipart/form-data">{% csrf_token %}
+			<form action="/user/save_profile/" method="post" enctype="multipart/form-data">{% csrf_token %}
 				用户名：<input type="text" name="user_name" placeholder={{user.name}} value={{user.name}}></br>
 				邮箱：<input type="text" name="user_email" placeholder={{user.email}} value={{user.email}}></br>
 				地区：<select name="area_city">
@@ -90,7 +90,7 @@
 		<div id="privacy">
 			</form>
 			<p>--------------- 隐私设置 ----------------</p>
-			<form action="/me/save_privacy/" method="post" enctype="multipart/form-data">{% csrf_token %}
+			<form action="/user/save_privacy/" method="post" enctype="multipart/form-data">{% csrf_token %}
 				当前选项：<select name="privacy">
 				{% for privacy in privacies %}
 					{% if privacy.description == user.privacy.description %}
@@ -108,27 +108,6 @@
 	<div data-role="footer" data-position="fixed">
     </div>
 
-    <script type="text/javascript">
- //    function displayUserImage(image_info_string) {
-	// 	var image_info_list = jQuery.parseJSON(image_info_string);
-	//     if (image_info_list.length > 0) {
-	//         //only display the first image
-	// 		image_info = image_info_list[0];
-	// 	} else {
-	// 		image_info = undefined;
-	// 	}
-	// 	var isHorizontal = true;
-	// 	if (image_info['height'] > image_info['width']) {
-	// 		isHorizontal = false;
-	// 	}
-	// 	$('#current_image').attr("src",image_info['image_url']);
-	// };
-
-        $(document).ready(function() {
-            initiatePage();
-            // displayUserImage(image_info_string);
-        });
-    </script>
 </div>
 </body>
 </html>

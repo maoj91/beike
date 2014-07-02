@@ -86,13 +86,5 @@ function selectImage(imgInfo){
 		
 }
 
-function initiatePage(){
-	$("#current_image").click(function(e){
-		e.preventDefault();
-		$("input[type=file]").trigger("click");
-	});
-}
-
-
 
 

@@ -103,8 +103,8 @@ def form_submit(request):
         title = request.POST.get('title','')
         content = request.POST.get('content','')
         category_id = int(request.POST.get('category'))
-        min_price = request.POST.get('min_price')
-        max_price = request.POST.get('max_price')
+        min_price = 0
+        max_price = request.POST.get('price')
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
         latlon = Point(float(longitude), float(latitude))

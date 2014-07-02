@@ -63,6 +63,8 @@ class User(models.Model):
 	address = models.ForeignKey(Address,blank=True, null=True)
 	privacy = models.ForeignKey(Privacy, default= get_default_privacy)
 	image_url = models.CharField(max_length= 255, null=True, default = get_default_image())
+	date_created = models.DateTimeField(auto_now_add=True)
+	about = models.CharField(max_length=4000, null=True)
 	def __unicode__(self):
 		return self.name
 
@@ -80,6 +82,7 @@ class Category(models.Model):
 class Condition(models.Model):
 	name = models.CharField(max_length=255)
 	description = models.CharField(max_length=1000)
+	value = models.IntegerField(null=True,default=0)
 	def __unicode__(self):
 		return self.name
 
@@ -99,7 +102,6 @@ class BuyPost(models.Model):
 	user = models.ForeignKey('User')
 	preferred_contacts = models.CharField(max_length = 255)
 	is_open = models.BooleanField(default=True)
-	#image urls separated by ';'
 	image_urls = models.CharField(max_length= 2000, null=True)
 	def __unicode__(self):
 		return unicode("%s: %s" % (self.title, self.content[:60]))

@@ -20,10 +20,12 @@
     <!-- beike customized css and js -->
     <link rel="stylesheet" href="/static/common.css">
     <link rel="stylesheet" href="/static/detail.css">
+    <link rel="stylesheet" href="/static/sell.css">
+    <link rel="stylesheet" href="/static/mine.css">
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
     <script src="/static/common.js"></script>
-    <script type="text/javascript" src="/static/jquery.touchSwipe.min.js"></script>
+    <script src="/static/jquery.touchSwipe.min.js"></script>
 </head>
 
 <body>
@@ -171,7 +173,6 @@
                     </span>
                     {% endfor%}
                 </div>           
-
             </div>
 
             <div class="ui-grid-a" style="width:100%;">
@@ -186,84 +187,121 @@
                 </div>
             </div>
 
-            <div class="ui-grid-a" style="padding:10px;">
-                <div class="ui-block-a" style="width:70%;height:40px;border-top:2px solid gray;border-bottom:2px solid gray;border-right:2px solid gray;">
-                    <img id='currency_icon' src='/static/images/detail/currency_icon.png' style="vertical-align:middle;">
+            <div class="ui-grid-b" style="padding:10px;height:40px;">
+                <div class="ui-block-a" style="width:30%;">
+                    <img id='currency_icon' src='/static/images/detail/currency_icon.png' style="max-width:15px;max-height:15px;">
                     <p style="display:inline;vertical-align:middle;">{{post.price}}</p>
                 </div>
-                <div class="ui-block-b" style="width:30%;height:40px;border-top:2px solid gray;border-bottom:2px solid gray;text-align: center;">
+                <div class="ui-block-b" style="width:30%;text-align:center;">
                     {% if post.item_condition.name == 'New' %}
-                        <img id='condition' src='/static/images/detail/condition_new.png'> 
+                    <img id='condition' src='/static/images/detail/condition_new.png'> 
                     {% elif post.item_condition.name == 'AlmostNew' %}
-                        <img id='condition' src='/static/images/detail/condition_nine.png'> 
+                    <img id='condition' src='/static/images/detail/condition_nine.png'> 
                     {% elif post.item_condition.name == 'Used' %}
-                        <img id='condition' src='/static/images/detail/condition_seven.png'> 
+                    <img id='condition' src='/static/images/detail/condition_seven.png'> 
                     {% elif post.item_condition.name == 'Refurbished' %}
-                        <img id='condition' src='/static/images/detail/condition_old.png'> 
+                    <img id='condition' src='/static/images/detail/condition_old.png'> 
                     {% endif %}
                 </div>
-         </div>
-
-         <div class="ui-grid-a" style="padding-top:10px;padding-bottom:10px;">
-            <div class="ui-block-a" style="width:70%;height:40px;">
-                <img id='location_icon' src='/static/images/detail/location_icon.png'>
-                {{post.user.address.city}}
+                <div class="ui-block-c" style="width:40%;">
+                    <p style="display:inline;padding-top:5px;">{{post.category.name}}</p>
+                </div>
             </div>
-            <div class="ui-block-b" style="width:30%;height:40px;text-align: center;">
-                {{post.category.name}}
+
             </div>
-        </div>
 
-        <div class="ui-grid-solo" id="content" style="margin-left:5%;margin-bottom:10px;">
-            {{post.content}}
-        </div>
-
-        <div class="ui-grid-solo" id="date" style="margin-right:5%;">
-            {% load string_utils %} {{post.date_published|get_time}}
-        </div>
-
-        <div style="clear:both;margin-left:5%;margin-right:5%;height:2px;background-color:gray;"></div>
-
-        <div style="width:100%;height:60px;">
-            <div id="contacts" style="display:table;height:100%;margin: 0 auto; padding: 5px;">
-                <a href="sms:{{phone}}"><img class="contact_icon" src='/static/images/detail/sms.png'></a>
-                {% if phone_checked%}
-                <a href="tel:{{phone}}"><img class="contact_icon" src='/static/images/detail/phone.png'></a>            
-                {% endif%}
-                {% if email_checked%}
-                <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}"><img class="contact_icon"src='/static/images/detail/email.png'></a>
-                {% endif%}
+            <div class="ui-grid-solo" id="content" style="margin-left:5%;margin-bottom:10px;">
+                {{post.content}}
             </div>
-        </div>
 
-<!--     <div class="ui-grid-a">
-        <div class="ui-block-a">
-            发布人
-        </div>
-        <div class="ui-block-b">
-            {{post.user.name}}
-        </div>
-    </div> -->
-    <div style="clear:both;"></div>
+            <div class="ui-grid-solo" id="date" style="margin-right:5%;margin-bottom:10px;">
+                {{ post.date_published|date:"n月j日" }}
+            </div>
+
+            <div style="clear:both;margin-top:20px;margin-bottom:10px;margin-left:5%;margin-right:5%;height:2px;background-color:gray;"></div>
+
+            <div style="width:100%;height:60px;">
+                <div id="contacts" style="display:table;height:100%;margin: 0 auto; padding: 5px;">
+                    <!-- <a href="sms:{{phone}}"><img class="contact_icon" src='/static/images/detail/sms.png'></a> -->
+                    <a href="sms:{{phone}}" class="contact_icon" data-role="button" data-inline="true" data-mini="true" data-icon="comment" data-iconpos="notext"></a>
+                    {% if phone_checked%}
+                    <!-- <a href="tel:{{phone}}"><img class="contact_icon" src='/static/images/detail/phone.png'></a>   -->  
+                    <a href="tel:{{phone}}" class="contact_icon" data-role="button" data-inline="true" data-mini="true" data-icon="phone" data-iconpos="notext"></a>
+
+                    {% endif%}
+                    {% if email_checked%}
+                    <!-- <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}"><img class="contact_icon"src='/static/images/detail/email.png'></a> -->
+                    <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}" class="contact_icon" data-role="button" data-inline="true" data-mini="true" data-icon="mail" data-iconpos="notext"></a>
+                    {% endif%}
+                </div>
+            </div>
+
+            <div style="width:100%;height:60px;margin-top:10px;">
+                <div id="share" style="display:table;height:100%;margin: 0 auto;padding: 10px;">
+                    <a href="sms:{{phone}}"><img style="width:auto;height:35px;" src='/static/images/detail/share.png'></a>
+                </div>
+            </div>
+
+    <div style="clear:both;text-align:center;margin-top:20px;border-top:solid gray 1px;padding:2px;">
+        物品所在位置                    
+        <img id='location_icon' src='/static/images/detail/location_icon.png' style="max-width:15px;max-height:15px;">
+        {{post.user.address.city}}
+    </div>
+    <div style="display:table;margin: 0 auto;">
+        <img id="map" src="" style="max-width:100%;max-height:200px;">
+    </div>
 
 
-    <div style='width:100%;display:table;margin-left:0;margin-right:0;margin-top:20px;'>
-        <img id="map" src="">
+    {% if user_image %}
+    <div style="display:table;margin: 0 auto; padding: 5px;">
+        <a href="/user/{{post.user.id}}/">
+            <img id='profile_image' src='{{user_image.image_url}}' style="max-width:100px;max-height:100px;"/>
+        </a>  
+    </div>
+    {% endif %}
+
+    {% if post.user %}
+    <div style="display:table;height:100%;margin: 0 auto; padding: 5px;">
+        {{post.user.name}}
+    </div>
+    {% endif %}
+
+
+    <div style="display:table;height:100%;margin: 0 auto; padding: 5px;">
+        注册于{{ post.user.date_created|date:"Y年n月j日" }}
     </div>
 
     {% if is_owner %}
-    <select name="open-close-post" id="open-close-post" data-role="slider">
-        <option value="open"{% if is_open %} selected {% endif %}>待售</option>
-        <option value="close"{% if not is_open %} selected {% endif %}>已售</option>
-    </select>
+    <div style="width:100%;height:60px;">
+        <div style="float:right;">
+            <img style="width:auto;height:35px;" src='/static/images/detail/complete_profile.png'>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if is_owner %}
+
+            <div class="ui-grid-a" style="padding-top:15px;padding-bottom:15px;background-color:gray;">
+                <div class="ui-block-a" style="width:50%;height:60px;">
+                    <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
+                    <select name="open-close-post" id="open-close-post" data-role="slider" style="vertical-align: middle;">
+                        <option value="open"{% if is_open %} selected {% endif %}>待售</option>
+                        <option value="close"{% if not is_open %} selected {% endif %}>已售</option>
+                    </select>
+                </div>
+                <!-- find this post about how to align an element vertically center in a div: http://stackoverflow.com/questions/7273338/how-to-vertically-align-an-image-inside-div-->
+                <div class="ui-block-b" style="width:50%;height:60px;text-align:center;display:inline-block;vertical-align: middle;">
+                    <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
+                    <a href="/detail/sell/{{post.id}}/edit/"><input type="image" value="修改" id="edit_btn" src="/static/images/detail/edit.png" style="max-width:80px;vertical-align: middle;"></a>
+                </div>
+            </div>
     {% else %}
-    <label for="follow-post">关注此贴:</label>
     <select name="follow-post" id="follow-post" data-role="slider">
-        <option value="unfollow" {% if not is_followed %} selected {% endif %}>不关注</option>
-        <option value="follow" {% if is_followed %} selected {% endif %}>关注中</option>
+        <option value="unfollow" {% if not is_followed %} selected {% endif %}>不收藏</option>
+        <option value="follow" {% if is_followed %} selected {% endif %}>收藏</option>
     </select>
     {% endif %}
-</div>
+
 <div>
     <input type="hidden" id="post_id" value={{post.id}}>
 </div>
@@ -343,9 +381,6 @@ $(document).ready(function() {
     selectThumbnail(0);
     showPosition();
 });
-
-
-
 </script>
 </div>
 </body>

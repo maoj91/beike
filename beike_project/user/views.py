@@ -15,15 +15,20 @@ from django.contrib.gis.geos import Point
 from django.views.decorators.csrf import csrf_exempt
 
 
-def index(request):
+def index(request,offset):
+    try:
+        offset = int(offset)
+    except ValueError:
+        raise Http404()
     validate_user(request)
     wx_id = request.session['wx_id']
-    user = User.objects.get(wx_id=wx_id)
+    user = User.objects.get(id=offset)
+    is_owner = user.wx_id == wx_id
     states = State.objects.values('name')
     cities = City.objects.all()
     privacies = Privacy.objects.values('description')
     image = json.loads(user.image_url)[0]
-    return render_to_response('me.html',{'user':user,'image':image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
+    return render_to_response('me.html',{'user':user,'is_owner':is_owner,'image':image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
 
 def get_info(request):
     validate_user(request)
@@ -128,7 +133,7 @@ def update_profile_image(request):
         image = image_list[0]        
         user.image_url = image_info
         user.save()
-        return HttpResponseRedirect('/me/',{'user':user,'error':error,'image':image})
+        return HttpResponseRedirect('/user/',{'user':user,'error':error,'image':image})
     else: 
         raise Http404
 
@@ -152,7 +157,7 @@ def save_profile(request):
             user.address.city = address_city
             user.address.state_or_region = address_state
             user.save()
-    return HttpResponseRedirect('/me/',{'user':user,'error':error})
+    return HttpResponseRedirect('/user/',{'user':user,'error':error})
 
 
 def get_city_district(geolocation):
@@ -208,7 +213,7 @@ def save_privacy(request):
         if(error == ""):
             user.privacy = privacy
             user.save()
-    return HttpResponseRedirect('/me/',{'user':user,'error':error})
+    return HttpResponseRedirect('/user/',{'user':user,'error':error})
 
 
 

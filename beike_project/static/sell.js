@@ -1,66 +1,74 @@
-// total number of images, max 3
-var imageNum = 0;
+var imageCount = 0;
+var imageMaxNum = 3;
+var currentImageIndex = 0;
+
 //whether it is in the process of uploading
 var isUploading = false;
-//position of the current image 
-var currentPosition = 0;
-var currentCondition = 1;
+
+var imagesInfo = new Array(3);
 
 function getImageDimensionInfo(file_dom_id) {
-    var imgInfo = {}
+    var imageInfo = {};
     //get and set orientation info
-    var fileId = "#" + file_dom_id
+    var fileId = "#" + file_dom_id;
     var file = $(fileId)[0].files[0];
     var fr = new FileReader;
     fr.onloadend = function() {
         var exif = EXIF.readFromBinaryFile(new BinaryFile(this.result));
         if (typeof exif.PixelXDimension != 'undefined') {
-            imgInfo['width'] = exif.PixelXDimension;
+            imageInfo['width'] = exif.PixelXDimension;
         } else {
-            imgInfo['width'] = 1
+            imageInfo['width'] = 1;
         }
 
         if (typeof exif.PixelXDimension != 'undefined') {
-            imgInfo['height'] = exif.PixelYDimension;
+            imageInfo['height'] = exif.PixelYDimension;
         } else {
-            imgInfo['height'] = 1
+            imageInfo['height'] = 1;
         }
     };
     fr.readAsBinaryString(file);
-    return imgInfo
+    return imageInfo;
 }
 
-function get_image_name_prefix(user_id) {
+function moreImagesAllowed() {
+    if (imageCount >= imageMaxNum) {
+        alert("已经达到上限");
+    }
+    return imageCount < imageMaxNum;
+}
+
+function getImageNamePrefix(user_id) {
     var currentTime = Date.now();
     var prefix = user_id + "/" + currentTime;
     return prefix;
 }
 
 function image_s3_upload(file_dom_id, user_id) {
-    if (!isUploading && imageNum < 3) {
+    if (!isUploading && imageCount < imageMaxNum) {
         //retrieve the image information. e.g. width, height
-        var imgInfo = getImageDimensionInfo(file_dom_id);
+        var imageInfo = getImageDimensionInfo(file_dom_id);
         //retrieve the image prefix for S3 upload
-        var image_name_prefix = get_image_name_prefix(user_id);
+        var imageNamePrefix = getImageNamePrefix(user_id);
+        console.log('Image name prefix: ' + imageNamePrefix);
+
         //upload it to s3
         var s3upload = new S3Upload({
             file_dom_selector: file_dom_id,
             s3_sign_put_url: '/s3/sign/',
-            s3_object_name_prefix: image_name_prefix,
+            s3_object_name_prefix: imageNamePrefix,
             onProgress: function(percent, message) {
-                $('#upload_status').html('Uploaded ' + percent + '%');
+                $('#upload_status').html('Completed ' + percent + '%');
                 $('#upload_status').show();
                 isUploading = true;
             },
             onFinishS3Put: function(url) {
-                imageNum = imageNum + 1;
-                //set the url in the hidden input
-                $('#image_url' + imageNum).val(url);
-                $('#image_width' + imageNum).val(imgInfo['width']);
-                $('#image_height' + imageNum).val(imgInfo['height']);
+                imageInfo['url'] = url;
+                //set the url in the image info
+                addImage(imageInfo);
+                console.log(JSON.stringify(imagesInfo[currentImageIndex]))
+                displayImage(imageCount - 1);
                 $('#upload_status').hide();
-                //populate the image information in HTML for form submit
-                selectImage(imageNum, imgInfo);
                 isUploading = false;
             },
             onError: function(status) {
@@ -72,55 +80,101 @@ function image_s3_upload(file_dom_id, user_id) {
     }
 }
 
-function selectImage(i, imgInfo) {
-    if (i <= imageNum) {
-        currentPosition = i;
-        //cleaer all border
-        for (var j = 1; j <= 3; j++) {
-            $('#preview' + j).css("border", "none");
-        }
-        if (i == 0) {
-            $('#current_image').attr('src', '');
-            $('#current_image').removeClass('landscape_image');
-            $('#current_image').removeClass('potrait_image');
-        } else {
-            var url = $('#image_url' + currentPosition).val();
-            $('#preview' + currentPosition).attr('src', url);
-            $('#preview' + currentPosition).css("border", "1px solid black");
-            $('#current_image').attr('src', url);
-            var imgOrientation = 1;
-            if (imgInfo['width'] > 0 && imgInfo['height'] > 0) {
-                imgOrientation = imgInfo['width'].toFixed(2) / imgInfo['height'].toFixed(2);
-            }
-            if (imgOrientation >= 1) {
-                $('#current_image').removeClass('landscape_image');
-                $('#current_image').removeClass('potrait_image');
-                $('#current_image').addClass('potrait_image');
+/*
+ * Add an image info and update the preview and form
+ */
+
+function addImage(imageInfo) {
+    if (imageCount < imageMaxNum) {
+        var index = imageCount;
+        imageCount++;
+        imagesInfo[index] = imageInfo;
+        //add image to the thumbnail
+        $('#preview' + index).attr('src', imageInfo['url']);
+        $('#preview' + index).show();
+        //add image to the form
+        $('#image_url' + index).val(imageInfo['url']);
+        $('#image_width' + index).val(imageInfo['width']);
+        $('#image_height' + index).val(imageInfo['height']);
+    }
+}
+
+/*
+ * Remove an image info and update the preview and form
+ */
+
+function removeImage(index) {
+    if (index < imageCount) {
+        imageCount--;
+        for (var i = index; i < imageMaxNum; i++) {
+            if (i < imageCount) {
+                imagesInfo[i] = imagesInfo[i + 1];
+                //add image to the thumbnail
+                $('#preview' + i).attr('src', imagesInfo[i]['url']);
+                //add image to the form
+                $('#image_url' + i).val(imagesInfo[i]['url']);
+                $('#image_width' + i).val(imagesInfo[i]['width']);
+                $('#image_height' + i).val(imagesInfo[i]['height']);
             } else {
-                $('#current_image').removeClass('landscape_image');
-                $('#current_image').removeClass('potrait_image');
-                $('#current_image').addClass('landscape_image');
+                imagesInfo[i] = null;
+                //remove image in the thumbnail
+                $('#preview' + i).removeAttr('src');
+                $('#preview' + i).css("border", "none");
+                $('#preview' + i).hide()
+                //remove image to the form
+                $('#image_url' + i).val('');
+                $('#image_width' + i).val('');
+                $('#image_height' + i).val('');
             }
         }
     }
 }
 
-function deleteImage() {
-    for (var j = currentPosition; j < imageNum; j++) {
-        var nextIndex = j + 1;
-        var url = $('#image_name' + nextIndex).val();
-        $('#image_name' + j).val(url);
-        $('#preview' + j).attr('src', url);
+/*
+ * This function is to display the image
+ */
 
+function displayImage(index) {
+    if (imageCount == 0) {
+        $('#current_image').css('background-image', '');
+        $('#delete_icon').hide();
     }
-    $('#image_name' + imageNum).val('');
-    $('#preview' + imageNum).attr('src', '');
-    if (currentPosition == imageNum) {
-        selectImage(imageNum - 1);
-    } else {
-        selectImage(currentPosition);
+    if (index < imageCount) {
+        //remove each thumbnail's border
+        for (var i = 0; i < imageMaxNum; i++) {
+            $('#preview' + i).css("border", "none");
+        }
+        var imageInfo = imagesInfo[index];
+        $('#preview' + index).css("border", "1px solid black");
+        $('#current_image').css('background-image', 'url(' + imageInfo['url'] + ')');
+        $('#current_image').css('background-position', 'center center');
+        var imgOrientation = 1;
+        if (imageInfo['width'] > 0 && imageInfo['height'] > 0) {
+            imgOrientation = imageInfo['width'].toFixed(2) / imageInfo['height'].toFixed(2);
+        }
+        if (imgOrientation >= 1) {
+            $('#current_image').removeClass('landscape_image');
+            $('#current_image').removeClass('potrait_image');
+            $('#current_image').addClass('potrait_image');
+            var imageWidth = 290;
+            var imageHeight = imageWidth * (imageInfo['height'].toFixed(2) / imageInfo['width'].toFixed(2));
+            $('#current_image').css('background-size', imageWidth + 'px ' + imageHeight + 'px');
+        } else {
+            $('#current_image').removeClass('landscape_image');
+            $('#current_image').removeClass('potrait_image');
+            $('#current_image').addClass('landscape_image');
+            var imageHeight = 290;
+            var imageWidth = imageHeight * (imageInfo['width'].toFixed(2) / imageInfo['height'].toFixed(2));
+            $('#current_image').css('background-size', imageWidth + 'px ' + imageHeight + 'px');
+        }
+        $('#delete_icon').show();
+        currentImageIndex = index;
     }
-    imageNum--;
+}
+
+function deleteCurrentImage() {
+    removeImage(currentImageIndex);
+    displayImage(0);
 }
 
 function selectCondition(i) {
@@ -146,47 +200,6 @@ function setOpenUntil() {
     var defaultDate = year + "-" + month + "-" + day;
     $('#open_until_date').attr("value", defaultDate);
     $('#open_until_date').attr("min", currentDate);
-}
-
-function initiatePage() {
-    selectCondition(1);
-    setOpenUntil();
-    $("#choose_file").click(function(e) {
-        e.preventDefault();
-        $("input[type=file]").trigger("click");
-    });
-}
-
-function validateForm() {
-    var msg = '';
-    var isValid = false;
-    var title = $('[name="title"]').val();
-    var price = $('[name="price"]').val();
-    var content = $('[name="content"]').val();
-    var image1 = $('[name="image1_url"]').val();
-    var image2 = $('[name="image2_url"]').val();
-    var image3 = $('[name="image3_url"]').val();
-
-    if (!title) {
-        msg = '输入项不能为空';
-    } else if (!price) {
-        msg = '输入项不能为空';
-    } else if (!content) {
-        msg = '输入项不能为空';
-    } else if (!isValidInteger(price)) {
-        msg = '请检查您输入的价格';
-    } else if (image1 == "" && image2 == "" && image3 == "") {
-        msg = '请至少上传一张图片';
-    } else {
-        isValid = true;
-    }
-    //TODO:need to validate phone number, price
-    $('#validate_msg').html(msg);
-    return isValid;
-}
-
-function isValidInteger(str) {
-    return (!isNaN(str)) && (str.indexOf(".") == -1);
 }
 
 /* Sell posts dynamic loading */
@@ -260,7 +273,7 @@ var sellPostLoader = (function($, undefined) {
                 isHorizontal = false;
             }
             var image_width, image_height
-            var max_width = document.body.clientWidth*0.4
+            var max_width = document.body.clientWidth * 0.4
             var max_height = 180
             if (isHorizontal) {
                 if (image_info['width'] < max_width) {
@@ -328,13 +341,55 @@ $(document).delegate("#nearby-sellpost", "pageinit", function() {
     });
 });
 
+function getLatitudeLongtitude(position) {
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    $("#latitude").val(latitude);
+    $("#longitude").val(longitude);
+    $.ajax({
+        type: "get",
+        url: "/me/get_info/get_zipcode_by_latlong",
+        dataType: "json",
+        data: {
+            latitude: latitude,
+            longitude: longitude
+        }
+    }).then(function(data) {
+        console.log(data);
+    });
+}
+
+var deviceWidth;
+$(document).delegate("#sellpost-form", "pageinit", function() {
+    imageCount = 0;
+    currentImageIndex = 0;
+    isUploading = false;
+    for (var i = 0; i < imageMaxNum; i++) {
+        imagesInfo[i] = null;
+    }
+    deviceWidth = $(window).width() * 0.90;
+    $('#image-uploader').css('width', deviceWidth);
+    $('form').validate({
+        rules: {
+            phone_number: "digitonly",
+            qq_number: "digitonly"
+        }
+    });
+    isEmailChecked = false;
+    isPhoneChecked = false;
+    isQQChecked = false;
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
+    }
+});
+
 function refreshSellPosts() {
     var zipcode = $('#zipcode').val();
     var sellPostCategory = $('input[name="category"]:checked').val();
     var sellPostKeyword = $('#sellPostKeyword').val();
     $.ajax({
         type: "get",
-        url: "/me/get_info/get_latlong_by_zipcode",
+        url: "/user/get_info/get_latlong_by_zipcode",
         dataType: "json",
         data: {
             zipcode: zipcode

@@ -1,0 +1,323 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <!-- jquery library -->
+    <script type="text/javascript" src="/static/jquery/jquery-1.8.3.js "></script>
+    <script type="text/javascript" src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+    <script type="text/javascript" src="/static/jquery/jquery.validate.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
+    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
+    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
+
+
+    <!--js library for s3 upload-->
+    <script type="text/javascript" src="/static/s3upload.js"></script>
+    <script type="text/javascript" src="/static/exif.js"></script>
+    <script type="text/javascript" src="/static/binaryajax.js"></script>
+
+    <!-- beike customized css and js -->
+    <link rel="stylesheet" href="/static/common.css">
+    <link rel="stylesheet" href="/static/detail.css">
+    <link rel="stylesheet" href="/static/sell.css">
+    <link rel="stylesheet" href="/static/mine.css">
+    <script src="/static/buy.js"></script>
+    <script src="/static/sell.js"></script>
+    <script src="/static/common.js"></script>
+    <script src="/static/jquery.touchSwipe.min.js"></script>
+</head>
+
+<body>
+    <div data-role="page" id="sellpost-edit" data-theme="a" data-fullscreen="true">
+        <div data-role="header" data-position="fixed">
+            <div style="background-color: rgb(35,192,148);">
+                <div class="ui-grid-b">
+                    <div class="ui-block-a">
+                    </div>
+                    <div class="ui-block-b">
+                        <p style="text-align:center; color:white">我要卖</p>
+                    </div>
+                    <div class="ui-block-a">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-role="content">
+
+                       <div>
+                <script id='code_1'>
+
+                var IMG_WIDTH = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+                var currentImg=0;
+                var maxImages={{image_num}};
+                var speed=500;
+
+                var imgs;
+
+                var swipeOptions=
+                {
+                    triggerOnTouchEnd : true,   
+                    swipeStatus : swipeStatus,
+                    allowPageScroll:"vertical",
+                    threshold:75            
+                }
+
+                $(function()
+                {               
+                    imgs = $("#imgs");
+                    imgs.swipe( swipeOptions );
+                });
+
+
+                /**
+                * Catch each phase of the swipe.
+                * move : we drag the div.
+                * cancel : we animate back to where we were
+                * end : we animate to the next image
+                */          
+                function swipeStatus(event, phase, direction, distance)
+                {
+                    //If we are moving before swipe, and we are going Lor R in X mode, or U or D in Y mode then drag.
+                    if( phase=="move" && (direction=="left" || direction=="right") )
+                    {
+                        var duration=0;
+
+                        if (direction == "left")
+                            scrollImages((IMG_WIDTH * currentImg) + distance, duration);
+
+                        else if (direction == "right")
+                            scrollImages((IMG_WIDTH * currentImg) - distance, duration);
+
+                    }
+
+                    else if ( phase == "cancel")
+                    {
+                        scrollImages(IMG_WIDTH * currentImg, speed);
+                    }
+
+                    else if ( phase =="end" )
+                    {
+                        if (direction == "right")
+                            previousImage()
+                        else if (direction == "left")           
+                            nextImage()
+                    }
+                }
+
+                function selectImage(i){
+                    var diff = i - currentImg;
+                    if(i>currentImg && i<=maxImages-1){
+                        for(var j=0;j<diff;j++){
+                            nextImage();
+                        }
+                    } else if(i>=0 && i<currentImg){
+                        for(var j=0;j<-diff;j++){
+                            previousImage();
+                        }
+                    }
+                }
+
+                function selectThumbnail(i){
+                    if(i>=0 && i<=maxImages-1){
+                        for(var j=0;j<=maxImages-1;j++){
+                            $("#thumbnail_span"+j).addClass("thumbnail_not_selected");
+                        }
+                        $("#thumbnail_span"+i).removeClass("thumbnail_not_selected");
+                        $("#thumbnail_span"+i).addClass("thumbnail_selected");
+                    }
+                }
+
+                function previousImage()
+                {
+                    currentImg = Math.max(currentImg-1, 0);
+                    scrollImages( IMG_WIDTH * currentImg, speed);
+                    selectThumbnail(currentImg);
+                }
+
+                function nextImage()
+                {
+                    currentImg = Math.min(currentImg+1, maxImages-1);
+                    scrollImages( IMG_WIDTH * currentImg, speed);
+                    selectThumbnail(currentImg);
+                }
+
+                /**
+                * Manuallt update the position of the imgs on drag
+                */
+                function scrollImages(distance, duration)
+                {
+                    imgs.css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
+
+                    //inverse the number we set in the css
+                    var value = (distance<0 ? "" : "-") + Math.abs(distance).toString();
+
+                    imgs.css("-webkit-transform", "translate3d("+value +"px,0px,0px)");
+                }
+                </script>
+
+                <div id="image_gallery">
+                    <div id="imgs">
+                        {% for image_metadata in image_list %}
+                        <span class="img_span">
+                            <img src="{{ image_metadata.image_url }}">
+                        </span>
+                        {% endfor%}
+                    </div>
+                </div>   
+                <div id="image_thumbnails">
+                    {% for image_metadata in image_list %}
+                    <span class="thumbnail_span" id="thumbnail_span{{forloop.counter0}}" onclick='selectImage({{forloop.counter0}})'>
+                        <img src="{{ image_metadata.image_url }}">
+                    </span>
+                    {% endfor%}
+                </div>           
+            </div>
+
+            <form action="/detail/sell/{{post.id}}/save/" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:20%;">
+                        <div class="field-label-inner-div">标题</div>
+                    </div>
+                    <div class="ui-block-b" style="width:80%">
+                        <input type="text" name="title" id="title" value="{{post.title}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入标题" />
+                    </div>
+                </div>
+
+                <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:20%;">
+                        <div class="field-label-inner-div">类别</div>
+                    </div>
+                    <div class="ui-block-b" style="width:80%;">
+                        <select name='category' id="category">
+                            {% for category in categories %}
+                                {% if post.category.id == category.id %}
+                                    <option value={{ category.id }} selected>{{category.name}}</option>
+                                {% else %}
+                                    <option value={{ category.id }}>{{category.name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:20%;">
+                        <div class="field-label-inner-div">价格</div>
+                    </div>
+                    <div class="ui-block-b" style="width:80%;">
+                        <input type="number" name="price" value="{{post.price}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入价格">
+                    </div>
+                </div>
+
+                <div class="ui-grid-solo ui-corner-all">
+                    <div style="position: relative; margin: 5px 30px 30px 10px">
+                        <div class="slider-scale-common slider-scale-div1">全新</div>
+                        <div class="slider-scale-common slider-scale-div2">九成新</div>
+                        <div class="slider-scale-common slider-scale-div3">七成新</div>
+                        <div class="slider-scale-common slider-scale-div4">五成新</div>
+                        <div class="slider-scale-common slider-scale-div5">旧</div>
+                    </div>
+                    <input data-highlight="true" type="range" name="condition-slider" id="condition-slider" value="{{post.item_condition.value}}" min="0" max="4" step="1" />
+                    <input type="hidden" id="my_condition" name="my_condition" value={{post.item_condition.value}}>
+                </div>
+
+                <div class="ui-grid-solo">
+                    <div class="ui-block-a">
+                        <div class="field-label-inner-div">详细描述</div>
+                        <textarea name="content" value="{{post.content}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入详细描述">{{post.content}}</textarea>
+                    </div>
+                </div>
+                <div>
+                    <input type="hidden" name="latitude" id="latitude"></input>
+                    <input type="hidden" name="longitude" id="longitude"></input>
+                </div>
+
+                <div>
+                    <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png">
+                </div>
+
+            </form>
+    </div>
+
+
+    <div data-role="footer" data-position="fixed">
+        <div style="background-color: rgb(35,192,148);">
+            <div class="ui-grid-d">
+                <div class="ui-block-a">
+                    <a href="/">
+                        <img height="30" width="30" style="padding:12px 5px 5px 12px;" src='/static/images/navigation/homepage_clicked.png' />
+                    </a>
+                </div>
+                <div class="ui-block-b">
+                    <a href="/buy/form/">
+                        <img height="40" width="32" style="padding:5px;" src='/static/images/navigation/buy_form_clicked.png' />
+                    </a>
+                </div>
+                <div class="ui-block-c">
+                    <a href="/sell/form/">
+                        <img height="40" width="32" style="padding:5px;" src='/static/images/navigation/sell_form_clicked.png' />
+                    </a>
+                </div>
+                <div class="ui-block-d">
+                    <a href="/buy/all_list/">
+                        <img height="40" width="40" style="padding:5px;" src='/static/images/navigation/buy_posts_clicked.png' />
+                    </a>
+                </div>
+                <div class="ui-block-e">
+                    <a href="/sell/all_list/">
+                        <img height="40" width="40" style="padding:5px;" src='/static/images/navigation/sell_posts_clicked.png' />
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+<script type="text/javascript">
+var wx_id = $("#wx_id").val();
+var post_id = $("#post_id").val();
+$("#follow-post").on('slidestop', function(event) {
+    var follow_option = $("#follow-post").val();
+    return $.ajax({
+        type: "get",
+        url: "/sell/follow_post",
+        dataType: "json",
+        data: {
+            wx_id: wx_id,
+            post_id: post_id,
+            follow_option: follow_option
+        }
+    }).then(function(data) {});
+});
+$("#open-close-post").on('slidestop', function(event) {
+    var operation = $("#open-close-post").val();
+    return $.ajax({
+        type: "get",
+        url: "/sell/open_close_post",
+        dataType: "json",
+        data: {
+            wx_id: wx_id,
+            post_id: post_id,
+            operation: operation
+        }
+    }).then(function(data) {});
+});
+
+function showPosition() {
+    var latlonStr = {{lat}}+","+{{lon}};
+    var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+    var height = 200;
+    var img_url = "http://maps.googleapis.com/maps/api/staticmap?center="+latlonStr+"&zoom=14&size="+width+"x"+height+"&sensor=false";
+    $("#map").attr("src",img_url);
+}
+
+$(document).ready(function() { 
+    selectThumbnail(0);
+    showPosition();
+});
+</script>
+</div>
+</body>
+
+</html>

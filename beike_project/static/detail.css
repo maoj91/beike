@@ -133,6 +133,6 @@
     float:right;
 }
 
-#contacts{
-    margin: auto;
+.ui-icon-qianbei-email{
+    background-image: url("/static/images/detail/email.png");
 }

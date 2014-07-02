@@ -2,10 +2,10 @@ insert into data_category (name) values ('Book');
 insert into data_category (name) values ('Electronics');
 insert into data_category (name) values ('Other');
 
-insert into data_condition (name, description) values ('New', 'Item is new.');
-insert into data_condition (name, description) values ('AlmostNew', 'Item is almost new.');
-insert into data_condition (name, description) values ('Used', 'Item is used.');
-insert into data_condition (name, description) values ('Refurbished', 'Item is refurbished.');
+insert into data_condition (name, description,value) values ('New', 'Item is new.',0);
+insert into data_condition (name, description,value) values ('AlmostNew', 'Item is almost new.',1);
+insert into data_condition (name, description,value) values ('Used', 'Item is used.',2);
+insert into data_condition (name, description,value) values ('Refurbished', 'Item old.',4);
 
 
 insert into data_privacy (name, description)
