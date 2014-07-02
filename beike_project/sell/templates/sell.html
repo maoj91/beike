@@ -33,6 +33,52 @@
         <div data-role="header" data-position="fixed" style="background-color: rgb(35,192,148);">
             <div class="ui-grid-b">
                 <div class="ui-block-a">
+                    <a href="#popupBasic" data-rel="popup" data-role="button">Search</a>
+                    <div class="ui-popup ui-overlay-shadow ui-corner-all" data-role="popup" id="popupBasic">
+                        <div class="ui-collapsible-set ui-corner-all" style="margin:0; width:250px;" data-expanded-icon="arrow-d" data-collapsed-icon="arrow-r" data-role="collapsible-set">
+                            <div data-inset="false" data-role="collapsible">
+                                <h3>
+                                    地址
+                                </h3>
+                                <div data-role="fieldcontain">
+                                    <form action="#" method="post" enctype="multipart/form-data" onsubmit="return refreshSellPosts();">
+                                        <input type="number" name="zipcode" id="zipcode" placeholder="请输入ZipCode" />
+                                        <input type="submit" value="Submit" id="submit_btn">
+                                    </form>
+                                </div>
+                            </div>
+                            <div data-inset="false" data-role="collapsible">
+                                <h3>
+                                    种类
+                                </h3>
+                                <div data-role="fieldcontain">
+                                    <fieldset data-role="controlgroup">
+                                        <form action="#" method="post" enctype="multipart/form-data" onsubmit="return refreshSellPosts();">
+                                            <legend>Choose a category:</legend>
+                                                {% for category in categories %}
+                                                <input type="radio" name="category" id={{ category.id }} value={{ category.id }}  />
+                                                <label for={{ category.id }}>{{category.name}}</label>
+                                                {% endfor %}
+
+                                                <input type="submit" value="Submit" id="submit_btn">
+                                        </form>
+                                    </fieldset>
+                                </div>
+
+                            </div>
+                            <div data-inset="false" data-role="collapsible">
+                                <h3>
+                                    关键字
+                                </h3>
+                                <div data-role="fieldcontain">
+                                    <form action="#" method="post" enctype="multipart/form-data" onsubmit="return refreshSellPosts();">
+                                        <input type="text" name="sellPostKeyword" id="sellPostKeyword" placeholder="请输入关键字" />
+                                        <input type="submit" value="Submit" id="submit_btn">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="ui-block-b">
                     <p style="text-align:center; color:white">周边物品</p>
@@ -43,13 +89,6 @@
         </div>
 
         <div id="sell-list" data-role="main">
-            <div data-role="fieldcontain">
-                <form action="#" method="post" enctype="multipart/form-data" onsubmit="return refreshSellPosts();">
-                    <label for="name">Zipcode:</label>
-                    <input type="text" name="zipcode" id="zipcode" value="" />
-                    <input type="submit" value="Submit" id="submit_btn">
-                </form>
-            </div>
             <div class="ui-grid-a">
                 <div class="ui-block-a">
                     <ul id="post-list-a" data-role="listview" data-theme="c" data-inset="true" class="post-ui-listview">

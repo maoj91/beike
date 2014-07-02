@@ -205,11 +205,11 @@ var sellPostLoader = (function($, undefined) {
             });
     };
 
-    pub.getAndDisplayPosts = function(position) {
+    pub.getAndDisplayPosts = function(position, sellPostCategory, sellPostKeyword) {
         //Starting loading animation
         $('#load-more').show();
         //Get posts and add success callback using then
-        getPosts(position).then(function() {
+        getPosts(position, sellPostCategory, sellPostKeyword).then(function() {
             //Stop loading animation on success
             // $('#load-more').hide();
         });
@@ -222,7 +222,7 @@ var sellPostLoader = (function($, undefined) {
         listB.empty();
     }
 
-    function getPosts(position) {
+    function getPosts(position, sellPostCategory, sellPostKeyword) {
         //Get posts via ajax
         return $.ajax({
             type: "get",
@@ -231,7 +231,9 @@ var sellPostLoader = (function($, undefined) {
             data: {
                 pageNum: sellPostPageNum,
                 latitude: position['latitude'],
-                longitude: position['longitude']
+                longitude: position['longitude'],
+                category: sellPostCategory,
+                keyword: sellPostKeyword
             }
         }).then(function(data) {
             displayPosts(data);
@@ -318,7 +320,7 @@ $(document).delegate("#nearby-sellpost", "pageinit", function() {
         // current_position = position;
         sellPostCurLatLon['latitude'] = position.coords.latitude;
         sellPostCurLatLon['longitude'] = position.coords.longitude;
-        sellPostLoader.getAndDisplayPosts(sellPostCurLatLon);
+        sellPostLoader.getAndDisplayPosts(sellPostCurLatLon, '', '');
     }).fail(function() {
         console.log("getCurrentPosition call failed")
     }).always(function() {
@@ -328,6 +330,8 @@ $(document).delegate("#nearby-sellpost", "pageinit", function() {
 
 function refreshSellPosts() {
     var zipcode = $('#zipcode').val();
+    var sellPostCategory = $('input[name="category"]:checked').val();
+    var sellPostKeyword = $('#sellPostKeyword').val();
     $.ajax({
         type: "get",
         url: "/me/get_info/get_latlong_by_zipcode",
@@ -343,7 +347,7 @@ function refreshSellPosts() {
         sellPostLoader.clearPosts();
         sellPostPageNum = 1;
         hasMoreSellPost = false;
-        sellPostLoader.getAndDisplayPosts(sellPostCurLatLon);
+        sellPostLoader.getAndDisplayPosts(sellPostCurLatLon, sellPostCategory, sellPostKeyword);
     });
     return false;
 }

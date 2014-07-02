@@ -25,16 +25,23 @@ def index(request):
 
 def all_list(request):
     validate_user(request)
+    categories = Category.objects.all();
     wx_id = request.session['wx_id']
-    return render_to_response('sell.html', {'user_id':wx_id })
+    return render_to_response('sell.html', {'user_id':wx_id, 'categories':categories})
 
 def get_posts_by_page(request):
     if request.is_ajax():
         page_num = request.GET.get('pageNum')
         latitude = request.GET.get('latitude')
         longitude = request.GET.get('longitude')
+        category = request.GET.get('category')
+        keyword = request.GET.get('keyword')
         origin = Point(float(longitude), float(latitude), srid=4326)
         query_set = SellPost.objects.filter(is_open=True).distance(origin).order_by('distance')
+        if category != '':
+            query_set = query_set.filter(category__id=category)
+        if keyword != '':
+            query_set = query_set.filter(title__icontains=keyword)
         #TO-DO: make the record count configurable
         paginator = Paginator(query_set, 8)
         try:
