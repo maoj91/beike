@@ -369,8 +369,7 @@ $(document).delegate("#sellpost-form", "pageinit", function() {
     $('#image-uploader').css('width', deviceWidth);
     $('form').validate({
         rules: {
-            phone_number: "digitonly",
-            qq_number: "digitonly"
+            phone_number: "digitonly"
         }
     });
     isEmailChecked = false;

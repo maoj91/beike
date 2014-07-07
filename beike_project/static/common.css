@@ -47,9 +47,7 @@
 #email_div {
     display: none;
 }
-#qq_number_div {
-    display: none;
-}
+
 label.error {
     color: red;
     font-size: 14px;

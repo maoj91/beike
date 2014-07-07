@@ -149,12 +149,11 @@ def form_submit(request):
 
         phone_checked = request.POST.get('phone-checked', 'off')
         email_checked = request.POST.get('email-checked', 'off')
-        qq_checked = request.POST.get('qq-checked', 'off')
+        sms_checked = request.POST.get('sms-checked', 'off')
         phone_number = request.POST.get('phone_number','')
         email = request.POST.get('email','')
-        qq_number = request.POST.get('qq_number','')
 
-        new_post.preferred_contacts = get_contact(phone_checked,email_checked,qq_checked,phone_number,email,qq_number)
+        new_post.preferred_contacts = get_contact(phone_checked,email_checked,sms_checked,phone_number,email)
         category_id = int(request.POST.get('category',''))
         new_post.category = get_category(category_id)
         new_post.title = request.POST.get('title','')
@@ -171,9 +170,7 @@ def form_submit(request):
         if user.mobile_phone is None: 
             user.mobile_phone = phone_number
             user.save()
-        if user.qq_number is None: 
-            user.qq_number = qq_number
-            user.save()  
+
         return HttpResponseRedirect('/mine/')
     else:
         raise Http500

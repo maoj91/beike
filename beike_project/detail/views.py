@@ -43,15 +43,14 @@ def sell_post_detail(request,offset):
     contact = json.loads(post.preferred_contacts)
     phone_checked = contact['phone_checked'] == 'on'
     email_checked = contact['email_checked'] == 'on'
-    qq_checked = contact['qq_checked'] == 'on' 
+    sms_checked = contact['sms_checked'] == 'on' 
     phone = contact['phone_number']
     email = contact['email']
-    qq = contact['qq_number']
     user_image = ImageMetadata.deserialize_list(post.user.image_url)[0]
     
     return render_to_response('sell_post_detail.html', {'post':post,'lat':lat,'lon':lon,'is_open':is_open, 'image_list': image_list, 'image_num':image_num,
-        'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner,'phone_checked':phone_checked,'email_checked':email_checked,'qq_checked':qq_checked,'phone':phone,
-        'email':email,'qq':qq,'user_image':user_image})
+        'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner,'phone_checked':phone_checked,'email_checked':email_checked,'sms_checked':sms_checked,'phone':phone,
+        'email':email,'user_image':user_image})
 
 
 def sell_detail_edit(request,offset):
@@ -76,13 +75,13 @@ def sell_detail_edit(request,offset):
     contact = json.loads(post.preferred_contacts)
     phone_checked = contact['phone_checked'] == 'on'
     email_checked = contact['email_checked'] == 'on'
-    qq_checked = contact['qq_checked'] == 'on' 
+    sms_checked = contact['sms_checked'] == 'on' 
     phone = contact['phone_number']
     email = contact['email']
     user_image = ImageMetadata.deserialize_list(post.user.image_url)[0]
     categories = Category.objects.all();
     return render_to_response('sell_detail_edit.html', {'post':post,'lat':lat,'lon':lon,'is_open':is_open, 'image_list': image_list, 'image_num':image_num,
-        'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner,'phone_checked':phone_checked,'email_checked':email_checked,'qq_checked':qq_checked,'phone':phone,
+        'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner,'phone_checked':phone_checked,'email_checked':email_checked,'sms_checked':sms_checked,'phone':phone,
         'email':email,'user_image':user_image, 'categories':categories},RequestContext(request))
 
 def sell_detail_save(request,offset):
@@ -97,12 +96,12 @@ def sell_detail_save(request,offset):
     if request.method == 'POST':
         # phone_checked = request.POST.get('phone-checked', 'off')
         # email_checked = request.POST.get('email-checked', 'off')
-        # qq_checked = request.POST.get('qq-checked', 'off')
+        # sms_checked = request.POST.get('sms-checked', 'off')
         # phone_number = request.POST.get('phone_number','')
         # email = request.POST.get('email','')
         # qq_number = request.POST.get('qq_number','')
 
-        # post.preferred_contacts = get_contact(phone_checked,email_checked,qq_checked,phone_number,email,qq_number)
+        # post.preferred_contacts = get_contact(phone_checked,email_checked,sms_checked,phone_number,email,qq_number)
         category_id = int(request.POST.get('category',''))
         post.category = get_category(category_id)
         post.title = request.POST.get('title','')
@@ -139,10 +138,9 @@ def buy_post_detail(request,offset):
     contact = json.loads(post.preferred_contacts)
     phone_checked = contact['phone_checked'] == 'on'
     email_checked = contact['email_checked'] == 'on'
-    qq_checked = contact['qq_checked'] == 'on' 
+    sms_checked = contact['sms_checked'] == 'on' 
     phone = contact['phone_number']
     email = contact['email']
-    qq = contact['qq_number']
     return render_to_response('buy_post_detail.html', {'post':post, 'is_open':is_open,'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner,
-        'phone_checked':phone_checked,'email_checked':email_checked,'qq_checked':qq_checked,'phone':phone,
-        'email':email,'qq':qq})
+        'phone_checked':phone_checked,'email_checked':email_checked,'sms_checked':sms_checked,'phone':phone,
+        'email':email})
