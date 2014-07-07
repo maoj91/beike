@@ -2,14 +2,18 @@ var emailChecked;
 
 var isEmailChecked = false;
 var isPhoneChecked = false;
-var isQQChecked = false;
+var isSmsChecked = false;
 
 function clickPhoneContact() {
     if (isPhoneChecked) {
         $('#phone-icon').show();
         $('#phone-icon-clicked').hide();
-        $('#phone_number_div').css('display', 'none');
         isPhoneChecked = false;
+        if(isSmsChecked){
+            $('#phone_number_div').css('display', 'inline');
+        } else{
+            $('#phone_number_div').css('display', 'none');
+        } 
     } else {
         $('#phone-icon').hide();
         $('#phone-icon-clicked').show();
@@ -32,17 +36,21 @@ function clickEmailContact() {
     }
 }
 
-function clickQQContact() {
-    if (isQQChecked) {
-        $('#qq-icon').show();
-        $('#qq-icon-clicked').hide();
-        $('#qq_number_div').css('display', 'none');
-        isQQChecked = false;
+function clickSmsContact() {
+    if (isSmsChecked) {
+        $('#sms-icon').show();
+        $('#sms-icon-clicked').hide();
+        if(isPhoneChecked){
+            $('#phone_number_div').css('display', 'inline');
+        } else{
+            $('#phone_number_div').css('display', 'none');
+        } 
+        isSmsChecked = false;
     } else {
-        $('#qq-icon').hide();
-        $('#qq-icon-clicked').show();
-        $('#qq_number_div').css('display', 'inline');
-        isQQChecked = true;
+        $('#sms-icon').hide();
+        $('#sms-icon-clicked').show();
+        $('#phone_number_div').css('display', 'inline');
+        isSmsChecked = true;
     }
 }
 

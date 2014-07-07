@@ -375,7 +375,7 @@ $(document).delegate("#sellpost-form", "pageinit", function() {
     });
     isEmailChecked = false;
     isPhoneChecked = false;
-    isQQChecked = false;
+    isSmsChecked = false;
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
     }
