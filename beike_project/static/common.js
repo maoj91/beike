@@ -2,19 +2,25 @@ var emailChecked;
 
 var isEmailChecked = false;
 var isPhoneChecked = false;
-var isQQChecked = false;
+var isSmsChecked = false;
 
 function clickPhoneContact() {
     if (isPhoneChecked) {
         $('#phone-icon').show();
         $('#phone-icon-clicked').hide();
-        $('#phone_number_div').css('display', 'none');
         isPhoneChecked = false;
+        $('#phone-checked').val('off');
+        if(isSmsChecked){
+            $('#phone_number_div').css('display', 'inline');
+        } else{
+            $('#phone_number_div').css('display', 'none');
+        } 
     } else {
         $('#phone-icon').hide();
         $('#phone-icon-clicked').show();
         $('#phone_number_div').css('display', 'inline');
         isPhoneChecked = true;
+        $('#phone-checked').val('on');
     }
 }
 
@@ -24,25 +30,33 @@ function clickEmailContact() {
         $('#email-icon-clicked').hide();
         $('#email_div').css('display', 'none');
         isEmailChecked = false;
+        $('#email-checked').val('off');
     } else {
         $('#email-icon').hide();
         $('#email-icon-clicked').show();
         $('#email_div').css('display', 'inline');
         isEmailChecked = true;
+        $('#email-checked').val('on');
     }
 }
 
-function clickQQContact() {
-    if (isQQChecked) {
-        $('#qq-icon').show();
-        $('#qq-icon-clicked').hide();
-        $('#qq_number_div').css('display', 'none');
-        isQQChecked = false;
+function clickSmsContact() {
+    if (isSmsChecked) {
+        $('#sms-icon').show();
+        $('#sms-icon-clicked').hide();
+        if(isPhoneChecked){
+            $('#phone_number_div').css('display', 'inline');
+        } else{
+            $('#phone_number_div').css('display', 'none');
+        } 
+        isSmsChecked = false;
+        $('#sms-checked').val('off');
     } else {
-        $('#qq-icon').hide();
-        $('#qq-icon-clicked').show();
-        $('#qq_number_div').css('display', 'inline');
-        isQQChecked = true;
+        $('#sms-icon').hide();
+        $('#sms-icon-clicked').show();
+        $('#phone_number_div').css('display', 'inline');
+        isSmsChecked = true;
+        $('#sms-checked').val('on');
     }
 }
 
