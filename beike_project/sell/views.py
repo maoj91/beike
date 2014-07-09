@@ -35,7 +35,7 @@ def get_posts_by_page(request):
         latitude = request.GET.get('latitude')
         longitude = request.GET.get('longitude')
         category = request.GET.get('category')
-        keyword = request.GET.get('keyword')
+        keyword = request.GET.get('keyword', '')
         origin = Point(float(longitude), float(latitude), srid=4326)
         query_set = SellPost.objects.filter(is_open=True).distance(origin).order_by('distance')
         if category != '':
