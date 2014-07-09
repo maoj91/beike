@@ -207,6 +207,8 @@ var sellPostPageNum = 1;
 var sellPostCurLatLon = {};
 var hasMoreSellPost = true;
 var slot_pos = 0;
+var category = '';
+var keyword = '';
 
 var sellPostLoader = (function($, undefined) {
     var pub = {};
@@ -219,11 +221,13 @@ var sellPostLoader = (function($, undefined) {
     };
 
     pub.getAndDisplayPosts = function(position, sellPostCategory, sellPostKeyword) {
+        category = sellPostCategory;
+        keyword = sellPostKeyword;
         //Starting loading animation
         $('#load-more').show();
         //Get posts and add success callback using then
         getPosts(position, sellPostCategory, sellPostKeyword).then(function() {
-            //Stop loading animation on success
+           //Stop loading animation on success
             // $('#load-more').hide();
         });
     };
@@ -385,7 +389,8 @@ $(document).delegate("#sellpost-form", "pageinit", function() {
 
 function refreshSellPosts() {
     var zipcode = $('#zipcode').val();
-    var sellPostCategory = $('input[name="category"]:checked').val();
+    var sellPostCategory = 0;
+    sellPostCategory = $('input[name="category"]:checked').val();
     var sellPostKeyword = $('#sellPostKeyword').val();
     $.ajax({
         type: "get",
@@ -404,6 +409,7 @@ function refreshSellPosts() {
         hasMoreSellPost = false;
         sellPostLoader.getAndDisplayPosts(sellPostCurLatLon, sellPostCategory, sellPostKeyword);
     });
+    
     return false;
 }
 /***************/

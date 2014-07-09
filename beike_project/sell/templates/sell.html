@@ -57,6 +57,8 @@
                                     <fieldset data-role="controlgroup">
                                         <form action="#" method="post" enctype="multipart/form-data" onsubmit="return refreshSellPosts();">
                                             <legend>Choose a category:</legend>
+                                                <input type="radio" name="category" id=0 value='' checked="checked" />
+                                                <label for=0>All</label>
                                                 {% for category in categories %}
                                                 <input type="radio" name="category" id={{ category.id }} value={{ category.id }}  />
                                                 <label for={{ category.id }}>{{category.name}}</label>
@@ -142,7 +144,9 @@
                 if ($(window).scrollTop() >= $(document).height() - $(window).height() - 200) {
                     if (typeof sellPostCurLatLon !== 'undefined') {
                         hasMoreSellPost = false;
-                        sellPostLoader.getAndDisplayPosts(sellPostCurLatLon);
+                        alert(category);
+                        alert(keyword);
+                        sellPostLoader.getAndDisplayPosts(sellPostCurLatLon, category, keyword);
                     }
                 }
             }
@@ -152,7 +156,9 @@
                 if ($(window).scrollTop() >= $(document).height() - $(window).height() - 200) {
                     if (typeof sellPostCurLatLon !== 'undefined') {
                         hasMoreSellPost = false;
-                        sellPostLoader.getAndDisplayPosts(sellPostCurLatLon);
+                        alert(category);
+                        alert(keyword);
+                        sellPostLoader.getAndDisplayPosts(sellPostCurLatLon, category, keyword);
                     }
                 }
             }
