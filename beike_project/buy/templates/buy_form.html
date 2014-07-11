@@ -121,23 +121,7 @@
                         <div id="prefer-contact" class="field-label-inner-div">联系方式</div>
                     </div>
                     <div class="ui-block-b" style="width:80%;">
-                        <!--                         <div data-role="fieldcontain" style="display:inline">
-                            <fieldset data-role="controlgroup" data-type="horizontal">
-                                <input type="checkbox" name="phone-checked" id="phone-checked" onchange="phoneContactChange()" />
-                                <label for="phone-checked">
-                                    <img src="/static/images/general/mobile.png" style="width: 30px; height: 30px" />
-                                </label>
-                                <input type="checkbox" name="email-checked" id="email-checked" onchange="emailContactChange()" />
-                                <label for="email-checked">
-                                    <img src="/static/images/general/email.png" style="width: 30px; height: 30px" />
-                                </label>
-                                <input type="checkbox" name="qq-checked" id="qq-checked" onchange="qqContactChange()" />
-                                <label for="qq-checked">
-                                    <img src="/static/images/general/weixin.jpg" style="width: 30px; height: 30px" />
-                                </label>
-                            </fieldset>
-                        </div>
- -->
+
                         <div class="ui-grid-b">
                             <div class="ui-block-a">
                                 <img style="display:block;" id="email-icon" onclick="clickEmailContact();" src="/static/images/general/email_icon.png" />
@@ -148,14 +132,19 @@
                                 <img style="display:none;" id="phone-icon-clicked" onclick="clickPhoneContact();" src="/static/images/general/phone_icon_clicked.png" />
                             </div>
                             <div class="ui-block-c">
-                                <img style="display:block;" id="qq-icon" onclick="clickQQContact();" src="/static/images/general/qq_icon.png" />
-                                <img style="display:none;" id="qq-icon-clicked" onclick="clickQQContact();" src="/static/images/general/qq_icon_clicked.png" />
+                                <img style="display:block;" id="sms-icon" onclick="clickSmsContact();" src="/static/images/general/sms_icon.png" />
+                                <img style="display:none;" id="sms-icon-clicked" onclick="clickSmsContact();" src="/static/images/general/sms_icon_clicked.png" />
                             </div>
                         </div>
 
                         <!--Use ui-grid-a because I cannot resolve the jquery validation css issue-->
                         <!--error message was always displayed inside the next input-->
                         <!--TO-DO: fix this issue and use just a single div-->
+
+                        <input type="hidden" name="sms-checked" id="sms-checked" value="off"></input>
+                        <input type="hidden" name="phone-checked" id="phone-checked" value="off"></input>
+                        <input type="hidden" name="email-checked" id="email-checked" value="off"></input>
+                        
                         <div id="email_div" class="ui-grid-a">
                             <div class="ui-block-a" style="width:0"></div>
                             <div class="ui-block-b" style="width:100%">
@@ -170,14 +159,6 @@
                                 {% if user.mobile_phone and user.mobile_phone != " " %}
                                 <input type="text" id="phone_number" name="phone_number" placeholder="手机号码" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入电话号码" />{% else %}
                                 <input type="text" id="phone_number" name="phone_number" placeholder="手机号码" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />{% endif %}
-                            </div>
-                        </div>
-                        <div id="qq_number_div" class="ui-grid-a">
-                            <div class="ui-block-a" style="width:0"></div>
-                            <div class="ui-block-b" style="width:100%">
-                                {% if user.qq_number and user.qq_number != " " %}
-                                <input type="text" id="qq_number" name="qq_number" placeholder="微信或QQ号" value="{{user.qq_number}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入微信或QQ号" />{% else %}
-                                <input type="text" id="qq_number" name="qq_number" placeholder="微信或QQ号" data-rule-required="true" data-rule-content="true" data-msg-required="请输入微信或QQ号" />{% endif %}
                             </div>
                         </div>
 
