@@ -4,11 +4,10 @@ import json
 Json serializable image metadata
 """
 class ImageMetadata(object):
-	def __init__(self, image_url = None, width = None, height = None, orientation = None):
+	def __init__(self, image_url = None, width = None, height = None):
 		self.image_url = image_url
 		self.width = width
 		self.height = height
-		self.orientation = orientation
 
 	def serialize(img_md):
 		return json.dumps(img_md.__dict__)
@@ -40,7 +39,7 @@ class ImageMetadata(object):
 def get_default_image():
     image_list = []
     default_image_url = 'https://s3-us-west-2.amazonaws.com/beike-s3/static/img/default_profile_img.png'
-    image = ImageMetadata(default_image_url, 1, 1, 1)
+    image = ImageMetadata(default_image_url, 1, 1)
     image_list.append(image)
     return ImageMetadata.serialize_list(image_list)
 
