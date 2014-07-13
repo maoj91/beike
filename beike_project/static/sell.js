@@ -181,15 +181,6 @@ function deleteCurrentImage() {
     displayImage(0);
 }
 
-function selectCondition(i) {
-    //cleaer all border
-    for (var j = 1; j <= 6; j++) {
-        $('#condition' + j).css("border", "none");
-    }
-    $('#condition' + i).css("border", "1px solid black");
-    $('#my_condition').val(i);
-}
-
 //3 months from now by default 
 
 function setOpenUntil() {

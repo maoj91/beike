@@ -193,14 +193,16 @@
                     <p style="display:inline;vertical-align:middle;">{{post.price}}</p>
                 </div>
                 <div class="ui-block-b" style="width:30%;text-align:center;">
-                    {% if post.item_condition.name == 'New' %}
-                    <img id='condition' src='/static/images/detail/condition_new.png'> 
-                    {% elif post.item_condition.name == 'AlmostNew' %}
-                    <img id='condition' src='/static/images/detail/condition_nine.png'> 
-                    {% elif post.item_condition.name == 'Used' %}
-                    <img id='condition' src='/static/images/detail/condition_seven.png'> 
-                    {% elif post.item_condition.name == 'Refurbished' %}
-                    <img id='condition' src='/static/images/detail/condition_old.png'> 
+                    {% if post.item_condition.name == 'Condition1' %}
+                    <img id='condition' src='/static/images/detail/condition1.png'> 
+                    {% elif post.item_condition.name == 'Condition2' %}
+                    <img id='condition' src='/static/images/detail/condition2.png'> 
+                    {% elif post.item_condition.name == 'Condition3' %}
+                    <img id='condition' src='/static/images/detail/condition3.png'> 
+                    {% elif post.item_condition.name == 'Condition4' %}
+                    <img id='condition' src='/static/images/detail/condition4.png'> 
+                    {% elif post.item_condition.name == 'Condition5' %}
+                    <img id='condition' src='/static/images/detail/condition5.png'> 
                     {% endif %}
                 </div>
                 <div class="ui-block-c" style="width:40%;">
