@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
 from data.models import SellPost, BuyPost, User, Category, Condition
 from data.views import get_user, get_category
-from data.data_util import get_contact
+from data.data_util import get_contact, get_condition
 from detail.forms import CommentForm
 import smtplib
 from email.mime.text import MIMEText
@@ -109,8 +109,8 @@ def sell_detail_save(request,offset):
         post.title = request.POST.get('title','')
         post.content = request.POST.get('content','')
         post.price = request.POST.get('price','')
-        condition_id = request.POST.get('my_condition',1) 
-        post.item_condition = Condition.objects.all()[int(condition_id)]
+        condition_value = request.POST.get('condition-slider',0) 
+        post.item_condition = get_condition(condition_value)
         post.save()
         return HttpResponseRedirect('/detail/sell/'+str(post.id)+'/')
     else:

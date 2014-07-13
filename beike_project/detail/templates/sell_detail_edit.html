@@ -221,7 +221,6 @@
                         <div class="slider-scale-common slider-scale-div5">旧</div>
                     </div>
                     <input data-highlight="true" type="range" name="condition-slider" id="condition-slider" value="{{post.item_condition.value}}" min="0" max="4" step="1" />
-                    <input type="hidden" id="my_condition" name="my_condition" value={{post.item_condition.value}}>
                 </div>
 
                 <div class="ui-grid-solo">
@@ -363,23 +362,24 @@ function showPosition() {
 }
 
 function showContacts() { 
-    if ("{{phone_checked}}" == "on"){
+    if("{{phone_checked}}" == "on" || "{{sms_checked}}" == "on" ){
         $('#phone_number_div').css('display', 'inline');
-        $('#phone-icon').hide();
-        $('#phone-icon-clicked').show();
-
     } else {
         $('#phone_number_div').css('display', 'none');
+    }
+
+    if ("{{phone_checked}}" == "on"){     
+        $('#phone-icon').hide();
+        $('#phone-icon-clicked').show();
+    } else {
         $('#phone-icon').show();
         $('#phone-icon-clicked').hide();
     }
 
     if("{{sms_checked}}" == "on" ){
-        $('#phone_number_div').css('display', 'inline');
         $('#sms-icon').hide();
         $('#sms-icon-clicked').show();
     } else { 
-        $('#phone_number_div').css('display', 'none');
         $('#sms-icon').show();
         $('#sms-icon-clicked').hide();
     }
