@@ -23,12 +23,8 @@
     border-bottom-width: 1px;
     padding: .5em .5em;
 }
-.vertical-li {
-    min-height: 150px;
-    max-width:90%;
-    margin: 5px !important;
-}
-.horizontal-li {
+
+.sellpost-li {
     min-height: 100px;
     max-width:90%;
     margin: 5px !important;

@@ -235,6 +235,56 @@
                     <input type="hidden" name="longitude" id="longitude"></input>
                 </div>
 
+                <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:20%;">
+                        <div id="prefer-contact" class="field-label-inner-div">联系方式</div>
+                    </div>
+                    <div class="ui-block-b" style="width:80%;">
+
+                        <div class="ui-grid-b">
+                            <div class="ui-block-a">
+                                <img style="display:block;" id="email-icon" onclick="clickEmailContact();" src="/static/images/general/email_icon.png" />
+                                <img style="display:none;" id="email-icon-clicked" onclick="clickEmailContact();" src="/static/images/general/email_icon_clicked.png" />
+                            </div>
+                            <div class="ui-block-b">
+                                <img style="display:block;" id="phone-icon" onclick="clickPhoneContact();" src="/static/images/general/phone_icon.png" />
+                                <img style="display:none;" id="phone-icon-clicked" onclick="clickPhoneContact();" src="/static/images/general/phone_icon_clicked.png" />
+                            </div>
+                            <div class="ui-block-c">
+                                <img style="display:block;" id="sms-icon" onclick="clickSmsContact();" src="/static/images/general/sms_icon.png" />
+                                <img style="display:none;" id="sms-icon-clicked" onclick="clickSmsContact();" src="/static/images/general/sms_icon_clicked.png" />
+                            </div>
+                        </div>
+
+                        <!--Use ui-grid-a because I cannot resolve the jquery validation css issue-->
+                        <!--error message was always displayed inside the next input-->
+                        <!--TO-DO: fix this issue and use just a single div-->
+                        <input type="hidden" name="sms-checked" id="sms-checked" value="{{sms_checked}}"></input>
+                        <input type="hidden" name="phone-checked" id="phone-checked" value="{{phone_checked}}"></input>
+                        <input type="hidden" name="email-checked" id="email-checked" value="{{email_checked}}"></input>
+                        <div id="phone_number_div" class="ui-grid-a">
+                            <div class="ui-block-a" style="width:0"></div>
+                            <div class="ui-block-b" style="width:100%">
+                                {% if phone_checked == 'on' or sms_checked == 'on' %}
+                                <input type="text" id="phone_number" name="phone_number" placeholder="{{phone}}" value="{{phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
+                                {% else %}
+                                <input type="text" id="phone_number" name="phone_number" placeholder="手机号码" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div id="email_div" class="ui-grid-a">
+                            <div class="ui-block-a" style="width:0"></div>
+                            <div class="ui-block-b" style="width:100%">
+                                {% if email_checked == 'on' %}
+                                <input type="text" id="email" name="email" placeholder="{{email}}" value="{{email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
+                                {% else %}
+                                <input type="text" id="email" name="email" placeholder="Email" data-rule-required="true" data-rule-content="true" data-msg-required="请输入Email" />
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div>
                     <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png">
                 </div>
@@ -312,9 +362,44 @@ function showPosition() {
     $("#map").attr("src",img_url);
 }
 
+function showContacts() { 
+    if ("{{phone_checked}}" == "on"){
+        $('#phone_number_div').css('display', 'inline');
+        $('#phone-icon').hide();
+        $('#phone-icon-clicked').show();
+
+    } else {
+        $('#phone_number_div').css('display', 'none');
+        $('#phone-icon').show();
+        $('#phone-icon-clicked').hide();
+    }
+
+    if("{{sms_checked}}" == "on" ){
+        $('#phone_number_div').css('display', 'inline');
+        $('#sms-icon').hide();
+        $('#sms-icon-clicked').show();
+    } else { 
+        $('#phone_number_div').css('display', 'none');
+        $('#sms-icon').show();
+        $('#sms-icon-clicked').hide();
+    }
+
+    if ("{{email_checked}}"  == 'on' ){
+        $('#email_div').css('display', 'inline');
+        $('#email-icon').hide();
+        $('#email-icon-clicked').show();
+    } else { 
+        $('#email_div').css('display', 'none');
+        $('#email-icon').show();
+        $('#email-icon-clicked').hide();
+    }
+
+}
+
 $(document).ready(function() { 
     selectThumbnail(0);
     showPosition();
+    showContacts();
 });
 </script>
 </div>

@@ -228,7 +228,7 @@ var sellPostLoader = (function($, undefined) {
         //Get posts and add success callback using then
         getPosts(position).then(function() {
             //Stop loading animation on success
-            // $('#load-more').hide();
+            $('#load-more').hide();
         });
     };
 
@@ -270,19 +270,10 @@ var sellPostLoader = (function($, undefined) {
                 image_info = undefined
                 continue;
             }
-            var isHorizontal = true
-            if (image_info['height'] > image_info['width']) {
-                isHorizontal = false;
-            }
 
             var image_width = document.body.clientWidth * 0.4;
-            var image_height = image_width * (image_info['height'] / image_info['width'])
-            var displayCss = "horizontal-li";
-            if (!isHorizontal) {
-                displayCss = "vertical-li"
-            }
-            image_height = 'auto';
-            var template = '<li class="' + displayCss + '"><div><a href="/detail/sell/' +
+            var image_height = 'auto';
+            var template = '<li class="sellpost-li"><div><a href="/detail/sell/' +
                 posts[i]['post_id'] + '"><div><img src="' +
                 image_info['image_url'] + '" width="' + image_width + '" height="' + image_height + '"/></div><div><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" />' +
                 posts[i]["title"] + '</div><div>$' + posts[i]["price"] + '</div><div>距离你 ' + posts[i]["distance"] + ' miles</div></a></div></li>';

@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
 from data.models import SellPost, BuyPost, User, Category, Condition
 from data.views import get_user, get_category
+from data.data_util import get_contact
 from detail.forms import CommentForm
 import smtplib
 from email.mime.text import MIMEText
@@ -73,11 +74,14 @@ def sell_detail_edit(request,offset):
     post_user = User.objects.get(id=post.user.id)
     post_user_id = post.user.id
     contact = json.loads(post.preferred_contacts)
-    phone_checked = contact['phone_checked'] == 'on'
-    email_checked = contact['email_checked'] == 'on'
-    sms_checked = contact['sms_checked'] == 'on' 
+    phone_checked = contact['phone_checked'] 
+    email_checked = contact['email_checked'] 
+    sms_checked = contact['sms_checked']
     phone = contact['phone_number']
     email = contact['email']
+    print sms_checked;
+    print phone_checked;
+    print email_checked;
     user_image = ImageMetadata.deserialize_list(post.user.image_url)[0]
     categories = Category.objects.all();
     return render_to_response('sell_detail_edit.html', {'post':post,'lat':lat,'lon':lon,'is_open':is_open, 'image_list': image_list, 'image_num':image_num,
@@ -94,14 +98,12 @@ def sell_detail_save(request,offset):
         raise Http404()
     post = SellPost.objects.get(id=offset)
     if request.method == 'POST':
-        # phone_checked = request.POST.get('phone-checked', 'off')
-        # email_checked = request.POST.get('email-checked', 'off')
-        # sms_checked = request.POST.get('sms-checked', 'off')
-        # phone_number = request.POST.get('phone_number','')
-        # email = request.POST.get('email','')
-        # qq_number = request.POST.get('qq_number','')
-
-        # post.preferred_contacts = get_contact(phone_checked,email_checked,sms_checked,phone_number,email,qq_number)
+        phone_checked = request.POST.get('phone-checked', 'off')
+        email_checked = request.POST.get('email-checked', 'off')
+        sms_checked = request.POST.get('sms-checked', 'off')
+        phone_number = request.POST.get('phone_number','')
+        email = request.POST.get('email','')
+        post.preferred_contacts = get_contact(phone_checked,email_checked,sms_checked,phone_number,email)
         category_id = int(request.POST.get('category',''))
         post.category = get_category(category_id)
         post.title = request.POST.get('title','')
