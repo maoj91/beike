@@ -16,7 +16,7 @@ from sell.sell_post_util import SellPostUtil
 from data.image_util import ImageMetadata
 from django.contrib.gis.measure import D
 import logging
-from data.data_util import get_contact
+from data.data_util import get_contact, get_condition
 
 logger = logging.getLogger(__name__)
 
@@ -159,8 +159,8 @@ def form_submit(request):
         new_post.title = request.POST.get('title','')
         new_post.content = request.POST.get('content','')
         new_post.price = request.POST.get('price','')
-        condition_id = request.POST.get('my_condition',0) 
-        new_post.item_condition = Condition.objects.all()[int(condition_id)]
+        condition_value = request.POST.get('condition-slider',0) 
+        new_post.item_condition = get_condition(condition_value)
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
         new_post.latlon = Point(float(longitude), float(latitude))
