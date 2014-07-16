@@ -50,9 +50,9 @@ def get_posts_by_page(request):
 
 def get_buy_post_summary(post, origin):
     if isinstance(post, BuyPost):
-        # transform to srid 900913
-        origin.transform(900913)
-        post.latlon.transform(900913)
+        # transform to srid 3857
+        origin.transform(3857)
+        post.latlon.transform(3857)
         buy_post_summary = {
             'post_id': post.id,
             'title': post.title,

@@ -2,7 +2,7 @@
 import os,sys
 
 DOMAIN = os.environ.get('DOMAIN', 'TEST')
-
+print "DOMAIN: " + DOMAIN
 if DOMAIN == 'TEST':
     from devo_settings import *
 elif DOMAIN == 'PROD':
@@ -108,7 +108,7 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 	os.path.join(BASE_DIR, 'templates'),
-	'/home/ubuntu/beike_repo/beike_project/templates/',
+        "/home/ubuntu/beike/beike_project/templates",
 )
 
 INSTALLED_APPS = (
@@ -118,8 +118,8 @@ INSTALLED_APPS = (
 	'django.contrib.sites',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
-    'django.contrib.gis',
-    'mathfilters',
+        'django.contrib.gis',
+        'mathfilters',
 	'django.contrib.admin',
 	# Uncomment the next line to enable admin documentation:
 	# 'django.contrib.admindocs',
@@ -130,7 +130,7 @@ INSTALLED_APPS = (
 	'data',
 	's3',
 	'user',  
-    'about',
+        'about',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

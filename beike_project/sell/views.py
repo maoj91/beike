@@ -106,13 +106,13 @@ def open_close_post(request):
 
 def get_sell_post_summary(post, origin):
     if isinstance(post, SellPost):
-        # transform to srid 900913
+        # transform to srid 3857 
         try:
-            origin.transform(900913)
+            origin.transform(3857)
         except Exception, E:
             raise Exception('%s: latlon was: %s' % (E, origin.latlon))
         try:
-            post.latlon.transform(900913)
+            post.latlon.transform(3857)
         except Exception, E:
             raise Exception('%s: latlon was: %s' % (E, post.latlon))
         
