@@ -67,12 +67,6 @@ AWS_STORAGE_BUCKET_NAME = 'beike-s3' #os.environ['AWS_STORAGE_BUCKET_NAME']
 #S3_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
 #STATIC_URL = S3_URL
 
-
-# STATICFILES_DIRS = (
-#     '/home/ubuntu/beike_repo/beike_project/static/',
-# 	os.path.join(BASE_DIR, 'static'),
-# )
-
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
@@ -108,7 +102,8 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 	os.path.join(BASE_DIR, 'templates'),
-        "/home/ubuntu/beike/beike_project/templates",
+        "/home/ubuntu/beike_repo/beike_project/templates", #devo
+        "/home/ubuntu/beike/beike_project/templates", #prod
 )
 
 INSTALLED_APPS = (
