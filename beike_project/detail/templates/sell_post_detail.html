@@ -188,25 +188,22 @@
             </div>
 
             <div class="ui-grid-b" style="padding:10px;height:40px;">
-                <div class="ui-block-a" style="width:30%;">
-                    <img id='currency_icon' src='/static/images/detail/currency_icon.png' style="max-width:15px;max-height:15px;">
-                    <p style="display:inline;vertical-align:middle;">{{post.price}}</p>
-                </div>
-                <div class="ui-block-b" style="width:30%;text-align:center;">
+                <div class="ui-block-a" style="width:100%;">
+                    <!-- <img id='currency_icon' src='/static/images/detail/currency_icon.png' style="max-width:15px;max-height:15px;"> -->
+                    <p style="display:inline;vertical-align:middle;">${{post.price}},
                     {% if post.item_condition.name == 'Condition1' %}
-                    <img id='condition' src='/static/images/detail/condition1.png'> 
+                    全新
                     {% elif post.item_condition.name == 'Condition2' %}
-                    <img id='condition' src='/static/images/detail/condition2.png'> 
+                    九成新
                     {% elif post.item_condition.name == 'Condition3' %}
-                    <img id='condition' src='/static/images/detail/condition3.png'> 
+                    七成新
                     {% elif post.item_condition.name == 'Condition4' %}
-                    <img id='condition' src='/static/images/detail/condition4.png'> 
+                    五成新
                     {% elif post.item_condition.name == 'Condition5' %}
-                    <img id='condition' src='/static/images/detail/condition5.png'> 
+                    旧
                     {% endif %}
-                </div>
-                <div class="ui-block-c" style="width:40%;">
-                    <p style="display:inline;padding-top:5px;">{{post.category.name}}</p>
+                    ,{{post.category.name}}
+                    </p>
                 </div>
             </div>
 
@@ -220,9 +217,35 @@
                 {{ post.date_published|date:"n月j日" }}
             </div>
 
-            <div style="clear:both;margin-top:20px;margin-bottom:10px;margin-left:5%;margin-right:5%;height:2px;background-color:gray;"></div>
+            <!-- <div style="clear:both;margin-top:20px;margin-bottom:10px;margin-left:5%;margin-right:5%;height:2px;background-color:gray;"></div> -->
 
-            <div style="width:100%;height:60px;">
+
+
+    <div style="clear:both;text-align:center;margin-top:20px;border-top:solid gray 1px;padding:2px;">
+        物品所在位置                    
+        <img id='location_icon' src='/static/images/detail/location_icon.png' style="max-width:15px;max-height:15px;">
+        {{post.user.address.city}}
+    </div>
+    <div style="display:table;margin: 0 auto;height:200px;">
+        <img id="map" src="" style="max-width:100%;height:100%;">
+    </div>
+
+    <div style="clear:both;text-align:center;border-top:solid gray 1px;padding:2px;margin-bottom:5px;">
+        物品发布人
+        {% if post.user %}
+        {{post.user.name}} 
+        {% endif %}                  
+    </div>
+
+    {% if user_image %}
+    <div style="display:table;margin:0 auto;">
+        <a href="/user/{{post.user.id}}/">
+            <img id='profile_image' src='{{user_image.image_url}}' class="user_image"/>
+        </a>  
+    </div>
+    {% endif %}
+
+            <div style="width:100%;height:60px;margin-bottom:20px;">
                 <div id="contacts" style="display:table;height:100%;margin: 0 auto; padding: 5px;">
                     {% if sms_checked%}
                     <a href="sms:{{phone}}" class="contact_icon" data-role="button" data-inline="true" data-mini="true" data-icon="comment" data-iconpos="notext"></a>
@@ -236,61 +259,26 @@
                 </div>
             </div>
 
-            <div style="width:100%;height:60px;margin-top:10px;">
-                <div id="share" style="display:table;height:100%;margin: 0 auto;padding: 10px;">
-                    <a href="sms:{{phone}}"><img style="width:auto;height:35px;" src='/static/images/detail/share.png'></a>
-                </div>
-            </div>
-
-    <div style="clear:both;text-align:center;margin-top:20px;border-top:solid gray 1px;padding:2px;">
-        物品所在位置                    
-        <img id='location_icon' src='/static/images/detail/location_icon.png' style="max-width:15px;max-height:15px;">
-        {{post.user.address.city}}
-    </div>
-    <div style="display:table;margin: 0 auto;">
-        <img id="map" src="" style="max-width:100%;max-height:200px;">
-    </div>
-
-
-    {% if user_image %}
-    <div style="display:table;margin: 0 auto; padding: 5px;">
-        <a href="/user/{{post.user.id}}/">
-            <img id='profile_image' src='{{user_image.image_url}}' style="max-width:100px;max-height:100px;"/>
-        </a>  
-    </div>
-    {% endif %}
-
-    {% if post.user %}
-    <div style="display:table;height:100%;margin: 0 auto; padding: 5px;">
-        {{post.user.name}}
-    </div>
-    {% endif %}
-
-
-    <div style="display:table;height:100%;margin: 0 auto; padding: 5px;">
-        注册于{{ post.user.date_created|date:"Y年n月j日" }}
-    </div>
-
-    {% if is_owner %}
-    <div style="width:100%;height:60px;">
-        <div style="float:right;">
-            <img style="width:auto;height:35px;" src='/static/images/detail/complete_profile.png'>
-        </div>
-    </div>
-    {% endif %}
 
     {% if is_owner %}
 
-            <div class="ui-grid-a" style="padding-top:15px;padding-bottom:15px;background-color:gray;">
-                <div class="ui-block-a" style="width:50%;height:60px;">
+            <div class="ui-grid-b" style="padding-top:15px;padding-bottom:15px;background-color:gray;">
+                <div class="ui-block-a" style="width:33%;height:60px;">
                     <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
                     <select name="open-close-post" id="open-close-post" data-role="slider" style="vertical-align: middle;">
                         <option value="open"{% if is_open %} selected {% endif %}>待售</option>
                         <option value="close"{% if not is_open %} selected {% endif %}>已售</option>
                     </select>
                 </div>
+
+
+            <div class="ui-block-b" style="width:33%;height:60px;">
+                <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
+                    <a href="sms:{{phone}}"><img style="width:auto;height:35px;" src='/static/images/detail/share.png' style="vertical-align: middle;"></a>
+                
+            </div>
                 <!-- find this post about how to align an element vertically center in a div: http://stackoverflow.com/questions/7273338/how-to-vertically-align-an-image-inside-div-->
-                <div class="ui-block-b" style="width:50%;height:60px;text-align:center;display:inline-block;vertical-align: middle;">
+                <div class="ui-block-c" style="width:33%;height:60px;text-align:center;display:inline-block;vertical-align: middle;">
                     <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
                     <a href="/detail/sell/{{post.id}}/edit/"><input type="image" value="修改" id="edit_btn" src="/static/images/detail/edit.png" style="max-width:80px;vertical-align: middle;"></a>
                 </div>
