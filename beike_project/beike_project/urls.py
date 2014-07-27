@@ -17,4 +17,5 @@ urlpatterns = patterns('',
 	url(r'^me/', include('me.urls')),
 	url(r'^about/', include('about.urls')),
 	url(r'^mine/', include('mine.urls')),
+	url(r'^user/', include('user.urls')),
 )

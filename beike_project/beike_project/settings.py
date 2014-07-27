@@ -125,7 +125,6 @@ INSTALLED_APPS = (
 	'data',
 	#'storages',
 	's3',
-
 	'user',  
     'about',
 )
