@@ -175,22 +175,43 @@
                 </div>           
             </div>
 
-            <div class="ui-grid-a" style="width:100%;">
-                <div class="ui-block-a" style="width:90%;padding:10px;">
+
+            <div>
+                <input type="hidden" id="is_followed" value={{is_followed}}>
+            </div>
+            <!-- if not owner, then we display the follow icon -->
+            {% if is_owner %}
+            <div class="ui-grid-b" style="width:100%;">
+                <div class="ui-block-a" style="width:70%;padding:10px;">
                     <img id='sell_icon' src='/static/images/detail/sell_icon.png' style="vertical-align:middle;">
                     <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.title}}</p>
                 </div>
-                <div class="ui-block-b" style="width:10%">
-                    {% if not is_owner %}
-                    <img id='bookmark' src='/static/images/detail/not_bookmarked.png' style="vertical-align:middle;"> 
-                    {% endif %}
+                <div class="ui-block-b" style="width:15%">
+                    <img id='share' src='/static/images/detail/not_followed.png' style="vertical-align:middle;weight:20px;height:20px;"> 
+                </div>
+                <div class="ui-block-c" style="width:15%">
+                    <img id='follow' style="vertical-align:middle;weight:20px;height:20px;"> 
                 </div>
             </div>
+            {% else %}
+            <div class="ui-grid-a" style="width:100%;">
+                <div class="ui-block-a" style="width:85%;padding:10px;">
+                    <img id='sell_icon' src='/static/images/detail/sell_icon.png' style="vertical-align:middle;weight:20px;height:20px;">
+                    <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.title}}</p>
+                </div>
+                <div class="ui-block-b" style="width:15%">
+                    <img id='share' src='/static/images/detail/not_followed.png' style="vertical-align:middle;weight:20px;height:20px;"> 
+                </div>
+            </div>
+            {% endif %}
 
-            <div class="ui-grid-b" style="padding:10px;height:40px;">
-                <div class="ui-block-a" style="width:100%;">
-                    <!-- <img id='currency_icon' src='/static/images/detail/currency_icon.png' style="max-width:15px;max-height:15px;"> -->
-                    <p style="display:inline;vertical-align:middle;">${{post.price}},
+            <div class="ui-grid-b" style="padding:2px;background-color:#f6f6f6;">
+                <div class="ui-block-a" style="width:50%;height:30px;">
+                    <!-- <img id='currency_icon' src='/static/images/detail/currency_icon.png' style="max-width:15px;max-height:15px;margin-left:10px;"> -->
+                    <p style="display:inline;vertical-align:middle;">${{post.price}}
+                    </p>
+                </div>
+                <div class="ui-block-b" style="width:25%;height:30px;">
                     {% if post.item_condition.name == 'Condition1' %}
                     全新
                     {% elif post.item_condition.name == 'Condition2' %}
@@ -202,14 +223,14 @@
                     {% elif post.item_condition.name == 'Condition5' %}
                     旧
                     {% endif %}
-                    ,{{post.category.name}}
-                    </p>
+                </div>
+                <div class="ui-block-c" style="width:25%;height:30px;">
+                    {{post.category.name}}
                 </div>
             </div>
 
-            </div>
 
-            <div class="ui-grid-solo" id="content" style="margin-left:5%;margin-bottom:10px;">
+            <div class="ui-grid-solo" id="content" style="margin-left:5%;margin-bottom:10px;margin-top:10px;">
                 {{post.content}}
             </div>
 
@@ -221,21 +242,15 @@
 
 
 
-    <div style="clear:both;text-align:center;margin-top:20px;border-top:solid gray 1px;padding:2px;">
-        物品所在位置                    
-        <img id='location_icon' src='/static/images/detail/location_icon.png' style="max-width:15px;max-height:15px;">
+    <div style="clear:both;margin-top:20px;padding:2px;background-color:#f6f6f6;">
+        <img id='location_icon' src='/static/images/detail/location_icon.png' style="max-width:15px;max-height:15px;margin-left:15px;">
         {{post.user.address.city}}
     </div>
     <div style="display:table;margin: 0 auto;height:200px;">
-        <img id="map" src="" style="max-width:100%;height:100%;">
+        <img id="map" src="" style="width:100%;height:100%;">
     </div>
 
-    <div style="clear:both;text-align:center;border-top:solid gray 1px;padding:2px;margin-bottom:5px;">
-        物品发布人
-        {% if post.user %}
-        {{post.user.name}} 
-        {% endif %}                  
-    </div>
+    <div style="clear:both;height:20px;"></div>
 
     {% if user_image %}
     <div style="display:table;margin:0 auto;">
@@ -245,8 +260,14 @@
     </div>
     {% endif %}
 
-            <div style="width:100%;height:60px;margin-bottom:20px;">
-                <div id="contacts" style="display:table;height:100%;margin: 0 auto; padding: 5px;">
+    {% if post.user %}
+    <div style="text-align:center;padding:2px;">
+        <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.user.name}}</p>
+    </div>
+    {% endif %} 
+
+    <div style="width:100%;height:60px;margin-bottom:20px;">
+        <div id="contacts" style="display:table;height:100%;margin: 0 auto; padding: 5px;">
                     {% if sms_checked%}
                     <a href="sms:{{phone}}" class="contact_icon" data-role="button" data-inline="true" data-mini="true" data-icon="comment" data-iconpos="notext"></a>
                     {% endif%}
@@ -256,8 +277,8 @@
                     {% if email_checked%}
                     <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}" class="contact_icon" data-role="button" data-inline="true" data-mini="true" data-icon="mail" data-iconpos="notext"></a>
                     {% endif%}
-                </div>
-            </div>
+        </div>
+    </div>
 
 
     {% if is_owner %}
@@ -271,22 +292,12 @@
                     </select>
                 </div>
 
-
-            <div class="ui-block-b" style="width:33%;height:60px;">
-                <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
-                    <a href="sms:{{phone}}"><img style="width:auto;height:35px;" src='/static/images/detail/share.png' style="vertical-align: middle;"></a>
-                
-            </div>
                 <!-- find this post about how to align an element vertically center in a div: http://stackoverflow.com/questions/7273338/how-to-vertically-align-an-image-inside-div-->
                 <div class="ui-block-c" style="width:33%;height:60px;text-align:center;display:inline-block;vertical-align: middle;">
                     <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
                     <a href="/detail/sell/{{post.id}}/edit/"><input type="image" value="修改" id="edit_btn" src="/static/images/detail/edit.png" style="max-width:80px;vertical-align: middle;"></a>
                 </div>
             </div>
-    {% else %}
-    <select name="follow-post" id="follow-post" data-role="slider">
-        <option value="unfollow" {% if not is_followed %} selected {% endif %}>不收藏</option>
-        <option value="follow" {% if is_followed %} selected {% endif %}>收藏</option>
     </select>
     {% endif %}
 
@@ -357,6 +368,15 @@ $("#open-close-post").on('slidestop', function(event) {
     }).then(function(data) {});
 });
 
+function showFollowStatus(){
+    var is_followed = $("#is_followed").val();
+    if( is_followed){
+        $("#follow").attr("src", '/static/images/detail/followed.png');
+    } else {
+        $("#follow").attr("src", '/static/images/detail/not_followed.png');
+    }
+}
+
 function showPosition() {
     var latlonStr = {{lat}}+","+{{lon}};
     var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
@@ -368,6 +388,7 @@ function showPosition() {
 $(document).ready(function() { 
     selectThumbnail(0);
     showPosition();
+    showFollowStatus();
 });
 </script>
 </div>
