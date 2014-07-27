@@ -71,26 +71,17 @@
                 </div>
             </div>
 
-            <div class="ui-grid-a">
-                <div class="ui-block-a">
-                    联系方式:
-                </div>
-                <div class="ui-grid-b">
-                    <div class="ui-grid-solo">
+            <div style="width:100%;height:60px;">
+                <div id="contacts" style="display:table;height:100%;margin: 0 auto; padding: 5px;">
+                    {% if sms_checked%}
+                    <a href="sms:{{phone}}" class="contact_icon" data-role="button" data-inline="true" data-mini="true" data-icon="comment" data-iconpos="notext"></a>
+                    {% endif%}
                     {% if phone_checked%}
-                        <a href="tel:{{phone}}" data-role="button">{{phone}}</a> (电话)
+                    <a href="tel:{{phone}}" class="contact_icon" data-role="button" data-inline="true" data-mini="true" data-icon="phone" data-iconpos="notext"></a>
                     {% endif%}
-                    </div>
-                    <div class="ui-grid-solo">
                     {% if email_checked%}
-                    <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}" data-role="button">{{email}}</a> (Email)
+                    <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}" class="contact_icon" data-role="button" data-inline="true" data-mini="true" data-icon="mail" data-iconpos="notext"></a>
                     {% endif%}
-                    </div>
-                    <div class="ui-grid-solo">
-                    {% if qq_checked%}
-                        {{qq}} (QQ或微信号)
-                    {% endif%}
-                    </div>
                 </div>
             </div>
 

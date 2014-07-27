@@ -15,17 +15,20 @@ function getImageDimensionInfo(file_dom_id) {
     var fr = new FileReader;
     fr.onloadend = function() {
         var exif = EXIF.readFromBinaryFile(new BinaryFile(this.result));
-        if (typeof exif.PixelXDimension != 'undefined') {
+        if (typeof exif.PixelXDimension != 'undefined' && typeof exif.PixelYDimension != 'undefined') {
             imageInfo['width'] = exif.PixelXDimension;
-        } else {
-            imageInfo['width'] = 1;
-        }
-
-        if (typeof exif.PixelXDimension != 'undefined') {
             imageInfo['height'] = exif.PixelYDimension;
         } else {
+            imageInfo['width'] = 1;
             imageInfo['height'] = 1;
         }
+
+        if (typeof exif.Orientation != 'undefined') {
+            imageInfo['orientation'] = exif.Orientation;
+        } else {
+            imageInfo['orientation'] = 1;
+        }
+
     };
     fr.readAsBinaryString(file);
     return imageInfo;
@@ -46,7 +49,7 @@ function getImageNamePrefix(user_id) {
 
 function image_s3_upload(file_dom_id, user_id) {
     if (!isUploading && imageCount < imageMaxNum) {
-        //retrieve the image information. e.g. width, height
+        //retrieve the image information. e.g. width, height, orientation
         var imageInfo = getImageDimensionInfo(file_dom_id);
         //retrieve the image prefix for S3 upload
         var imageNamePrefix = getImageNamePrefix(user_id);
@@ -63,8 +66,8 @@ function image_s3_upload(file_dom_id, user_id) {
                 isUploading = true;
             },
             onFinishS3Put: function(url) {
-                imageInfo['url'] = url;
                 //set the url in the image info
+                imageInfo['url'] = url;
                 addImage(imageInfo);
                 console.log(JSON.stringify(imagesInfo[currentImageIndex]))
                 displayImage(imageCount - 1);
@@ -96,6 +99,7 @@ function addImage(imageInfo) {
         $('#image_url' + index).val(imageInfo['url']);
         $('#image_width' + index).val(imageInfo['width']);
         $('#image_height' + index).val(imageInfo['height']);
+        $('#image_orientation' + index).val(imageInfo['orientation']);
     }
 }
 
@@ -276,31 +280,14 @@ var sellPostLoader = (function($, undefined) {
             if (image_info['height'] > image_info['width']) {
                 isHorizontal = false;
             }
-            var image_width, image_height
-            var max_width = document.body.clientWidth * 0.4
-            var max_height = 180
-            if (isHorizontal) {
-                if (image_info['width'] < max_width) {
-                    image_width = image_info['width']
-                    image_height = image_info['height']
-                } else {
-                    image_width = max_width
-                    image_height = max_width * (image_info['height'] / image_info['width']);
-                }
-            } else {
-                if (image_info['height'] < max_height) {
-                    image_width = image_info['width']
-                    image_height = image_info['height']
-                } else {
-                    image_height = max_height
-                    image_width = max_height * (image_info['width'] / image_info['height']);
 
-                }
-            }
+            var image_width = document.body.clientWidth * 0.4;
+            var image_height = image_width * (image_info['height'] / image_info['width'])
             var displayCss = "horizontal-li";
             if (!isHorizontal) {
                 displayCss = "vertical-li"
             }
+            image_height = 'auto';
             var template = '<li class="' + displayCss + '"><div><a href="/detail/sell/' +
                 posts[i]['post_id'] + '"><div><img src="' +
                 image_info['image_url'] + '" width="' + image_width + '" height="' + image_height + '"/></div><div><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" />' +
@@ -345,6 +332,17 @@ $(document).delegate("#nearby-sellpost", "pageinit", function() {
     });
 });
 
+function getImageSize(imgSrc) {
+    var imgItem = new Image();
+    // p = $(imgItem).onload(function(){
+    //     return {width: imgItem.width, height: imgItem.height};
+    // });
+    imgItem.onload = function() {
+        console.log(this.width + " " + this.height);
+    }
+    imgItem.src = imgSrc;
+}
+
 function getLatitudeLongtitude(position) {
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
@@ -375,13 +373,12 @@ $(document).delegate("#sellpost-form", "pageinit", function() {
     $('#image-uploader').css('width', deviceWidth);
     $('form').validate({
         rules: {
-            phone_number: "digitonly",
-            qq_number: "digitonly"
+            phone_number: "digitonly"
         }
     });
     isEmailChecked = false;
     isPhoneChecked = false;
-    isQQChecked = false;
+    isSmsChecked = false;
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
     }
