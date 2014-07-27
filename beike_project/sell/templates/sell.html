@@ -140,8 +140,22 @@
         </div>
         <script type="text/javascript">
 
+        $(document).on("scrollstart", function() {
+            
+            if ($(document).height() > $(window).height() && hasMoreSellPost) {
+                if ($(window).scrollTop() >= $(document).height() - $(window).height() - 200) {
+                    if (typeof sellPostCurLatLon !== 'undefined') {
+                        hasMoreSellPost = false;
+                        alert(category);
+                        alert(keyword);
+                        sellPostLoader.getAndDisplayPosts(sellPostCurLatLon, category, keyword);
+                    }
+                }
+            }
+        });
         $(document).on("scrollstop", function() {
-            if (hasMoreSellPost) {
+            
+            if ($(document).height() > $(window).height() && hasMoreSellPost) {
                 if ($(window).scrollTop() >= $(document).height() - $(window).height() - 200) {
                     if (typeof sellPostCurLatLon !== 'undefined') {
                         hasMoreSellPost = false;

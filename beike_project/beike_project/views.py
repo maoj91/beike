@@ -26,6 +26,9 @@ def index(request):
 				city = user.address.city 
 		        return render_to_response('index.html',{'user':user, 'city':city})
 
+def healthcheck(request):
+	return render_to_response('health_check.html')
+
 def validate_user(request):
 	wx_id = request.session['wx_id']
 	key = request.session['key']
