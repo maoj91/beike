@@ -1,6 +1,15 @@
 # Django settings for beike_project project.
 import os,sys
 
+DOMAIN = os.environ.get('DOMAIN', 'TEST')
+print "DOMAIN: " + DOMAIN
+if DOMAIN == 'TEST':
+    from devo_settings import *
+elif DOMAIN == 'PROD':
+    from prod_settings import *
+else:
+    raise Exception("Invalid domain value: " + DOMAIN)
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 POSTGIS_VERSION = ( 2, 1 )
@@ -8,22 +17,10 @@ POSTGIS_VERSION = ( 2, 1 )
 BASE_DIR = '' 
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Qianbei', 'qianbei.platform@gmail.com'),
 )
 
 MANAGERS = ADMINS
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'beike_db',                      # Or path to database file if using sqlite3.
-        # The following settings are not used with sqlite3:
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
-    }
-}
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -56,17 +53,19 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
 
-STATIC_ROOT = os.path.join('/var/www/', 'static')
+# Static assets directory to serve in production
+STATIC_ROOT = "/var/www/beike/static/"
+# All the files in installed_app/static/ directory will be copied to STATIC_ROOT
+STATIC_URL = '/static/'
+# All the files in beike_project/static/ will be copied to STATIC_ROOT
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
+
 AWS_STORAGE_BUCKET_NAME = 'beike-s3' #os.environ['AWS_STORAGE_BUCKET_NAME']
 #STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 #S3_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
 #STATIC_URL = S3_URL
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (
-    '/home/ubuntu/beike_repo/beike_project/static/',
-	os.path.join(BASE_DIR, 'static'),
-)
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -83,7 +82,6 @@ SECRET_KEY = 'b)p*(4ve%w#j-+t7=l7gs06=&@302wpn&8)6oul*b1fuzk_^c='
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -92,8 +90,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    # Uncomment the next line for simple clickjacking protection:
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 ROOT_URLCONF = 'beike_project.urls'
@@ -106,7 +102,8 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 	os.path.join(BASE_DIR, 'templates'),
-	'/home/ubuntu/beike_repo/beike_project/templates/',
+        "/home/ubuntu/beike_repo/beike_project/templates", #devo
+        "/home/ubuntu/beike/beike_project/templates", #prod
 )
 
 INSTALLED_APPS = (
@@ -116,9 +113,8 @@ INSTALLED_APPS = (
 	'django.contrib.sites',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
-    'django.contrib.gis',
-    'mathfilters',
-	# Uncomment the next line to enable the admin:
+        'django.contrib.gis',
+        'mathfilters',
 	'django.contrib.admin',
 	# Uncomment the next line to enable admin documentation:
 	# 'django.contrib.admindocs',
@@ -129,7 +125,7 @@ INSTALLED_APPS = (
 	'data',
 	's3',
 	'user',  
-    'about',
+        'about',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

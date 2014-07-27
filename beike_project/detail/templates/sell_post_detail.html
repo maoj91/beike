@@ -193,14 +193,16 @@
                     <p style="display:inline;vertical-align:middle;">{{post.price}}</p>
                 </div>
                 <div class="ui-block-b" style="width:30%;text-align:center;">
-                    {% if post.item_condition.name == 'New' %}
-                    <img id='condition' src='/static/images/detail/condition_new.png'> 
-                    {% elif post.item_condition.name == 'AlmostNew' %}
-                    <img id='condition' src='/static/images/detail/condition_nine.png'> 
-                    {% elif post.item_condition.name == 'Used' %}
-                    <img id='condition' src='/static/images/detail/condition_seven.png'> 
-                    {% elif post.item_condition.name == 'Refurbished' %}
-                    <img id='condition' src='/static/images/detail/condition_old.png'> 
+                    {% if post.item_condition.name == 'Condition1' %}
+                    <img id='condition' src='/static/images/detail/condition1.png'> 
+                    {% elif post.item_condition.name == 'Condition2' %}
+                    <img id='condition' src='/static/images/detail/condition2.png'> 
+                    {% elif post.item_condition.name == 'Condition3' %}
+                    <img id='condition' src='/static/images/detail/condition3.png'> 
+                    {% elif post.item_condition.name == 'Condition4' %}
+                    <img id='condition' src='/static/images/detail/condition4.png'> 
+                    {% elif post.item_condition.name == 'Condition5' %}
+                    <img id='condition' src='/static/images/detail/condition5.png'> 
                     {% endif %}
                 </div>
                 <div class="ui-block-c" style="width:40%;">
@@ -222,15 +224,13 @@
 
             <div style="width:100%;height:60px;">
                 <div id="contacts" style="display:table;height:100%;margin: 0 auto; padding: 5px;">
-                    <!-- <a href="sms:{{phone}}"><img class="contact_icon" src='/static/images/detail/sms.png'></a> -->
+                    {% if sms_checked%}
                     <a href="sms:{{phone}}" class="contact_icon" data-role="button" data-inline="true" data-mini="true" data-icon="comment" data-iconpos="notext"></a>
+                    {% endif%}
                     {% if phone_checked%}
-                    <!-- <a href="tel:{{phone}}"><img class="contact_icon" src='/static/images/detail/phone.png'></a>   -->  
                     <a href="tel:{{phone}}" class="contact_icon" data-role="button" data-inline="true" data-mini="true" data-icon="phone" data-iconpos="notext"></a>
-
                     {% endif%}
                     {% if email_checked%}
-                    <!-- <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}"><img class="contact_icon"src='/static/images/detail/email.png'></a> -->
                     <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}" class="contact_icon" data-role="button" data-inline="true" data-mini="true" data-icon="mail" data-iconpos="notext"></a>
                     {% endif%}
                 </div>

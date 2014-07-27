@@ -97,11 +97,10 @@ $(document).delegate("#nearby-buypost", "pageinit", function() {
 $(document).delegate("#buy-form", "pageinit", function(event) {
     $('form').validate({
         rules:{
-            phone_number: "digitonly",
-            qq_number: "digitonly"
+            phone_number: "digitonly"
         }
     });
     isEmailChecked = false;
     isPhoneChecked = false;
-    isQQChecked = false;
+    isSmsChecked = false;
 });

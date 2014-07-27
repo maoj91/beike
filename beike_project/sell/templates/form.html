@@ -27,6 +27,8 @@
     <script src="/static/sell.js"></script>
     <script src="/static/common.js"></script>
     <script src="/static/jquery.touchSwipe.min.js"></script>
+    <script src="/static/jquery.fileupload.js"></script>
+
 </head>
 
 <body>
@@ -45,11 +47,16 @@
             </div>
         </div>
         <div data-role="content">
+
             <div class="ui-grid-solo" id="image-uploader" style="max-width: 600px; height: 320px">
                 <div class="ui-grid-solo" style="width: 100%; height: 260px; background-color:grey;">
-                    <div id="current_image" style="background-repeat: no-repeat;">
-                        <img style="display: none" id="delete_icon" width="30px" height="30px" src="/static/images/sell_post/delete-icon.png" onclick="deleteCurrentImage()" />
-                        <p id="upload_status"></p>
+                    <div style="position: relative; text-align: center">
+                        <div id="delete_icon" style="display: none; position: absolute; top: 0; left: 0;">
+                            <img width="30px" height="30px" src="/static/images/sell_post/delete-icon.png" onclick="deleteCurrentImage()" />
+                        </div>
+                        <div style="position: absolute; top: 0;" id="upload_status"></div>
+                        <div id="current_image">
+                        </div>
                     </div>
                 </div>
 
@@ -58,7 +65,7 @@
                         <label for="post_image">
                             <img src='/static/images/sell_post/upload.png' style="width: 100%; height: 100%;">
                         </label>
-                        <input style="display:none;" type="file" id="post_image" name="post_image" accept="image/*" onchange="image_s3_upload(this.id,'{{user_id}}');" onclick="return moreImagesAllowed();" />
+                        <input style="display:none;" type="file" id="post_image" name="post_image" accept="image/*" onclick="return moreImagesAllowed();" />
                     </div>
 
 
@@ -135,7 +142,6 @@
                         <div class="slider-scale-common slider-scale-div5">旧</div>
                     </div>
                     <input data-highlight="true" type="range" name="condition-slider" id="condition-slider" value="0" min="0" max="4" step="1" />
-                    <input type="hidden" id="my_condition" name="my_condition" value=0>
                 </div>
 
                 <div class="ui-grid-solo">
@@ -151,10 +157,10 @@
                 </div>
 
                 <div class="ui-grid-a">
-                    <div class="ui-block-a" style="width:20%;">
+                    <div class="ui-block-a" style="width:30%;">
                         <div id="prefer-contact" class="field-label-inner-div">联系方式</div>
                     </div>
-                    <div class="ui-block-b" style="width:80%;">
+                    <div class="ui-block-b" style="width:70%;">
 
                         <div class="ui-grid-b">
                             <div class="ui-block-a">
@@ -166,19 +172,22 @@
                                 <img style="display:none;" id="phone-icon-clicked" onclick="clickPhoneContact();" src="/static/images/general/phone_icon_clicked.png" />
                             </div>
                             <div class="ui-block-c">
-                                <img style="display:block;" id="qq-icon" onclick="clickQQContact();" src="/static/images/general/qq_icon.png" />
-                                <img style="display:none;" id="qq-icon-clicked" onclick="clickQQContact();" src="/static/images/general/qq_icon_clicked.png" />
+                                <img style="display:block;" id="sms-icon" onclick="clickSmsContact();" src="/static/images/general/sms_icon.png" />
+                                <img style="display:none;" id="sms-icon-clicked" onclick="clickSmsContact();" src="/static/images/general/sms_icon_clicked.png" />
                             </div>
                         </div>
 
                         <!--Use ui-grid-a because I cannot resolve the jquery validation css issue-->
                         <!--error message was always displayed inside the next input-->
                         <!--TO-DO: fix this issue and use just a single div-->
+                        <input type="hidden" name="sms-checked" id="sms-checked" value="off"></input>
+                        <input type="hidden" name="phone-checked" id="phone-checked" value="off"></input>
+                        <input type="hidden" name="email-checked" id="email-checked" value="off"></input>
                         <div id="phone_number_div" class="ui-grid-a">
                             <div class="ui-block-a" style="width:0"></div>
                             <div class="ui-block-b" style="width:100%">
                                 {% if user.mobile_phone and user.mobile_phone != " " %}
-                                <input type="text" id="phone_number" name="phone_number" placeholder="手机号码" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入电话号码" />{% else %}
+                                <input type="text" id="phone_number" name="phone_number" placeholder="手机号码" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />{% else %}
                                 <input type="text" id="phone_number" name="phone_number" placeholder="手机号码" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />{% endif %}
                             </div>
                         </div>
@@ -190,20 +199,13 @@
                                 <input type="text" id="email" name="email" placeholder="Email" data-rule-required="true" data-rule-content="true" data-msg-required="请输入Email" />{% endif %}
                             </div>
                         </div>
-                        <div id="qq_number_div" class="ui-grid-a">
-                            <div class="ui-block-a" style="width:0"></div>
-                            <div class="ui-block-b" style="width:100%">
-                                {% if user.qq_number and user.qq_number != " " %}
-                                <input type="text" id="qq_number" name="qq_number" placeholder="微信或QQ号" value="{{user.qq_number}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入微信或QQ号" />{% else %}
-                                <input type="text" id="qq_number" name="qq_number" placeholder="微信或QQ号" data-rule-required="true" data-rule-content="true" data-msg-required="请输入微信或QQ号" />{% endif %}
-                            </div>
-                        </div>
-
                     </div>
                 </div>
 
-                <div>
-                    <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png">
+                <div class="ui-grid-solo" style="margin: 20px 0 0 0">
+                    <div>
+                        <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png">
+                    </div>
                 </div>
 
             </form>
@@ -242,7 +244,6 @@
             </div>
         </div>
     </div>
-
     </div>
 </body>
 

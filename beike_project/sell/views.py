@@ -16,7 +16,7 @@ from sell.sell_post_util import SellPostUtil
 from data.image_util import ImageMetadata
 from django.contrib.gis.measure import D
 import logging
-from data.data_util import get_contact
+from data.data_util import get_contact, get_condition
 
 logger = logging.getLogger(__name__)
 
@@ -113,13 +113,13 @@ def open_close_post(request):
 
 def get_sell_post_summary(post, origin):
     if isinstance(post, SellPost):
-        # transform to srid 900913
+        # transform to srid 3857 
         try:
-            origin.transform(900913)
+            origin.transform(3857)
         except Exception, E:
             raise Exception('%s: latlon was: %s' % (E, origin.latlon))
         try:
-            post.latlon.transform(900913)
+            post.latlon.transform(3857)
         except Exception, E:
             raise Exception('%s: latlon was: %s' % (E, post.latlon))
         
@@ -156,19 +156,18 @@ def form_submit(request):
 
         phone_checked = request.POST.get('phone-checked', 'off')
         email_checked = request.POST.get('email-checked', 'off')
-        qq_checked = request.POST.get('qq-checked', 'off')
+        sms_checked = request.POST.get('sms-checked', 'off')
         phone_number = request.POST.get('phone_number','')
         email = request.POST.get('email','')
-        qq_number = request.POST.get('qq_number','')
 
-        new_post.preferred_contacts = get_contact(phone_checked,email_checked,qq_checked,phone_number,email,qq_number)
+        new_post.preferred_contacts = get_contact(phone_checked,email_checked,sms_checked,phone_number,email)
         category_id = int(request.POST.get('category',''))
         new_post.category = get_category(category_id)
         new_post.title = request.POST.get('title','')
         new_post.content = request.POST.get('content','')
         new_post.price = request.POST.get('price','')
-        condition_id = request.POST.get('my_condition',1) 
-        new_post.item_condition = Condition.objects.all()[int(condition_id)]
+        condition_value = request.POST.get('condition-slider',0) 
+        new_post.item_condition = get_condition(condition_value)
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
         new_post.latlon = Point(float(longitude), float(latitude))
@@ -178,39 +177,20 @@ def form_submit(request):
         if user.mobile_phone is None: 
             user.mobile_phone = phone_number
             user.save()
-        if user.qq_number is None: 
-            user.qq_number = qq_number
-            user.save()  
+
         return HttpResponseRedirect('/mine/')
     else:
         raise Http500
 
 def get_image_info(request):
     image_list = []
-
-    # process image1
-    image_url1 = request.POST.get('image_url0')
-    image_width1 = request.POST.get('image_width0')
-    image_height1 = request.POST.get('image_height0')
-    if image_url1 and image_width1 and image_height1:
-        image1 = ImageMetadata(image_url1, image_width1, image_height1)
-        image_list.append(image1)
-
-    # process image2
-    image_url2 = request.POST.get('image_url1')
-    image_width2 = request.POST.get('image_width1')
-    image_height2 = request.POST.get('image_height1')
-    if image_url2 and image_width2 and image_height2:
-        image2 = ImageMetadata(image_url2, image_width2, image_height2)
-        image_list.append(image2)
-
-    # process image3
-    image_url3 = request.POST.get('image_url2')
-    image_width3 = request.POST.get('image_width2')
-    image_height3 = request.POST.get('image_height2')
-    if image_url3 and image_width3 and image_height3:
-        image3 = ImageMetadata(image_url3, image_width3, image_height3)
-        image_list.append(image3)
-
+    for i in range(0, 2):
+        image_url = request.POST.get('image_url' + str(i))
+        image_width = request.POST.get('image_width' + str(i))
+        image_height = request.POST.get('image_height' + str(i))
+        image_orientation = request.POST.get('image_orientation' + str(i))
+        if image_url and image_width and image_height and image_orientation:
+            image = ImageMetadata(image_url, image_width, image_height, image_orientation)
+            image_list.append(image)
     return ImageMetadata.serialize_list(image_list)
 

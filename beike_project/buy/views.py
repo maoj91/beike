@@ -50,9 +50,9 @@ def get_posts_by_page(request):
 
 def get_buy_post_summary(post, origin):
     if isinstance(post, BuyPost):
-        # transform to srid 900913
-        origin.transform(900913)
-        post.latlon.transform(900913)
+        # transform to srid 3857
+        origin.transform(3857)
+        post.latlon.transform(3857)
         buy_post_summary = {
             'post_id': post.id,
             'title': post.title,
@@ -111,15 +111,14 @@ def form_submit(request):
 
         phone_checked = request.POST.get('phone-checked', 'off')
         email_checked = request.POST.get('email-checked', 'off')
-        qq_checked = request.POST.get('qq-checked', 'off')
+        sms_checked = request.POST.get('sms-checked', 'off')
         phone_number = request.POST.get('phone_number','')
         email = request.POST.get('email','')
-        qq_number = request.POST.get('qq_number','')
 
         new_post = BuyPost()
         new_post.id = None
         new_post.is_open = True
-        new_post.preferred_contacts = get_contact(phone_checked,email_checked,qq_checked,phone_number,email,qq_number)
+        new_post.preferred_contacts = get_contact(phone_checked,email_checked,sms_checked,phone_number,email)
         new_post.date_published = datetime.now()
         new_post.title = title
         new_post.min_price = min_price
@@ -133,9 +132,6 @@ def form_submit(request):
         if user.mobile_phone is None: 
             user.mobile_phone = phone_number
             user.save()
-        if user.qq_number is None: 
-            user.qq_number = qq_number
-            user.save()    
 
         return HttpResponseRedirect('/mine/')
     else: 

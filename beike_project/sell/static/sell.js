@@ -6,30 +6,7 @@ var currentImageIndex = 0;
 var isUploading = false;
 
 var imagesInfo = new Array(3);
-
-function getImageDimensionInfo(file_dom_id) {
-    var imageInfo = {};
-    //get and set orientation info
-    var fileId = "#" + file_dom_id;
-    var file = $(fileId)[0].files[0];
-    var fr = new FileReader;
-    fr.onloadend = function() {
-        var exif = EXIF.readFromBinaryFile(new BinaryFile(this.result));
-        if (typeof exif.PixelXDimension != 'undefined') {
-            imageInfo['width'] = exif.PixelXDimension;
-        } else {
-            imageInfo['width'] = 1;
-        }
-
-        if (typeof exif.PixelXDimension != 'undefined') {
-            imageInfo['height'] = exif.PixelYDimension;
-        } else {
-            imageInfo['height'] = 1;
-        }
-    };
-    fr.readAsBinaryString(file);
-    return imageInfo;
-}
+var imagesHtml = new Array(3);
 
 function moreImagesAllowed() {
     if (imageCount >= imageMaxNum) {
@@ -44,42 +21,6 @@ function getImageNamePrefix(user_id) {
     return prefix;
 }
 
-function image_s3_upload(file_dom_id, user_id) {
-    if (!isUploading && imageCount < imageMaxNum) {
-        //retrieve the image information. e.g. width, height
-        var imageInfo = getImageDimensionInfo(file_dom_id);
-        //retrieve the image prefix for S3 upload
-        var imageNamePrefix = getImageNamePrefix(user_id);
-        console.log('Image name prefix: ' + imageNamePrefix);
-
-        //upload it to s3
-        var s3upload = new S3Upload({
-            file_dom_selector: file_dom_id,
-            s3_sign_put_url: '/s3/sign/',
-            s3_object_name_prefix: imageNamePrefix,
-            onProgress: function(percent, message) {
-                $('#upload_status').html('Completed ' + percent + '%');
-                $('#upload_status').show();
-                isUploading = true;
-            },
-            onFinishS3Put: function(url) {
-                imageInfo['url'] = url;
-                //set the url in the image info
-                addImage(imageInfo);
-                console.log(JSON.stringify(imagesInfo[currentImageIndex]))
-                displayImage(imageCount - 1);
-                $('#upload_status').hide();
-                isUploading = false;
-            },
-            onError: function(status) {
-                $('#upload_status').html('Upload error: ' + status);
-                $('#upload_status').show();
-                isUploading = false;
-            }
-        });
-    }
-}
-
 /*
  * Add an image info and update the preview and form
  */
@@ -89,6 +30,21 @@ function addImage(imageInfo) {
         var index = imageCount;
         imageCount++;
         imagesInfo[index] = imageInfo;
+        width = '300px';
+        height = '300px';
+        if (imageInfo['width'] > imageInfo['height']) {
+            height = 'auto';
+        } else {
+            width = 'auto';
+        }
+
+        imgElement = $('<img></img>');
+        imgElement.attr("src", imageInfo['url']);
+        imgElement.css("width", width);
+        imgElement.css("height", height);
+        imagesHtml[index] = imgElement;
+        displayImage(index);
+
         //add image to the thumbnail
         $('#preview' + index).attr('src', imageInfo['url']);
         $('#preview' + index).show();
@@ -96,6 +52,7 @@ function addImage(imageInfo) {
         $('#image_url' + index).val(imageInfo['url']);
         $('#image_width' + index).val(imageInfo['width']);
         $('#image_height' + index).val(imageInfo['height']);
+        $('#image_orientation' + index).val(imageInfo['orientation']);
     }
 }
 
@@ -109,6 +66,7 @@ function removeImage(index) {
         for (var i = index; i < imageMaxNum; i++) {
             if (i < imageCount) {
                 imagesInfo[i] = imagesInfo[i + 1];
+                imagesHtml[i] = imagesHtml[i + 1];
                 //add image to the thumbnail
                 $('#preview' + i).attr('src', imagesInfo[i]['url']);
                 //add image to the form
@@ -117,6 +75,7 @@ function removeImage(index) {
                 $('#image_height' + i).val(imagesInfo[i]['height']);
             } else {
                 imagesInfo[i] = null;
+                imagesHtml[i] = null;
                 //remove image in the thumbnail
                 $('#preview' + i).removeAttr('src');
                 $('#preview' + i).css("border", "none");
@@ -136,7 +95,7 @@ function removeImage(index) {
 
 function displayImage(index) {
     if (imageCount == 0) {
-        $('#current_image').css('background-image', '');
+        $('#current_image').empty();
         $('#delete_icon').hide();
     }
     if (index < imageCount) {
@@ -146,27 +105,8 @@ function displayImage(index) {
         }
         var imageInfo = imagesInfo[index];
         $('#preview' + index).css("border", "1px solid black");
-        $('#current_image').css('background-image', 'url(' + imageInfo['url'] + ')');
-        $('#current_image').css('background-position', 'center center');
-        var imgOrientation = 1;
-        if (imageInfo['width'] > 0 && imageInfo['height'] > 0) {
-            imgOrientation = imageInfo['width'].toFixed(2) / imageInfo['height'].toFixed(2);
-        }
-        if (imgOrientation >= 1) {
-            $('#current_image').removeClass('landscape_image');
-            $('#current_image').removeClass('potrait_image');
-            $('#current_image').addClass('potrait_image');
-            var imageWidth = 290;
-            var imageHeight = imageWidth * (imageInfo['height'].toFixed(2) / imageInfo['width'].toFixed(2));
-            $('#current_image').css('background-size', imageWidth + 'px ' + imageHeight + 'px');
-        } else {
-            $('#current_image').removeClass('landscape_image');
-            $('#current_image').removeClass('potrait_image');
-            $('#current_image').addClass('landscape_image');
-            var imageHeight = 290;
-            var imageWidth = imageHeight * (imageInfo['width'].toFixed(2) / imageInfo['height'].toFixed(2));
-            $('#current_image').css('background-size', imageWidth + 'px ' + imageHeight + 'px');
-        }
+        $('#current_image').empty();
+        $('#current_image').append(imagesHtml[index]);
         $('#delete_icon').show();
         currentImageIndex = index;
     }
@@ -175,15 +115,6 @@ function displayImage(index) {
 function deleteCurrentImage() {
     removeImage(currentImageIndex);
     displayImage(0);
-}
-
-function selectCondition(i) {
-    //cleaer all border
-    for (var j = 1; j <= 6; j++) {
-        $('#condition' + j).css("border", "none");
-    }
-    $('#condition' + i).css("border", "1px solid black");
-    $('#my_condition').val(i);
 }
 
 //3 months from now by default 
@@ -272,36 +203,12 @@ var sellPostLoader = (function($, undefined) {
                 image_info = undefined
                 continue;
             }
-            var isHorizontal = true
-            if (image_info['height'] > image_info['width']) {
-                isHorizontal = false;
-            }
-            var image_width, image_height
-            var max_width = document.body.clientWidth * 0.4
-            var max_height = 180
-            if (isHorizontal) {
-                if (image_info['width'] < max_width) {
-                    image_width = image_info['width']
-                    image_height = image_info['height']
-                } else {
-                    image_width = max_width
-                    image_height = max_width * (image_info['height'] / image_info['width']);
-                }
-            } else {
-                if (image_info['height'] < max_height) {
-                    image_width = image_info['width']
-                    image_height = image_info['height']
-                } else {
-                    image_height = max_height
-                    image_width = max_height * (image_info['width'] / image_info['height']);
 
-                }
-            }
-            var displayCss = "horizontal-li";
-            if (!isHorizontal) {
-                displayCss = "vertical-li"
-            }
-            var template = '<li class="' + displayCss + '"><div><a href="/detail/sell/' +
+            image_width = document.body.clientWidth * 0.4;
+            image_height = image_info['height']/image_info['width'] * image_width;
+
+
+            var template = '<li class="sellpost-li"><div><a href="/detail/sell/' +
                 posts[i]['post_id'] + '"><div><img src="' +
                 image_info['image_url'] + '" width="' + image_width + '" height="' + image_height + '"/></div><div><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" />' +
                 posts[i]["title"] + '</div><div>$' + posts[i]["price"] + '</div><div>距离你 ' + posts[i]["distance"] + ' miles</div></a></div></li>';
@@ -345,6 +252,17 @@ $(document).delegate("#nearby-sellpost", "pageinit", function() {
     });
 });
 
+function getImageSize(imgSrc) {
+    var imgItem = new Image();
+    // p = $(imgItem).onload(function(){
+    //     return {width: imgItem.width, height: imgItem.height};
+    // });
+    imgItem.onload = function() {
+        console.log(this.width + " " + this.height);
+    }
+    imgItem.src = imgSrc;
+}
+
 function getLatitudeLongtitude(position) {
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
@@ -375,16 +293,37 @@ $(document).delegate("#sellpost-form", "pageinit", function() {
     $('#image-uploader').css('width', deviceWidth);
     $('form').validate({
         rules: {
-            phone_number: "digitonly",
-            qq_number: "digitonly"
+            phone_number: "digitonly"
         }
     });
     isEmailChecked = false;
     isPhoneChecked = false;
-    isQQChecked = false;
+    isSmsChecked = false;
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
     }
+    $('#post_image').fileupload({
+            url: "/s3/upload/",
+            dataType: 'json',
+            done: function (e, data) {
+                var imageInfo = {};
+                imageInfo['url'] = data.result.image_url;
+                imageInfo['width'] = data.result.width;
+                imageInfo['height'] = data.result.height;
+                imageInfo['orientation'] = data.result.orientation;
+                addImage(imageInfo);
+                console.log(JSON.stringify(imagesInfo[currentImageIndex]))
+                $('#upload_status').hide();
+                isUploading = false;
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#upload_status').html('Completed ' + progress + '%');
+                $('#upload_status').show();
+                isUploading = true;
+            }
+    });
+
 });
 
 function refreshSellPosts() {
