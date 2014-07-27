@@ -146,8 +146,6 @@
                 if ($(window).scrollTop() >= $(document).height() - $(window).height() - 200) {
                     if (typeof sellPostCurLatLon !== 'undefined') {
                         hasMoreSellPost = false;
-                        alert(category);
-                        alert(keyword);
                         sellPostLoader.getAndDisplayPosts(sellPostCurLatLon, category, keyword);
                     }
                 }
