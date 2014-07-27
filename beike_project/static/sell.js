@@ -388,6 +388,9 @@ $(document).delegate("#sellpost-form", "pageinit", function() {
 });
 
 function refreshSellPosts() {
+    $('#popupBasic-popup').removeClass('ui-popup-active');
+    $('#popupBasic-popup').addClass('ui-popup-hidden');
+    $('#popupBasic-popup').addClass('ui-popup-truncate');
     var zipcode = $('#zipcode').val();
     var sellPostCategory = 0;
     sellPostCategory = $('input[name="category"]:checked').val();
