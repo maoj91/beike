@@ -61,8 +61,8 @@ def upload(request):
         degree = get_image_rotation_degree(exif_data.get("Orientation", 1))
         rotated_img = img.rotate(degree)
         width, height = rotated_img.size
-        resize_width = 600
-        resize_height = 600
+        resize_width = 300
+        resize_height = 300
         if width > height:
             resize_height = int((height/width) * resize_width)
         else:
@@ -83,7 +83,7 @@ def upload(request):
         k.set_contents_from_string(output.getvalue())
         k.set_acl('public-read')
 
-        imgMetadata = ImageMetadata(url, resize_width, resize_height, 1)
+        imgMetadata = ImageMetadata(url, resize_width, resize_height)
         return HttpResponse(ImageMetadata.serialize(imgMetadata));
     else:
         return HttpResponseBadRequest("Invalid request.")

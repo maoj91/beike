@@ -123,7 +123,6 @@ INSTALLED_APPS = (
 	'mine',
 	'detail',
 	'data',
-	#'storages',
 	's3',
 	'user',  
     'about',

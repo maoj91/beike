@@ -80,6 +80,7 @@ class Category(models.Model):
 class Condition(models.Model):
 	name = models.CharField(max_length=255)
 	description = models.CharField(max_length=1000)
+	value = models.IntegerField(null=True,default=0)
 	def __unicode__(self):
 		return self.name
 
@@ -99,7 +100,6 @@ class BuyPost(models.Model):
 	user = models.ForeignKey('User')
 	preferred_contacts = models.CharField(max_length = 255)
 	is_open = models.BooleanField(default=True)
-	#image urls separated by ';'
 	image_urls = models.CharField(max_length= 2000, null=True)
 	def __unicode__(self):
 		return unicode("%s: %s" % (self.title, self.content[:60]))

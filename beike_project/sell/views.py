@@ -166,7 +166,8 @@ def form_submit(request):
         new_post.title = request.POST.get('title','')
         new_post.content = request.POST.get('content','')
         new_post.price = request.POST.get('price','')
-        condition_value = request.POST.get('condition-slider',0) 
+        condition_value = request.POST.get('condition-slider',0)
+        print condition_value
         new_post.item_condition = get_condition(condition_value)
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
@@ -188,9 +189,8 @@ def get_image_info(request):
         image_url = request.POST.get('image_url' + str(i))
         image_width = request.POST.get('image_width' + str(i))
         image_height = request.POST.get('image_height' + str(i))
-        image_orientation = request.POST.get('image_orientation' + str(i))
-        if image_url and image_width and image_height and image_orientation:
-            image = ImageMetadata(image_url, image_width, image_height, image_orientation)
+        if image_url and image_width and image_height:
+            image = ImageMetadata(image_url, image_width, image_height)
             image_list.append(image)
     return ImageMetadata.serialize_list(image_list)
 

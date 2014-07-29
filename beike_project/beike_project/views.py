@@ -20,7 +20,7 @@ def index(request):
 			request.session['key'] = key
 			validate_user(request)
 			if not is_user_exist(wx_id):
-				return HttpResponseRedirect('/me/get_info/')
+				return HttpResponseRedirect('/user/get_info/')
 			else:
 				user = User.objects.get(wx_id=request.session['wx_id'])
 				city = user.address.city 
