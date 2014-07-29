@@ -190,7 +190,7 @@
                     <img id='share' src='/static/images/detail/not_followed.png' style="vertical-align:middle;weight:20px;height:20px;"> 
                 </div>
                 <div class="ui-block-c" style="width:15%">
-                    <img id='follow' style="vertical-align:middle;weight:20px;height:20px;"> 
+                    <img id='follow' style="vertical-align:middle;weight:20px;height:20px;" onclick="toggleFollowStatus();"> 
                 </div>
             </div>
             {% else %}
@@ -200,7 +200,7 @@
                     <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.title}}</p>
                 </div>
                 <div class="ui-block-b" style="width:15%">
-                    <img id='share' src='/static/images/detail/not_followed.png' style="vertical-align:middle;weight:20px;height:20px;"> 
+                    <img id='share' src='/static/images/detail/not_followed.png' style="vertical-align:middle;weight:20px;height:20px;" > 
                 </div>
             </div>
             {% endif %}
@@ -368,12 +368,23 @@ $("#open-close-post").on('slidestop', function(event) {
     }).then(function(data) {});
 });
 
-function showFollowStatus(){
+function toggleFollowStatus(){
     var is_followed = $("#is_followed").val();
-    if( is_followed){
+    if( is_followed == "False"){
+        $("#is_followed").val("True");
         $("#follow").attr("src", '/static/images/detail/followed.png');
     } else {
+        $("#is_followed").val("False");
         $("#follow").attr("src", '/static/images/detail/not_followed.png');
+    }
+}
+
+function showFollowStatus(){
+    var is_followed = $("#is_followed").val();
+    if( is_followed == "False"){
+        $("#follow").attr("src", '/static/images/detail/not_followed.png');
+    } else {
+        $("#follow").attr("src", '/static/images/detail/followed.png');
     }
 }
 
