@@ -71,11 +71,11 @@ def follow_post(request):
         post_id = request.GET.get('post_id')
         post = sell_post_util.get_post(post_id)
 
-        follow_option = request.GET.get('follow_option')
-        if follow_option == 'follow':
+        is_followed = request.GET.get('is_followed')
+        if is_followed == 'True':
             sell_post_util.follow_post(user, post)
             return HttpResponse("{}")
-        elif follow_option == 'unfollow':
+        elif is_followed == 'False':
             sell_post_util.unfollow_post(user, post)
             return HttpResponse("{}")
         else:

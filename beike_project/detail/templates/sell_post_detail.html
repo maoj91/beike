@@ -341,19 +341,7 @@
 <script type="text/javascript">
 var wx_id = $("#wx_id").val();
 var post_id = $("#post_id").val();
-$("#follow-post").on('slidestop', function(event) {
-    var follow_option = $("#follow-post").val();
-    return $.ajax({
-        type: "get",
-        url: "/sell/follow_post",
-        dataType: "json",
-        data: {
-            wx_id: wx_id,
-            post_id: post_id,
-            follow_option: follow_option
-        }
-    }).then(function(data) {});
-});
+
 $("#open-close-post").on('slidestop', function(event) {
     var operation = $("#open-close-post").val();
     return $.ajax({
@@ -369,14 +357,28 @@ $("#open-close-post").on('slidestop', function(event) {
 });
 
 function toggleFollowStatus(){
-    var is_followed = $("#is_followed").val();
+    var is_followed = $("#is_followed").val(); 
+    var follow_img = '';   
     if( is_followed == "False"){
-        $("#is_followed").val("True");
-        $("#follow").attr("src", '/static/images/detail/followed.png');
+        is_followed = "True";
+        follow_img = '/static/images/detail/followed.png';
     } else {
-        $("#is_followed").val("False");
-        $("#follow").attr("src", '/static/images/detail/not_followed.png');
+        is_followed = "False";
+        follow_img = '/static/images/detail/not_followed.png';
     }
+    $("#is_followed").val(is_followed);
+    $.ajax({
+        type: "get",
+        url: "/sell/follow_post",
+        dataType: "json",
+        data: {
+            wx_id: wx_id,
+            post_id: post_id,
+            is_followed: is_followed
+        }
+    }).then(function(data) {
+        $("#follow").attr("src", follow_img);
+    });
 }
 
 function showFollowStatus(){
