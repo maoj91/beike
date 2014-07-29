@@ -14,7 +14,7 @@ from beike_project.views import validate_user
 from buy.buy_post_util import *
 from sell.sell_post_util import *
 from data.views import get_user
-from sell.image_util import ImageMetadata
+from data.image_util import ImageMetadata
 import datetime
 import logging
 import json

@@ -25,16 +25,23 @@ def index(request):
 
 def all_list(request):
     validate_user(request)
+    categories = Category.objects.all();
     wx_id = request.session['wx_id']
-    return render_to_response('sell.html', {'user_id':wx_id })
+    return render_to_response('sell.html', {'user_id':wx_id, 'categories':categories})
 
 def get_posts_by_page(request):
     if request.is_ajax():
         page_num = request.GET.get('pageNum')
         latitude = request.GET.get('latitude')
         longitude = request.GET.get('longitude')
+        category = request.GET.get('category')
+        keyword = request.GET.get('keyword', '')
         origin = Point(float(longitude), float(latitude), srid=4326)
         query_set = SellPost.objects.filter(is_open=True).distance(origin).order_by('distance')
+        if category != '':
+            query_set = query_set.filter(category__id=category)
+        if keyword != '':
+            query_set = query_set.filter(title__icontains=keyword)
         #TO-DO: make the record count configurable
         paginator = Paginator(query_set, 8)
         try:
@@ -159,7 +166,8 @@ def form_submit(request):
         new_post.title = request.POST.get('title','')
         new_post.content = request.POST.get('content','')
         new_post.price = request.POST.get('price','')
-        condition_value = request.POST.get('condition-slider',0) 
+        condition_value = request.POST.get('condition-slider',0)
+        print condition_value
         new_post.item_condition = get_condition(condition_value)
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
@@ -181,9 +189,8 @@ def get_image_info(request):
         image_url = request.POST.get('image_url' + str(i))
         image_width = request.POST.get('image_width' + str(i))
         image_height = request.POST.get('image_height' + str(i))
-        image_orientation = request.POST.get('image_orientation' + str(i))
-        if image_url and image_width and image_height and image_orientation:
-            image = ImageMetadata(image_url, image_width, image_height, image_orientation)
+        if image_url and image_width and image_height:
+            image = ImageMetadata(image_url, image_width, image_height)
             image_list.append(image)
     return ImageMetadata.serialize_list(image_list)
 

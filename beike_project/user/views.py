@@ -49,8 +49,13 @@ def get_city_by_latlong(request):
 
 def get_latlon_by_zipcode(request):
     if request.is_ajax():
+        wx_id = request.session['wx_id']
+        user = User.objects.get(wx_id=wx_id)
         zipcode = request.GET.get('zipcode')
-        geolocation = get_location_by_zipcode(zipcode)
+        geolocation = get_location_by_zipcode(user.address.zip_code)
+        if zipcode:
+            geolocation = get_location_by_zipcode(zipcode)
+        
         return HttpResponse(json.dumps({'latitude': geolocation.latitude, 'longitude': geolocation.longitude,
             'city': geolocation.city}, cls=DjangoJSONEncoder))
     else:
