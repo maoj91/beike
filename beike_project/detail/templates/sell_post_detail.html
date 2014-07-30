@@ -179,8 +179,9 @@
             <div>
                 <input type="hidden" id="is_followed" value={{is_followed}}>
             </div>
-            <!-- if not owner, then we display the follow icon -->
-            {% if is_owner %}
+
+            <div data-role="popup" id="follow-popup">
+            </div>
             <div class="ui-grid-b" style="width:100%;">
                 <div class="ui-block-a" style="width:70%;padding:10px;">
                     <img id='sell_icon' src='/static/images/detail/sell_icon.png' style="vertical-align:middle;">
@@ -193,17 +194,6 @@
                     <img id='follow' style="vertical-align:middle;weight:20px;height:20px;" onclick="toggleFollowStatus();"> 
                 </div>
             </div>
-            {% else %}
-            <div class="ui-grid-a" style="width:100%;">
-                <div class="ui-block-a" style="width:85%;padding:10px;">
-                    <img id='sell_icon' src='/static/images/detail/sell_icon.png' style="vertical-align:middle;weight:20px;height:20px;">
-                    <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.title}}</p>
-                </div>
-                <div class="ui-block-b" style="width:15%">
-                    <img id='share' src='/static/images/detail/not_followed.png' style="vertical-align:middle;weight:20px;height:20px;" > 
-                </div>
-            </div>
-            {% endif %}
 
             <div class="ui-grid-b" style="padding:2px;background-color:#f6f6f6;">
                 <div class="ui-block-a" style="width:50%;height:30px;">
@@ -359,11 +349,14 @@ $("#open-close-post").on('slidestop', function(event) {
 function toggleFollowStatus(){
     var is_followed = $("#is_followed").val(); 
     var follow_img = '';   
+    var popup_msg = '';
     if( is_followed == "False"){
         is_followed = "True";
         follow_img = '/static/images/detail/followed.png';
+        popup_msg = '<p>关注本帖!</p>';
     } else {
         is_followed = "False";
+        popup_msg = '<p>取消关注！</p>';
         follow_img = '/static/images/detail/not_followed.png';
     }
     $("#is_followed").val(is_followed);
@@ -379,6 +372,11 @@ function toggleFollowStatus(){
     }).then(function(data) {
         $("#follow").attr("src", follow_img);
     });
+    $('#follow-popup').html(popup_msg);
+    $('#follow-popup').popup("open");
+    setTimeout(function() {
+      $('#follow-popup').popup("close");
+    }, 1000);
 }
 
 function showFollowStatus(){

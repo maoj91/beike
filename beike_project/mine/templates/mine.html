@@ -42,13 +42,12 @@
             </div>
         </div>
         <div data-role="content">
-            <div class="ui-grid-solo">
-                    
+            <div class="ui-grid-solo" style="display:table;margin:0 auto;">
                     {% if image %}  
                         {% for key, value in image.items %} 
                             {% if key == 'image_url' %}
                             <a href="/user/{{user.id}}/">
-                                <img id='profile_image' src='{{value}}' style="max-width:100px;max-height:100px;"/>
+                                <img id='profile_image' src='{{value}}' style="width:80px;height: 80px;border-radius: 50%;"/>
                             </a>
                             {% elif key == 'width' %}
                             {% elif key == 'height' %}
