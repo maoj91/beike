@@ -1,6 +1,14 @@
+.form-element-grid {
+    margin: 10 0 !important;
+}
+
 .field-label-inner-div {
     padding: 15px 0 15px 0;
     color:#00CED1;
+}
+
+.field-value-inner-div {
+    padding: 15px 0 15px 0;
 }
 
 .text-p {
