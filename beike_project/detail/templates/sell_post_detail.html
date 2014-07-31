@@ -175,44 +175,52 @@
                 </div>           
             </div>
 
-            <div class="ui-grid-a" style="width:100%;">
-                <div class="ui-block-a" style="width:90%;padding:10px;">
+
+            <div>
+                <input type="hidden" id="is_followed" value={{is_followed}}>
+            </div>
+
+            <div data-role="popup" id="follow-popup">
+            </div>
+            <div class="ui-grid-b" style="width:100%;">
+                <div class="ui-block-a" style="width:70%;padding:10px;">
                     <img id='sell_icon' src='/static/images/detail/sell_icon.png' style="vertical-align:middle;">
                     <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.title}}</p>
                 </div>
-                <div class="ui-block-b" style="width:10%">
-                    {% if not is_owner %}
-                    <img id='bookmark' src='/static/images/detail/not_bookmarked.png' style="vertical-align:middle;"> 
-                    {% endif %}
+                <div class="ui-block-b" style="width:15%">
+                    <img id='share' src='/static/images/detail/not_followed.png' style="vertical-align:middle;weight:20px;height:20px;"> 
+                </div>
+                <div class="ui-block-c" style="width:15%">
+                    <img id='follow' style="vertical-align:middle;weight:20px;height:20px;" onclick="toggleFollowStatus();"> 
                 </div>
             </div>
 
-            <div class="ui-grid-b" style="padding:10px;height:40px;">
-                <div class="ui-block-a" style="width:30%;">
-                    <img id='currency_icon' src='/static/images/detail/currency_icon.png' style="max-width:15px;max-height:15px;">
-                    <p style="display:inline;vertical-align:middle;">{{post.price}}</p>
+            <div class="ui-grid-b" style="padding:2px;background-color:#f6f6f6;">
+                <div class="ui-block-a" style="width:50%;height:30px;">
+                    <!-- <img id='currency_icon' src='/static/images/detail/currency_icon.png' style="max-width:15px;max-height:15px;margin-left:10px;"> -->
+                    <p style="display:inline;vertical-align:middle;">${{post.price}}
+                    </p>
                 </div>
-                <div class="ui-block-b" style="width:30%;text-align:center;">
+                <div class="ui-block-b" style="width:25%;height:30px;">
                     {% if post.item_condition.name == 'Condition1' %}
-                    <img id='condition' src='/static/images/detail/condition1.png'> 
+                    全新
                     {% elif post.item_condition.name == 'Condition2' %}
-                    <img id='condition' src='/static/images/detail/condition2.png'> 
+                    九成新
                     {% elif post.item_condition.name == 'Condition3' %}
-                    <img id='condition' src='/static/images/detail/condition3.png'> 
+                    七成新
                     {% elif post.item_condition.name == 'Condition4' %}
-                    <img id='condition' src='/static/images/detail/condition4.png'> 
+                    五成新
                     {% elif post.item_condition.name == 'Condition5' %}
-                    <img id='condition' src='/static/images/detail/condition5.png'> 
+                    旧
                     {% endif %}
                 </div>
-                <div class="ui-block-c" style="width:40%;">
-                    <p style="display:inline;padding-top:5px;">{{post.category.name}}</p>
+                <div class="ui-block-c" style="width:25%;height:30px;">
+                    {{post.category.name}}
                 </div>
             </div>
 
-            </div>
 
-            <div class="ui-grid-solo" id="content" style="margin-left:5%;margin-bottom:10px;">
+            <div class="ui-grid-solo" id="content" style="margin-left:5%;margin-bottom:10px;margin-top:10px;">
                 {{post.content}}
             </div>
 
@@ -220,85 +228,74 @@
                 {{ post.date_published|date:"n月j日" }}
             </div>
 
-            <div style="clear:both;margin-top:20px;margin-bottom:10px;margin-left:5%;margin-right:5%;height:2px;background-color:gray;"></div>
+            <!-- <div style="clear:both;margin-top:20px;margin-bottom:10px;margin-left:5%;margin-right:5%;height:2px;background-color:gray;"></div> -->
 
-            <div style="width:100%;height:60px;">
-                <div id="contacts" style="display:table;height:100%;margin: 0 auto; padding: 5px;">
-                    {% if sms_checked%}
-                    <a href="sms:{{phone}}" class="contact_icon" data-role="button" data-inline="true" data-mini="true" data-icon="comment" data-iconpos="notext"></a>
-                    {% endif%}
-                    {% if phone_checked%}
-                    <a href="tel:{{phone}}" class="contact_icon" data-role="button" data-inline="true" data-mini="true" data-icon="phone" data-iconpos="notext"></a>
-                    {% endif%}
-                    {% if email_checked%}
-                    <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}" class="contact_icon" data-role="button" data-inline="true" data-mini="true" data-icon="mail" data-iconpos="notext"></a>
-                    {% endif%}
-                </div>
-            </div>
 
-            <div style="width:100%;height:60px;margin-top:10px;">
-                <div id="share" style="display:table;height:100%;margin: 0 auto;padding: 10px;">
-                    <a href="sms:{{phone}}"><img style="width:auto;height:35px;" src='/static/images/detail/share.png'></a>
-                </div>
-            </div>
 
-    <div style="clear:both;text-align:center;margin-top:20px;border-top:solid gray 1px;padding:2px;">
-        物品所在位置                    
-        <img id='location_icon' src='/static/images/detail/location_icon.png' style="max-width:15px;max-height:15px;">
+    <div style="clear:both;margin-top:20px;padding:2px;background-color:#f6f6f6;">
+        <img id='location_icon' src='/static/images/detail/location_icon.png' style="max-width:15px;max-height:15px;margin-left:15px;">
         {{post.user.address.city}}
     </div>
-    <div style="display:table;margin: 0 auto;">
-        <img id="map" src="" style="max-width:100%;max-height:200px;">
+    <div style="display:table;margin: 0 auto;height:200px;">
+        <img id="map" src="" style="width:100%;height:100%;">
     </div>
 
+    <div style="clear:both;height:20px;"></div>
 
     {% if user_image %}
-    <div style="display:table;margin: 0 auto; padding: 5px;">
+    <div style="display:table;margin:0 auto;">
         <a href="/user/{{post.user.id}}/">
-            <img id='profile_image' src='{{user_image.image_url}}' style="max-width:100px;max-height:100px;"/>
+            <img id='profile_image' src='{{user_image.image_url}}' style="width: 80px;height:80px;border-radius: 50%;"/>
         </a>  
     </div>
     {% endif %}
 
     {% if post.user %}
-    <div style="display:table;height:100%;margin: 0 auto; padding: 5px;">
-        {{post.user.name}}
+    <div style="text-align:center;padding:2px;">
+        <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.user.name}}</p>
     </div>
-    {% endif %}
+    {% endif %} 
 
-
-    <div style="display:table;height:100%;margin: 0 auto; padding: 5px;">
-        注册于{{ post.user.date_created|date:"Y年n月j日" }}
-    </div>
-
-    {% if is_owner %}
-    <div style="width:100%;height:60px;">
-        <div style="float:right;">
-            <img style="width:auto;height:35px;" src='/static/images/detail/complete_profile.png'>
+    <div style="width:100%;height:60px;margin-bottom:20px;">
+        <div id="contacts" style="display:table;height:100%;margin: 0 auto; padding: 5px;">
+                    {% if sms_checked%}
+                    <a href="sms:{{phone}}"><img style="width:50px;height:50px;" src="/static/images/detail/sms_selected.png" /></a>
+                    {% else %}
+                    <img style="width:50px;height:50px;" src="/static/images/detail/sms.png"/>
+                    {% endif%}
+                    {% if phone_checked%}
+                    <a href="tel:{{phone}}"><img style="width:50px;height:50px;" src="/static/images/detail/phone_selected.png" /></a>
+                    {% else %}
+                    <img style="width:50px;height:50px;" src="/static/images/detail/phone.png" />
+                    {% endif%}
+                    {% if email_checked%}
+                    <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}">
+                    <img style="width:50px;height:50px;" src="/static/images/detail/email_selected.png" />
+                    </a>
+                    {% else %}
+                    <img style="width:50px;height:50px;" src="/static/images/detail/email.png" />
+                    {% endif%}
         </div>
     </div>
-    {% endif %}
+
 
     {% if is_owner %}
 
-            <div class="ui-grid-a" style="padding-top:15px;padding-bottom:15px;background-color:gray;">
-                <div class="ui-block-a" style="width:50%;height:60px;">
+            <div class="ui-grid-b" style="padding-top:15px;padding-bottom:15px;background-color:gray;">
+                <div class="ui-block-a" style="width:33%;height:60px;">
                     <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
                     <select name="open-close-post" id="open-close-post" data-role="slider" style="vertical-align: middle;">
                         <option value="open"{% if is_open %} selected {% endif %}>待售</option>
                         <option value="close"{% if not is_open %} selected {% endif %}>已售</option>
                     </select>
                 </div>
+
                 <!-- find this post about how to align an element vertically center in a div: http://stackoverflow.com/questions/7273338/how-to-vertically-align-an-image-inside-div-->
-                <div class="ui-block-b" style="width:50%;height:60px;text-align:center;display:inline-block;vertical-align: middle;">
+                <div class="ui-block-c" style="width:33%;height:60px;text-align:center;display:inline-block;vertical-align: middle;">
                     <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
                     <a href="/detail/sell/{{post.id}}/edit/"><input type="image" value="修改" id="edit_btn" src="/static/images/detail/edit.png" style="max-width:80px;vertical-align: middle;"></a>
                 </div>
             </div>
-    {% else %}
-    <select name="follow-post" id="follow-post" data-role="slider">
-        <option value="unfollow" {% if not is_followed %} selected {% endif %}>不收藏</option>
-        <option value="follow" {% if is_followed %} selected {% endif %}>收藏</option>
     </select>
     {% endif %}
 
@@ -342,19 +339,7 @@
 <script type="text/javascript">
 var wx_id = $("#wx_id").val();
 var post_id = $("#post_id").val();
-$("#follow-post").on('slidestop', function(event) {
-    var follow_option = $("#follow-post").val();
-    return $.ajax({
-        type: "get",
-        url: "/sell/follow_post",
-        dataType: "json",
-        data: {
-            wx_id: wx_id,
-            post_id: post_id,
-            follow_option: follow_option
-        }
-    }).then(function(data) {});
-});
+
 $("#open-close-post").on('slidestop', function(event) {
     var operation = $("#open-close-post").val();
     return $.ajax({
@@ -369,6 +354,49 @@ $("#open-close-post").on('slidestop', function(event) {
     }).then(function(data) {});
 });
 
+function toggleFollowStatus(){
+    var is_followed = $("#is_followed").val(); 
+    var follow_img = '';   
+    var popup_msg = '';
+    if( is_followed == "False"){
+        is_followed = "True";
+        follow_img = '/static/images/detail/followed.png';
+        popup_msg = '<p>关注本帖!</p>';
+    } else {
+        is_followed = "False";
+        popup_msg = '<p>取消关注！</p>';
+        follow_img = '/static/images/detail/not_followed.png';
+    }
+    $("#is_followed").val(is_followed);
+    $("#follow").attr("src", follow_img);
+    $('#follow-popup').html(popup_msg);
+    $('#follow-popup').popup("open");
+    setTimeout(function() {
+      $('#follow-popup').popup("close");
+    }, 1000);
+    $.ajax({
+        type: "get",
+        url: "/sell/follow_post",
+        dataType: "json",
+        data: {
+            wx_id: wx_id,
+            post_id: post_id,
+            is_followed: is_followed
+        }
+    }).then(function(data) {
+        
+    });
+}
+
+function showFollowStatus(){
+    var is_followed = $("#is_followed").val();
+    if( is_followed == "False"){
+        $("#follow").attr("src", '/static/images/detail/not_followed.png');
+    } else {
+        $("#follow").attr("src", '/static/images/detail/followed.png');
+    }
+}
+
 function showPosition() {
     var latlonStr = {{lat}}+","+{{lon}};
     var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
@@ -380,6 +408,7 @@ function showPosition() {
 $(document).ready(function() { 
     selectThumbnail(0);
     showPosition();
+    showFollowStatus();
 });
 </script>
 </div>
