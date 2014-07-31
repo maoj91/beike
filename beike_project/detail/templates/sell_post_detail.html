@@ -368,6 +368,12 @@ function toggleFollowStatus(){
         follow_img = '/static/images/detail/not_followed.png';
     }
     $("#is_followed").val(is_followed);
+    $("#follow").attr("src", follow_img);
+    $('#follow-popup').html(popup_msg);
+    $('#follow-popup').popup("open");
+    setTimeout(function() {
+      $('#follow-popup').popup("close");
+    }, 1000);
     $.ajax({
         type: "get",
         url: "/sell/follow_post",
@@ -380,12 +386,6 @@ function toggleFollowStatus(){
     }).then(function(data) {
         
     });
-    $("#follow").attr("src", follow_img);
-    $('#follow-popup').html(popup_msg);
-    $('#follow-popup').popup("open");
-    setTimeout(function() {
-      $('#follow-popup').popup("close");
-    }, 1000);
 }
 
 function showFollowStatus(){
