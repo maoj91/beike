@@ -245,7 +245,7 @@
     {% if user_image %}
     <div style="display:table;margin:0 auto;">
         <a href="/user/{{post.user.id}}/">
-            <img id='profile_image' src='{{user_image.image_url}}' class="user_image"/>
+            <img id='profile_image' src='{{user_image.image_url}}' style="width: 80px;height:80px;border-radius: 50%;"/>
         </a>  
     </div>
     {% endif %}
@@ -378,8 +378,9 @@ function toggleFollowStatus(){
             is_followed: is_followed
         }
     }).then(function(data) {
-        $("#follow").attr("src", follow_img);
+        
     });
+    $("#follow").attr("src", follow_img);
     $('#follow-popup').html(popup_msg);
     $('#follow-popup').popup("open");
     setTimeout(function() {
