@@ -188,7 +188,7 @@
                     <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.title}}</p>
                 </div>
                 <div class="ui-block-b" style="width:15%">
-                    <img id='share' src='/static/images/detail/not_followed.png' style="vertical-align:middle;weight:20px;height:20px;"> 
+                    <img id='share' src='/static/images/detail/share.png' style="vertical-align:middle;weight:20px;height:20px;"> 
                 </div>
                 <div class="ui-block-c" style="width:15%">
                     <img id='follow' style="vertical-align:middle;weight:20px;height:20px;" onclick="toggleFollowStatus();"> 
@@ -258,22 +258,22 @@
 
     <div style="width:100%;height:60px;margin-bottom:20px;">
         <div id="contacts" style="display:table;height:100%;margin: 0 auto; padding: 5px;">
-                    {% if sms_checked%}
-                    <a href="sms:{{phone}}"><img style="width:50px;height:50px;" src="/static/images/detail/sms_selected.png" /></a>
-                    {% else %}
-                    <img style="width:50px;height:50px;" src="/static/images/detail/sms.png"/>
-                    {% endif%}
-                    {% if phone_checked%}
-                    <a href="tel:{{phone}}"><img style="width:50px;height:50px;" src="/static/images/detail/phone_selected.png" /></a>
-                    {% else %}
-                    <img style="width:50px;height:50px;" src="/static/images/detail/phone.png" />
-                    {% endif%}
                     {% if email_checked%}
                     <a href="mailto:{{email}}?Subject=回复帖子：{{post.title}}">
                     <img style="width:50px;height:50px;" src="/static/images/detail/email_selected.png" />
                     </a>
                     {% else %}
                     <img style="width:50px;height:50px;" src="/static/images/detail/email.png" />
+                    {% endif%}
+                    {% if phone_checked%}
+                    <a href="tel:{{phone}}"><img style="margin-left:10px;margin-right:10px;width:50px;height:50px;" src="/static/images/detail/phone_selected.png" /></a>
+                    {% else %}
+                    <img style="width:50px;height:50px;" src="/static/images/detail/phone.png" />
+                    {% endif%}
+                    {% if sms_checked%}
+                    <a href="sms:{{phone}}"><img style="width:50px;height:50px;" src="/static/images/detail/sms_selected.png" /></a>
+                    {% else %}
+                    <img style="width:50px;height:50px;" src="/static/images/detail/sms.png"/>
                     {% endif%}
         </div>
     </div>
