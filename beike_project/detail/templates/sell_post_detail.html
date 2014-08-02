@@ -176,65 +176,74 @@
             </div>
 
 
-            <div>
-                <input type="hidden" id="is_followed" value={{is_followed}}>
+
+
+            <div style="margin-left:5%;margin-right:5%;">             
+                <div>
+                    <input type="hidden" id="is_followed" value={{is_followed}}>
+                </div>
+                <div data-role="popup" id="follow-popup">
+                </div>
+                
+                <div class="ui-grid-solo" style="clear:both;margin-top:10px;">
+                        <img id='sell_icon' src='/static/images/detail/sell_icon.png' style="vertical-align:middle;">
+                        <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.title}}</p>
+                </div>
+
+                <div style="margin-top:10px;margin-bottom:10px;height:1px;background-color:#d1cfd1;"></div>
+
+                <div class="ui-grid-b" style="padding:2px;">
+                    <div class="ui-block-a" style="width:50%;height:30px;">
+                        <!-- <img id='currency_icon' src='/static/images/detail/currency_icon.png' style="max-width:15px;max-height:15px;margin-left:10px;"> -->
+                        <p style="display:inline;vertical-align:middle;">${{post.price}}
+                        </p>
+                    </div>
+                    <div class="ui-block-b" style="width:25%;height:30px;text-align:right;">
+                        {% if post.item_condition.name == 'Condition1' %}
+                        全新
+                        {% elif post.item_condition.name == 'Condition2' %}
+                        九成新
+                        {% elif post.item_condition.name == 'Condition3' %}
+                        七成新
+                        {% elif post.item_condition.name == 'Condition4' %}
+                        五成新
+                        {% elif post.item_condition.name == 'Condition5' %}
+                        旧
+                        {% endif %}
+                    </div>
+                    <div class="ui-block-c" style="width:25%;height:30px;text-align:right;">
+                        {{post.category.name}}
+                    </div>
+                </div>
+
+                <div class="ui-grid-b" style="margin-top:10px;">
+                    <div class="ui-block-b" style="width:50%">
+                        <img id='share' src='/static/images/detail/contact_seller.png' style="vertical-align:middle;max-height:35px;"> 
+                    </div>
+                    <div class="ui-block-b" style="width:25%;text-align:right;">
+                        <img id='share' src='/static/images/detail/share.png' style="vertical-align:middle;weight:20px;height:20px;border:1px solid #d1cfd1;border-radius:15%;padding:7px 15px 7px 15px;"> 
+                    </div>
+                    <div class="ui-block-c" style="width:25%;text-align:right;">
+                        <img id='follow'  style="vertical-align:middle;weight:20px;height:20px;border:1px solid #d1cfd1;border-radius:15%;padding:7px 12px 7px 12px;" onclick="toggleFollowStatus();"> 
+                    </div>
+                </div>
+
+                <div class="ui-grid-solo" id="content" style="margin-bottom:20px;margin-top:20px;">
+                    {{post.content}}
+                </div>
             </div>
 
-            <div data-role="popup" id="follow-popup">
-            </div>
-            <div class="ui-grid-b" style="width:100%;">
-                <div class="ui-block-a" style="width:70%;padding:10px;">
-                    <img id='sell_icon' src='/static/images/detail/sell_icon.png' style="vertical-align:middle;">
-                    <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.title}}</p>
-                </div>
-                <div class="ui-block-b" style="width:15%">
-                    <img id='share' src='/static/images/detail/share.png' style="vertical-align:middle;weight:20px;height:20px;"> 
-                </div>
-                <div class="ui-block-c" style="width:15%">
-                    <img id='follow' style="vertical-align:middle;weight:20px;height:20px;" onclick="toggleFollowStatus();"> 
-                </div>
-            </div>
-
-            <div class="ui-grid-b" style="padding:2px;background-color:#f6f6f6;">
-                <div class="ui-block-a" style="width:50%;height:30px;">
-                    <!-- <img id='currency_icon' src='/static/images/detail/currency_icon.png' style="max-width:15px;max-height:15px;margin-left:10px;"> -->
-                    <p style="display:inline;vertical-align:middle;">${{post.price}}
-                    </p>
-                </div>
-                <div class="ui-block-b" style="width:25%;height:30px;">
-                    {% if post.item_condition.name == 'Condition1' %}
-                    全新
-                    {% elif post.item_condition.name == 'Condition2' %}
-                    九成新
-                    {% elif post.item_condition.name == 'Condition3' %}
-                    七成新
-                    {% elif post.item_condition.name == 'Condition4' %}
-                    五成新
-                    {% elif post.item_condition.name == 'Condition5' %}
-                    旧
-                    {% endif %}
-                </div>
-                <div class="ui-block-c" style="width:25%;height:30px;">
-                    {{post.category.name}}
-                </div>
-            </div>
-
-
-            <div class="ui-grid-solo" id="content" style="margin-left:5%;margin-bottom:10px;margin-top:10px;">
-                {{post.content}}
-            </div>
-
-            <div class="ui-grid-solo" id="date" style="margin-right:5%;margin-bottom:10px;">
-                {{ post.date_published|date:"n月j日" }}
-            </div>
-
-            <!-- <div style="clear:both;margin-top:20px;margin-bottom:10px;margin-left:5%;margin-right:5%;height:2px;background-color:gray;"></div> -->
 
 
 
-    <div style="clear:both;margin-top:20px;padding:2px;background-color:#f6f6f6;">
-        <img id='location_icon' src='/static/images/detail/location_icon.png' style="max-width:15px;max-height:15px;margin-left:15px;">
-        {{post.user.address.city}}
+    <div class="ui-grid-a" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;">
+        <div class="ui-block-a" style="width:70%;">
+            <img id='location_icon' src='/static/images/detail/location_icon.png' style="max-width:15px;max-height:15px;">
+            {{post.user.address.city}}
+        </div>
+        <div class="ui-block-b" style="width:30%;text-align:right;">
+            {{ post.date_published|date:"n月j日" }}
+        </div>
     </div>
     <div style="display:table;margin: 0 auto;height:200px;">
         <img id="map" src="" style="width:100%;height:100%;">
@@ -266,7 +275,7 @@
                     <img style="width:50px;height:50px;" src="/static/images/detail/email.png" />
                     {% endif%}
                     {% if phone_checked%}
-                    <a href="tel:{{phone}}"><img style="margin-left:10px;margin-right:10px;width:50px;height:50px;" src="/static/images/detail/phone_selected.png" /></a>
+                    <a href="tel:{{phone}}"><img style="margin-left:20px;margin-right:20px;width:50px;height:50px;" src="/static/images/detail/phone_selected.png" /></a>
                     {% else %}
                     <img style="width:50px;height:50px;" src="/static/images/detail/phone.png" />
                     {% endif%}
@@ -278,25 +287,20 @@
         </div>
     </div>
 
-
-    {% if is_owner %}
-
-            <div class="ui-grid-b" style="padding-top:15px;padding-bottom:15px;background-color:gray;">
-                <div class="ui-block-a" style="width:33%;height:60px;">
+<!--                 <div class="ui-block-a" style="width:33%;height:60px;">
                     <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
                     <select name="open-close-post" id="open-close-post" data-role="slider" style="vertical-align: middle;">
                         <option value="open"{% if is_open %} selected {% endif %}>待售</option>
                         <option value="close"{% if not is_open %} selected {% endif %}>已售</option>
                     </select>
-                </div>
+                </div> -->
 
+    {% if is_owner %}
                 <!-- find this post about how to align an element vertically center in a div: http://stackoverflow.com/questions/7273338/how-to-vertically-align-an-image-inside-div-->
-                <div class="ui-block-c" style="width:33%;height:60px;text-align:center;display:inline-block;vertical-align: middle;">
+                <div class="ui-grid-solo" style="width:100%;padding-top:15px;padding-bottom:15px;background-color:#d1cfd1;height:60px;text-align:center;display:inline-block;vertical-align: middle;">
                     <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
                     <a href="/detail/sell/{{post.id}}/edit/"><input type="image" value="修改" id="edit_btn" src="/static/images/detail/edit.png" style="max-width:80px;vertical-align: middle;"></a>
                 </div>
-            </div>
-    </select>
     {% endif %}
 
 <div>
