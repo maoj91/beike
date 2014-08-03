@@ -46,7 +46,8 @@ function addImage(imageInfo) {
         displayImage(index);
 
         //add image to the thumbnail
-        $('#preview' + index).attr('src', imageInfo['url']);
+        imgThumbnail = $('<img src="' + imageInfo['url'] + '" width="100%" height="100%"/>');
+        $('#preview' + index).append(imgThumbnail);
         $('#preview' + index).show();
         //add image to the form
         $('#image_url' + index).val(imageInfo['url']);
@@ -68,7 +69,8 @@ function removeImage(index) {
                 imagesInfo[i] = imagesInfo[i + 1];
                 imagesHtml[i] = imagesHtml[i + 1];
                 //add image to the thumbnail
-                $('#preview' + i).attr('src', imagesInfo[i]['url']);
+                imgThumbnail = $('<img src="' + imagesInfo[i]['url'] + '" width="100%" height="100%"/>')
+                $('#preview' + i).append(imgThumbnail);
                 //add image to the form
                 $('#image_url' + i).val(imagesInfo[i]['url']);
                 $('#image_width' + i).val(imagesInfo[i]['width']);
@@ -77,9 +79,7 @@ function removeImage(index) {
                 imagesInfo[i] = null;
                 imagesHtml[i] = null;
                 //remove image in the thumbnail
-                $('#preview' + i).removeAttr('src');
-                $('#preview' + i).css("border", "none");
-                $('#preview' + i).hide()
+                $('#preview' + i).empty();
                 //remove image to the form
                 $('#image_url' + i).val('');
                 $('#image_width' + i).val('');
@@ -99,14 +99,13 @@ function displayImage(index) {
         $('#delete_icon').hide();
     }
     if (index < imageCount) {
-        //remove each thumbnail's border
-        for (var i = 0; i < imageMaxNum; i++) {
-            $('#preview' + i).css("border", "none");
-        }
         var imageInfo = imagesInfo[index];
-        $('#preview' + index).css("border", "1px solid black");
         $('#current_image').empty();
         $('#current_image').append(imagesHtml[index]);
+        $('#imgselector0').css("background-color", "black");
+        $('#imgselector1').css("background-color", "black");
+        $('#imgselector2').css("background-color", "black");
+        $('#imgselector' + index).css("background-color", "#00CED1");
         $('#delete_icon').show();
         currentImageIndex = index;
     }
@@ -158,7 +157,7 @@ var sellPostLoader = (function($, undefined) {
         $('#load-more').show();
         //Get posts and add success callback using then
         getPosts(position, sellPostCategory, sellPostKeyword).then(function() {
-           //Stop loading animation on success
+            //Stop loading animation on success
             // $('#load-more').hide();
         });
     };
@@ -205,7 +204,7 @@ var sellPostLoader = (function($, undefined) {
             }
 
             image_width = document.body.clientWidth * 0.4;
-            image_height = image_info['height']/image_info['width'] * image_width;
+            image_height = image_info['height'] / image_info['width'] * image_width;
 
 
             var template = '<li class="sellpost-li"><div><a href="/detail/sell/' +
@@ -270,7 +269,7 @@ function getLatitudeLongtitude(position) {
     $("#longitude").val(longitude);
     $.ajax({
         type: "get",
-        url: "/me/get_info/get_zipcode_by_latlong",
+        url: "/user/get_info/get_zipcode_by_latlong",
         dataType: "json",
         data: {
             latitude: latitude,
@@ -278,6 +277,8 @@ function getLatitudeLongtitude(position) {
         }
     }).then(function(data) {
         console.log(data);
+        $('#zipcode').val(data['zipcode']);
+        $('#city').text(data['city']);
     });
 }
 
@@ -303,28 +304,34 @@ $(document).delegate("#sellpost-form", "pageinit", function() {
         navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
     }
     $('#post_image').fileupload({
-            url: "/s3/upload/",
-            dataType: 'json',
-            done: function (e, data) {
-                var imageInfo = {};
-                imageInfo['url'] = data.result.image_url;
-                imageInfo['width'] = data.result.width;
-                imageInfo['height'] = data.result.height;
-                imageInfo['orientation'] = data.result.orientation;
-                addImage(imageInfo);
-                console.log(JSON.stringify(imagesInfo[currentImageIndex]))
-                $('#upload_status').hide();
-                isUploading = false;
-            },
-            progressall: function (e, data) {
-                var progress = parseInt(data.loaded / data.total * 100, 10);
-                $('#upload_status').html('Completed ' + progress + '%');
-                $('#upload_status').show();
-                isUploading = true;
-            }
+        url: "/s3/upload/",
+        dataType: 'json',
+        done: function(e, data) {
+            var imageInfo = {};
+            imageInfo['url'] = data.result.image_url;
+            imageInfo['width'] = data.result.width;
+            imageInfo['height'] = data.result.height;
+            imageInfo['orientation'] = data.result.orientation;
+            addImage(imageInfo);
+            console.log(JSON.stringify(imagesInfo[currentImageIndex]))
+            $('#upload_status').hide();
+            isUploading = false;
+        },
+        progressall: function(e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('#upload_status').html('Completed ' + progress + '%');
+            $('#upload_status').show();
+            isUploading = true;
+        }
+    });
+    $('#content').bind('input propertychange', function() {
+        contentLength = $('#content').val().length;
+        lengthCount = contentLength + "/" + 3000;
+        $('#lengthCounter').text(lengthCount);
     });
 
 });
+
 
 function refreshSellPosts() {
     $('#popupBasic-popup').removeClass('ui-popup-active');
@@ -351,7 +358,7 @@ function refreshSellPosts() {
         hasMoreSellPost = false;
         sellPostLoader.getAndDisplayPosts(sellPostCurLatLon, sellPostCategory, sellPostKeyword);
     });
-    
+
     return false;
 }
 /***************/

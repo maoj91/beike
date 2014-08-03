@@ -14,7 +14,6 @@
 
 
     <!--js library for s3 upload-->
-    <script type="text/javascript" src="/static/s3upload.js"></script>
     <script type="text/javascript" src="/static/exif.js"></script>
     <script type="text/javascript" src="/static/binaryajax.js"></script>
 
@@ -23,11 +22,13 @@
     <link rel="stylesheet" href="/static/detail.css">
     <link rel="stylesheet" href="/static/sell.css">
     <link rel="stylesheet" href="/static/mine.css">
+    <script src="/static/jquery.fileupload.js"></script>
+    <script src="/static/jquery.touchSwipe.min.js"></script>
+    <script src="/static/common.js"></script>
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
-    <script src="/static/common.js"></script>
-    <script src="/static/jquery.touchSwipe.min.js"></script>
-    <script src="/static/jquery.fileupload.js"></script>
+    
+    
 
 </head>
 
@@ -46,41 +47,52 @@
                 </div>
             </div>
         </div>
-        <div data-role="content">
 
-            <div class="ui-grid-solo" id="image-uploader" style="max-width: 600px; height: 320px">
-                <div class="ui-grid-solo" style="width: 100%; height: 260px; background-color:grey;">
-                    <div style="position: relative; text-align: center">
-                        <div id="delete_icon" style="display: none; position: absolute; top: 0; left: 0;">
-                            <img width="30px" height="30px" src="/static/images/sell_post/delete-icon.png" onclick="deleteCurrentImage()" />
-                        </div>
-                        <div style="position: absolute; top: 0;" id="upload_status"></div>
-                        <div id="current_image">
-                        </div>
+        <div id="image-uploader" style="max-width: 600px !important; width: 100% !important; height: 360px;">
+            <div class="ui-grid-solo" style="width: 100%; height: 300px; background-color: rgb(213,213,213); background-image:url('/static/images/sell_post/camera.ico'); background-position: center top; background-repeat:no-repeat;">
+                <div style="position: relative; text-align: center;">
+                    <div id="delete_icon" style="display: none; position: absolute; top: 0; left: 0;">
+                        <img width="30px" height="30px" src="/static/images/sell_post/delete-icon.png" onclick="deleteCurrentImage()" />
                     </div>
-                </div>
-
-                <div id="image_thumbnails_div" class="ui-grid-c" style="width: 100%; max-width: 300px; height: 60px;">
-                    <div class="ui-block-a" style="width: 25%;">
-                        <label for="post_image">
-                            <img src='/static/images/sell_post/upload.png' style="width: 100%; height: 100%;">
-                        </label>
-                        <input style="display:none;" type="file" id="post_image" name="post_image" accept="image/*" onclick="return moreImagesAllowed();" />
-                    </div>
-
-
-                    <div class="ui-block-b" style="width: 25%;">
-                        <img style="width: 100%; height: 100%" id="preview0" onclick="displayImage(0)">
-                    </div>
-                    <div class="ui-block-c" style="width: 25%;">
-                        <img style="width: 100%; height: 100%" id="preview1" onclick="displayImage(1)">
-                    </div>
-                    <div class="ui-block-d" style="width: 25%;">
-                        <img style="width: 100%; height: 100%" id="preview2" onclick="displayImage(2)">
+                    <div style="position: absolute; top: 0;" id="upload_status"></div>
+                    <div id="current_image">
                     </div>
                 </div>
             </div>
 
+            <div id="image_thumbnails_div" class="ui-grid-a" style="width: 100%; height: 65px; background-color: rgb(213,213,213);">
+                <div class="ui-block-a" style="width: 20%;text-align: center;background-color: rgb(172,172,172);">
+                    <input style="display:none;" data-role="none" type="file" id="post_image" name="post_image" accept="image/*" onclick="return moreImagesAllowed();" />
+                    <label for="post_image">
+                        <img src='/static/images/sell_post/upload.png' style="width: 90%; height: 90%;">
+                    </label>
+
+                </div>
+
+                <div class="ui-block-b" style="width: 80%;">
+                    <div class="ui-grid-c" id="imgselector" style="height: 5px; background-color: rgb(172,172,172);">
+                        <div id="imgselector0" class="ui-block-a" style="height: 100%"></div>
+                        <div id="imgselector1" class="ui-block-b" style="height: 100%"></div>
+                        <div id="imgselector2" class="ui-block-c" style="height: 100%"></div>
+                        <div class="ui-block-d" style="height: 100%"></div>
+                    </div>
+                    <div class="ui-grid-c" style="height: 55px;">
+                        <div class="ui-block-a" style="width: 25%; height: 100%; border-right: solid 1px white;">
+                            <span id="preview0" onclick="displayImage(0)"></span>
+                        </div>
+                        <div class="ui-block-b" style="width: 25%; height: 100%; border-right: solid 1px white;">
+                            <span id="preview1" onclick="displayImage(1)"></span>
+                        </div>
+                        <div class="ui-block-c" style="width: 25%; height: 100%; border-right: solid 1px white;">
+                            <span id="preview2" onclick="displayImage(2)"></span>
+                        </div>
+                        <div class="ui-block-d" style="width: 25%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div data-role="content">
             <form action="/sell/form_submit/" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" id="image_url0" name="image_url0" />
@@ -100,18 +112,18 @@
                 <input type="hidden" id="image_orientation2" name="image_orientation2" />
 
 
-                <div class="ui-grid-a">
+                <div class="ui-grid-a form-element-grid">
                     <div class="ui-block-a" style="width:20%;">
-                        <div class="field-label-inner-div">标题</div>
+                        <div class="field-label-inner-div">标&nbsp;&nbsp;&nbsp;&nbsp;题</div>
                     </div>
                     <div class="ui-block-b" style="width:80%">
                         <input type="text" name="title" id="title" placeholder="请输入标题" data-rule-required="true" data-rule-content="true" data-msg-required="请输入标题" />
                     </div>
                 </div>
 
-                <div class="ui-grid-a">
+                <div class="ui-grid-a form-element-grid">
                     <div class="ui-block-a" style="width:20%;">
-                        <div class="field-label-inner-div">类别</div>
+                        <div class="field-label-inner-div">类&nbsp;&nbsp;&nbsp;&nbsp;别</div>
                     </div>
                     <div class="ui-block-b" style="width:80%;">
                         <select name='category' id="category">
@@ -123,17 +135,39 @@
                 </div>
 
 
-                <div class="ui-grid-a">
+                <div class="ui-grid-a form-element-grid">
                     <div class="ui-block-a" style="width:20%;">
-                        <div class="field-label-inner-div">价格</div>
+                        <div class="field-label-inner-div">价&nbsp;&nbsp;&nbsp;&nbsp;格</div>
                     </div>
                     <div class="ui-block-b" style="width:80%;">
                         <input type="number" name="price" placeholder="请标价" data-rule-required="true" data-rule-content="true" data-msg-required="请输入价格">
                     </div>
                 </div>
 
+                <div class="ui-grid-b form-element-grid">
+                    <div class="ui-block-a" style="width:20%;">
+                        <div class="field-label-inner-div">邮&nbsp;&nbsp;&nbsp;&nbsp;编</div>
+                    </div>
+                    <div class="ui-block-b" style="width:40%;">
+                        <input type="text" name="zipcode" id="zipcode" placeholder="zipcode">
+                    </div>
+                    <div class="ui-block-c" style="width:40%;">
+                        <a href="" data-role="button" onclick="getLocationByZipcode(); return false;">
+                            <span class="text-p">修改</span>
+                        </a>
+                    </div>
+                </div>
 
-                <div class="ui-grid-solo ui-corner-all">
+                <div class="ui-grid-a form-element-grid">
+                    <div class="ui-block-a" style="width:20%;">
+                        <div class="field-label-inner-div">城&nbsp;&nbsp;&nbsp;&nbsp;市</div>
+                    </div>
+                    <div class="ui-block-b" style="width:80%;">
+                        <div name="city" id="city" class="field-value-inner-div"></div>
+                    </div>
+                </div>
+
+                <!--                 <div class="ui-grid-solo ui-corner-all form-element-grid">
                     <div style="position: relative; margin: 5px 30px 30px 10px">
                         <div class="slider-scale-common slider-scale-div1">全新</div>
                         <div class="slider-scale-common slider-scale-div2">九成新</div>
@@ -142,21 +176,40 @@
                         <div class="slider-scale-common slider-scale-div5">旧</div>
                     </div>
                     <input data-highlight="true" type="range" name="condition-slider" id="condition-slider" value="0" min="0" max="4" step="1" />
-                </div>
-
-                <div class="ui-grid-solo">
-                    <div class="ui-block-a">
-                        <div class="field-label-inner-div">详细描述</div>
-                        <textarea name="content" placeholder="描述颜色、大小、形状、新旧等需求" data-rule-required="true" data-rule-content="true" data-msg-required="请输入详细描述"></textarea>
+                </div> -->
+                <div class="ui-grid-a form-element-grid">
+                    <div class="ui-block-a" style="width:20%;">
+                        <div class="field-label-inner-div">新旧度</div>
+                    </div>
+                    <div class="ui-block-b" style="width:80%;">
+                        <div class="ui-grid-c field-value-inner-div">
+                            <div class="ui-block-a" style="text-align: center;">
+                                <span id="condition-0-desc" style="display: none;" onclick='chooseCondition(0); return false;'>新</span>
+                                <img id="condition-0-img" src="/static/images/sell_post/new.png" width="60" height="40">
+                            </div>
+                            <div class="ui-block-b" style="text-align: center;">
+                                <span id="condition-1-desc" onclick='chooseCondition(1);'>九成新</span>
+                                <img id="condition-1-img" style="display: none;" src="/static/images/sell_post/90-new.png" width="60" height="40">
+                            </div>
+                            <div class="ui-block-c" style="text-align: center;">
+                                <span id="condition-2-desc" onclick='chooseCondition(2);'>七成新</span>
+                                <img id="condition-2-img" style="display: none;" src="/static/images/sell_post/70-new.png" width="60" height="40">
+                            </div>
+                            <div class="ui-block-d" style="text-align: center;">
+                                <span id="condition-3-desc" onclick='chooseCondition(3);'>旧</span>
+                                <img id="condition-3-img" style="display: none;" src="/static/images/sell_post/used.png" width="60" height="40">
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <input type="hidden" id="condition-slider" value="0" />
 
                 <div>
                     <input type="hidden" name="latitude" id="latitude"></input>
                     <input type="hidden" name="longitude" id="longitude"></input>
                 </div>
 
-                <div class="ui-grid-a">
+                <div class="ui-grid-a form-element-grid">
                     <div class="ui-block-a" style="width:30%;">
                         <div id="prefer-contact" class="field-label-inner-div">联系方式</div>
                     </div>
@@ -164,16 +217,16 @@
 
                         <div class="ui-grid-b">
                             <div class="ui-block-a">
-                                <img style="display:block;" id="email-icon" onclick="clickEmailContact();" src="/static/images/general/email_icon.png" />
-                                <img style="display:none;" id="email-icon-clicked" onclick="clickEmailContact();" src="/static/images/general/email_icon_clicked.png" />
+                                <img style="display:block; width: 40px; height: 40px;" id="email-icon" onclick="clickEmailContact();" src="/static/images/general/email_icon.png" />
+                                <img style="display:none; width: 40px; height: 45px;" id="email-icon-clicked" onclick="clickEmailContact();" src="/static/images/general/email_icon_clicked.png" />
                             </div>
                             <div class="ui-block-b">
-                                <img style="display:block;" id="phone-icon" onclick="clickPhoneContact();" src="/static/images/general/phone_icon.png" />
-                                <img style="display:none;" id="phone-icon-clicked" onclick="clickPhoneContact();" src="/static/images/general/phone_icon_clicked.png" />
+                                <img style="display:block; width: 40px; height: 40px;" id="phone-icon" onclick="clickPhoneContact();" src="/static/images/general/phone_icon.png" />
+                                <img style="display:none; width: 40px; height: 45px;" id="phone-icon-clicked" onclick="clickPhoneContact();" src="/static/images/general/phone_icon_clicked.png" />
                             </div>
                             <div class="ui-block-c">
-                                <img style="display:block;" id="sms-icon" onclick="clickSmsContact();" src="/static/images/general/sms_icon.png" />
-                                <img style="display:none;" id="sms-icon-clicked" onclick="clickSmsContact();" src="/static/images/general/sms_icon_clicked.png" />
+                                <img style="display:block; width: 40px; height: 40px;" id="sms-icon" onclick="clickSmsContact();" src="/static/images/general/sms_icon.png" />
+                                <img style="display:none; width: 40px; height: 45px;" id="sms-icon-clicked" onclick="clickSmsContact();" src="/static/images/general/sms_icon_clicked.png" />
                             </div>
                         </div>
 
@@ -202,48 +255,96 @@
                     </div>
                 </div>
 
-                <div class="ui-grid-solo" style="margin: 20px 0 0 0">
-                    <div>
+                <div class="ui-grid-solo" style="margin: 15px 0 !important;">
+                    <div class="ui-grid-a">
+                        <div class="ui-block-a">
+                            <span class="text-p">其他描述</span>
+                        </div>
+                        <div class="ui-block-b">
+                            <span id="lengthCounter" class="text-p" style="float:right">0/3000</span>
+                        </div>
+                    </div>
+                    <div class="ui-grid-solo">
+                        <textarea name="content" id="content" style="height: 150px !important;" placeholder="描述颜色、大小、形状、新旧等需求" data-rule-required="true" data-rule-content="true" data-msg-required="请输入详细描述" maxlength="3000"></textarea>
+                    </div>
+                </div>
+
+                <div class="ui-grid-b" style="margin: 30px 0 !important;">
+                    <div class="ui-block-a"></div>
+                    <div class="ui-block-b">
                         <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png">
                     </div>
+                    <div class="ui-block-c"></div>
                 </div>
 
             </form>
         </div>
-    </div>
 
-
-    <div data-role="footer" data-position="fixed">
-        <div style="background-color: rgb(35,192,148);">
-            <div class="ui-grid-d">
-                <div class="ui-block-a">
-                    <a href="/">
-                        <img height="30" width="30" style="padding:12px 5px 5px 12px;" src='/static/images/navigation/homepage_clicked.png' />
-                    </a>
-                </div>
-                <div class="ui-block-b">
-                    <a href="/buy/form/">
-                        <img height="40" width="32" style="padding:5px;" src='/static/images/navigation/buy_form_clicked.png' />
-                    </a>
-                </div>
-                <div class="ui-block-c">
-                    <a href="/sell/form/">
-                        <img height="40" width="32" style="padding:5px;" src='/static/images/navigation/sell_form_clicked.png' />
-                    </a>
-                </div>
-                <div class="ui-block-d">
-                    <a href="/buy/all_list/">
-                        <img height="40" width="40" style="padding:5px;" src='/static/images/navigation/buy_posts_clicked.png' />
-                    </a>
-                </div>
-                <div class="ui-block-e">
-                    <a href="/sell/all_list/">
-                        <img height="40" width="40" style="padding:5px;" src='/static/images/navigation/sell_posts_clicked.png' />
-                    </a>
+        <div data-role="footer" data-position="fixed">
+            <div style="background-color: rgb(35,192,148);">
+                <div class="ui-grid-d">
+                    <div class="ui-block-a">
+                        <a href="/">
+                            <img height="30" width="30" style="padding:12px 5px 5px 12px;" src='/static/images/navigation/homepage_clicked.png' />
+                        </a>
+                    </div>
+                    <div class="ui-block-b">
+                        <a href="/buy/form/">
+                            <img height="40" width="32" style="padding:5px;" src='/static/images/navigation/buy_form_clicked.png' />
+                        </a>
+                    </div>
+                    <div class="ui-block-c">
+                        <a href="/sell/form/">
+                            <img height="40" width="32" style="padding:5px;" src='/static/images/navigation/sell_form_clicked.png' />
+                        </a>
+                    </div>
+                    <div class="ui-block-d">
+                        <a href="/buy/all_list/">
+                            <img height="40" width="40" style="padding:5px;" src='/static/images/navigation/buy_posts_clicked.png' />
+                        </a>
+                    </div>
+                    <div class="ui-block-e">
+                        <a href="/sell/all_list/">
+                            <img height="40" width="40" style="padding:5px;" src='/static/images/navigation/sell_posts_clicked.png' />
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+
+        <script type="text/javascript">
+        function getLocationByZipcode() {
+            var zipcode = $("#zipcode").val();
+            $.ajax({
+                type: "get",
+                url: "/user/get_info/get_latlong_by_zipcode",
+                dataType: "json",
+                data: {
+                    zipcode: zipcode
+                }
+            }).then(function(data) {
+                console.log(data);
+                $('#city').text(data['city']);
+                $('#latitude').val(data['latitude']);
+                $('#longitude').val(data['longitude']);
+            });
+        }
+
+        function chooseCondition(conditionNum) {
+            if (conditionNum >= 0 && conditionNum < 4) {
+                for (i = 0; i < 4; i++) {
+                    if (i == conditionNum) {
+                        $('#condition-' + i + '-desc').hide();
+                        $('#condition-' + i + '-img').show();
+                        $("#condition-slider").val(conditionNum)
+                    } else {
+                        $('#condition-' + i + '-desc').show();
+                        $('#condition-' + i + '-img').hide();
+                    }
+                }
+            }
+        }
+        </script>
     </div>
 </body>
 

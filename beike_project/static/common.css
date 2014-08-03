@@ -1,6 +1,14 @@
+.form-element-grid {
+    margin: 10px 0 !important;
+}
+
 .field-label-inner-div {
     padding: 15px 0 15px 0;
     color:#00CED1;
+}
+
+.field-value-inner-div {
+    padding: 15px 0 15px 0;
 }
 
 .text-p {
@@ -31,14 +39,28 @@
     margin-top: 0.4em;
 }
 .head_text_right {
-    float:right;
-    margin-top: 0.4em;
+    position: absolute;
+    left: 50px;
+    top: 20px;
+    font-size: small;
+    color:#218868;
 }
 .main-button {
-    width: 50%;
-    margin-left:27%;
+    width: 60%;
+    margin-left:22%;
     margin-right:7%;
     margin-top:5%
+}
+.city_background{
+    position: absolute;
+    left: 10px;
+    top: 0px;
+}
+.city_mark{
+    position: absolute;
+    left: 30px;
+    top: 10px;
+
 }
 /* CSS for buypost creation page */
 #phone_number_div {
