@@ -90,9 +90,8 @@ function removeImage(index) {
 }
 
 /*
- * This function is to display the image
+ * Display the image
  */
-
 function displayImage(index) {
     if (imageCount == 0) {
         $('#current_image').empty();
@@ -114,22 +113,6 @@ function displayImage(index) {
 function deleteCurrentImage() {
     removeImage(currentImageIndex);
     displayImage(0);
-}
-
-//3 months from now by default 
-
-function setOpenUntil() {
-    var date = new Date();
-    var day = date.getDate();
-    var currentMonth = date.getMonth() + 1;
-    var month = date.getMonth() + 4;
-    var year = date.getFullYear();
-    if (month < 10) month = "0" + month;
-    if (day < 10) day = "0" + day;
-    var currentDate = year + "-" + currentMonth + "-" + day;
-    var defaultDate = year + "-" + month + "-" + day;
-    $('#open_until_date').attr("value", defaultDate);
-    $('#open_until_date').attr("min", currentDate);
 }
 
 /* Sell posts dynamic loading */
@@ -168,70 +151,70 @@ var sellPostLoader = (function($, undefined) {
         var listB = $("#post-list-b");
         listB.empty();
     }
-
-    function getPosts(position, sellPostCategory, sellPostKeyword) {
-        //Get posts via ajax
-        return $.ajax({
-            type: "get",
-            url: "/sell/get_posts_by_page",
-            dataType: "json",
-            data: {
-                pageNum: sellPostPageNum,
-                latitude: position['latitude'],
-                longitude: position['longitude'],
-                category: sellPostCategory,
-                keyword: sellPostKeyword
-            }
-        }).then(function(data) {
-            displayPosts(data);
-        });
-    }
-
-    function displayPosts(posts) {
-        var listA = $("#post-list-a");
-        var listB = $("#post-list-b");
-        var i = 0,
-            len = posts.length;
-        //process posts data
-        for (i = 0; i < len; i++) {
-            var image_info_list = jQuery.parseJSON(posts[i]["image_info"]);
-            if (image_info_list.length > 0) {
-                //only display the first image
-                image_info = image_info_list[0];
-            } else {
-                image_info = undefined
-                continue;
-            }
-
-            image_width = document.body.clientWidth * 0.4;
-            image_height = image_info['height'] / image_info['width'] * image_width;
-
-
-            var template = '<li class="sellpost-li"><div><a href="/detail/sell/' +
-                posts[i]['post_id'] + '"><div><img src="' +
-                image_info['image_url'] + '" width="' + image_width + '" height="' + image_height + '"/></div><div><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" />' +
-                posts[i]["title"] + '</div><div>$' + posts[i]["price"] + '</div><div>距离你 ' + posts[i]["distance"] + ' miles</div></a></div></li>';
-
-            if (slot_pos % 2 === 0) {
-                listA.append(template);
-            } else {
-                listB.append(template);
-            }
-            slot_pos++;
-        }
-        listA.listview("refresh");
-        listB.listview("refresh");
-        if (len == 0) {
-            hasMoreSellPost = false;
-            $('#load-more').hide();
-        } else {
-            hasMoreSellPost = true;
-            sellPostPageNum++;
-        }
-
-    }
     return pub;
 }(jQuery));
+
+function getPosts(position, sellPostCategory, sellPostKeyword) {
+    //Get posts via ajax
+    return $.ajax({
+        type: "get",
+        url: "/sell/get_posts_by_page",
+        dataType: "json",
+        data: {
+            pageNum: sellPostPageNum,
+            latitude: position['latitude'],
+            longitude: position['longitude'],
+            category: sellPostCategory,
+            keyword: sellPostKeyword
+        }
+    }).then(function(posts) {
+        displayPosts(posts);
+    });
+}
+
+function displayPosts(posts) {
+    var listA = $("#post-list-a");
+    var listB = $("#post-list-b");
+    var i = 0,
+        len = posts.length;
+    //process posts data
+    for (i = 0; i < len; i++) {
+        var image_info_list = jQuery.parseJSON(posts[i]["image_info"]);
+        if (image_info_list.length > 0) {
+            //only display the first image
+            image_info = image_info_list[0];
+        } else {
+            image_info = undefined
+            continue;
+        }
+
+        image_width = document.body.clientWidth * 0.4;
+        image_height = image_info['height'] / image_info['width'] * image_width;
+
+        var postTemplate = $('<li class="sellpost-li"></li>');
+        postTemplate.append($('<div>' + posts[i]["title"] + '</div>'));
+        postTemplate.append($('<div><img src="' + image_info['image_url'] + '" width="' + image_width + '" height="' + image_height + '"/></div>'));
+        postTemplate.append($('<div>$' + posts[i]["price"] + '</div>'));
+        postTemplate.append($('<div>距离你 ' + posts[i]["distance"] + ' miles</div>'));
+
+        if (slot_pos % 2 === 0) {
+            listA.append(postTemplate);
+        } else {
+            listB.append(postTemplate);
+        }
+        slot_pos++;
+    }
+    listA.listview("refresh");
+    listB.listview("refresh");
+    if (len == 0) {
+        hasMoreSellPost = false;
+        $('#load-more').hide();
+    } else {
+        hasMoreSellPost = true;
+        sellPostPageNum++;
+    }
+
+}
 
 $(document).delegate("#nearby-sellpost", "pageinit", function() {
     sellPostPageNum = 1;
@@ -250,17 +233,6 @@ $(document).delegate("#nearby-sellpost", "pageinit", function() {
         //do nothing
     });
 });
-
-function getImageSize(imgSrc) {
-    var imgItem = new Image();
-    // p = $(imgItem).onload(function(){
-    //     return {width: imgItem.width, height: imgItem.height};
-    // });
-    imgItem.onload = function() {
-        console.log(this.width + " " + this.height);
-    }
-    imgItem.src = imgSrc;
-}
 
 function getLatitudeLongtitude(position) {
     var latitude = position.coords.latitude;
@@ -282,7 +254,6 @@ function getLatitudeLongtitude(position) {
     });
 }
 
-var deviceWidth;
 $(document).delegate("#sellpost-form", "pageinit", function() {
     imageCount = 0;
     currentImageIndex = 0;
@@ -290,7 +261,7 @@ $(document).delegate("#sellpost-form", "pageinit", function() {
     for (var i = 0; i < imageMaxNum; i++) {
         imagesInfo[i] = null;
     }
-    deviceWidth = $(window).width() * 0.90;
+    var deviceWidth = $(window).width() * 0.90;
     $('#image-uploader').css('width', deviceWidth);
     $('form').validate({
         rules: {
@@ -337,6 +308,7 @@ function refreshSellPosts() {
     $('#popupBasic-popup').removeClass('ui-popup-active');
     $('#popupBasic-popup').addClass('ui-popup-hidden');
     $('#popupBasic-popup').addClass('ui-popup-truncate');
+    slot_pos = 0;
     var zipcode = $('#zipcode').val();
     var sellPostCategory = 0;
     sellPostCategory = $('input[name="category"]:checked').val();
@@ -361,4 +333,3 @@ function refreshSellPosts() {
 
     return false;
 }
-/***************/
