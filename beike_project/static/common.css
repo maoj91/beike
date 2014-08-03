@@ -38,13 +38,7 @@
     float:left;
     margin-top: 0.4em;
 }
-.head_text_right {
-    position: absolute;
-    left: 50px;
-    top: 20px;
-    font-size: small;
-    color:#218868;
-}
+
 .main-button {
     width: 60%;
     margin-left:22%;
@@ -55,12 +49,24 @@
     position: absolute;
     left: 10px;
     top: 0px;
+    width:100px;
+    height:40px;
 }
-.city_mark{
+
+#city{
     position: absolute;
     left: 30px;
     top: 10px;
+}
 
+.city_mark{
+    max-width:15px;
+    max-height:15px;
+}
+
+.head_text_right {
+    font-size: small;
+    color:#218868;
 }
 /* CSS for buypost creation page */
 #phone_number_div {
