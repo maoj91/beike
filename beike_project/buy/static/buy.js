@@ -1,6 +1,8 @@
 var buyPostPageNum = 1;
 var current_position;
 var hasMoreBuyPost = true;
+var buypost_slot = 0;
+var numPerPage;
 
 var buyPostLoader = (function($, undefined) {
     var pub = {};
@@ -53,20 +55,25 @@ function displayBuyposts(posts) {
         len = posts.length;
     //process posts data
     for (i = 0; i < len; i++) {
-        var template = '<li><div><a href="/detail/buy/' + posts[i]['post_id'] + '"><img width="20" height="20" src="/static/images/nearby_buy_posts/request_logo.png" /></a></div><div>' +
-            posts[i]["title"] + '</div><div> $' + posts[i]["min_price"] + ' - $' +
-            posts[i]["max_price"] +
-            '</div><div>距离你 ' + posts[i]["distance"] + ' miles</div></li>';
-        if (i % 2 === 0) {
-            listA.append(template);
+
+        var postTemplate = $('<li class="sellpost-li"><div></div></li>');
+        var content = $('<a href="/detail/buy/' + posts[i]['post_id'] + '" style="text-decoration:none;"></a>')
+        content.append($('<div><img width="20" height="20" src="/static/images/nearby_buy_posts/request_logo.png" /><span>&nbsp;&nbsp;&nbsp;&nbsp;' + posts[i]["title"] + '</span></div>'))
+        content.append($('<div>$' + posts[i]["min_price"] + '</div>'));
+        content.append($('<div>距离你 ' + posts[i]["distance"] + ' miles</div>'));
+
+        postTemplate.children().append(content);
+        if (buypost_slot % 2 === 0) {
+            listA.append(postTemplate);
         } else {
-            listB.append(template);
+            listB.append(postTemplate);
         }
+        buypost_slot++;
     }
 
     listA.listview("refresh");
     listB.listview("refresh");
-    if (len == 0) {
+    if (len < numPerPage) {
         hasMoreBuyPost = false;
         $('#load-more').hide();
     } else {
@@ -89,6 +96,7 @@ $(document).delegate("#nearby-buypost", "pageinit", function() {
     }).always(function() {
         //do nothing
     });
+    numPerPage = $('#num-per-page').val();
 });
 
 $(document).delegate("#buy-form", "pageinit", function(event) {

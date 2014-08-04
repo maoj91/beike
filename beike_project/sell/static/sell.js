@@ -7,6 +7,7 @@ var isUploading = false;
 
 var imagesInfo = new Array(3);
 var imagesHtml = new Array(3);
+var numPerPage;
 
 function moreImagesAllowed() {
     if (imageCount >= imageMaxNum) {
@@ -206,7 +207,7 @@ function displayPosts(posts) {
     }
     listA.listview("refresh");
     listB.listview("refresh");
-    if (len == 0) {
+    if (len < numPerPage) {
         hasMoreSellPost = false;
         $('#load-more').hide();
     } else {
@@ -232,6 +233,7 @@ $(document).delegate("#nearby-sellpost", "pageinit", function() {
     }).always(function() {
         //do nothing
     });
+    numPerPage = $('#num-per-page').val();
 });
 
 function getLatitudeLongtitude(position) {
