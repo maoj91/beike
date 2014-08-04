@@ -30,7 +30,7 @@
 </head>
 
 <body>
-    <div id="nearby-buypost" data-role="page" data-fullscreen="true">
+    <div id="nearby-buypost" data-role="page" data-fullscreen="true" style="background-color: rgb(226,229,220);">
         <link rel="stylesheet" type="text/css" href="/static/sell.css">
         <div data-role="header" data-position="fixed">
             <div style="background-color: rgb(35,192,148);">
@@ -45,6 +45,7 @@
                 </div>
             </div>
         </div>
+
         <div id="buy-list" data-role="main">
             <div class="ui-grid-a">
                 <div class="ui-block-a">
@@ -56,10 +57,11 @@
                     </ul>
                 </div>
             </div>
+            <div id="load-more" style="vertical-align:middle; text-align:center; display:none">
+                <img width="50px" height="50px" src="/static/images/general/loading_green.gif" />
+            </div>
         </div>
-        <div id="load-more" style="vertical-align:middle; text-align:center; display:none">
-            <img width="50px" height="50px" src="/static/images/general/loading_green.gif" />
-        </div>
+
         <div data-role="footer" data-position="fixed">
             <div style="background-color: rgb(35,192,148);">
                 <div class="ui-grid-d">
@@ -92,7 +94,6 @@
             </div>
         </div>
         <script type="text/javascript">
-
         $(document).on("scrollstart", function() {
             if ($(document).height() > $(window).height() && hasMoreBuyPost) {
                 if ($(window).scrollTop() >= $(document).height() - $(window).height() - 100) {

@@ -30,7 +30,7 @@
 </head>
 
 <body>
-    <div id="nearby-sellpost" data-role="page" data-fullscreen="true">
+    <div id="nearby-sellpost" data-role="page" data-fullscreen="true" style="background-color: rgb(226,229,220);">
         <link rel="stylesheet" type="text/css" href="/static/sell.css">
         <div data-role="header" data-position="fixed" style="background-color: rgb(35,192,148);">
             <div class="ui-grid-b">
@@ -57,14 +57,14 @@
                                     <fieldset data-role="controlgroup">
                                         <form action="#" method="post" enctype="multipart/form-data" onsubmit="return refreshSellPosts();">
                                             <legend>Choose a category:</legend>
-                                                <input type="radio" name="category" id=0 value='' checked="checked" />
-                                                <label for=0>All</label>
-                                                {% for category in categories %}
-                                                <input type="radio" name="category" id={{ category.id }} value={{ category.id }}  />
-                                                <label for={{ category.id }}>{{category.name}}</label>
-                                                {% endfor %}
+                                            <input type="radio" name="category" id=0 value='' checked="checked" />
+                                            <label for=0>All</label>
+                                            {% for category in categories %}
+                                            <input type="radio" name="category" id={{ category.id }} value={{ category.id }} />
+                                            <label for={{ category.id }}>{{category.name}}</label>
+                                            {% endfor %}
 
-                                                <input type="submit" value="Submit" id="submit_btn">
+                                            <input type="submit" value="Submit" id="submit_btn">
                                         </form>
                                     </fieldset>
                                 </div>
@@ -91,7 +91,6 @@
                 </div>
             </div>
         </div>
-
         <div id="sell-list" data-role="main">
             <div class="ui-grid-a">
                 <div class="ui-block-a">
@@ -103,10 +102,11 @@
                     </ul>
                 </div>
             </div>
+            <div id="load-more" style="vertical-align:middle; text-align:center; display:none">
+                <img width="50px" height="50px" src="/static/images/general/loading_green.gif" />
+            </div>
         </div>
-        <div id="load-more" style="vertical-align:middle; text-align:center; display:none">
-            <img width="50px" height="50px" src="/static/images/general/loading_green.gif" />
-        </div>
+
         <div data-role="footer" data-position="fixed">
             <div style="background-color: rgb(35,192,148);">
                 <div class="ui-grid-d">
@@ -139,9 +139,8 @@
             </div>
         </div>
         <script type="text/javascript">
-
         $(document).on("scrollstart", function() {
-            
+
             if ($(document).height() > $(window).height() && hasMoreSellPost) {
                 if ($(window).scrollTop() >= $(document).height() - $(window).height() - 200) {
                     if (typeof sellPostCurLatLon !== 'undefined') {
@@ -152,7 +151,7 @@
             }
         });
         $(document).on("scrollstop", function() {
-            
+
             if ($(document).height() > $(window).height() && hasMoreSellPost) {
                 if ($(window).scrollTop() >= $(document).height() - $(window).height() - 200) {
                     if (typeof sellPostCurLatLon !== 'undefined') {
@@ -163,7 +162,6 @@
             }
         });
         </script>
-
     </div>
 
 </body>

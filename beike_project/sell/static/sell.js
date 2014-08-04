@@ -193,7 +193,7 @@ function displayPosts(posts) {
 
         var postTemplate = $('<li class="sellpost-li"></li>');
         postTemplate.append($('<div>' + posts[i]["title"] + '</div>'));
-        postTemplate.append($('<div><img src="' + image_info['image_url'] + '" width="' + image_width + '" height="' + image_height + '"/></div>'));
+        postTemplate.append($('<div><a href="/detail/sell/' + posts[i]['post_id'] + '"><img src="' + image_info['image_url'] + '" width="' + image_width + '" height="' + image_height + '"/></a></div>'));
         postTemplate.append($('<div>$' + posts[i]["price"] + '</div>'));
         postTemplate.append($('<div>距离你 ' + posts[i]["distance"] + ' miles</div>'));
 
