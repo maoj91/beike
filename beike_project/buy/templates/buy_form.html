@@ -102,7 +102,7 @@
                         <div class="field-label-inner-div">城&nbsp;&nbsp;&nbsp;&nbsp;市</div>
                     </div>
                     <div class="ui-block-b" style="width:80%;">
-                        <div name="city" id="city" class="field-value-inner-div"></div>
+                        <div name="city_name" id="city_name" class="field-value-inner-div"></div>
                     </div>
                 </div>
 
@@ -223,7 +223,7 @@
                 }
             }).then(function(data) {
                 $('#zipcode').val(data['zipcode']);
-                $('#city').text(data['city']);
+                $('#city_name').text(data['city']);
                 console.log(data);
             });
         }
@@ -239,7 +239,7 @@
                 }
             }).then(function(data) {
                 console.log(data);
-                $('#city').text(data['city']);
+                $('#city_name').text(data['city']);
                 $('#latitude').val(data['latitude']);
                 $('#longitude').val(data['longitude']);
             });

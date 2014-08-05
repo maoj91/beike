@@ -44,7 +44,6 @@ function addImage(imageInfo) {
         imgElement.css("width", width);
         imgElement.css("height", height);
         imagesHtml[index] = imgElement;
-        displayImage(index);
 
         //add image to the thumbnail
         imgThumbnail = $('<img src="' + imageInfo['url'] + '" width="100%" height="100%"/>');
@@ -55,6 +54,7 @@ function addImage(imageInfo) {
         $('#image_width' + index).val(imageInfo['width']);
         $('#image_height' + index).val(imageInfo['height']);
         $('#image_orientation' + index).val(imageInfo['orientation']);
+        displayImage(index);
     }
 }
 
@@ -102,9 +102,9 @@ function displayImage(index) {
         var imageInfo = imagesInfo[index];
         $('#current_image').empty();
         $('#current_image').append(imagesHtml[index]);
-        $('#imgselector0').css("background-color", "black");
-        $('#imgselector1').css("background-color", "black");
-        $('#imgselector2').css("background-color", "black");
+        $('#imgselector0').css("background-color", "rgb(172,172,172)");
+        $('#imgselector1').css("background-color", "rgb(172,172,172)");
+        $('#imgselector2').css("background-color", "rgb(172,172,172)");
         $('#imgselector' + index).css("background-color", "#00CED1");
         $('#delete_icon').show();
         currentImageIndex = index;
@@ -252,7 +252,7 @@ function getLatitudeLongtitude(position) {
     }).then(function(data) {
         console.log(data);
         $('#zipcode').val(data['zipcode']);
-        $('#city').text(data['city']);
+        $('#city_name').text(data['city']);
     });
 }
 
@@ -268,7 +268,13 @@ $(document).delegate("#sellpost-form", "pageinit", function() {
     $('form').validate({
         rules: {
             phone_number: "digitonly"
+        },
+        submitHandler: function(form) {
+            if ($(form).valid() && $('#image_url0').valid())
+                form.submit();
+            return false; // prevent normal form posting
         }
+
     });
     isEmailChecked = false;
     isPhoneChecked = false;

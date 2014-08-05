@@ -90,7 +90,7 @@
         <div data-role="content">
             <form action="/sell/form_submit/" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <input type="hidden" id="image_url0" name="image_url0" />
+                <input type="hidden" id="image_url0" name="image_url0" data-rule-required="true" data-rule-content="true" data-msg-required="请至少上传一张照片" />
                 <input type="hidden" id="image_width0" name="image_width0" />
                 <input type="hidden" id="image_height0" name="image_height0" />
 
@@ -129,7 +129,6 @@
                     </div>
                 </div>
 
-
                 <div class="ui-grid-a form-element-grid">
                     <div class="ui-block-a" style="width:20%;">
                         <div class="field-label-inner-div">价&nbsp;&nbsp;&nbsp;&nbsp;格</div>
@@ -158,7 +157,7 @@
                         <div class="field-label-inner-div">城&nbsp;&nbsp;&nbsp;&nbsp;市</div>
                     </div>
                     <div class="ui-block-b" style="width:80%;">
-                        <div name="city" id="city" class="field-value-inner-div"></div>
+                        <div name="city_name" id="city_name" class="field-value-inner-div"></div>
                     </div>
                 </div>
 
@@ -180,19 +179,27 @@
                         <div class="ui-grid-c field-value-inner-div">
                             <div class="ui-block-a" style="text-align: center;">
                                 <span id="condition-0-desc" style="display: none;" onclick='chooseCondition(0); return false;'>新</span>
-                                <img id="condition-0-img" src="/static/images/sell_post/new.png" width="60" height="40">
+                                <div style="margin: -10px 0 0 0">
+                                    <img id="condition-0-img" src="/static/images/sell_post/new.png" width="60" height="40">
+                                </div>
                             </div>
                             <div class="ui-block-b" style="text-align: center;">
                                 <span id="condition-1-desc" onclick='chooseCondition(1);'>九成新</span>
-                                <img id="condition-1-img" style="display: none;" src="/static/images/sell_post/90-new.png" width="60" height="40">
+                                <div style="margin: -10px 0 0 0">
+                                    <img id="condition-1-img" style="display: none;" src="/static/images/sell_post/90-new.png" width="60" height="40">
+                                </div>
                             </div>
                             <div class="ui-block-c" style="text-align: center;">
                                 <span id="condition-2-desc" onclick='chooseCondition(2);'>七成新</span>
-                                <img id="condition-2-img" style="display: none;" src="/static/images/sell_post/70-new.png" width="60" height="40">
+                                <div style="margin: -10px 0 0 0">
+                                    <img id="condition-2-img" style="display: none;" src="/static/images/sell_post/70-new.png" width="60" height="40">
+                                </div>
                             </div>
                             <div class="ui-block-d" style="text-align: center;">
                                 <span id="condition-3-desc" onclick='chooseCondition(3);'>旧</span>
-                                <img id="condition-3-img" style="display: none;" src="/static/images/sell_post/used.png" width="60" height="40">
+                                <div style="margin: -10px 0 0 0">
+                                    <img id="condition-3-img" style="display: none;" src="/static/images/sell_post/used.png" width="60" height="40">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -319,7 +326,7 @@
                 }
             }).then(function(data) {
                 console.log(data);
-                $('#city').text(data['city']);
+                $('#city_name').text(data['city']);
                 $('#latitude').val(data['latitude']);
                 $('#longitude').val(data['longitude']);
             });
