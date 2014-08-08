@@ -31,18 +31,18 @@ function addImage(imageInfo) {
         var index = imageCount;
         imageCount++;
         imagesInfo[index] = imageInfo;
-        width = '300px';
-        height = '300px';
+        maxWidth = '450px';
+        maxHeight = '250px';
         if (imageInfo['width'] > imageInfo['height']) {
-            height = 'auto';
+            maxHeight = 'auto';
         } else {
-            width = 'auto';
+            maxWidth = 'auto';
         }
 
         imgElement = $('<img></img>');
         imgElement.attr("src", imageInfo['url']);
-        imgElement.css("width", width);
-        imgElement.css("height", height);
+        imgElement.css("max-width", maxWidth);
+        imgElement.css("max-height", maxHeight);
         imagesHtml[index] = imgElement;
 
         //add image to the thumbnail
@@ -69,8 +69,9 @@ function removeImage(index) {
             if (i < imageCount) {
                 imagesInfo[i] = imagesInfo[i + 1];
                 imagesHtml[i] = imagesHtml[i + 1];
-                //add image to the thumbnail
+                //replace image in the thumbnail
                 imgThumbnail = $('<img src="' + imagesInfo[i]['url'] + '" width="100%" height="100%"/>')
+                $('#preview' + i).empty();
                 $('#preview' + i).append(imgThumbnail);
                 //add image to the form
                 $('#image_url' + i).val(imagesInfo[i]['url']);
@@ -90,6 +91,21 @@ function removeImage(index) {
     }
 }
 
+function handleImage(index) {
+    if (isUploading == true) {
+        return;
+    }
+    if(index == currentImageIndex) {
+        var toDelete = confirm("要删除该照片吗?");
+        if (toDelete == true) {
+            removeImage(index);
+            displayImage(0);
+        }
+    } else {
+        displayImage(index);
+    }
+}
+
 /*
  * Display the image
  */
@@ -97,6 +113,9 @@ function displayImage(index) {
     if (imageCount == 0) {
         $('#current_image').empty();
         $('#delete_icon').hide();
+        $('#imgselector0').css("background-color", "rgb(172,172,172)");
+        $('#imgselector1').css("background-color", "rgb(172,172,172)");
+        $('#imgselector2').css("background-color", "rgb(172,172,172)");
     }
     if (index < imageCount) {
         var imageInfo = imagesInfo[index];
@@ -111,10 +130,10 @@ function displayImage(index) {
     }
 }
 
-function deleteCurrentImage() {
-    removeImage(currentImageIndex);
-    displayImage(0);
-}
+// function deleteCurrentImage() {
+//     removeImage(currentImageIndex);
+//     displayImage(0);
+// }
 
 /* Sell posts dynamic loading */
 var sellPostPageNum = 1;
@@ -295,12 +314,21 @@ $(document).delegate("#sellpost-form", "pageinit", function() {
             console.log(JSON.stringify(imagesInfo[currentImageIndex]))
             $('#upload_status').hide();
             isUploading = false;
+            $('#progress-bar-div').hide();
+            $('#image-uploader').attr("disabled", false);
+            $('#post_image').attr("disabled", false);
         },
         progressall: function(e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
             $('#upload_status').html('Completed ' + progress + '%');
             $('#upload_status').show();
+            $('#progress-bar-div').show();
+            $('#progress-bar').attr("aria-valuenow", progress);
+            $('#progress-bar').css("width", progress+"%");
+            $('#progress-bar').text(progress+"%");
             isUploading = true;
+            $('#image-uploader').attr("disabled", true);
+            $('#post_image').attr("disabled", true);
         }
     });
     $('#content').bind('input propertychange', function() {
