@@ -394,7 +394,7 @@ function toggleFollowStatus(){
 }
 
 function sendEmail(email, title){
-    window.location="mailto:"+email+"?Subject=回复帖子:"+title;
+    window.location.assign("mailto:"+email+"?Subject=回复帖子:"+title);
     // alert(email+","+title);
 }
 
