@@ -225,10 +225,10 @@
                         <a href="#seller"><img id='share' src='/static/images/detail/contact_seller.png' style="vertical-align:middle;max-height:35px;"></a>
                     </div>
                     <div class="ui-block-b" style="width:25%;text-align:right;">
-                        <img id='share' src='/static/images/detail/share.png' style="vertical-align:middle;weight:20px;height:20px;border:1px solid #d1cfd1;border-radius:15%;padding:7px 15px 7px 15px;"> 
+                        <img id='share' src='/static/images/detail/share.png' style="vertical-align:middle;weight:30px;height:30px;border:1px solid #d1cfd1;border-radius:15%;padding:7px 15px 7px 15px;"> 
                     </div>
                     <div class="ui-block-c" style="width:25%;text-align:right;">
-                        <img id='follow'  style="vertical-align:middle;weight:20px;height:20px;border:1px solid #d1cfd1;border-radius:15%;padding:7px 12px 7px 12px;" onclick="toggleFollowStatus();"> 
+                        <img id='follow'  style="vertical-align:middle;weight:30px;height:30px;border:1px solid #d1cfd1;border-radius:15%;padding:7px 12px 7px 12px;" onclick="toggleFollowStatus();"> 
                     </div>
                 </div>
 
@@ -394,7 +394,7 @@ function toggleFollowStatus(){
 }
 
 function sendEmail(email, title){
-    window.location.href="mailto:"+email+"?Subject=回复帖子:"+title;
+    window.location="mailto:"+email+"?Subject=回复帖子:"+title;
     // alert(email+","+title);
 }
 
