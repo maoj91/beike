@@ -17,6 +17,7 @@ from data.image_util import ImageMetadata
 from django.contrib.gis.measure import D
 import logging
 from data.data_util import get_contact, get_condition
+from django.db.models import Q
 
 logger = logging.getLogger(__name__)
 NUM_PER_PAGE = 20
@@ -42,7 +43,7 @@ def get_posts_by_page(request):
         if category != '':
             query_set = query_set.filter(category__id=category)
         if keyword != '':
-            query_set = query_set.filter(title__icontains=keyword)
+            query_set = query_set.filter(Q(content__icontains=keyword)|Q(title__icontains=keyword))
         #TO-DO: make the record count configurable
         paginator = Paginator(query_set, NUM_PER_PAGE)
         try:
