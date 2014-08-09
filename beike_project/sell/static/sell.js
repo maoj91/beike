@@ -311,17 +311,10 @@ $(document).delegate("#sellpost-form", "pageinit", function() {
             imageInfo['height'] = data.result.height;
             imageInfo['orientation'] = data.result.orientation;
             addImage(imageInfo);
-            console.log(JSON.stringify(imagesInfo[currentImageIndex]))
-            $('#upload_status').hide();
-            isUploading = false;
-            $('#progress-bar-div').hide();
-            $('#image-uploader').attr("disabled", false);
-            $('#post_image').attr("disabled", false);
+            console.log(JSON.stringify(imagesInfo[currentImageIndex]));
         },
         progressall: function(e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#upload_status').html('Completed ' + progress + '%');
-            $('#upload_status').show();
             $('#progress-bar-div').show();
             $('#progress-bar').attr("aria-valuenow", progress);
             $('#progress-bar').css("width", progress+"%");
@@ -329,6 +322,16 @@ $(document).delegate("#sellpost-form", "pageinit", function() {
             isUploading = true;
             $('#image-uploader').attr("disabled", true);
             $('#post_image').attr("disabled", true);
+        },
+        fail: function(e, data) {
+            alert("照片上传出错，请重试一次");
+
+        },
+        always: function(e, data) {
+            isUploading = false;
+            $('#progress-bar-div').hide();
+            $('#image-uploader').attr("disabled", false);
+            $('#post_image').attr("disabled", false);
         }
     });
     $('#content').bind('input propertychange', function() {
