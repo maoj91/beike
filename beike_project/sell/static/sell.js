@@ -7,6 +7,7 @@ var isUploading = false;
 
 var imagesInfo = new Array(3);
 var imagesHtml = new Array(3);
+var numPerPage;
 
 function moreImagesAllowed() {
     if (imageCount >= imageMaxNum) {
@@ -30,20 +31,19 @@ function addImage(imageInfo) {
         var index = imageCount;
         imageCount++;
         imagesInfo[index] = imageInfo;
-        width = '300px';
-        height = '300px';
+        maxWidth = '450px';
+        maxHeight = '250px';
         if (imageInfo['width'] > imageInfo['height']) {
-            height = 'auto';
+            maxHeight = 'auto';
         } else {
-            width = 'auto';
+            maxWidth = 'auto';
         }
 
         imgElement = $('<img></img>');
         imgElement.attr("src", imageInfo['url']);
-        imgElement.css("width", width);
-        imgElement.css("height", height);
+        imgElement.css("max-width", maxWidth);
+        imgElement.css("max-height", maxHeight);
         imagesHtml[index] = imgElement;
-        displayImage(index);
 
         //add image to the thumbnail
         imgThumbnail = $('<img src="' + imageInfo['url'] + '" width="100%" height="100%"/>');
@@ -54,6 +54,7 @@ function addImage(imageInfo) {
         $('#image_width' + index).val(imageInfo['width']);
         $('#image_height' + index).val(imageInfo['height']);
         $('#image_orientation' + index).val(imageInfo['orientation']);
+        displayImage(index);
     }
 }
 
@@ -68,8 +69,9 @@ function removeImage(index) {
             if (i < imageCount) {
                 imagesInfo[i] = imagesInfo[i + 1];
                 imagesHtml[i] = imagesHtml[i + 1];
-                //add image to the thumbnail
+                //replace image in the thumbnail
                 imgThumbnail = $('<img src="' + imagesInfo[i]['url'] + '" width="100%" height="100%"/>')
+                $('#preview' + i).empty();
                 $('#preview' + i).append(imgThumbnail);
                 //add image to the form
                 $('#image_url' + i).val(imagesInfo[i]['url']);
@@ -89,6 +91,21 @@ function removeImage(index) {
     }
 }
 
+function handleImage(index) {
+    if (isUploading == true) {
+        return;
+    }
+    if(index == currentImageIndex) {
+        var toDelete = confirm("要删除该照片吗?");
+        if (toDelete == true) {
+            removeImage(index);
+            displayImage(0);
+        }
+    } else {
+        displayImage(index);
+    }
+}
+
 /*
  * Display the image
  */
@@ -96,24 +113,27 @@ function displayImage(index) {
     if (imageCount == 0) {
         $('#current_image').empty();
         $('#delete_icon').hide();
+        $('#imgselector0').css("background-color", "rgb(172,172,172)");
+        $('#imgselector1').css("background-color", "rgb(172,172,172)");
+        $('#imgselector2').css("background-color", "rgb(172,172,172)");
     }
     if (index < imageCount) {
         var imageInfo = imagesInfo[index];
         $('#current_image').empty();
         $('#current_image').append(imagesHtml[index]);
-        $('#imgselector0').css("background-color", "black");
-        $('#imgselector1').css("background-color", "black");
-        $('#imgselector2').css("background-color", "black");
+        $('#imgselector0').css("background-color", "rgb(172,172,172)");
+        $('#imgselector1').css("background-color", "rgb(172,172,172)");
+        $('#imgselector2').css("background-color", "rgb(172,172,172)");
         $('#imgselector' + index).css("background-color", "#00CED1");
         $('#delete_icon').show();
         currentImageIndex = index;
     }
 }
 
-function deleteCurrentImage() {
-    removeImage(currentImageIndex);
-    displayImage(0);
-}
+// function deleteCurrentImage() {
+//     removeImage(currentImageIndex);
+//     displayImage(0);
+// }
 
 /* Sell posts dynamic loading */
 var sellPostPageNum = 1;
@@ -193,7 +213,7 @@ function displayPosts(posts) {
 
         var postTemplate = $('<li class="sellpost-li"></li>');
         postTemplate.append($('<div>' + posts[i]["title"] + '</div>'));
-        postTemplate.append($('<div><img src="' + image_info['image_url'] + '" width="' + image_width + '" height="' + image_height + '"/></div>'));
+        postTemplate.append($('<div><a href="/detail/sell/' + posts[i]['post_id'] + '"><img src="' + image_info['image_url'] + '" width="' + image_width + '" height="' + image_height + '"/></a></div>'));
         postTemplate.append($('<div>$' + posts[i]["price"] + '</div>'));
         postTemplate.append($('<div>距离你 ' + posts[i]["distance"] + ' miles</div>'));
 
@@ -206,7 +226,7 @@ function displayPosts(posts) {
     }
     listA.listview("refresh");
     listB.listview("refresh");
-    if (len == 0) {
+    if (len < numPerPage) {
         hasMoreSellPost = false;
         $('#load-more').hide();
     } else {
@@ -232,6 +252,7 @@ $(document).delegate("#nearby-sellpost", "pageinit", function() {
     }).always(function() {
         //do nothing
     });
+    numPerPage = $('#num-per-page').val();
 });
 
 function getLatitudeLongtitude(position) {
@@ -250,7 +271,7 @@ function getLatitudeLongtitude(position) {
     }).then(function(data) {
         console.log(data);
         $('#zipcode').val(data['zipcode']);
-        $('#city').text(data['city']);
+        $('#city_name').text(data['city']);
     });
 }
 
@@ -266,7 +287,13 @@ $(document).delegate("#sellpost-form", "pageinit", function() {
     $('form').validate({
         rules: {
             phone_number: "digitonly"
+        },
+        submitHandler: function(form) {
+            if ($(form).valid() && $('#image_url0').valid())
+                form.submit();
+            return false; // prevent normal form posting
         }
+
     });
     isEmailChecked = false;
     isPhoneChecked = false;
@@ -284,15 +311,27 @@ $(document).delegate("#sellpost-form", "pageinit", function() {
             imageInfo['height'] = data.result.height;
             imageInfo['orientation'] = data.result.orientation;
             addImage(imageInfo);
-            console.log(JSON.stringify(imagesInfo[currentImageIndex]))
-            $('#upload_status').hide();
-            isUploading = false;
+            console.log(JSON.stringify(imagesInfo[currentImageIndex]));
         },
         progressall: function(e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#upload_status').html('Completed ' + progress + '%');
-            $('#upload_status').show();
+            $('#progress-bar-div').show();
+            $('#progress-bar').attr("aria-valuenow", progress);
+            $('#progress-bar').css("width", progress+"%");
+            $('#progress-bar').text(progress+"%");
             isUploading = true;
+            $('#image-uploader').attr("disabled", true);
+            $('#post_image').attr("disabled", true);
+        },
+        fail: function(e, data) {
+            alert("照片上传出错，请重试一次");
+
+        },
+        always: function(e, data) {
+            isUploading = false;
+            $('#progress-bar-div').hide();
+            $('#image-uploader').attr("disabled", false);
+            $('#post_image').attr("disabled", false);
         }
     });
     $('#content').bind('input propertychange', function() {

@@ -12,21 +12,23 @@
     <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
     <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
 
-
-    <!--js library for s3 upload-->
-    <script type="text/javascript" src="/static/s3upload.js"></script>
     <script type="text/javascript" src="/static/exif.js"></script>
     <script type="text/javascript" src="/static/binaryajax.js"></script>
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/bootstrap-theme.min.css">
+    <script type="text/javascript" src="/static/bootstrap.min.js"></script>
 
     <!-- beike customized css and js -->
     <link rel="stylesheet" href="/static/common.css">
     <link rel="stylesheet" href="/static/detail.css">
     <link rel="stylesheet" href="/static/sell.css">
     <link rel="stylesheet" href="/static/mine.css">
+    <script src="/static/jquery.fileupload.js"></script>
+    <script src="/static/jquery.touchSwipe.min.js"></script>
+    <script src="/static/common.js"></script>
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
-    <script src="/static/common.js"></script>
-    <script src="/static/jquery.touchSwipe.min.js"></script>
     <title>千贝科技</title>
 </head>
 
@@ -102,7 +104,7 @@
                         <div class="field-label-inner-div">城&nbsp;&nbsp;&nbsp;&nbsp;市</div>
                     </div>
                     <div class="ui-block-b" style="width:80%;">
-                        <div name="city" id="city" class="field-value-inner-div"></div>
+                        <div name="city_name" id="city_name" class="field-value-inner-div"></div>
                     </div>
                 </div>
 
@@ -154,7 +156,7 @@
                     </div>
                 </div>
 
-                <div class="ui-grid-solo" style="margin: 20 0;">
+                <div class="ui-grid-solo" style="margin: 20px 0;">
                     <div class="ui-grid-a">
                         <div class="ui-block-a">
                             <span class="text-p">其他描述</span>
@@ -167,7 +169,7 @@
                         <textarea name="content" id="content" style="height: 150px !important;" placeholder="描述颜色、大小、形状、新旧等需求" data-rule-required="true" data-rule-content="true" data-msg-required="请输入详细描述" maxlength="3000"></textarea>
                     </div>
                 </div>
-                <div class="ui-grid-b" style="margin: 20 0;">
+                <div class="ui-grid-b" style="margin: 20px 0;">
                     <div class = "ui-block-a"></div>
                     <div class = "ui-block-b">
                         <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/04/submit.png">
@@ -177,33 +179,31 @@
             </form>
         </div>
         <div data-role="footer" data-position="fixed">
-            <div style="background-color: rgb(35,192,148);">
-                <div class="ui-grid-d">
-                    <div class="ui-block-a">
-                        <a href="/">
-                            <img height="30" width="30" style="padding:12px 5px 5px 12px;" src='/static/images/navigation/homepage_clicked.png' />
-                        </a>
-                    </div>
-                    <div class="ui-block-b">
-                        <a href="/buy/form/">
-                            <img height="40" width="32" style="padding:5px;" src='/static/images/navigation/buy_form_clicked.png' />
-                        </a>
-                    </div>
-                    <div class="ui-block-c">
-                        <a href="/sell/form/">
-                            <img height="40" width="32" style="padding:5px;" src='/static/images/navigation/sell_form_clicked.png' />
-                        </a>
-                    </div>
-                    <div class="ui-block-d">
-                        <a href="/buy/all_list/">
-                            <img height="40" width="40" style="padding:5px;" src='/static/images/navigation/buy_posts_clicked.png' />
-                        </a>
-                    </div>
-                    <div class="ui-block-e">
-                        <a href="/sell/all_list/">
-                            <img height="40" width="40" style="padding:5px;" src='/static/images/navigation/sell_posts_clicked.png' />
-                        </a>
-                    </div>
+            <div class="ui-grid-d" style="background-color: rgb(35,192,148);">
+                <div class="ui-block-a">
+                    <a href="/">
+                        <img height="50" width="50" style="padding:5px 5px 5px 5px;" src='/static/images/navigation/homepage.png' />
+                    </a>
+                </div>
+                <div class="ui-block-b">
+                    <a href="/buy/form/">
+                        <img height="55" width="55" src='/static/images/navigation/buy_form_clicked.png' />
+                    </a>
+                </div>
+                <div class="ui-block-c">
+                    <a href="/sell/form/">
+                        <img height="55" width="55" src='/static/images/navigation/sell_form.png' />
+                    </a>
+                </div>
+                <div class="ui-block-d">
+                    <a href="/buy/all_list/">
+                        <img height="55" width="55" src='/static/images/navigation/buy_posts.png' />
+                    </a>
+                </div>
+                <div class="ui-block-e">
+                    <a href="/sell/all_list/">
+                        <img height="55" width="55" src='/static/images/navigation/sell_posts.png' />
+                    </a>
                 </div>
             </div>
         </div>
@@ -223,7 +223,7 @@
                 }
             }).then(function(data) {
                 $('#zipcode').val(data['zipcode']);
-                $('#city').text(data['city']);
+                $('#city_name').text(data['city']);
                 console.log(data);
             });
         }
@@ -239,7 +239,7 @@
                 }
             }).then(function(data) {
                 console.log(data);
-                $('#city').text(data['city']);
+                $('#city_name').text(data['city']);
                 $('#latitude').val(data['latitude']);
                 $('#longitude').val(data['longitude']);
             });
