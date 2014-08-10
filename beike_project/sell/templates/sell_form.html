@@ -12,6 +12,9 @@
     <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
     <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
 
+    <link rel="stylesheet" type="text/css" href="/static/jQMProgressBar.css">
+    <script type="text/javascript" src="/static/jQMProgressBar.js"></script>
+
     <script type="text/javascript" src="/static/exif.js"></script>
     <script type="text/javascript" src="/static/binaryajax.js"></script>
 
@@ -47,13 +50,7 @@
         <div id="image-uploader" style="max-width: 600px !important; width: 100% !important; height: 300px;">
             <div class="ui-grid-solo" style="width: 100%; height: 250px; background-color: rgb(213,213,213); background-image:url('/static/images/sell_post/camera_bkg.png'); background-size: 180px 150px; background-position: center; background-repeat:no-repeat;">
                 <div style="position: relative; text-align: center;">
-
-                    <div id="progress-bar-div" class="progress" style="width: 60%; position: absolute; top: 100px; left: 20%; display: none;">
-                        <div id="progress-bar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-                            0%
-                        </div>
-                    </div>
-
+                    <div id="progressbar" style=" width: 60%; position: absolute; top: 100px; left: 20%;"></div>
                     <div id="current_image">
                     </div>
                 </div>

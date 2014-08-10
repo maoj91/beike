@@ -95,7 +95,7 @@ function handleImage(index) {
     if (isUploading == true) {
         return;
     }
-    if(index == currentImageIndex) {
+    if (index == currentImageIndex) {
         var toDelete = confirm("要删除该照片吗?");
         if (toDelete == true) {
             removeImage(index);
@@ -212,7 +212,7 @@ function displayPosts(posts) {
         image_height = image_info['height'] / image_info['width'] * image_width;
         var distance = posts[i]["distance"];
         if (posts[i]["distance"] > 1000) {
-            distance = (posts[i]["distance"]/1000).toFixed(2) + " K"
+            distance = (posts[i]["distance"] / 1000).toFixed(2) + " K"
         }
 
         var postTemplate = $('<li class="sellpost-li"></li>');
@@ -319,21 +319,18 @@ $(document).delegate("#sellpost-form", "pageinit", function() {
         },
         progressall: function(e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#progress-bar-div').show();
-            $('#progress-bar').attr("aria-valuenow", progress);
-            $('#progress-bar').css("width", progress+"%");
-            $('#progress-bar').text(progress+"%");
+            $('#progressbar').show();
+            jQMProgressBar('progressbar').setValue(progress);
             isUploading = true;
             $('#image-uploader').attr("disabled", true);
             $('#post_image').attr("disabled", true);
         },
         fail: function(e, data) {
             alert("照片上传出错，请重试一次");
-
         },
         always: function(e, data) {
+            $('#progressbar').hide();
             isUploading = false;
-            $('#progress-bar-div').hide();
             $('#image-uploader').attr("disabled", false);
             $('#post_image').attr("disabled", false);
         }
@@ -343,6 +340,13 @@ $(document).delegate("#sellpost-form", "pageinit", function() {
         lengthCount = contentLength + "/" + 3000;
         $('#lengthCounter').text(lengthCount);
     });
+    jQMProgressBar('progressbar')
+        .isMini(false)
+        .setMax(100)
+        .setStartFrom(0)
+        .showCounter(true)
+        .build();
+    $('#progressbar').hide();
 
 });
 
