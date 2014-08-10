@@ -55,12 +55,15 @@ function displayBuyposts(posts) {
         len = posts.length;
     //process posts data
     for (i = 0; i < len; i++) {
-
+        var distance = posts[i]["distance"];
+        if (posts[i]["distance"] > 1000) {
+            distance = (posts[i]["distance"]/1000).toFixed(2) + " K"
+        }
         var postTemplate = $('<li class="sellpost-li"><div></div></li>');
-        var content = $('<a href="/detail/buy/' + posts[i]['post_id'] + '" style="text-decoration:none;"></a>')
-        content.append($('<div><img width="20" height="20" src="/static/images/nearby_buy_posts/request_logo.png" /><span>&nbsp;&nbsp;&nbsp;&nbsp;' + posts[i]["title"] + '</span></div>'))
-        content.append($('<div>$' + posts[i]["min_price"] + '</div>'));
-        content.append($('<div>距离你 ' + posts[i]["distance"] + ' miles</div>'));
+        var content = $('<a href="/detail/buy/' + posts[i]['post_id'] + '" style="text-decoration:none; color: rgb(0,0,0);font-weight:normal;"></a>')
+        content.append($('<div><img width="20" height="20" src="/static/images/nearby_buy_posts/request_logo.png" /><span style="font-size: 18px;">&nbsp;&nbsp;' + posts[i]["title"] + '</span></div>'))
+        content.append($('<div style="font-size: 16px;"><span style="color: #FF1493;">$&nbsp;</span>' + posts[i]["min_price"] + '</div>'));
+        content.append($('<div style="font-size: 12px;">距离你 ' + distance + ' miles</div>'));
 
         postTemplate.children().append(content);
         if (buypost_slot % 2 === 0) {
