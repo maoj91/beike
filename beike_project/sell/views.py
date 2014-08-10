@@ -28,7 +28,7 @@ def all_list(request):
     validate_user(request)
     categories = Category.objects.all();
     wx_id = request.session['wx_id']
-    return render_to_response('sell.html', {'user_id':wx_id, 'categories':categories, 'num_per_page': NUM_PER_PAGE})
+    return render_to_response('sell_posts.html', {'user_id':wx_id, 'categories':categories, 'num_per_page': NUM_PER_PAGE})
 
 def get_posts_by_page(request):
     if request.is_ajax():
@@ -141,7 +141,7 @@ def form(request):
     wx_id = request.session['wx_id']
     user = User.objects.get(wx_id=wx_id)
     categories = Category.objects.all();
-    return render_to_response('form.html',{'user':user,'user_id':wx_id, 'categories':categories},RequestContext(request)); 
+    return render_to_response('sell_form.html',{'user':user,'user_id':wx_id, 'categories':categories},RequestContext(request)); 
 
 
 def form_submit(request):
