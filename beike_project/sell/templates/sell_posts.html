@@ -29,54 +29,53 @@
 </head>
 
 <body>
-    <div id="nearby-sellpost" data-role="page" data-fullscreen="true" style="background-color: rgb(226,229,220);">
+    <div id="nearby-sellpost" data-role="page" data-fullscreen="true" class="base-style" style="background-color: rgb(226,229,220);">
         <link rel="stylesheet" type="text/css" href="/static/sell.css">
         <div data-role="header" data-position="fixed" style="background-color: rgb(35,192,148);">
             <div class="ui-grid-b">
                 <div class="ui-block-a">
-                    <a href="#popupBasic" data-rel="popup" data-role="button">Search</a>
+                    <a href="#popupBasic" data-rel="popup" data-role="button">高级搜索</a>
                     <div class="ui-popup ui-overlay-shadow ui-corner-all" data-role="popup" id="popupBasic">
                         <div class="ui-collapsible-set ui-corner-all" style="margin:0; width:250px;" data-expanded-icon="arrow-d" data-collapsed-icon="arrow-r" data-role="collapsible-set">
                             <div data-inset="false" data-role="collapsible">
-                                <h3>
+                                <h3 style="font-size: 15px;">
                                     地址
                                 </h3>
                                 <div data-role="fieldcontain">
                                     <form action="#" method="post" enctype="multipart/form-data" onsubmit="return refreshSellPosts();">
                                         <input type="number" name="zipcode" id="zipcode" placeholder="请输入ZipCode" />
-                                        <input type="submit" value="Submit" id="submit_btn">
+                                        <input type="submit" value="提交" id="address_submit_btn">
                                     </form>
                                 </div>
                             </div>
                             <div data-inset="false" data-role="collapsible">
-                                <h3>
+                                <h3 style="font-size: 15px;">
                                     种类
                                 </h3>
                                 <div data-role="fieldcontain">
                                     <fieldset data-role="controlgroup">
                                         <form action="#" method="post" enctype="multipart/form-data" onsubmit="return refreshSellPosts();">
-                                            <legend>Choose a category:</legend>
+                                            <legend>请选择种类:</legend>
                                             <input type="radio" name="category" id=0 value='' checked="checked" />
                                             <label for=0>All</label>
                                             {% for category in categories %}
                                             <input type="radio" name="category" id={{ category.id }} value={{ category.id }} />
                                             <label for={{ category.id }}>{{category.name}}</label>
                                             {% endfor %}
-
-                                            <input type="submit" value="Submit" id="submit_btn">
+                                            <input type="submit" value="提交" id="category_submit_btn">
                                         </form>
                                     </fieldset>
                                 </div>
 
                             </div>
                             <div data-inset="false" data-role="collapsible">
-                                <h3>
+                                <h3 style="font-size: 15px;">
                                     关键字
                                 </h3>
                                 <div data-role="fieldcontain">
                                     <form action="#" method="post" enctype="multipart/form-data" onsubmit="return refreshSellPosts();">
                                         <input type="text" name="sellPostKeyword" id="sellPostKeyword" placeholder="请输入关键字" />
-                                        <input type="submit" value="Submit" id="submit_btn">
+                                        <input type="submit" value="提交" id="keyword_submit_btn">
                                     </form>
                                 </div>
                             </div>
@@ -84,14 +83,14 @@
                     </div>
                 </div>
                 <div class="ui-block-b">
-                    <p style="text-align:center; color:white">周边物品</p>
+                    <p style="text-align:center; color:white;">周边物品</p>
                 </div>
                 <div class="ui-block-a">
                 </div>
             </div>
         </div>
         <div id="sell-list" data-role="main">
-            <input type="hidden" id="num-per-page" name="num-per-page" value="{{num_per_page}}"/>
+            <input type="hidden" id="num-per-page" name="num-per-page" value="{{num_per_page}}" />
             <div class="ui-grid-a">
                 <div class="ui-block-a">
                     <ul id="post-list-a" data-role="listview" data-theme="c" data-inset="true">
@@ -111,7 +110,7 @@
             <div class="ui-grid-d" style="background-color: rgb(35,192,148);">
                 <div class="ui-block-a">
                     <a href="/">
-                        <img height="50" width="50" style="padding:5px 5px 5px 5px;" src='/static/images/navigation/homepage.png' />
+                        <img height="45" width="45" style="padding:5px 5px 5px 5px;" src='/static/images/navigation/homepage.png' />
                     </a>
                 </div>
                 <div class="ui-block-b">

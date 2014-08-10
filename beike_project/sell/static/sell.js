@@ -210,12 +210,16 @@ function displayPosts(posts) {
 
         image_width = document.body.clientWidth * 0.4;
         image_height = image_info['height'] / image_info['width'] * image_width;
+        var distance = posts[i]["distance"];
+        if (posts[i]["distance"] > 1000) {
+            distance = (posts[i]["distance"]/1000).toFixed(2) + " K"
+        }
 
         var postTemplate = $('<li class="sellpost-li"></li>');
-        postTemplate.append($('<div>' + posts[i]["title"] + '</div>'));
+        postTemplate.append($('<div style="font-size: 20px;"><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" /><span>&nbsp;&nbsp;&nbsp;&nbsp;' + posts[i]["title"] + '</span></div>'));
         postTemplate.append($('<div><a href="/detail/sell/' + posts[i]['post_id'] + '"><img src="' + image_info['image_url'] + '" width="' + image_width + '" height="' + image_height + '"/></a></div>'));
-        postTemplate.append($('<div>$' + posts[i]["price"] + '</div>'));
-        postTemplate.append($('<div>距离你 ' + posts[i]["distance"] + ' miles</div>'));
+        postTemplate.append($('<div style="font-size: 16px;"><span style="color: #FF1493;">$&nbsp;</span>' + posts[i]["price"] + '</div>'));
+        postTemplate.append($('<div style="font-size: 12px;">距离你 ' + distance + ' miles</div>'));
 
         if (slot_pos % 2 === 0) {
             listA.append(postTemplate);
@@ -271,7 +275,7 @@ function getLatitudeLongtitude(position) {
     }).then(function(data) {
         console.log(data);
         $('#zipcode').val(data['zipcode']);
-        $('#city_name').text(data['city']);
+        $('#city_name').val(data['city']);
     });
 }
 
