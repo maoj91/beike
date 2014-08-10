@@ -50,17 +50,31 @@
     margin-top:5%
 }
 .city_background{
-    position: relative;
+    position: absolute;
     left: 10px;
-    top: -280px;
+    top: 15px;
     width:100px;
     height:40px;
 }
 
-#city{
-    position: relative;
+.city_background_android{
+    position: absolute;
+    left: 10px;
+    top: 60px;
+    width: 100px;
+    height: 40px;
+}
+
+.city{
+    position: absolute;
     left: 25px;
-    top: -310px;
+    top: 25px;
+}
+
+.city_android{
+    position: absolute;
+    left: 25px;
+    top: 70px;
 }
 
 .city_mark{

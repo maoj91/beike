@@ -41,14 +41,14 @@
             
             <div class="ui-grid-solo">
                 <img width="100%" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/logo.png" />
-                <img  class="city_background" src='/static/images/homepage/citybackground.png' />
-                <div id="city">
+                <img  class="city_background" id="city_background" src='/static/images/homepage/citybackground.png' />
+                <div id="city" class="city">
                     <img  class="city_mark" src='/static/images/detail/location_icon.png' />
                     <span class="head_text_right">{{city}}</span>
                 </div>
             </div>
 
-            <div class="ui-grid-b" style="top:-50px;position:relative">
+            <div class="ui-grid-b">
                 <div class="ui-block-a">
                     <a href="/buy/form">
                         <img class='main-button' src='/static/images/homepage/buy.png' />
@@ -108,6 +108,10 @@
             }
             if (isAndroidWeixin()) {
                 $('#notification-banner').show();
+                $('#city').removeClass('city');
+                $('#city').addClass('city_android');   
+                $('#city_background').removeClass('city_background');
+                $('#city_background').addClass('city_background_android'); 
             }
         </script>
     </div>
