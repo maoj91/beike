@@ -50,17 +50,17 @@
     margin-top:5%
 }
 .city_background{
-    position: absolute;
+    position: relative;
     left: 10px;
-    top: 0px;
+    top: -280px;
     width:100px;
     height:40px;
 }
 
 #city{
-    position: absolute;
-    left: 30px;
-    top: 10px;
+    position: relative;
+    left: 25px;
+    top: -310px;
 }
 
 .city_mark{
