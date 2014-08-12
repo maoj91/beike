@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.gis.db import models
 from data.image_util import get_default_image
+from datetime import datetime
 
 class Country(models.Model):
 	name = models.CharField(max_length=255)
@@ -63,6 +64,8 @@ class User(models.Model):
 	address = models.ForeignKey(Address,blank=True, null=True)
 	privacy = models.ForeignKey(Privacy, default= get_default_privacy)
 	image_url = models.CharField(max_length= 255, null=True, default = get_default_image())
+	date_created = models.DateTimeField(default=datetime.now, blank=False)
+	description = models.CharField(max_length=3000, default="",null=False)
 	def __unicode__(self):
 		return self.name
 

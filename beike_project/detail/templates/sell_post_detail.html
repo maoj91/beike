@@ -225,13 +225,13 @@
 
                 <div class="ui-grid-b" style="margin-top:10px;">
                     <div class="ui-block-b" style="width:50%">
-                        <a href="#seller"><img id='share' src='/static/images/detail/contact_seller.png' style="vertical-align:middle;max-height:35px;"></a>
+                        <a href="#seller"><img src='/static/images/detail/contact_seller.png' style="vertical-align:middle;max-height:35px;"></a>
                     </div>
                     <div class="ui-block-b" style="width:25%;text-align:right;">
-                        <img id='share' src='/static/images/detail/share.png' style="vertical-align:middle;weight:30px;height:30px;border:1px solid #d1cfd1;border-radius:15%;padding:7px 15px 7px 15px;"  onclick="showShareMsg()"> 
+                        <img id='share' src='/static/images/detail/share.png' style="vertical-align:middle;weight:20px;height:20px;border:1px solid #d1cfd1;border-radius:15%;padding:7px 15px 7px 15px;"  onclick="showShareMsg()"> 
                     </div>
                     <div class="ui-block-c" style="width:25%;text-align:right;">
-                        <img id='follow'  style="vertical-align:middle;weight:30px;height:30px;border:1px solid #d1cfd1;border-radius:15%;padding:7px 12px 7px 12px;" onclick="toggleFollowStatus();"> 
+                        <img id='follow'  style="vertical-align:middle;weight:20px;height:20px;border:1px solid #d1cfd1;border-radius:15%;padding:7px 12px 7px 12px;" onclick="toggleFollowStatus();"> 
                     </div>
                 </div>
 
@@ -272,6 +272,12 @@
     </div>
     {% endif %} 
 
+    {% if post.user.description %}
+    <div class="ui-grid-solo" id="user_description" style="margin-bottom:20px;margin-top:20px;margin-left:5%;margin-right:5%;">
+        {{post.user.description}}
+    </div>
+    {% endif %} 
+
     <a name="seller"></a>
     <div style="width:100%;height:60px;margin-bottom:20px;">
         <div id="contacts" style="display:table;height:100%;margin: 0 auto; padding: 5px;">
@@ -295,6 +301,16 @@
                     <img style="width:50px;height:50px;" src="/static/images/detail/sms.png"/>
                     {% endif%}
         </div>
+    </div>
+
+    <div class="ui-grid-solo" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;text-align:center;">
+            注册于{{ post.user.date_created|date:"Y年n月j日" }}
+    </div>
+
+    <div class="ui-grid-solo" style="clear:both;margin-top:20px;margin-bottom:20px;text-align:right;">
+        <a href="/user/{{user_id}}/">
+            <img src="/static/images/detail/complete_profile.png" style="max-height:30px;">
+        </a>
     </div>
 
 <!--                 <div class="ui-block-a" style="width:33%;height:60px;">
