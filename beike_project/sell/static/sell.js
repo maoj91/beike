@@ -371,6 +371,11 @@ function refreshSellPosts() {
         hasMoreSellPost = false;
         sellPostLoader.getAndDisplayPosts(sellPostCurLatLon, sellPostCategory, sellPostKeyword);
     });
-
+    document.getElementById("zipcode").value='';
+    document.getElementById("sellPostKeyword").value='';
+    if(sellPostCategory != 0){
+        $('input[name=category][value=]').prop("checked",true).checkboxradio( "refresh" );
+        $('input[name=category][value=' + sellPostCategory + ']').prop("checked",false).checkboxradio( "refresh" );
+    }
     return false;
 }
