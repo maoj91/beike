@@ -1,3 +1,7 @@
+/************************************/
+/* Sell post upload form javascript */
+/************************************/
+
 var imageCount = 0;
 var imageMaxNum = 3;
 var currentImageIndex = 0;
@@ -7,8 +11,10 @@ var isUploading = false;
 
 var imagesInfo = new Array(3);
 var imagesHtml = new Array(3);
-var numPerPage;
 
+/*
+* Check if it is allowed to upload more images
+*/
 function moreImagesAllowed() {
     if (imageCount >= imageMaxNum) {
         alert("已经达到上限");
@@ -16,16 +22,9 @@ function moreImagesAllowed() {
     return imageCount < imageMaxNum;
 }
 
-function getImageNamePrefix(user_id) {
-    var currentTime = Date.now();
-    var prefix = user_id + "/" + currentTime;
-    return prefix;
-}
-
 /*
  * Add an image info and update the preview and form
  */
-
 function addImage(imageInfo) {
     if (imageCount < imageMaxNum) {
         var index = imageCount;
@@ -61,7 +60,6 @@ function addImage(imageInfo) {
 /*
  * Remove an image info and update the preview and form
  */
-
 function removeImage(index) {
     if (index < imageCount) {
         imageCount--;
@@ -91,20 +89,19 @@ function removeImage(index) {
     }
 }
 
-function handleImage(index) {
-    if (isUploading == true) {
-        return;
-    }
-    if (index == currentImageIndex) {
+/*
+ * Delete the image
+ */
+function deleteImage(index) {
+    if (!isUploading) {
         var toDelete = confirm("要删除该照片吗?");
         if (toDelete == true) {
             removeImage(index);
             displayImage(0);
         }
-    } else {
-        displayImage(index);
     }
 }
+
 
 /*
  * Display the image
@@ -112,30 +109,99 @@ function handleImage(index) {
 function displayImage(index) {
     if (imageCount == 0) {
         $('#current_image').empty();
-        $('#delete_icon').hide();
-        $('#imgselector0').css("background-color", "rgb(172,172,172)");
-        $('#imgselector1').css("background-color", "rgb(172,172,172)");
-        $('#imgselector2').css("background-color", "rgb(172,172,172)");
+        $('#imgselector0').empty();
     }
     if (index < imageCount) {
         var imageInfo = imagesInfo[index];
+        //replace the image
         $('#current_image').empty();
         $('#current_image').append(imagesHtml[index]);
-        $('#imgselector0').css("background-color", "rgb(172,172,172)");
-        $('#imgselector1').css("background-color", "rgb(172,172,172)");
-        $('#imgselector2').css("background-color", "rgb(172,172,172)");
-        $('#imgselector' + index).css("background-color", "#00CED1");
-        $('#delete_icon').show();
+        //move the image thumbnail
+        $('#imgselector0').empty();
+        $('#imgselector1').empty();
+        $('#imgselector2').empty();
+        var imgDeleteIcon = $('<img src="/static/images/sell_post/thumbnail_selected.png" width="100%" onclick="deleteImage('
+                          + index + ');">');
+        $('#imgselector' + index).append(imgDeleteIcon);
         currentImageIndex = index;
     }
 }
 
-// function deleteCurrentImage() {
-//     removeImage(currentImageIndex);
-//     displayImage(0);
-// }
+$(document).delegate("#sellpost-form", "pageinit", function() {
+    imageCount = 0;
+    currentImageIndex = 0;
+    isUploading = false;
+    for (var i = 0; i < imageMaxNum; i++) {
+        imagesInfo[i] = null;
+    }
+    var deviceWidth = $(window).width() * 0.90;
+    $('#image-uploader').css('width', deviceWidth);
+    $('form').validate({
+        rules: {
+            phone_number: "digitonly"
+        },
+        submitHandler: function(form) {
+            if ($(form).valid() && $('#image_url0').valid())
+                form.submit();
+            return false; // prevent normal form posting
+        }
 
+    });
+    isEmailChecked = false;
+    isPhoneChecked = false;
+    isSmsChecked = false;
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
+    }
+    $('#post_image').fileupload({
+        url: "/s3/upload/",
+        dataType: 'json',
+        done: function(e, data) {
+            var imageInfo = {};
+            imageInfo['url'] = data.result.image_url;
+            imageInfo['width'] = data.result.width;
+            imageInfo['height'] = data.result.height;
+            imageInfo['orientation'] = data.result.orientation;
+            addImage(imageInfo);
+            console.log(JSON.stringify(imagesInfo[currentImageIndex]));
+        },
+        progressall: function(e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('#progressbar').show();
+            jQMProgressBar('progressbar').setValue(progress);
+            isUploading = true;
+            $('#image-uploader').attr("disabled", true);
+            $('#post_image').attr("disabled", true);
+        },
+        fail: function(e, data) {
+            alert("照片上传出错，请重试一次");
+        },
+        always: function(e, data) {
+            $('#progressbar').hide();
+            isUploading = false;
+            $('#image-uploader').attr("disabled", false);
+            $('#post_image').attr("disabled", false);
+        }
+    });
+    $('#content').bind('input propertychange', function() {
+        contentLength = $('#content').val().length;
+        lengthCount = contentLength + "/" + 3000;
+        $('#lengthCounter').text(lengthCount);
+    });
+    jQMProgressBar('progressbar')
+        .isMini(false)
+        .setMax(100)
+        .setStartFrom(0)
+        .showCounter(true)
+        .build();
+    $('#progressbar').hide();
+});
+
+/******************************/
 /* Sell posts dynamic loading */
+/******************************/
+
+var numPerPage;
 var sellPostPageNum = 1;
 var sellPostCurLatLon = {};
 var hasMoreSellPost = true;
@@ -216,9 +282,9 @@ function displayPosts(posts) {
         }
 
         var postTemplate = $('<li class="sellpost-li"></li>');
-        postTemplate.append($('<div style="font-size: 20px;"><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" /><span>&nbsp;&nbsp;&nbsp;&nbsp;' + posts[i]["title"] + '</span></div>'));
+        postTemplate.append($('<div style="font-size: 18px;"><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" /><span>&nbsp;&nbsp;' + posts[i]["title"] + '</span></div>'));
         postTemplate.append($('<div><a href="/detail/sell/' + posts[i]['post_id'] + '"><img src="' + image_info['image_url'] + '" width="' + image_width + '" height="' + image_height + '"/></a></div>'));
-        postTemplate.append($('<div style="font-size: 16px;"><span style="color: #FF1493;">$&nbsp;</span>' + posts[i]["price"] + '</div>'));
+        postTemplate.append($('<div style="font-size: 16px;"><span style="color: #ff9999;">$&nbsp;</span>' + posts[i]["price"] + '</div>'));
         postTemplate.append($('<div style="font-size: 12px;">距离你 ' + distance + ' miles</div>'));
 
         if (slot_pos % 2 === 0) {
@@ -278,78 +344,6 @@ function getLatitudeLongtitude(position) {
         $('#city_name').val(data['city']);
     });
 }
-
-$(document).delegate("#sellpost-form", "pageinit", function() {
-    imageCount = 0;
-    currentImageIndex = 0;
-    isUploading = false;
-    for (var i = 0; i < imageMaxNum; i++) {
-        imagesInfo[i] = null;
-    }
-    var deviceWidth = $(window).width() * 0.90;
-    $('#image-uploader').css('width', deviceWidth);
-    $('form').validate({
-        rules: {
-            phone_number: "digitonly"
-        },
-        submitHandler: function(form) {
-            if ($(form).valid() && $('#image_url0').valid())
-                form.submit();
-            return false; // prevent normal form posting
-        }
-
-    });
-    isEmailChecked = false;
-    isPhoneChecked = false;
-    isSmsChecked = false;
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
-    }
-    $('#post_image').fileupload({
-        url: "/s3/upload/",
-        dataType: 'json',
-        done: function(e, data) {
-            var imageInfo = {};
-            imageInfo['url'] = data.result.image_url;
-            imageInfo['width'] = data.result.width;
-            imageInfo['height'] = data.result.height;
-            imageInfo['orientation'] = data.result.orientation;
-            addImage(imageInfo);
-            console.log(JSON.stringify(imagesInfo[currentImageIndex]));
-        },
-        progressall: function(e, data) {
-            var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#progressbar').show();
-            jQMProgressBar('progressbar').setValue(progress);
-            isUploading = true;
-            $('#image-uploader').attr("disabled", true);
-            $('#post_image').attr("disabled", true);
-        },
-        fail: function(e, data) {
-            alert("照片上传出错，请重试一次");
-        },
-        always: function(e, data) {
-            $('#progressbar').hide();
-            isUploading = false;
-            $('#image-uploader').attr("disabled", false);
-            $('#post_image').attr("disabled", false);
-        }
-    });
-    $('#content').bind('input propertychange', function() {
-        contentLength = $('#content').val().length;
-        lengthCount = contentLength + "/" + 3000;
-        $('#lengthCounter').text(lengthCount);
-    });
-    jQMProgressBar('progressbar')
-        .isMini(false)
-        .setMax(100)
-        .setStartFrom(0)
-        .showCounter(true)
-        .build();
-    $('#progressbar').hide();
-
-});
-
 
 function refreshSellPosts() {
     $('#popupBasic-popup').removeClass('ui-popup-active');
