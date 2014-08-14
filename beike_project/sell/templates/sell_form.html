@@ -62,27 +62,26 @@
                     <label for="post_image">
                         <img src='/static/images/sell_post/upload.png' style="width: 90%; height: 90%;">
                     </label>
-
                 </div>
 
                 <div class="ui-block-b" style="width: 80%;">
-                    <div class="ui-grid-c" id="imgselector" style="height: 5px; background-color: rgb(172,172,172);">
-                        <div id="imgselector0" class="ui-block-a" style="height: 100%" onclick="handleImage(0)"></div>
-                        <div id="imgselector1" class="ui-block-b" style="height: 100%" onclick="handleImage(1)"></div>
-                        <div id="imgselector2" class="ui-block-c" style="height: 100%" onclick="handleImage(2)"></div>
-                        <div class="ui-block-d" style="height: 100%"></div>
-                    </div>
                     <div class="ui-grid-c" style="height: 55px;">
-                        <div class="ui-block-a" style="width: 25%; height: 100%; border-right: solid 1px white;">
-                            <span id="preview0" onclick="handleImage(0)"></span>
+                        <div class="ui-block-a" style="width: 25%; height: 100%; position: relative;">
+                            <div id="imgselector0" style="position: absolute; height: 6px; width: 100%; background-color: rgb(172,172,172);">
+                            </div>
+                            <div id="preview0" style="width: 100%; height: 100%; border-right: solid 1px white;" onclick="displayImage(0);"></div>
                         </div>
-                        <div class="ui-block-b" style="width: 25%; height: 100%; border-right: solid 1px white;">
-                            <span id="preview1" onclick="handleImage(1)"></span>
+                        <div class="ui-block-b" style="width: 25%; height: 100%; position: relative;">
+                            <div id="imgselector1" style="position: absolute; height: 6px; width: 100%; background-color: rgb(172,172,172);"></div>
+                            <div id="preview1" style="width: 100%; height: 100%; border-right: solid 1px white;" onclick="displayImage(1);"></div>
                         </div>
-                        <div class="ui-block-c" style="width: 25%; height: 100%; border-right: solid 1px white;">
-                            <span id="preview2" onclick="handleImage(2)"></span>
+                        <div class="ui-block-c" style="width: 25%; height: 100%; position: relative;">
+                            <div id="imgselector2" style="position: absolute; height: 6px; width: 100%; background-color: rgb(172,172,172);"></div>
+                            <div id="preview2" style="width: 100%; height: 100%; border-right: solid 1px white;" onclick="displayImage(2);"></div>
                         </div>
-                        <div class="ui-block-d" style="width: 25%;"></div>
+                        <div class="ui-block-d" style="width: 25%; height: 100%; position: relative;">
+                            <div style="position: absolute; height: 6px; width: 100%; background-color: rgb(172,172,172);"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -289,7 +288,7 @@
             <div class="ui-grid-d" style="background-color: rgb(35,192,148);">
                 <div class="ui-block-a">
                     <a href="/">
-                        <img height="50" width="50" style="padding:5px 5px 5px 5px;" src='/static/images/navigation/homepage.png' />
+                        <img height="30" width="35" style="padding:10px 5px 5px 10px;" src='/static/images/navigation/homepage.png' />
                     </a>
                 </div>
                 <div class="ui-block-b">
