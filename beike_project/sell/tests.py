@@ -3,7 +3,7 @@ Unit Test for sell app
 """
 
 from django.test import TestCase
-from sell.image_util import ImageMetadata
+from data.image_util import ImageMetadata
 
 
 class SellTest(TestCase):

@@ -12,9 +12,9 @@
     <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
     <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
 
+    <link rel="stylesheet" type="text/css" href="/static/jQMProgressBar.css">
+    <script type="text/javascript" src="/static/jQMProgressBar.js"></script>
 
-    <!--js library for s3 upload-->
-    <script type="text/javascript" src="/static/s3upload.js"></script>
     <script type="text/javascript" src="/static/exif.js"></script>
     <script type="text/javascript" src="/static/binaryajax.js"></script>
 
@@ -23,11 +23,11 @@
     <link rel="stylesheet" href="/static/detail.css">
     <link rel="stylesheet" href="/static/sell.css">
     <link rel="stylesheet" href="/static/mine.css">
+    <script src="/static/jquery.fileupload.js"></script>
+    <script src="/static/jquery.touchSwipe.min.js"></script>
+    <script src="/static/common.js"></script>
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
-    <script src="/static/common.js"></script>
-    <script src="/static/jquery.touchSwipe.min.js"></script>
-    <script src="/static/jquery.fileupload.js"></script>
     <title>千贝科技</title>
 </head>
 
@@ -38,50 +38,45 @@
         </div>
 
         <div data-role="main">
-            <div class="ui-grid-a">
-                <div class="ui-block-a">
-                    <img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/city.png" style="float:left">
-                    <div class="head_text_left">&nbsp{{city}}</div>
-                </div>
-                <div class="ui-block-b">
-                    <div class="head_text_right">&nbsp{{user.name}}</div>
-                    <img src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/user.png" style="float:right">
-                </div>
-            </div>
-
+            
             <div class="ui-grid-solo">
                 <img width="100%" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/logo.png" />
+                <img  class="city_background" id="city_background" src='/static/images/homepage/citybackground.png' />
+                <div id="city" class="city">
+                    <img  class="city_mark" src='/static/images/detail/location_icon.png' />
+                    <span class="head_text_right">{{city}}</span>
+                </div>
             </div>
 
             <div class="ui-grid-b">
                 <div class="ui-block-a">
                     <a href="/buy/form">
-                        <img class='main-button' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/buy.png' />
+                        <img class='main-button' src='/static/images/homepage/buy.png' />
                     </a>
                 </div>
                 <div class="ui-block-b">
                     <a href="/sell/form">
-                        <img class='main-button' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/sell.png' />
+                        <img class='main-button' src='/static/images/homepage/sell.png' />
                     </a>
                 </div>
                 <div class="ui-block-c">
                     <a href="/mine/">
-                        <img class='main-button' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/my.png' />
+                        <img class='main-button' src='/static/images/homepage/mine.png' />
                     </a>
                 </div>
                 <div class="ui-block-a">
                     <a href="/sell/all_list/">
-                        <img class='main-button' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/nearby.png' />
+                        <img class='main-button' src='/static/images/homepage/nearbypost.png' />
                     </a>
                 </div>
                 <div class="ui-block-b">
                     <a href="/buy/all_list/">
-                        <img class='main-button' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/request.png' />
+                        <img class='main-button' src='/static/images/homepage/nearbyrequest.png' />
                     </a>
                 </div>
                 <div class="ui-block-c">
                     <a href="/about/">
-                        <img class='main-button' src='https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/help.png' />
+                        <img class='main-button' src='/static/images/homepage/help.png' />
                     </a>
                 </div>
             </div>
@@ -113,6 +108,10 @@
             }
             if (isAndroidWeixin()) {
                 $('#notification-banner').show();
+                //$('#city').removeClass('city');
+                //$('#city').addClass('city_android');   
+                //$('#city_background').removeClass('city_background');
+                //$('#city_background').addClass('city_background_android'); 
             }
         </script>
     </div>

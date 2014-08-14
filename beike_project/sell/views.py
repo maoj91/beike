@@ -17,8 +17,10 @@ from data.image_util import ImageMetadata
 from django.contrib.gis.measure import D
 import logging
 from data.data_util import get_contact, get_condition
+from django.db.models import Q
 
 logger = logging.getLogger(__name__)
+NUM_PER_PAGE = 20
 
 def index(request):
     return HttpResponse('sell');
@@ -27,7 +29,7 @@ def all_list(request):
     validate_user(request)
     categories = Category.objects.all();
     wx_id = request.session['wx_id']
-    return render_to_response('sell.html', {'user_id':wx_id, 'categories':categories})
+    return render_to_response('sell_posts.html', {'user_id':wx_id, 'categories':categories, 'num_per_page': NUM_PER_PAGE})
 
 def get_posts_by_page(request):
     if request.is_ajax():
@@ -41,9 +43,9 @@ def get_posts_by_page(request):
         if category != '':
             query_set = query_set.filter(category__id=category)
         if keyword != '':
-            query_set = query_set.filter(title__icontains=keyword)
+            query_set = query_set.filter(Q(content__icontains=keyword)|Q(title__icontains=keyword))
         #TO-DO: make the record count configurable
-        paginator = Paginator(query_set, 8)
+        paginator = Paginator(query_set, NUM_PER_PAGE)
         try:
             sell_posts = paginator.page(page_num)
         except PageNotAnInteger:
@@ -71,11 +73,11 @@ def follow_post(request):
         post_id = request.GET.get('post_id')
         post = sell_post_util.get_post(post_id)
 
-        follow_option = request.GET.get('follow_option')
-        if follow_option == 'follow':
+        is_followed = request.GET.get('is_followed')
+        if is_followed == 'True':
             sell_post_util.follow_post(user, post)
             return HttpResponse("{}")
-        elif follow_option == 'unfollow':
+        elif is_followed == 'False':
             sell_post_util.unfollow_post(user, post)
             return HttpResponse("{}")
         else:
@@ -140,7 +142,7 @@ def form(request):
     wx_id = request.session['wx_id']
     user = User.objects.get(wx_id=wx_id)
     categories = Category.objects.all();
-    return render_to_response('form.html',{'user':user,'user_id':wx_id, 'categories':categories},RequestContext(request)); 
+    return render_to_response('sell_form.html',{'user':user,'user_id':wx_id, 'categories':categories},RequestContext(request)); 
 
 
 def form_submit(request):
@@ -166,7 +168,8 @@ def form_submit(request):
         new_post.title = request.POST.get('title','')
         new_post.content = request.POST.get('content','')
         new_post.price = request.POST.get('price','')
-        condition_value = request.POST.get('condition-slider',0) 
+        condition_value = request.POST.get('condition-slider',0)
+        print condition_value
         new_post.item_condition = get_condition(condition_value)
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
@@ -188,9 +191,8 @@ def get_image_info(request):
         image_url = request.POST.get('image_url' + str(i))
         image_width = request.POST.get('image_width' + str(i))
         image_height = request.POST.get('image_height' + str(i))
-        image_orientation = request.POST.get('image_orientation' + str(i))
-        if image_url and image_width and image_height and image_orientation:
-            image = ImageMetadata(image_url, image_width, image_height, image_orientation)
+        if image_url and image_width and image_height:
+            image = ImageMetadata(image_url, image_width, image_height)
             image_list.append(image)
     return ImageMetadata.serialize_list(image_list)
 
