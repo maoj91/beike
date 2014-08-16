@@ -33,14 +33,10 @@
         <div data-role="content">
             <div id="current_image_div">
 
-                {% if image %}
-                  {% for key, value in image.items %}
-                    {% if key == 'image_url' %}
-                      <img id="current_image" src='{{value}}' style="width=50px;height=50px;">
-                    {% elif key == 'width' %} 
-                    {% elif key == 'height' %} 
-                    {% endif %}
-                  {% endfor %}
+                {% if user_image %}
+                <div style="display:table;margin:0 auto;">
+                        <img id='profile_image' src='{{user_image.image_url}}' style="width: 80px;height:80px;border-radius: 50%;"/>
+                </div>
                 {% endif %}
 
                 <div class="hidden_file">
