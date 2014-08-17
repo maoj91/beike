@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html lang="zh">
+
+<head>
+    <meta name="viewport" content="width=device-width ,  user-scalable=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width ,  user-scalable=no">
+    <meta charset="UTF-8">
+    <!-- jquery library -->
+    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
+    <script src="/static/jquery/jquery-1.8.3.js "></script>
+    <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+
+    <!--js library for s3 upload-->
+    <script type="text/javascript" src="/static/s3upload.js"></script>
+    <script src="/static/exif.js"></script>
+    <script src="/static/binaryajax.js"></script>
+
+    <!-- customized css and js -->
+    <link rel="stylesheet" href="/static/common.css">
+    <link rel="stylesheet" href="/static/detail.css">
+    <script src="/static/buy.js"></script>
+    <script src="/static/sell.js"></script>
+    <script src="/static/common.js"></script>
+    <script type="text/javascript" src="/static/jquery.touchSwipe.min.js"></script>
+</head>
+
+<body>
+    <div data-role="page" id="main-page" data-theme="a">
+        <link rel="stylesheet" type="text/css" href="/static/me.css">
+        <div data-role="header" data-position="fixed">
+        </div>
+        <div data-role="content">
+            <div id="current_image_div">
+
+                {% if user_image %}
+                <div style="display:table;margin:0 auto;">
+                        <img id='profile_image' src='{{user_image.image_url}}' style="width: 80px;height:80px;border-radius: 50%;"/>
+                </div>
+                {% endif %}
+
+                <div class="hidden_file">
+                    <input type="file" id="image1" data-clear-btn="false" name="image" accept="image/*" onchange="image_s3_upload(this.id,'{{user.wx_id}}');" capture>
+                </div>
+                <p id="upload_status">status</p>
+                <form action="/user/update_profile_image/" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <input type="hidden" id="image_url" name="image_url" value="">
+                    <input type="hidden" id="image_width" name="image_width" value="">
+                    <input type="hidden" id="image_height" name="image_height" value="">
+                    <input type="submit" id="save_image" value="Save">
+                </form>
+            </div>
+
+
+            <div id="error">
+                {% if error %}
+                <p>{{error}}</p>
+                {% endif %}
+            </div>
+            <div id="profile">
+                <p>--------------- 个人资料 ----------------</p>
+                <form action="/user/save_profile/" method="post" enctype="multipart/form-data">{% csrf_token %} 用户名：
+                    <input type="text" name="user_name" placeholder={{user.name}} value={{user.name}}>
+                    </br>
+                    邮箱：
+                    <input type="text" name="user_email" placeholder={{user.email}} value={{user.email}}>
+                    </br>
+                    地区：
+                    <select name="area_city">
+                        {% for city in cities %}
+                        {% if city.name == user.city.name %}
+                        <option value="{{city.name}}" selected>{{city.name}}</option>
+                        {% else %}
+                        <option value="{{city.name}}">{{city.name}}</option>
+                        {% endif %}
+                        {% endfor %} ,
+                    </select>
+
+                    <select name="area_state">
+                        {% for state in states %}
+                        {% if state == user.city.state.name %}
+                        <option value="{{state.name}}" selected>{{state.name}}</option>
+                        {% else %}
+                        <option value="{{state.name}}">{{state.name}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                    </br>
+                    <input type="submit" id="save_profile" value="Save">
+                </form>
+            </div>
+            <div id="privacy">
+                </form>
+                <p>--------------- 隐私设置 ----------------</p>
+                <form action="/user/save_privacy/" method="post" enctype="multipart/form-data">{% csrf_token %} 当前选项：
+                    <select name="privacy">
+                        {% for privacy in privacies %}
+                        {% if privacy.description == user.privacy.description %}
+                        <option value="{{privacy.description}}" selected>{{privacy.description}}</option>
+                        {% else %}
+                        <option value="{{privacy.description}}">{{privacy.description}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                    </br>
+                    <input type="submit" id="save_privacy" value="Save">
+                </form>
+            </div>
+        </div>
+
+        <div data-role="footer" data-position="fixed">
+            <div class="ui-grid-d" style="background-color: rgb(35,192,148);">
+                <div class="ui-block-a">
+                    <a href="/">
+                        <img height="30" width="35" style="padding:10px 5px 5px 10px;" src='/static/images/navigation/homepage.png' />
+                    </a>
+                </div>
+                <div class="ui-block-b">
+                    <a href="/buy/form/">
+                        <img height="55" width="55" src='/static/images/navigation/buy_form.png' />
+                    </a>
+                </div>
+                <div class="ui-block-c">
+                    <a href="/sell/form/">
+                        <img height="55" width="55" src='/static/images/navigation/sell_form.png' />
+                    </a>
+                </div>
+                <div class="ui-block-d">
+                    <a href="/buy/all_list/">
+                        <img height="55" width="55" src='/static/images/navigation/buy_posts.png' />
+                    </a>
+                </div>
+                <div class="ui-block-e">
+                    <a href="/sell/all_list/">
+                        <img height="55" width="55" src='/static/images/navigation/sell_posts.png' />
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
