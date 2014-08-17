@@ -30,6 +30,24 @@ def index(request,offset):
     user_image = ImageMetadata.deserialize_list(user.image_url)[0]
     return render_to_response('user.html',{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
 
+
+def edit(request,offset):
+    try:
+        offset = int(offset)
+    except ValueError:
+        raise Http404()
+    validate_user(request)
+    wx_id = request.session['wx_id']
+    user = User.objects.get(id=offset)
+    is_owner = user.wx_id == wx_id
+    states = State.objects.values('name')
+    cities = City.objects.all()
+    privacies = Privacy.objects.values('description')
+    user_image = ImageMetadata.deserialize_list(user.image_url)[0]
+    return render_to_response('user_edit.html',{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
+
+
+
 def get_info(request):
     validate_user(request)
     wx_id = request.session['wx_id']
