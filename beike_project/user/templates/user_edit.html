@@ -30,7 +30,7 @@
         <link rel="stylesheet" type="text/css" href="/static/me.css">
         <div data-role="header" data-position="fixed">
         </div>
-        <div data-role="content">
+        <div data-role="content" style="padding:0;">
             <div id="current_image_div">
 
                 {% if user_image %}
@@ -51,61 +51,98 @@
                 </form>
             </div>
 
+        <form action="/user/save_profile/" method="post" enctype="multipart/form-data">{% csrf_token %}
+           <div style="text-align:center;padding:2px;">
+                <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{user.name}}</p>
+            </div>
 
-            <div id="error">
-                {% if error %}
-                <p>{{error}}</p>
-                {% endif %}
+            <div class="ui-grid-solo" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;">
+                基本资料
             </div>
-            <div id="profile">
-                <p>--------------- 个人资料 ----------------</p>
-                <form action="/user/save_profile/" method="post" enctype="multipart/form-data">{% csrf_token %} 用户名：
-                    <input type="text" name="user_name" placeholder={{user.name}} value={{user.name}}>
-                    </br>
-                    邮箱：
-                    <input type="text" name="user_email" placeholder={{user.email}} value={{user.email}}>
-                    </br>
-                    地区：
-                    <select name="area_city">
-                        {% for city in cities %}
-                        {% if city.name == user.city.name %}
-                        <option value="{{city.name}}" selected>{{city.name}}</option>
-                        {% else %}
-                        <option value="{{city.name}}">{{city.name}}</option>
-                        {% endif %}
-                        {% endfor %} ,
-                    </select>
 
-                    <select name="area_state">
-                        {% for state in states %}
-                        {% if state == user.city.state.name %}
-                        <option value="{{state.name}}" selected>{{state.name}}</option>
-                        {% else %}
-                        <option value="{{state.name}}">{{state.name}}</option>
-                        {% endif %}
-                        {% endfor %}
-                    </select>
-                    </br>
-                    <input type="submit" id="save_profile" value="Save">
-                </form>
+            <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
+                        <div class="field-label-inner-div">邮&nbsp;&nbsp;&nbsp;&nbsp;箱</div>
+                    </div>
+                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
+                        <input type="text" name="email" id="email" value="{{user.email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
+                    </div>
             </div>
-            <div id="privacy">
-                </form>
-                <p>--------------- 隐私设置 ----------------</p>
-                <form action="/user/save_privacy/" method="post" enctype="multipart/form-data">{% csrf_token %} 当前选项：
-                    <select name="privacy">
-                        {% for privacy in privacies %}
-                        {% if privacy.description == user.privacy.description %}
-                        <option value="{{privacy.description}}" selected>{{privacy.description}}</option>
-                        {% else %}
-                        <option value="{{privacy.description}}">{{privacy.description}}</option>
-                        {% endif %}
-                        {% endfor %}
-                    </select>
-                    </br>
-                    <input type="submit" id="save_privacy" value="Save">
-                </form>
+
+            <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
+                        <div class="field-label-inner-div">学校/单位</div>
+                    </div>
+                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
+                        <input type="text" name="organization" id="organization" value="{{user.organization}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入学校或单位" />
+                    </div>
             </div>
+
+
+            <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
+                        <div class="field-label-inner-div">所&nbsp;在&nbsp;地</div>
+                    </div>
+                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
+                        <input type="text" name="address" id="address" value="{{user.address.city}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入所在地" />
+                    </div>
+            </div>
+
+
+
+            <div class="ui-grid-solo" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;">
+                自我介绍
+            </div>
+
+            <div class="ui-grid-solo" style="padding-top:10px;margin-left:5%;margin-right:5%;height: 150px !important;">
+                <div class="ui-block-a">
+                    <span id="lengthCounter" class="text-p" style="float:right">0/3000</span>
+                </div>
+                <div class="ui-block-a">
+                    <textarea type="text" name="description" id="description" value="{{user.description}}" maxlength="3000" placeholder="自我介绍">
+                    {{user.description}}
+                    </textarea>
+                </div>
+            </div>
+
+
+
+            <div class="ui-grid-solo" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;">
+                详细信息
+            </div>
+
+            <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
+                        <div class="field-label-inner-div">性&nbsp;&nbsp;&nbsp;&nbsp;别</div>
+                    </div>
+                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
+                        <fieldset class="ui-field-contain">
+                            <select name="gender" id="gender">
+                              <option value="3">男</option>
+                              <option value="2">女</option>
+                            </select>
+                        </fieldset>                    
+                    </div>
+            </div>
+
+            <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
+                        <div class="field-label-inner-div">年&nbsp;&nbsp;&nbsp;&nbsp;龄</div>
+                    </div>
+                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
+                        <input type="text" name="age" id="age" value="{{user.age}}" placeholder="请输入您的年龄"/>
+                    </div>
+            </div>
+
+            <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
+                        <div class="field-label-inner-div">手&nbsp;&nbsp;&nbsp;&nbsp;机</div>
+                    </div>
+                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
+                        <input type="text" name="mobile_phone" id="mobile_phone" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
+                    </div>
+            </div>
+        </form>
         </div>
 
         <div data-role="footer" data-position="fixed">
