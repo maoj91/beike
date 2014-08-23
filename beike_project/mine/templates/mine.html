@@ -5,36 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <!-- jquery library -->
+    <script type="text/javascript" src="/static/jquery/jquery-1.8.3.js "></script>
+    <script type="text/javascript" src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+    <script type="text/javascript" src="/static/jquery/jquery.validate.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
-    <script src="/static/jquery/jquery-1.8.3.js "></script>
-    <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
+    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
 
-    <!--js library for s3 upload-->
-    <script src="/static/lodash.js"></script>
-    <script type="text/javascript" src="/static/s3upload.js"></script>
-    <script src="/static/exif.js"></script>
-    <script src="/static/binaryajax.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/jQMProgressBar.css">
+    <script type="text/javascript" src="/static/jQMProgressBar.js"></script>
+
+    <script type="text/javascript" src="/static/exif.js"></script>
+    <script type="text/javascript" src="/static/binaryajax.js"></script>
 
     <!-- beike customized css and js -->
     <link rel="stylesheet" href="/static/common.css">
     <link rel="stylesheet" href="/static/detail.css">
     <link rel="stylesheet" href="/static/sell.css">
     <link rel="stylesheet" href="/static/mine.css">
+    <script src="/static/jquery.fileupload.js"></script>
+    <script src="/static/jquery.touchSwipe.min.js"></script>
+    <script src="/static/common.js"></script>
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
-    <script src="/static/common.js"></script>
-    <script src="/static/jquery.touchSwipe.min.js"></script>
 </head>
 
 <body>
-    <div data-role="page" id="main-page" data-theme="a" data-fullscreen="true">        
+    <div data-role="page" id="main-page" data-theme="a" data-fullscreen="true">
         <div data-role="header" data-position="fixed">
             <div style="background-color: rgb(35,192,148);">
                 <div class="ui-grid-b">
                     <div class="ui-block-a">
                     </div>
                     <div class="ui-block-b">
-                        <p style = "text-align:center; color:white">我的</p>
+                        <p style="text-align:center; color:white">我的</p>
                     </div>
                     <div class="ui-block-a">
                     </div>
@@ -43,40 +47,37 @@
         </div>
         <div data-role="content">
             <div class="ui-grid-solo" style="display:table;margin:0 auto;">
-                    {% if image %}  
-                        {% for key, value in image.items %} 
-                            {% if key == 'image_url' %}
-                            <a href="/user/{{user.id}}/">
-                                <img id='profile_image' src='{{value}}' style="width:80px;height: 80px;border-radius: 50%;"/>
-                            </a>
-                            {% elif key == 'width' %}
-                            {% elif key == 'height' %}
-                            {% endif %}
-                            
-                        {% endfor %}    
-                    {% endif %}
+                {% if image %} {% for key, value in image.items %} {% if key == 'image_url' %}
+                <a href="/user/{{user.id}}/">
+                    <img id='profile_image' src='{{value}}' style="width:80px;height: 80px;border-radius: 50%;" />
+                </a>
+                {% elif key == 'width' %} {% elif key == 'height' %} {% endif %} {% endfor %} {% endif %}
             </div>
-            <div data-role="collapsible-set">
+            <div data-role="collapsible-set" data-corners="false">
                 <div data-role="collapsible" data-collapsed="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
 
                     <h4>
-                        <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_buy_posts.png" />我要卖</h4>
+                        <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_sell_posts.png" />我要卖</h4>
                     <ul data-role="listview" data-inset="false">
                         {% for post in sell_posts %}
-                        <li>
+                        <li style="margin: 0px;">
                             <a href="/detail/sell/{{post.id}}">
-                                <h3>{{post.title}} [${{post.price}}]</h3>
-                                <div class="post_meta">
-                                    on {{post.date_published}} by {{post.user.name}}</br>
-                                    in {{post.user.city}}, {{post.user.state}}
+                                <div style="font-size: 18px;">
+                                    {{post.title}}
+                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                    <span style="color: #ff9933;">$</span>
+                                    {{post.price}}
                                 </div>
-                                <div class="post_body">
-                                    {{post.content|safe|linebreaks}}
+                                <div style="font-size: 14px; font-weight: normal;">
+                                    发布于 {{post.date_published|date:"M d, Y"}}
+                                </div>
+                                <div style="font-size: 14px; font-weight: normal;">
+                                    描述:{{post.content}}
                                 </div>
                             </a>
                         </li>
                         {% endfor %}
-                    <ul data-role="listview" data-inset="false">
+                        <ul data-role="listview" data-inset="false">
                 </div>
 
                 <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
@@ -84,32 +85,50 @@
                         <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_buy_posts.png" />我要买</h4>
                     <ul data-role="listview" data-inset="false">
                         {% for post in buy_posts %}
-                        <li>
+                        <li style="margin: 0px;">
                             <a href="/detail/buy/{{post.id}}">
-                                <h2>{{post.title}} [${{post.min_price}} - ${{post.max_price}}]</h2>
-                                <p class="post_meta">
-                                    on {{post.date_published}} by {{post.user.name}} {{post.content}}
-                                </p>
+                                <div style="font-size: 18px;">
+                                    {{post.title}}
+                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                    <span style="color: #ff9933;">$</span>
+                                    {{post.max_price}}
+                                </div>
+                                <div style="font-size: 14px; font-weight: normal;">
+                                    发布于 {{post.date_published|date:"M d, Y"}}
+                                </div>
+                                <div style="font-size: 14px; font-weight: normal;">
+                                    描述:{{post.content}}
+                                </div>
                             </a>
                         </li>
                         {% endfor %}
                     </ul>
                 </div>
+            </div>
+            <div style="height: 50px;"></div>
+
+            <div data-role="collapsible-set" data-corners="false">
                 <div data-role="collapsible" data-collapsed="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
 
                     <h4>
-                        <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_buy_posts.png" />关注物品</h4>
+                        <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_fav_sell_posts.png" />关注物品</h4>
                     <ul data-role="listview" data-inset="false">
                         {% for post in followed_sell_posts %}
-                        <li>
+                        <li style="margin: 0px;">
                             <a href="/detail/sell/{{post.id}}">
-                                <h3>{{post.title}} [${{post.price}}]</h3>
-                                <div class="post_meta">
-                                    on {{post.date_published}} by {{post.user.name}}</br>
-                                    in {{post.user.city}}, {{post.user.state}}
+                                <div style="font-size: 18px;">
+                                    {{post.title}}
+                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                    <span style="color: #ff9933;">$</span>
+                                    {{post.price}}
                                 </div>
-                                <div class="post_body">
-                                    {{post.content|safe|linebreaks}}
+                                <div style="font-size: 14px; font-weight: normal;">
+                                    发布于 {{post.date_published|date:"M d, Y"}}
+                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                    发布者 {{post.user.name}}
+                                </div>
+                                <div style="font-size: 14px; font-weight: normal;">
+                                    描述:{{post.content}}
                                 </div>
                             </a>
                         </li>
@@ -119,15 +138,25 @@
 
                 <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
                     <h4>
-                        <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_buy_posts.png" />关注需求</h4>
+                        <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_fav_buy_posts.png" />关注需求</h4>
                     <ul data-role="listview" data-inset="false">
                         {% for post in followed_buy_posts %}
-                        <li>
+                        <li style="margin: 0px;">
                             <a href="/detail/buy/{{post.id}}">
-                                <h2>{{post.title}} [${{post.min_price}} - ${{post.max_price}}]</h2>
-                                <p class="post_meta">
-                                    on {{post.date_published}} by {{post.user.name}} {{post.content}}
-                                </p>
+                                <div style="font-size: 18px;">
+                                    {{post.title}}
+                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                    <span style="color: #ff9933;">$</span>
+                                    {{post.max_price}}
+                                </div>
+                                <div style="font-size: 14px; font-weight: normal;">
+                                    发布于 {{post.date_published|date:"M d, Y"}}
+                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                    发布者 {{post.user.name}}
+                                </div>
+                                <div style="font-size: 14px; font-weight: normal;">
+                                    描述:{{post.content}}
+                                </div>
                             </a>
                         </li>
                         {% endfor %}
