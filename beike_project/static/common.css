@@ -60,7 +60,7 @@
 .city_background_android{
     position: absolute;
     left: 10px;
-    top: 60px;
+    top: 50px;
     width: 100px;
     height: 40px;
 }
@@ -74,7 +74,7 @@
 .city_android{
     position: absolute;
     left: 25px;
-    top: 70px;
+    top: 60px;
 }
 
 .city_mark{

@@ -4,6 +4,7 @@ from user import views
 
 urlpatterns = patterns('',
 	url(r'^(\d+)/$', views.index),
+	url(r'^(\d+)/edit/$', views.edit),
 	url(r'^save_profile/$', views.save_profile),
 	url(r'^save_privacy/$', views.save_privacy),
 	url(r'^update_profile_image/$', views.update_profile_image),

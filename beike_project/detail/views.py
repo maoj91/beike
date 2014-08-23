@@ -47,10 +47,11 @@ def sell_post_detail(request,offset):
     sms_checked = contact['sms_checked'] == 'on' 
     phone = contact['phone_number']
     email = contact['email']
+    user_id = user.id
     user_image = ImageMetadata.deserialize_list(post.user.image_url)[0]
     
     return render_to_response('sell_post_detail.html', {'post':post,'lat':lat,'lon':lon,'is_open':is_open, 'image_list': image_list, 'image_num':image_num,
-        'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner,'phone_checked':phone_checked,'email_checked':email_checked,'sms_checked':sms_checked,'phone':phone,
+        'is_followed': is_followed, 'wx_id':wx_id, 'user_id':user_id, 'is_owner': is_owner,'phone_checked':phone_checked,'email_checked':email_checked,'sms_checked':sms_checked,'phone':phone,
         'email':email,'user_image':user_image})
 
 
