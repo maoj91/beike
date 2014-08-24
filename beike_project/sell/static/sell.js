@@ -278,14 +278,14 @@ function displayPosts(posts) {
         image_height = image_info['height'] / image_info['width'] * image_width;
         var distance = posts[i]["distance"];
         if (posts[i]["distance"] > 1000) {
-            distance = (posts[i]["distance"] / 1000).toFixed(2) + " K"
+            distance = (posts[i]["distance"] / 1000).toFixed(0) + "K"
         }
 
         var postTemplate = $('<li class="sellpost-li"></li>');
-        postTemplate.append($('<div style="font-size: 18px;"><img width="20" height="20" src="/static/images/nearby_sell_posts/sell_logo.png" /><span>&nbsp;&nbsp;' + posts[i]["title"] + '</span></div>'));
+        postTemplate.append($('<div><p><img style="width: 20px; height: 20px; margin: 0px 0 -4px 0;" src="/static/images/nearby_sell_posts/sell_logo.png" /><span style="font-size: 18px;">&nbsp;&nbsp;' + posts[i]["title"] + '</span></p></div>'));
         postTemplate.append($('<div><a href="/detail/sell/' + posts[i]['post_id'] + '"><img src="' + image_info['image_url'] + '" width="' + image_width + '" height="' + image_height + '"/></a></div>'));
         postTemplate.append($('<div style="font-size: 16px;"><span style="color: #ff9999;">$&nbsp;</span>' + posts[i]["price"] + '</div>'));
-        postTemplate.append($('<div style="font-size: 12px;">距离你 ' + distance + ' miles</div>'));
+        postTemplate.append($('<div style="font-size: 12px; color: rgb(172,172,172);">距离你 ' + distance + ' miles</div>'));
 
         if (slot_pos % 2 === 0) {
             listA.append(postTemplate);
