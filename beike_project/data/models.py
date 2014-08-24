@@ -54,7 +54,7 @@ class Address(models.Model):
 
 class User(models.Model):
 	name = models.CharField(max_length=255, default='张三')
-	gender = models.IntegerField()
+	gender = models.IntegerField(default=0,null=False) # 1 for male, 2 for female
 	age = models.IntegerField(null=True)
 	wx_id = models.CharField(max_length=255,unique=True)
 	wx_name = models.CharField(max_length=255)

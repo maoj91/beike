@@ -102,8 +102,10 @@
                     <div class="field-label-inner-div">性&nbsp;&nbsp;&nbsp;&nbsp;别</div>
                 </div>
                 <div class="ui-block-b" style="width:70%;height:100%;padding-top:15px;">
-                    {% if user.gender %}
-                        {{user.gender}}
+                    {% if user.gender == 1%}
+                        男
+                    {% elif user.gender == 2%}
+                        女
                     {% else %}
                         未填
                     {% endif %}

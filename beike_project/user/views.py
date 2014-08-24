@@ -61,6 +61,7 @@ def update(request,offset):
         user.organization = request.POST.get('organization','')    
         user.description = request.POST.get('description','')   
         user.mobile_phone = request.POST.get('mobile_phone','')   
+        user.gender = int(request.POST.get('gender',''))
         # user.image_url = get_image_info(request)      
         user.save()
     user_image = ImageMetadata.deserialize_list(user.image_url)[0]
