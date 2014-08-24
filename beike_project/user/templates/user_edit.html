@@ -19,19 +19,21 @@
     <!-- customized css and js -->
     <link rel="stylesheet" href="/static/common.css">
     <link rel="stylesheet" href="/static/detail.css">
+    <script src="/static/jquery.fileupload.js"></script>
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
+    <script src="/static/user.js"></script>
     <script src="/static/common.js"></script>
     <script type="text/javascript" src="/static/jquery.touchSwipe.min.js"></script>
 </head>
 
 <body>
-    <div data-role="page" id="main-page" data-theme="a">
+    <div data-role="page" id="user-update-page" data-theme="a">
         <link rel="stylesheet" type="text/css" href="/static/me.css">
         <div data-role="header" data-position="fixed">
         </div>
         <div data-role="content" style="padding:0;">
-            <div id="current_image_div">
+            <div id="image-uploader">
 
                 {% if user_image %}
                 <div style="display:table;margin:0 auto;">
@@ -39,21 +41,33 @@
                 </div>
                 {% endif %}
 
-                <div class="hidden_file">
-                    <input type="file" id="image1" data-clear-btn="false" name="image" accept="image/*" onchange="image_s3_upload(this.id,'{{user.wx_id}}');" capture>
+                <div class="ui-grid-solo" style="width:100%;padding-top:15px;padding-bottom:15px;height:30px;text-align:center;display:inline-block;vertical-align: middle;">
+                    <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
+                    <div class="ui-block-a" style="display:inline-block;width:25px;height:25px;text-align: center;background-color: rgb(172,172,172);">
+                        <input style="display:none;" data-role="none" type="file" id="user_image" name="user_image" accept="image/*"/>
+                        <label for="user_image">
+                            <img src='/static/images/sell_post/upload.png' style="width:20px;height:20px;">
+                        </label>
+                    </div>
                 </div>
-                <p id="upload_status">status</p>
-                <form action="/user/update_profile_image/" method="post" enctype="multipart/form-data">{% csrf_token %}
-                    <input type="hidden" id="image_url" name="image_url" value="">
-                    <input type="hidden" id="image_width" name="image_width" value="">
-                    <input type="hidden" id="image_height" name="image_height" value="">
-                    <input type="submit" id="save_image" value="Save">
-                </form>
+<!--                 <div class="hidden_file">
+                    <input type="file" id="image1" data-clear-btn="false" name="image" accept="image/*" onchange="image_s3_upload(this.id,'{{user.wx_id}}');" capture>
+                </div> -->
             </div>
 
-        <form action="/user/save_profile/" method="post" enctype="multipart/form-data">{% csrf_token %}
-           <div style="text-align:center;padding:2px;">
-                <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{user.name}}</p>
+        <form action="/user/{{user.id}}/update/" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <input type="hidden" id="image_url" name="image_url">
+            <input type="hidden" id="image_width" name="image_width">
+            <input type="hidden" id="image_height" name="image_height">
+            <input type="hidden" id="image_orientation" name="image_orientation" />
+
+            <div class="ui-grid-a" style="clear:both;">
+                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
+                        <div class="field-label-inner-div">用&nbsp;户&nbsp;名</div>
+                    </div>
+                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
+                        <input type="text" name="name" id="name" value="{{user.name}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入用户名" />
+                    </div>
             </div>
 
             <div class="ui-grid-solo" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;">
@@ -142,7 +156,13 @@
                         <input type="text" name="mobile_phone" id="mobile_phone" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
                     </div>
             </div>
+
+            <div class="ui-grid-solo" style="width:100%;padding-top:15px;padding-bottom:15px;background-color:#d1cfd1;height:60px;text-align:center;display:inline-block;vertical-align: middle;">
+                    <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
+                    <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png" style="max-width:80px;vertical-align: middle;">
+            </div>
         </form>
+
         </div>
 
         <div data-role="footer" data-position="fixed">

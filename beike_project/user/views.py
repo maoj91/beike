@@ -46,7 +46,28 @@ def edit(request,offset):
     user_image = ImageMetadata.deserialize_list(user.image_url)[0]
     return render_to_response('user_edit.html',{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
 
-
+def update(request,offset):
+    try:
+        offset = int(offset)
+    except ValueError:
+        raise Http404()
+    validate_user(request)
+    wx_id = request.session['wx_id']
+    user = User.objects.get(id=offset)
+    is_owner = user.wx_id == wx_id
+    if request.method == 'POST':
+        user.name = request.POST.get('name','')    
+        user.email = request.POST.get('email','')
+        user.organization = request.POST.get('organization','')    
+        user.description = request.POST.get('description','')   
+        user.mobile_phone = request.POST.get('mobile_phone','')   
+        # user.image_url = get_image_info(request)      
+        user.save()
+    user_image = ImageMetadata.deserialize_list(user.image_url)[0]
+    states = State.objects.values('name')
+    cities = City.objects.all()
+    privacies = Privacy.objects.values('description')
+    return HttpResponseRedirect('/user/'+str(offset),{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
 
 def get_info(request):
     validate_user(request)
@@ -145,42 +166,6 @@ def create(request):
     else: 
         raise Http404
 
-def update_profile_image(request):
-    validate_user(request)
-    wx_id = request.session['wx_id']
-    user = User.objects.get(wx_id=wx_id)
-    error = ""
-    if request.method == 'POST':
-        image_info = get_image_info(request)
-        image_list = json.dumps(image_info)
-        image = image_list[0]        
-        user.image_url = image_info
-        user.save()
-        return HttpResponseRedirect('/user/',{'user':user,'error':error,'image':image})
-    else: 
-        raise Http404
-
-
-def save_profile(request):
-    validate_user(request)
-    wx_id = request.session['wx_id']
-    user = User.objects.get(wx_id=wx_id)
-    error = ""
-    if request.method == 'POST':
-        user_name = request.POST.get('user_name','')    
-        user_email = request.POST.get('user_email','')
-        address_city = request.POST.get('address_city','')
-        address_state = request.POST.get('address_state','')
-        error = validate_profile(user_name,user_email,address_city,address_state)
-
-
-        if(error == ""):
-            user.name = user_name
-            user.email = user_email
-            user.address.city = address_city
-            user.address.state_or_region = address_state
-            user.save()
-    return HttpResponseRedirect('/user/',{'user':user,'error':error})
 
 
 def get_city_district(geolocation):
