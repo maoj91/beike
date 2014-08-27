@@ -13,6 +13,9 @@ from django.core.serializers.json import DjangoJSONEncoder
 from data.image_util import ImageMetadata
 from django.contrib.gis.geos import Point
 from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
+from datetime import date
+
 
 
 def index(request,offset):
@@ -28,7 +31,8 @@ def index(request,offset):
     cities = City.objects.all()
     privacies = Privacy.objects.values('description')
     user_image = ImageMetadata.deserialize_list(user.image_url)[0]
-    return render_to_response('user.html',{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
+    age = get_age(user.date_of_birth)
+    return render_to_response('user.html',{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities,'age':age},RequestContext(request))
 
 
 def edit(request,offset):
@@ -44,7 +48,7 @@ def edit(request,offset):
     cities = City.objects.all()
     privacies = Privacy.objects.values('description')
     user_image = ImageMetadata.deserialize_list(user.image_url)[0]
-    return render_to_response('user_edit.html',{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
+    return render_to_response('user_edit.html',{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities},RequestContext(request))
 
 def update(request,offset):
     try:
@@ -62,6 +66,9 @@ def update(request,offset):
         user.description = request.POST.get('description','')   
         user.mobile_phone = request.POST.get('mobile_phone','')   
         user.gender = int(request.POST.get('gender',''))
+        dob = request.POST.get('date_of_birth','');
+        if dob: 
+            user.date_of_birth = datetime.strptime(dob, '%Y-%m-%d')
         # user.image_url = get_image_info(request)      
         user.save()
     user_image = ImageMetadata.deserialize_list(user.image_url)[0]
@@ -245,4 +252,11 @@ def get_image_info(request):
         image = ImageMetadata(image_url, image_width, image_height)
         image_list.append(image)
     return ImageMetadata.serialize_list(image_list)
+
+def get_age(born):
+    if born:
+        today = date.today()
+        return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+    else: 
+        return '';
     

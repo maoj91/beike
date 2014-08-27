@@ -113,7 +113,7 @@
                     <span id="lengthCounter" class="text-p" style="float:right">0/3000</span>
                 </div>
                 <div class="ui-block-a">
-                    <textarea type="text" name="description" id="description" value="{{user.description}}" maxlength="3000" placeholder="自我介绍">
+                    <textarea name="description" id="description" data-rule-content="true" value="{{user.description}}" maxlength="3000" placeholder="自我介绍">
                     {{user.description}}
                     </textarea>
                 </div>
@@ -142,10 +142,15 @@
 
             <div class="ui-grid-a">
                     <div class="ui-block-a" style="width:25%;margin-left:5%;">
-                        <div class="field-label-inner-div">年&nbsp;&nbsp;&nbsp;&nbsp;龄</div>
+                        <div class="field-label-inner-div">生&nbsp;&nbsp;&nbsp;&nbsp;日</div>
                     </div>
                     <div class="ui-block-b" style="width:65%;margin-right:5%;">
-                        <input type="text" name="age" id="age" value="{{user.age}}" placeholder="请输入您的年龄"/>
+                        <!-- TODO: add validation of input -->
+                        {% if user.date_of_birth %}
+                        <input type="date" name="date_of_birth" id="date_of_birth" value={{user.date_of_birth|date:"Y-m-d"}}>
+                        {% else %}
+                        <input type="date" name="date_of_birth" id="date_of_birth" max="{{today_str}}">
+                        {% endif %}
                     </div>
             </div>
 

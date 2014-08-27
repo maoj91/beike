@@ -31,7 +31,7 @@
         <div data-role="header" data-position="fixed">
         </div>
         <div data-role="content" style="padding: 0;">
-            <div id="current_image_div">
+            <div id="current_image_div" style="margin-top:10px;">
                 {% if user_image %}
                 <div style="display:table;margin:0 auto;">
                         <img id='profile_image' src='{{user_image.image_url}}' style="width: 80px;height:80px;border-radius: 50%;"/>
@@ -117,8 +117,8 @@
                     <div class="field-label-inner-div">年&nbsp;&nbsp;&nbsp;&nbsp;龄</div>
                 </div>
                 <div class="ui-block-b" style="width:70%;height:100%;padding-top:15px;">
-                    {% if user.age %}
-                        {{user.age}}
+                    {% if age %}
+                        {{age}}
                     {% else %}
                         未填
                     {% endif %}
