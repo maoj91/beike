@@ -61,9 +61,9 @@ function displayBuyposts(posts) {
         }
         var postTemplate = $('<li class="sellpost-li"><div></div></li>');
         var content = $('<a href="/detail/buy/' + posts[i]['post_id'] + '" style="text-decoration:none; color: rgb(0,0,0);font-weight:normal;"></a>')
-        content.append($('<div><img width="18" height="20" src="/static/images/nearby_buy_posts/request_logo.png" /><span style="font-size: 18px;">&nbsp;&nbsp;' + posts[i]["title"] + '</span></div>'))
+        content.append($('<div><p><img style="width: 20px; height: 20px; margin: 0px 0 -4px 0;" src="/static/images/nearby_buy_posts/request_logo.png" /><span style="font-size: 18px;">&nbsp;&nbsp;' + posts[i]["title"] + '</span></p></div>'))
         content.append($('<div style="font-size: 16px;"><span style="color: #ff9933;">$&nbsp;</span>' + posts[i]["min_price"] + '</div>'));
-        content.append($('<div style="font-size: 12px;">距离你 ' + distance + ' miles</div>'));
+        content.append($('<div style="font-size: 12px; color: rgb(172,172,172);">距离你 ' + distance + ' miles</div>'));
 
         postTemplate.children().append(content);
         if (buypost_slot % 2 === 0) {
