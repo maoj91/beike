@@ -13,6 +13,9 @@ from django.core.serializers.json import DjangoJSONEncoder
 from data.image_util import ImageMetadata
 from django.contrib.gis.geos import Point
 from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
+from datetime import date
+
 
 
 def index(request,offset):
@@ -28,7 +31,8 @@ def index(request,offset):
     cities = City.objects.all()
     privacies = Privacy.objects.values('description')
     user_image = ImageMetadata.deserialize_list(user.image_url)[0]
-    return render_to_response('user.html',{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
+    age = get_age(user.date_of_birth)
+    return render_to_response('user.html',{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities,'age':age},RequestContext(request))
 
 
 def edit(request,offset):
@@ -44,9 +48,34 @@ def edit(request,offset):
     cities = City.objects.all()
     privacies = Privacy.objects.values('description')
     user_image = ImageMetadata.deserialize_list(user.image_url)[0]
-    return render_to_response('user_edit.html',{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
+    return render_to_response('user_edit.html',{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities},RequestContext(request))
 
-
+def update(request,offset):
+    try:
+        offset = int(offset)
+    except ValueError:
+        raise Http404()
+    validate_user(request)
+    wx_id = request.session['wx_id']
+    user = User.objects.get(id=offset)
+    is_owner = user.wx_id == wx_id
+    if request.method == 'POST':
+        user.name = request.POST.get('name','')    
+        user.email = request.POST.get('email','')
+        user.organization = request.POST.get('organization','')    
+        user.description = request.POST.get('description','')   
+        user.mobile_phone = request.POST.get('mobile_phone','')   
+        user.gender = int(request.POST.get('gender',''))
+        dob = request.POST.get('date_of_birth','');
+        if dob: 
+            user.date_of_birth = datetime.strptime(dob, '%Y-%m-%d')
+        # user.image_url = get_image_info(request)      
+        user.save()
+    user_image = ImageMetadata.deserialize_list(user.image_url)[0]
+    states = State.objects.values('name')
+    cities = City.objects.all()
+    privacies = Privacy.objects.values('description')
+    return HttpResponseRedirect('/user/'+str(offset),{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
 
 def get_info(request):
     validate_user(request)
@@ -145,42 +174,6 @@ def create(request):
     else: 
         raise Http404
 
-def update_profile_image(request):
-    validate_user(request)
-    wx_id = request.session['wx_id']
-    user = User.objects.get(wx_id=wx_id)
-    error = ""
-    if request.method == 'POST':
-        image_info = get_image_info(request)
-        image_list = json.dumps(image_info)
-        image = image_list[0]        
-        user.image_url = image_info
-        user.save()
-        return HttpResponseRedirect('/user/',{'user':user,'error':error,'image':image})
-    else: 
-        raise Http404
-
-
-def save_profile(request):
-    validate_user(request)
-    wx_id = request.session['wx_id']
-    user = User.objects.get(wx_id=wx_id)
-    error = ""
-    if request.method == 'POST':
-        user_name = request.POST.get('user_name','')    
-        user_email = request.POST.get('user_email','')
-        address_city = request.POST.get('address_city','')
-        address_state = request.POST.get('address_state','')
-        error = validate_profile(user_name,user_email,address_city,address_state)
-
-
-        if(error == ""):
-            user.name = user_name
-            user.email = user_email
-            user.address.city = address_city
-            user.address.state_or_region = address_state
-            user.save()
-    return HttpResponseRedirect('/user/',{'user':user,'error':error})
 
 
 def get_city_district(geolocation):
@@ -259,4 +252,11 @@ def get_image_info(request):
         image = ImageMetadata(image_url, image_width, image_height)
         image_list.append(image)
     return ImageMetadata.serialize_list(image_list)
+
+def get_age(born):
+    if born:
+        today = date.today()
+        return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+    else: 
+        return '';
     

@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="/static/mine.css">
     <script src="/static/jquery.fileupload.js"></script>
     <script src="/static/jquery.touchSwipe.min.js"></script>
+    <script src="/static/user.js"></script>
     <script src="/static/common.js"></script>
     <script src="/static/buy_form.js"></script>
     <script src="/static/buy_posts.js"></script>
@@ -34,12 +35,12 @@
 </head>
 
 <body>
-    <div data-role="page" id="main-page" data-theme="a">
+    <div data-role="page" id="user-update-page" data-theme="a">
         <link rel="stylesheet" type="text/css" href="/static/me.css">
         <div data-role="header" data-position="fixed">
         </div>
-        <div data-role="content">
-            <div id="current_image_div">
+        <div data-role="content" style="padding:0;">
+            <div id="image-uploader">
 
                 {% if user_image %}
                 <div style="display:table;margin:0 auto;">
@@ -47,73 +48,134 @@
                 </div>
                 {% endif %}
 
-                <div class="hidden_file">
-                    <input type="file" id="image1" data-clear-btn="false" name="image" accept="image/*" onchange="image_s3_upload(this.id,'{{user.wx_id}}');" capture>
+                <div class="ui-grid-solo" style="width:100%;padding-top:15px;padding-bottom:15px;height:30px;text-align:center;display:inline-block;vertical-align: middle;">
+                    <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
+                    <div class="ui-block-a" style="display:inline-block;width:25px;height:25px;text-align: center;background-color: rgb(172,172,172);">
+                        <input style="display:none;" data-role="none" type="file" id="user_image" name="user_image" accept="image/*"/>
+                        <label for="user_image">
+                            <img src='/static/images/sell_post/upload.png' style="width:20px;height:20px;">
+                        </label>
+                    </div>
                 </div>
-                <p id="upload_status">status</p>
-                <form action="/user/update_profile_image/" method="post" enctype="multipart/form-data">{% csrf_token %}
-                    <input type="hidden" id="image_url" name="image_url" value="">
-                    <input type="hidden" id="image_width" name="image_width" value="">
-                    <input type="hidden" id="image_height" name="image_height" value="">
-                    <input type="submit" id="save_image" value="Save">
-                </form>
+<!--                 <div class="hidden_file">
+                    <input type="file" id="image1" data-clear-btn="false" name="image" accept="image/*" onchange="image_s3_upload(this.id,'{{user.wx_id}}');" capture>
+                </div> -->
+            </div>
+
+        <form action="/user/{{user.id}}/update/" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <input type="hidden" id="image_url" name="image_url">
+            <input type="hidden" id="image_width" name="image_width">
+            <input type="hidden" id="image_height" name="image_height">
+            <input type="hidden" id="image_orientation" name="image_orientation" />
+
+            <div class="ui-grid-a" style="clear:both;">
+                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
+                        <div class="field-label-inner-div">用&nbsp;户&nbsp;名</div>
+                    </div>
+                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
+                        <input type="text" name="name" id="name" value="{{user.name}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入用户名" />
+                    </div>
+            </div>
+
+            <div class="ui-grid-solo" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;">
+                基本资料
+            </div>
+
+            <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
+                        <div class="field-label-inner-div">邮&nbsp;&nbsp;&nbsp;&nbsp;箱</div>
+                    </div>
+                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
+                        <input type="text" name="email" id="email" value="{{user.email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
+                    </div>
+            </div>
+
+            <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
+                        <div class="field-label-inner-div">学校/单位</div>
+                    </div>
+                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
+                        <input type="text" name="organization" id="organization" value="{{user.organization}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入学校或单位" />
+                    </div>
             </div>
 
 
-            <div id="error">
-                {% if error %}
-                <p>{{error}}</p>
-                {% endif %}
+            <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
+                        <div class="field-label-inner-div">所&nbsp;在&nbsp;地</div>
+                    </div>
+                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
+                        <input type="text" name="address" id="address" value="{{user.address.city}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入所在地" />
+                    </div>
             </div>
-            <div id="profile">
-                <p>--------------- 个人资料 ----------------</p>
-                <form action="/user/save_profile/" method="post" enctype="multipart/form-data">{% csrf_token %} 用户名：
-                    <input type="text" name="user_name" placeholder={{user.name}} value={{user.name}}>
-                    </br>
-                    邮箱：
-                    <input type="text" name="user_email" placeholder={{user.email}} value={{user.email}}>
-                    </br>
-                    地区：
-                    <select name="area_city">
-                        {% for city in cities %}
-                        {% if city.name == user.city.name %}
-                        <option value="{{city.name}}" selected>{{city.name}}</option>
-                        {% else %}
-                        <option value="{{city.name}}">{{city.name}}</option>
-                        {% endif %}
-                        {% endfor %} ,
-                    </select>
 
-                    <select name="area_state">
-                        {% for state in states %}
-                        {% if state == user.city.state.name %}
-                        <option value="{{state.name}}" selected>{{state.name}}</option>
-                        {% else %}
-                        <option value="{{state.name}}">{{state.name}}</option>
-                        {% endif %}
-                        {% endfor %}
-                    </select>
-                    </br>
-                    <input type="submit" id="save_profile" value="Save">
-                </form>
+
+
+            <div class="ui-grid-solo" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;">
+                自我介绍
             </div>
-            <div id="privacy">
-                </form>
-                <p>--------------- 隐私设置 ----------------</p>
-                <form action="/user/save_privacy/" method="post" enctype="multipart/form-data">{% csrf_token %} 当前选项：
-                    <select name="privacy">
-                        {% for privacy in privacies %}
-                        {% if privacy.description == user.privacy.description %}
-                        <option value="{{privacy.description}}" selected>{{privacy.description}}</option>
-                        {% else %}
-                        <option value="{{privacy.description}}">{{privacy.description}}</option>
-                        {% endif %}
-                        {% endfor %}
-                    </select>
-                    </br>
-                    <input type="submit" id="save_privacy" value="Save">
-                </form>
+
+            <div class="ui-grid-solo" style="padding-top:10px;margin-left:5%;margin-right:5%;height: 150px !important;">
+                <div class="ui-block-a">
+                    <span id="lengthCounter" class="text-p" style="float:right">0/3000</span>
+                </div>
+                <div class="ui-block-a">
+                    <textarea name="description" id="description" data-rule-content="true" value="{{user.description}}" maxlength="3000" placeholder="自我介绍">
+                    {{user.description}}
+                    </textarea>
+                </div>
             </div>
+
+
+
+            <div class="ui-grid-solo" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;">
+                详细信息
+            </div>
+
+            <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
+                        <div class="field-label-inner-div">性&nbsp;&nbsp;&nbsp;&nbsp;别</div>
+                    </div>
+                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
+                        <fieldset class="ui-field-contain">
+                            <select name="gender" id="gender" value="{{user.gender}}">
+                              <option value="0">未知</option>
+                              <option value="1">男</option>
+                              <option value="2">女</option>
+                            </select>
+                        </fieldset>                    
+                    </div>
+            </div>
+
+            <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
+                        <div class="field-label-inner-div">生&nbsp;&nbsp;&nbsp;&nbsp;日</div>
+                    </div>
+                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
+                        <!-- TODO: add validation of input -->
+                        {% if user.date_of_birth %}
+                        <input type="date" name="date_of_birth" id="date_of_birth" value={{user.date_of_birth|date:"Y-m-d"}}>
+                        {% else %}
+                        <input type="date" name="date_of_birth" id="date_of_birth" max="{{today_str}}">
+                        {% endif %}
+                    </div>
+            </div>
+
+            <div class="ui-grid-a">
+                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
+                        <div class="field-label-inner-div">手&nbsp;&nbsp;&nbsp;&nbsp;机</div>
+                    </div>
+                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
+                        <input type="text" name="mobile_phone" id="mobile_phone" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
+                    </div>
+            </div>
+
+            <div class="ui-grid-solo" style="width:100%;padding-top:15px;padding-bottom:15px;background-color:#d1cfd1;height:60px;text-align:center;display:inline-block;vertical-align: middle;">
+                    <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
+                    <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png" style="max-width:80px;vertical-align: middle;">
+            </div>
+        </form>
+
         </div>
 
         <div data-role="footer" data-position="fixed">
