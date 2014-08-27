@@ -57,7 +57,7 @@ function displayBuyposts(posts) {
     for (i = 0; i < len; i++) {
         var distance = posts[i]["distance"];
         if (posts[i]["distance"] > 1000) {
-            distance = (posts[i]["distance"]/1000).toFixed(2) + " K"
+            distance = (posts[i]["distance"] / 1000).toFixed(2) + " K"
         }
         var postTemplate = $('<li class="sellpost-li"><div></div></li>');
         var content = $('<a href="/detail/buy/' + posts[i]['post_id'] + '" style="text-decoration:none; color: rgb(0,0,0);font-weight:normal;"></a>')
@@ -100,15 +100,27 @@ $(document).delegate("#nearby-buypost", "pageinit", function() {
         //do nothing
     });
     numPerPage = $('#num-per-page').val();
-});
 
-$(document).delegate("#buy-form", "pageinit", function(event) {
-    $('form').validate({
-        rules: {
-            phone_number: "digitonly"
+    $(document).on("scrollstart", function() {
+        if ($(document).height() > $(window).height() && hasMoreBuyPost) {
+            if ($(window).scrollTop() >= $(document).height() - $(window).height() - 100) {
+                if (typeof current_position !== 'undefined') {
+                    hasMoreBuyPost = false;
+                    buyPostLoader.getAndDisplayPosts(current_position);
+                }
+            }
         }
     });
-    isEmailChecked = false;
-    isPhoneChecked = false;
-    isSmsChecked = false;
+
+    $(document).on("scrollstop", function() {
+        if ($(document).height() > $(window).height() && hasMoreBuyPost) {
+            if ($(window).scrollTop() >= $(document).height() - $(window).height() - 100) {
+                if (typeof current_position !== 'undefined') {
+                    hasMoreBuyPost = false;
+                    buyPostLoader.getAndDisplayPosts(current_position);
+                }
+            }
+        }
+    });
+
 });

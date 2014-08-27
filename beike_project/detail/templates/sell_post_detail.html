@@ -2,11 +2,12 @@
 <html lang="zh">
 
 <head>
-    <meta name="viewport" content="width=device-width ,  user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <!-- jquery library -->
     <script type="text/javascript" src="/static/jquery/jquery-1.8.3.js "></script>
     <script type="text/javascript" src="/static/jquery/jquery.mobile-1.4.2.js"></script>
+    <script type="text/javascript" src="/static/jquery/jquery.validate.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
     <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
     <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
@@ -14,21 +15,22 @@
     <link rel="stylesheet" type="text/css" href="/static/jQMProgressBar.css">
     <script type="text/javascript" src="/static/jQMProgressBar.js"></script>
 
-    <!--js library for s3 upload-->
-    <script src="/static/lodash.js"></script>
-    <script type="text/javascript" src="/static/s3upload.js"></script>
-    <script src="/static/exif.js"></script>
-    <script src="/static/binaryajax.js"></script>
+    <script type="text/javascript" src="/static/exif.js"></script>
+    <script type="text/javascript" src="/static/binaryajax.js"></script>
 
     <!-- beike customized css and js -->
     <link rel="stylesheet" href="/static/common.css">
     <link rel="stylesheet" href="/static/detail.css">
     <link rel="stylesheet" href="/static/sell.css">
     <link rel="stylesheet" href="/static/mine.css">
-    <script src="/static/buy.js"></script>
-    <script src="/static/sell.js"></script>
-    <script src="/static/common.js"></script>
+    <script src="/static/jquery.fileupload.js"></script>
     <script src="/static/jquery.touchSwipe.min.js"></script>
+    <script src="/static/common.js"></script>
+    <script src="/static/buy_form.js"></script>
+    <script src="/static/buy_posts.js"></script>
+    <script src="/static/sell_form.js"></script>
+    <script src="/static/sell_posts.js"></script>
+    <title>千贝科技</title>
 </head>
 
 <body>
@@ -339,27 +341,27 @@
     <div class="ui-grid-d" style="background-color: rgb(35,192,148);">
         <div class="ui-block-a">
             <a href="/">
-                <img height="30" width="35" style="padding:10px 5px 5px 10px;" src='/static/images/navigation/homepage.png' />
+                <img height="28" width="30" style="padding:10px 5px 5px 10px;" src='/static/images/navigation/homepage.png' />
             </a>
         </div>
         <div class="ui-block-b">
             <a href="/buy/form/">
-                <img height="55" width="55" src='/static/images/navigation/buy_form.png' />
+                <img height="50" width="50" src='/static/images/navigation/buy_form.png' />
             </a>
         </div>
         <div class="ui-block-c">
             <a href="/sell/form/">
-                <img height="55" width="55" src='/static/images/navigation/sell_form.png' />
+                <img height="50" width="50" src='/static/images/navigation/sell_form.png' />
             </a>
         </div>
         <div class="ui-block-d">
             <a href="/buy/all_list/">
-                <img height="55" width="55" src='/static/images/navigation/buy_posts.png' />
+                <img height="50" width="50" src='/static/images/navigation/buy_posts.png' />
             </a>
         </div>
         <div class="ui-block-e">
             <a href="/sell/all_list/">
-                <img height="55" width="55" src='/static/images/navigation/sell_posts.png' />
+                <img height="50" width="50" src='/static/images/navigation/sell_posts.png' />
             </a>
         </div>
     </div>
