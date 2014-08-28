@@ -41,4 +41,21 @@ $(document).delegate("#user-update-page", "pageinit", function() {
 	    $('#image_orientation').val(imageInfo['orientation']);
 	    $('#user_image').attr('src',imageInfo['url']);
 	}
+
+	$('#description').bind('input propertychange', function() {
+        var contentLength = $('#description').val().length;
+        var lengthCount = contentLength + "/" + 3000;
+        $('#lengthCounter').text(lengthCount);
+    });
+});
+
+function initLengthCounter(){
+	var contentLength = $('#description').val().length;
+   	var lengthCount = contentLength + "/" + 3000;
+    $('#lengthCounter').text(lengthCount);
+}
+
+
+$(document).ready(function(){ 
+	initLengthCounter();
 });

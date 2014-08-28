@@ -108,14 +108,12 @@
                 自我介绍
             </div>
 
-            <div class="ui-grid-solo" style="padding-top:10px;margin-left:5%;margin-right:5%;height: 150px !important;">
+            <div class="ui-grid-solo" style="padding-top:10px;margin-left:5%;margin-right:5%;">
                 <div class="ui-block-a">
                     <span id="lengthCounter" class="text-p" style="float:right">0/3000</span>
                 </div>
-                <div class="ui-block-a">
-                    <textarea name="description" id="description" data-rule-content="true" value="{{user.description}}" maxlength="3000" placeholder="自我介绍">
-                    {{user.description}}
-                    </textarea>
+                <div class="ui-block-a" >
+                    <textarea name="description" id="description" data-rule-content="true" value="{{user.description}}" maxlength="3000" placeholder="自我介绍" style="height: 100px !important;">{{user.description}}</textarea>
                 </div>
             </div>
 
