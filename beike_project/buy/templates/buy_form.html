@@ -26,14 +26,16 @@
     <script src="/static/jquery.fileupload.js"></script>
     <script src="/static/jquery.touchSwipe.min.js"></script>
     <script src="/static/common.js"></script>
-    <script src="/static/buy.js"></script>
-    <script src="/static/sell.js"></script>
+    <script src="/static/buy_form.js"></script>
+    <script src="/static/buy_posts.js"></script>
+    <script src="/static/sell_form.js"></script>
+    <script src="/static/sell_posts.js"></script>
     <title>千贝科技</title>
 </head>
 
 <body>
     <div data-role="page" id="buy-form" data-theme="a" data-fullscreen="true" class="base-style">
-        <div data-role="header" data-position="fixed">
+        <div data-role="header">
             <div style="background-color: rgb(35,192,148);">
                 <div class="ui-grid-b">
                     <div class="ui-block-a">
@@ -80,8 +82,8 @@
                 </div>
 
                 <div>
-                    <input type="hidden" name="latitude" id="latitude"></input>
-                    <input type="hidden" name="longitude" id="longitude"></input>
+                    <input type="hidden" name="latitude" id="buy_form_latitude"></input>
+                    <input type="hidden" name="longitude" id="buy_form_longitude"></input>
                 </div>
 
                 <div class="ui-grid-b form-element-grid">
@@ -89,10 +91,10 @@
                         <div class="field-label-inner-div">邮&nbsp;&nbsp;&nbsp;&nbsp;编</div>
                     </div>
                     <div class="ui-block-b" style="width:50%;">
-                        <input type="text" name="zipcode" id="zipcode" placeholder="zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改">
+                        <input type="text" name="zipcode" id="buy_form_zipcode" placeholder="zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改">
                     </div>
                     <div class="ui-block-c" style="width:30%;">
-                        <a href="" data-role="button" onclick="getLocationByZipcode(); return false;">
+                        <a href="" data-role="button" onclick="getLocationByZipcodeForBuyForm(); return false;">
                             <span class="text-p">更新</span>
                         </a>
                     </div>
@@ -103,7 +105,7 @@
                         <div class="field-label-inner-div">城&nbsp;&nbsp;&nbsp;&nbsp;市</div>
                     </div>
                     <div class="ui-block-b" style="width:80%;">
-                        <input readonly style="border: none; background-color: transparent;" data-role="none" name="city_name" id="city_name" class="field-value-inner-div" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改"></input>
+                        <input readonly style="border: none; background-color: transparent;" data-role="none" name="city_name" id="buy_form_city_name" class="field-value-inner-div" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改"></input>
                     </div>
                 </div>
 
@@ -177,102 +179,35 @@
                 </div>
             </form>
         </div>
-        <div data-role="footer" data-position="fixed">
+        <div data-role="footer">
             <div class="ui-grid-d" style="background-color: rgb(35,192,148);">
                 <div class="ui-block-a">
                     <a href="/">
-                        <img height="30" width="35" style="padding:10px 5px 5px 10px;" src='/static/images/navigation/homepage.png' />
+                        <img height="28px" width="30px" style="padding:10px 5px 5px 10px;" src='/static/images/navigation/homepage.png' />
                     </a>
                 </div>
                 <div class="ui-block-b">
                     <a href="/buy/form/">
-                        <img height="55" width="55" src='/static/images/navigation/buy_form_clicked.png' />
+                        <img height="50px" width="50px" src='/static/images/navigation/buy_form_clicked.png' />
                     </a>
                 </div>
                 <div class="ui-block-c">
                     <a href="/sell/form/">
-                        <img height="55" width="55" src='/static/images/navigation/sell_form.png' />
+                        <img height="50px" width="50px" src='/static/images/navigation/sell_form.png' />
                     </a>
                 </div>
                 <div class="ui-block-d">
                     <a href="/buy/all_list/">
-                        <img height="55" width="55" src='/static/images/navigation/buy_posts.png' />
+                        <img height="50px" width="50px" src='/static/images/navigation/buy_posts.png' />
                     </a>
                 </div>
                 <div class="ui-block-e">
                     <a href="/sell/all_list/">
-                        <img height="55" width="55" src='/static/images/navigation/sell_posts.png' />
+                        <img height="50px" width="50px" src='/static/images/navigation/sell_posts.png' />
                     </a>
                 </div>
             </div>
         </div>
-        <script type="text/javascript">
-        function getLocationByLatLon(position) {
-            var latitude = position.coords.latitude;
-            var longitude = position.coords.longitude;
-            $("#latitude").val(latitude);
-            $("#longitude").val(longitude);
-            $.ajax({
-                type: "get",
-                url: "/user/get_info/get_zipcode_by_latlong",
-                dataType: "json",
-                data: {
-                    latitude: latitude,
-                    longitude: longitude
-                }
-            }).then(function(data) {
-                $('#zipcode').val(data['zipcode']);
-                $('#city_name').val(data['city']);
-                console.log(data);
-            });
-        }
-
-        function getLocationByZipcode() {
-            var zipcode = $("#zipcode").val();
-            $.ajax({
-                type: "get",
-                url: "/user/get_info/get_latlong_by_zipcode",
-                dataType: "json",
-                data: {
-                    zipcode: zipcode
-                }
-            }).then(function(data) {
-                console.log(data);
-                $('#city_name').val(data['city']);
-                $('#latitude').val(data['latitude']);
-                $('#longitude').val(data['longitude']);
-            });
-        }
-
-        function getCurrentPositionDeferred(options) {
-            var deferred = $.Deferred();
-            navigator.geolocation.getCurrentPosition(deferred.resolve, deferred.reject, options);
-            return deferred.promise();
-        };
-
-        $(document).ready(function() {
-            if (navigator.geolocation) {
-                getCurrentPositionDeferred({
-                    enableHighAccuracy: true
-                }).done(function(position) {
-                    getLocationByLatLon(position)
-                }).fail(function() {
-                    console.log("getCurrentPosition call failed")
-                }).always(function() {
-                    //do nothing
-                });
-            } else {
-                alert("geolocation is disabled.")
-            }
-            $('#content').bind('input propertychange', function() {
-                contentLength = $('#content').val().length;
-                lengthCount = contentLength + "/" + 3000;
-                $('#lengthCounter').text(lengthCount);
-            });
-        });
-        </script>
-
-
     </div>
 </body>
 
