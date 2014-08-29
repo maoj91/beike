@@ -11,20 +11,24 @@
     <script src="/static/jquery/jquery-1.8.3.js "></script>
     <script src="/static/jquery/jquery.mobile-1.4.2.js"></script>
 
-    <!--js library for s3 upload-->
-    <script type="text/javascript" src="/static/s3upload.js"></script>
-    <script src="/static/exif.js"></script>
-    <script src="/static/binaryajax.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/jQMProgressBar.css">
+    <script type="text/javascript" src="/static/jQMProgressBar.js"></script>
 
-    <!-- customized css and js -->
+    <script type="text/javascript" src="/static/exif.js"></script>
+    <script type="text/javascript" src="/static/binaryajax.js"></script>
+
+    <!-- beike customized css and js -->
     <link rel="stylesheet" href="/static/common.css">
     <link rel="stylesheet" href="/static/detail.css">
+    <link rel="stylesheet" href="/static/sell.css">
+    <link rel="stylesheet" href="/static/mine.css">
     <script src="/static/jquery.fileupload.js"></script>
+    <script src="/static/jquery.touchSwipe.min.js"></script>
+    <script src="/static/common.js"></script>
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
     <script src="/static/user.js"></script>
-    <script src="/static/common.js"></script>
-    <script type="text/javascript" src="/static/jquery.touchSwipe.min.js"></script>
+
 </head>
 
 <body>
@@ -33,26 +37,27 @@
         <div data-role="header" data-position="fixed">
         </div>
         <div data-role="content" style="padding:0;">
-            <div id="image-uploader">
-
+            <div id="image-uploader" style="margin-top:10px;">
                 {% if user_image %}
                 <div style="display:table;margin:0 auto;">
-                        <img id='profile_image' src='{{user_image.image_url}}' style="width: 80px;height:80px;border-radius: 50%;"/>
+                        <img id='profile_image' src='{{user_image.image_url}}' style="width: 90px;height:90px;border-radius: 50%;"/>
                 </div>
                 {% endif %}
 
-                <div class="ui-grid-solo" style="width:100%;padding-top:15px;padding-bottom:15px;height:30px;text-align:center;display:inline-block;vertical-align: middle;">
-                    <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
-                    <div class="ui-block-a" style="display:inline-block;width:25px;height:25px;text-align: center;background-color: rgb(172,172,172);">
-                        <input style="display:none;" data-role="none" type="file" id="user_image" name="user_image" accept="image/*"/>
-                        <label for="user_image">
-                            <img src='/static/images/sell_post/upload.png' style="width:20px;height:20px;">
+                <div style="position: relative; text-align: center;">
+                    <div id="progressbar" style=" width: 60%; position: absolute; top: 100px; left: 20%;"></div>
+                    <div id="current_image">
+                    </div>
+                </div>
+
+                <div class="ui-grid-solo" style="width:100%;padding-top:15px;padding-bottom:15px;text-align:center;">
+                    <div class="ui-block-a" style="display:inline-block;padding-left:2px;padding-right:1px;padding-top:2px;padding-bottom:2px;width:29px;height:24px;text-align:center;background-color: rgb(172,172,172);">
+                        <input style="display:none;" data-role="none" type="file" id="post_image" name="post_image" accept="image/*"/>
+                        <label for="post_image">
+                            <img src='/static/images/sell_post/upload.png' style="width:25px;">
                         </label>
                     </div>
                 </div>
-<!--                 <div class="hidden_file">
-                    <input type="file" id="image1" data-clear-btn="false" name="image" accept="image/*" onchange="image_s3_upload(this.id,'{{user.wx_id}}');" capture>
-                </div> -->
             </div>
 
         <form action="/user/{{user.id}}/update/" method="post" enctype="multipart/form-data">{% csrf_token %}

@@ -66,10 +66,12 @@ def update(request,offset):
         user.description = request.POST.get('description','')   
         user.mobile_phone = request.POST.get('mobile_phone','')   
         user.gender = int(request.POST.get('gender',''))
-        dob = request.POST.get('date_of_birth','');
+        dob = request.POST.get('date_of_birth','')
         if dob: 
             user.date_of_birth = datetime.strptime(dob, '%Y-%m-%d')
-        # user.image_url = get_image_info(request)      
+        new_image = get_image_info(request)      
+        if new_image:
+            user.image_url = new_image
         user.save()
     user_image = ImageMetadata.deserialize_list(user.image_url)[0]
     states = State.objects.values('name')
@@ -247,11 +249,12 @@ def get_image_info(request):
     image_url = request.POST.get('image_url')
     image_width = request.POST.get('image_width')
     image_height = request.POST.get('image_height')
-    print image_url
     if image_url and image_width and image_height:
         image = ImageMetadata(image_url, image_width, image_height)
         image_list.append(image)
-    return ImageMetadata.serialize_list(image_list)
+        return ImageMetadata.serialize_list(image_list)
+    else: 
+        return '';
 
 def get_age(born):
     if born:
