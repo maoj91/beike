@@ -284,10 +284,11 @@
     <div style="width:100%;height:60px;margin-bottom:20px;">
         <div id="contacts" style="display:table;height:100%;margin: 0 auto; padding: 5px;">
                     {% if email_checked%}
-                    <img style="width:50px;height:50px;" src="/static/images/detail/email_selected.png" onclick="sendEmail('{{email}}','{{post.title}}')"/>
-<!--                     <a href="">
-                    <div style='display:inline;background-image: url(/static/images/detail/email_selected.png);width:50px;height:50px;'>
-                    </div> -->
+<!--                     <img style="width:50px;height:50px;" src="/static/images/detail/email_selected.png" onclick="sendEmail('{{email}}','{{post.title}}')"/> -->
+                    <a href="mailto:{{email}}?Subject=回复帖子:{{title}}"  data-shadow="false" data-theme="none" style="display:inline;">
+                        <img src="/static/images/detail/email_selected.png" border="0" style="width:50px;height:50px;"/>
+                    <!-- <div style='display:inline;background-image: url(/static/images/detail/email_selected.png);width:50px;height:50px;'> -->
+                    <!-- </div> -->
                     </a>
                     {% else %}
                     <img style="width:50px;height:50px;" src="/static/images/detail/email.png" />
