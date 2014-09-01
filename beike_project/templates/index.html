@@ -45,8 +45,10 @@
                 <img width="100%" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/logo.png" />
                 <img  class="city_background" id="city_background" src='/static/images/homepage/citybackground.png' />
                 <div id="city" class="city">
-                    <img  class="city_mark" src='/static/images/detail/location_icon.png' />
-                    <span class="head_text_right">{{city}}</span>
+                    <a href="/user/{{user.id}}/" STYLE="text-decoration: none; color:#218868 ">
+                        <img  class="city_mark" src='/static/images/detail/location_icon.png' />
+                        <span class="head_text_right">{{city}}</span>
+                    </a>
                 </div>
             </div>
 
