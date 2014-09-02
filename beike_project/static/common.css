@@ -1,3 +1,21 @@
+html, body, div {
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+div, img {
+    display: block;
+}
+
+.wrapper { 
+    /**/
+    width: 100%; height: auto;
+    /*/
+    width: 640px; height: 1010px; 
+    /**/
+}
+
 .base-style {
     font-size: 14px;
 }
@@ -37,10 +55,69 @@
 .signup-inner {
     display: inline-block;
 }
+
+
 /* CSS for index page */
- .head_text_left {
+.main-top {
+    /*height: 545px;*/
+}
+
+.city{
+    position: absolute;
+    left: 17px;
+    top: -5px;
+    padding: 10px 30px 10px 26px;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    box-shadow: 0px 0px 12px #333;
+}
+
+/*.city-background{
+    position: absolute;
+    left: 10px;
+    top: 0px;
+    width:100px;
+    height:40px;
+}*/
+
+.city-mark{
+    display: inline;
+    height: 27px;
+    vertical-align: text-bottom;
+    margin-right: 3px;
+}
+
+.city-background-android{
+    position: absolute;
+    left: 10px;
+    top: 50px;
+    width: 100px;
+    height: 40px;
+}
+
+.city-android{
+    position: absolute;
+    left: 25px;
+    top: 60px;
+}
+
+/*.head-text-left {
     float:left;
     margin-top: 0.4em;
+}*/
+
+.head-text-right {
+    font-family: \5FAE\8F6F\96C5\9ED1, sans-serif;
+    font-size: 22px;
+    color:#24c498;
+}
+
+.main-bottom {
+    background-color: #dfe7da;
+    /*height: 465px;*/
+    box-sizing: border-box;
+    padding-top: 50px;
+    padding-bottom: 50px;
 }
 
 .main-button {
@@ -49,43 +126,7 @@
     margin-right:7%;
     margin-top:5%
 }
-.city_background{
-    position: absolute;
-    left: 10px;
-    top: 0px;
-    width:100px;
-    height:40px;
-}
 
-.city_background_android{
-    position: absolute;
-    left: 10px;
-    top: 50px;
-    width: 100px;
-    height: 40px;
-}
-
-.city{
-    position: absolute;
-    left: 30px;
-    top: 10px;
-}
-
-.city_android{
-    position: absolute;
-    left: 25px;
-    top: 60px;
-}
-
-.city_mark{
-    max-width:15px;
-    max-height:15px;
-}
-
-.head_text_right {
-    font-size: small;
-    color:#218868;
-}
 /* CSS for buypost creation page */
 #phone_number_div {
     display: none;
