@@ -191,12 +191,12 @@ label.error {
 
 /* image uploader */
 #image-uploader {
-    max-width: 600px !important;
-    width: 100% !important;
+    max-width: 600px;
+    width: 100%;
     height: 300px;
 }
 
-.image-uploader-large {
+.image-uploader-image {
     width: 100%;
     height: 250px;
     background-color: rgb(213,213,213);
@@ -226,11 +226,12 @@ label.error {
 
 
 .new-image {
+    position: relative;
     width: 20%;
     height:65px;
     text-align: center;
     background-color: rgb(172,172,172);
-    position:relative;
+    float: left;
 }
 
 .new-image-icon {
@@ -244,9 +245,10 @@ label.error {
 }
 
 .image-thumbnail-box {
+    position: relative;
     width: 25%;
     height: 100%;
-    position: relative;
+    float: left;
 }
 
 .image-thumbnail-top {
@@ -262,11 +264,11 @@ label.error {
     border-right: solid 1px white;
 }
 
-.form-left {
+.ui-block-a.form-left {
     width: 20%;
 }
 
-.form-right {
+.ui-block-b.form-right {
     width: 80%;
 }
 

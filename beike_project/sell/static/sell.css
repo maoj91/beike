@@ -74,18 +74,7 @@
     overflow: hidden;
     height:100%;
 }
-#preview1 {
-    width:5em;
-    height:100%;
-}
-#preview2 {
-    width:5em;
-    height:100%;
-}
-#preview3 {
-    width:5em;
-    height:100%;
-}
+
 .condition {
     float:left;
     width:16.6%;

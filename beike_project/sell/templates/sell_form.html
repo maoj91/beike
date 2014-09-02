@@ -8,7 +8,7 @@
     {% include "header.html" with title="我要卖" %}
 
     <div id="image-uploader">
-        <div class="ui-grid-solo image-uploader-large">
+        <div class="ui-grid-solo image-uploader-image">
             <div class="progressbar-wrapper">
                 <div id="progressbar"></div>
                 <div id="current_image"></div>
@@ -16,7 +16,7 @@
         </div>
 
         <div id="image_thumbnails_div" class="ui-grid-a">
-            <div class="ui-block-a new-image">
+            <div class="new-image">
                 <input style="display:none;" data-role="none" type="file" id="post_image" name="post_image" accept="image/*" onclick="return moreImagesAllowed();" />
                 <label for="post_image">
                     <img class="new-image-icon" src='/static/images/sell_post/upload.png'>
@@ -25,19 +25,19 @@
 
             <div class="ui-block-b" style="width: 80%;">
                 <div class="ui-grid-c" style="height: 65px;">
-                    <div class="ui-block-a image-thumbnail-box">
+                    <div class="image-thumbnail-box">
                         <div id="imgselector0" class="image-thumbnail-top"></div>
                         <div id="preview0" class="image-thumbnail" onclick="displayImage(0);"></div>
                     </div>
-                    <div class="ui-block-b image-thumbnail-box">
+                    <div class="image-thumbnail-box">
                         <div id="imgselector1" class="image-thumbnail-top"></div>
                         <div id="preview1" class="image-thumbnail"onclick="displayImage(1);"></div>
                     </div>
-                    <div class="ui-block-c image-thumbnail-box">
+                    <div class="image-thumbnail-box">
                         <div id="imgselector2" class="image-thumbnail-top"></div>
                         <div id="preview2" class="image-thumbnail" onclick="displayImage(2);"></div>
                     </div>
-                    <div class="ui-block-d image-thumbnail-box">
+                    <div class="image-thumbnail-box">
                         <div id="imgselector3" class="image-thumbnail-top"></div>
                         <div id="preview3" class="image-thumbnail" onclick="displayImage(3);"></div>
                     </div>
