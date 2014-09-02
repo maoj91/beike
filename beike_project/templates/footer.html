@@ -1,4 +1,5 @@
-<div data-role="footer">
+<div style="height: 50px"></div>
+<div data-role="footer" class="footer">
     <div class="ui-grid-d" style="background-color: rgb(35,192,148);">
         <div class="ui-block-a">
             <a href="/">
@@ -7,22 +8,22 @@
         </div>
         <div class="ui-block-b">
             <a href="/buy/form/">
-                <img height="50px" width="50px" src='/static/images/navigation/buy_form_clicked.png' />
+                <img height="50px" width="50px" src='/static/images/navigation/buy_form{{ buy|default:"" }}.png' />
             </a>
         </div>
         <div class="ui-block-c">
             <a href="/sell/form/">
-                <img height="50px" width="50px" src='/static/images/navigation/sell_form.png' />
+                <img height="50px" width="50px" src='/static/images/navigation/sell_form{{ sell|default:"" }}.png' />
             </a>
         </div>
         <div class="ui-block-d">
             <a href="/buy/all_list/">
-                <img height="50px" width="50px" src='/static/images/navigation/buy_posts.png' />
+                <img height="50px" width="50px" src='/static/images/navigation/buy_posts{{ buy_list|default:"" }}.png' />
             </a>
         </div>
         <div class="ui-block-e">
             <a href="/sell/all_list/">
-                <img height="50px" width="50px" src='/static/images/navigation/sell_posts.png' />
+                <img height="50px" width="50px" src='/static/images/navigation/sell_posts{{ sell_list|default:"" }}.png' />
             </a>
         </div>
     </div>

@@ -3,79 +3,9 @@
 
 {% include "head.html" %}
 
-<head>
-    <meta charset="utf-8">
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="viewport" content="user-scalable=no, width=device-width initial-scale=1"/>
-    
-    <!-- jquery library -->
-    <script type="text/javascript" src="/static/jquery/jquery-1.8.3.min.js "></script>
-    <script type="text/javascript" src="/static/jquery/jquery.mobile-1.4.2.min.js"></script>
-    <script type="text/javascript" src="/static/jquery/jquery.validate.js"></script>
-    <script type="text/javascript" src="/static/jQMProgressBar.js"></script>
-    <script type="text/javascript" src="/static/exif.js"></script>
-    <script type="text/javascript" src="/static/binaryajax.js"></script>
-    
-    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile.structure-1.4.2.min.css">
-    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
-    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
-    <link rel="stylesheet" type="text/css" href="/static/jQMProgressBar.css">
-    
-    <!-- beike customized css and js -->
-    <link rel="stylesheet" href="/static/common.css">
-    <script src="/static/jquery.fileupload.js"></script>
-    <script src="/static/jquery.touchSwipe.min.js"></script>
-    <script src="/static/common.js"></script>
-    <title>千贝科技</title>
-</head>
-<!--head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="UTF-8">
-    <!-- jquery library ->
-    <script type="text/javascript" src="/static/jquery/jquery-1.8.3.js "></script>
-    <script type="text/javascript" src="/static/jquery/jquery.mobile-1.4.2.js"></script>
-    <script type="text/javascript" src="/static/jquery/jquery.validate.js"></script>
-    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
-    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
-    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
-
-    <link rel="stylesheet" type="text/css" href="/static/jQMProgressBar.css">
-    <script type="text/javascript" src="/static/jQMProgressBar.js"></script>
-
-    <script type="text/javascript" src="/static/exif.js"></script>
-    <script type="text/javascript" src="/static/binaryajax.js"></script>
-
-    <!-- beike customized css and js ->
-    <link rel="stylesheet" href="/static/common.css">
-    <link rel="stylesheet" href="/static/detail.css">
-    <link rel="stylesheet" href="/static/sell.css">
-    <link rel="stylesheet" href="/static/mine.css">
-    <script src="/static/jquery.fileupload.js"></script>
-    <script src="/static/jquery.touchSwipe.min.js"></script>
-    <script src="/static/common.js"></script>
-    <script src="/static/buy_form.js"></script>
-    <script src="/static/buy_posts.js"></script>
-    <script src="/static/sell_form.js"></script>
-    <script src="/static/sell_posts.js"></script>
-    <title>千贝科技</title>
-</head-->
-
 <body>
-    <div data-role="page" id="buy-form" data-theme="a" data-fullscreen="true" class="base-style">
-        <div data-role="header">
-            <div style="background-color: rgb(35,192,148);">
-                <div class="ui-grid-b">
-                    <div class="ui-block-a">
-                    </div>
-                    <div class="ui-block-b">
-                        <p style="text-align:center; color:white">需求发布</p>
-                    </div>
-                    <div class="ui-block-a">
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div data-role="page" id="buy-form" data-theme="a" data-fullscreen="true">
+        {% include "header.html" with title="需求发布" %}
 
         <div data-role="content">
             <form action="/buy/form_submit/" method="post" enctype="multipart/form-data">
@@ -207,35 +137,7 @@
                 </div>
             </form>
         </div>
-        <div data-role="footer">
-            <div class="ui-grid-d" style="background-color: rgb(35,192,148);">
-                <div class="ui-block-a">
-                    <a href="/">
-                        <img height="28px" width="30px" style="padding:10px 5px 5px 10px;" src='/static/images/navigation/homepage.png' />
-                    </a>
-                </div>
-                <div class="ui-block-b">
-                    <a href="/buy/form/">
-                        <img height="50px" width="50px" src='/static/images/navigation/buy_form_clicked.png' />
-                    </a>
-                </div>
-                <div class="ui-block-c">
-                    <a href="/sell/form/">
-                        <img height="50px" width="50px" src='/static/images/navigation/sell_form.png' />
-                    </a>
-                </div>
-                <div class="ui-block-d">
-                    <a href="/buy/all_list/">
-                        <img height="50px" width="50px" src='/static/images/navigation/buy_posts.png' />
-                    </a>
-                </div>
-                <div class="ui-block-e">
-                    <a href="/sell/all_list/">
-                        <img height="50px" width="50px" src='/static/images/navigation/sell_posts.png' />
-                    </a>
-                </div>
-            </div>
-        </div>
+        {% include "footer.html" with buy="_clicked" %}
     </div>
 </body>
 
