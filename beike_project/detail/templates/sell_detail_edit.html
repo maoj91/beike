@@ -23,6 +23,11 @@
     <link rel="stylesheet" href="/static/detail.css">
     <link rel="stylesheet" href="/static/sell.css">
     <link rel="stylesheet" href="/static/mine.css">
+
+    <script src="/static/buy.js"></script>
+    <script src="/static/sell.js"></script>
+    <script src="/static/detail.js"></script>
+    <script src="/static/common.js"></script>
     <script src="/static/jquery.fileupload.js"></script>
     <script src="/static/jquery.touchSwipe.min.js"></script>
     <script src="/static/common.js"></script>
@@ -227,12 +232,20 @@
                     <input data-highlight="true" type="range" name="condition-slider" id="condition-slider" value="{{post.item_condition.value}}" min="0" max="4" step="1" />
                 </div>
 
-                <div class="ui-grid-solo">
-                    <div class="ui-block-a">
-                        <div class="field-label-inner-div">详细描述</div>
-                        <textarea name="content" value="{{post.content}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入详细描述">{{post.content}}</textarea>
+                <div class="ui-grid-solo" style="margin: 15px 0 !important;">
+                    <div class="ui-grid-a">
+                        <div class="ui-block-a">
+                            <span class="text-p">其他描述</span>
+                        </div>
+                        <div class="ui-block-b">
+                            <span id="lengthCounter" class="text-p" style="float:right">0/3000</span>
+                        </div>
+                    </div>
+                    <div class="ui-grid-solo">
+                        <textarea name="content" id="content" style="height: 100px !important;" placeholder="描述颜色、大小、形状、新旧等需求" data-rule-required="true" data-rule-content="true" data-msg-required="请输入详细描述" maxlength="3000" value="{{post.content}}">{{post.content}}</textarea>
                     </div>
                 </div>
+
                 <div>
                     <input type="hidden" name="latitude" id="latitude"></input>
                     <input type="hidden" name="longitude" id="longitude"></input>

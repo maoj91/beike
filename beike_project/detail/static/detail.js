@@ -66,4 +66,25 @@ function image_s3_upload(file_dom_id,user_id){
 }
 
 
+$(document).delegate("#sellpost-edit", "pageinit", function() {
+
+	$('#content').bind('input propertychange', function() {
+        var contentLength = $('#content').val().length;
+        var lengthCount = contentLength + "/" + 3000;
+        $('#lengthCounter').text(lengthCount);
+    });
+});
+
+function initLengthCounter(){
+	var contentLength = $('#content').val().length;
+   	var lengthCount = contentLength + "/" + 3000;
+    $('#lengthCounter').text(lengthCount);
+}
+
+
+$(document).ready(function(){ 
+	initLengthCounter();
+});
+
+
 

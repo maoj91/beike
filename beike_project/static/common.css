@@ -75,7 +75,7 @@ div, img {
 /*.city-background{
     position: absolute;
     left: 10px;
-    top: 0px;
+    top: -6px;
     width:100px;
     height:40px;
 }*/
@@ -90,7 +90,7 @@ div, img {
 .city-background-android{
     position: absolute;
     left: 10px;
-    top: 50px;
+    top: 44px;
     width: 100px;
     height: 40px;
 }
@@ -98,7 +98,7 @@ div, img {
 .city-android{
     position: absolute;
     left: 25px;
-    top: 60px;
+    top: 54px;
 }
 
 /*.head-text-left {
