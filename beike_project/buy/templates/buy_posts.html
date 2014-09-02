@@ -6,9 +6,9 @@
 <body>
     <div id="nearby-buypost" data-role="page" data-fullscreen="true" class="base-style" style="background-color: rgb(226,229,220);">
         {% include "header.html" with title="周边需求" %}
-
         <div id="buy-list" data-role="main">
             <input type="hidden" id="num-per-page" name="num-per-page" value="{{num_per_page}}" />
+            <!--div id="buypost-list"> a single datalist is sufficient </div-->
             <div class="ui-grid-a">
                 <div class="ui-block-a">
                     <ul id="buypost-list-a" data-role="listview" data-theme="c" data-inset="true">
@@ -19,9 +19,7 @@
                     </ul>
                 </div>
             </div>
-            <div id="load-more" style="vertical-align:middle; text-align:center; display:none;">
-                <img width="50px" height="50px" src="/static/images/general/loading_green.gif" />
-            </div>
+            <div id="load-more"><img width="50px" height="50px" src="/static/images/general/loading_green.gif" /></div>
         </div>
         
         {% include "footer.html" with buy_list="_clicked" %}

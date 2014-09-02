@@ -1,7 +1,9 @@
-<<<<<<< HEAD
 <div data-role="header" class="header ui-header">
     <div class="ui-grid-b">
         <div class="ui-block-a">
+            {% if search == "on" %}
+            <a href="#popupBasic" data-rel="popup" data-role="button">高级搜索</a>
+            {% endif %}
         </div>
         <div class="ui-block-b">
             <p>{{title}}</p>
@@ -9,16 +11,4 @@
         <div class="ui-block-a">
         </div>
     </div>
-=======
-<div data-role="header" class="header ui-header">
-    <div class="ui-grid-b">
-        <div class="ui-block-a">
-        </div>
-        <div class="ui-block-b">
-            <p>{{title}}</p>
-        </div>
-        <div class="ui-block-a">
-        </div>
-    </div>
->>>>>>> origin/master
 </div>

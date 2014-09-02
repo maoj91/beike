@@ -30,7 +30,7 @@ body {
     font-size: 14px;
 }
 
-.form-element-grid {
+.form-grid {
     margin: 10px 0 !important;
 }
 
@@ -186,4 +186,92 @@ label.error {
     width: 100%;
     float: left;
     display: block;
+}
+
+
+/* image uploader */
+#image-uploader {
+    max-width: 600px !important;
+    width: 100% !important;
+    height: 300px;
+}
+
+.image-uploader-large {
+    width: 100%;
+    height: 250px;
+    background-color: rgb(213,213,213);
+    background-image:url('/static/images/sell_post/camera_bkg.png');
+    background-size: 180px 150px;
+    background-position: center;
+    background-repeat:no-repeat;
+}
+
+#image_thumbnails_div {
+    width: 100%;
+    height: 65px;
+    background-color: rgb(213,213,213);
+}
+
+#progressbar {
+    width: 60%;
+    position: absolute;
+    top: 100px;
+    left: 20%;
+}
+
+.progressbar-wrapper {
+    position: relative; text-align: center;
+}
+
+
+
+.new-image {
+    width: 20%;
+    height:65px;
+    text-align: center;
+    background-color: rgb(172,172,172);
+    position:relative;
+}
+
+.new-image-icon {
+    width: 80%;
+    height: 70%;
+    position:absolute;
+    left: 10%;
+    right: 10%;
+    top: 15%;
+    bottom: 15%;
+}
+
+.image-thumbnail-box {
+    width: 25%;
+    height: 100%;
+    position: relative;
+}
+
+.image-thumbnail-top {
+    position: absolute;
+    height: 6px;
+    width: 100%;
+    background-color: rgb(172,172,172);
+}
+
+.image-thumbnail {
+    width: 100%;
+    height: 100%;
+    border-right: solid 1px white;
+}
+
+.form-left {
+    width: 20%;
+}
+
+.form-right {
+    width: 80%;
+}
+
+#load-more {
+    vertical-align: middle;
+    text-align: center;
+    display: none;
 }
