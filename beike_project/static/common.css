@@ -52,7 +52,7 @@
 .city_background{
     position: absolute;
     left: 10px;
-    top: 0px;
+    top: -6px;
     width:100px;
     height:40px;
 }
@@ -60,7 +60,7 @@
 .city_background_android{
     position: absolute;
     left: 10px;
-    top: 50px;
+    top: 44px;
     width: 100px;
     height: 40px;
 }
@@ -68,13 +68,13 @@
 .city{
     position: absolute;
     left: 30px;
-    top: 10px;
+    top: 4px;
 }
 
 .city_android{
     position: absolute;
     left: 25px;
-    top: 60px;
+    top: 54px;
 }
 
 .city_mark{
