@@ -49,33 +49,28 @@ function getBuyposts(position) {
 }
 
 function displayBuyposts(posts) {
-    var listA = $("#buypost-list-a");
-    var listB = $("#buypost-list-b");
-    var i = 0,
-        len = posts.length;
-    //process posts data
+    var items = $(""),
+        i = 0, len = posts.length;
     for (i = 0; i < len; i++) {
         var distance = posts[i]["distance"];
         if (posts[i]["distance"] > 1000) {
             distance = (posts[i]["distance"] / 1000).toFixed(2) + " K"
         }
-        var postTemplate = $('<li class="sellpost-li"><div></div></li>');
-        var content = $('<a href="/detail/buy/' + posts[i]['post_id'] + '" style="text-decoration:none; color: rgb(0,0,0);font-weight:normal;"></a>')
-        content.append($('<div><p><img style="width: 20px; height: 20px; margin: 0px 0 -4px 0;" src="/static/images/nearby_buy_posts/request_logo.png" /><span style="font-size: 18px;">&nbsp;&nbsp;' + posts[i]["title"] + '</span></p></div>'))
-        content.append($('<div style="font-size: 16px;"><span style="color: #ff9933;">$&nbsp;</span>' + posts[i]["min_price"] + '</div>'));
-        content.append($('<div style="font-size: 12px; color: rgb(172,172,172);">距离你 ' + distance + ' miles</div>'));
-
-        postTemplate.children().append(content);
-        if (buypost_slot % 2 === 0) {
-            listA.append(postTemplate);
-        } else {
-            listB.append(postTemplate);
-        }
+        items.after($('<div class="post-item-div">'+
+'<a class="post-item" href="/detail/buy/' + posts[i]['post_id'] + '">'+
+    '<div>'+
+        '<img class="post-icon" src="/static/images/nearby_buy_posts/request_logo.png" />'+
+        '<span style="font-size: 18px;">' + posts[i]["title"] + '</span>'+
+    '</div>'+
+    '<div class="post-price">'+
+        '<span class="post-currency">$&nbsp;</span>' + posts[i]["min_price"]+ 
+    '</div>'+
+    '<div class="post-distance">距离你 ' + distance + ' miles</div>'+
+'</a></div>'));
         buypost_slot++;
     }
-
-    listA.listview("refresh");
-    listB.listview("refresh");
+    items.after($('<div style="clear:both"></div>'))
+    
     if (len < numPerPage) {
         hasMoreBuyPost = false;
         $('#load-more').hide();
@@ -83,6 +78,7 @@ function displayBuyposts(posts) {
         hasMoreBuyPost = true;
         buyPostPageNum++;
     }
+    $("#buypost-list").append(items);
 }
 
 $(document).delegate("#nearby-buypost", "pageinit", function() {
