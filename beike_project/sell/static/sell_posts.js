@@ -60,10 +60,11 @@ function getPosts(position, sellPostCategory, sellPostKeyword) {
 }
 
 function displayPosts(posts) {
-    var listA = $("#post-list-a");
-    var listB = $("#post-list-b");
-    var i = 0,
-        len = posts.length;
+    var listA = $(""),
+        listB = $(""),
+        i = 0,
+        len = posts.length,
+        image_width = document.body.clientWidth * 0.4;
     //process posts data
     for (i = 0; i < len; i++) {
         var image_info_list = jQuery.parseJSON(posts[i]["image_info"]);
@@ -75,28 +76,30 @@ function displayPosts(posts) {
             continue;
         }
 
-        image_width = document.body.clientWidth * 0.4;
-        image_height = image_info['height'] / image_info['width'] * image_width;
         var distance = posts[i]["distance"];
         if (posts[i]["distance"] > 1000) {
             distance = (posts[i]["distance"] / 1000).toFixed(0) + "K"
         }
-
-        var postTemplate = $('<li class="sellpost-li"></li>');
-        postTemplate.append($('<div><p><img style="width: 20px; height: 20px; margin: 0px 0 -4px 0;" src="/static/images/nearby_sell_posts/sell_logo.png" /><span style="font-size: 18px;">&nbsp;&nbsp;' + posts[i]["title"] + '</span></p></div>'));
-        postTemplate.append($('<div><a href="/detail/sell/' + posts[i]['post_id'] + '"><img src="' + image_info['image_url'] + '" width="' + image_width + '" height="' + image_height + '"/></a></div>'));
-        postTemplate.append($('<div style="font-size: 16px;"><span style="color: #ff9999;">$&nbsp;</span>' + posts[i]["price"] + '</div>'));
-        postTemplate.append($('<div style="font-size: 12px; color: rgb(172,172,172);">距离你 ' + distance + ' miles</div>'));
+        var item = $('<div class="post-item-div">'+
+            '<a class="post-item" href="/detail/sell/' + posts[i]['post_id'] + '">'+
+                '<div>'+
+                    '<img class="post-icon" src="/static/images/nearby_sell_posts/sell_logo.png" />'+
+                    '<span class="post-title">' + posts[i]["title"] + '</span>'+
+                '</div>'+
+                '<img class="post-image" src="' + image_info['image_url'] + '" width="' + image_width + '" height="' + image_height + '"/>'+
+                '<div class="post-price">'+
+                    '<span class="post-currency">$&nbsp;</span>' + posts[i]["min_price"]+ 
+                '</div>'+
+                '<div class="post-distance">距离你 ' + distance + ' miles</div>'+
+            '</a></div>');
 
         if (slot_pos % 2 === 0) {
-            listA.append(postTemplate);
+            listA.after(item);
         } else {
-            listB.append(postTemplate);
+            listB.after(item);
         }
         slot_pos++;
     }
-    listA.listview("refresh");
-    listB.listview("refresh");
     if (len < numPerPage) {
         hasMoreSellPost = false;
         $('#load-more').hide();
@@ -104,7 +107,8 @@ function displayPosts(posts) {
         hasMoreSellPost = true;
         sellPostPageNum++;
     }
-
+    $("#sellpost-list1").append(listA);
+    $("#sellpost-list2").append(listB);
 }
 
 function refreshSellPosts() {

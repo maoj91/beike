@@ -49,27 +49,34 @@ function getBuyposts(position) {
 }
 
 function displayBuyposts(posts) {
-    var items = $(""),
+    var listA = $(""),
+        listB = $(""),
         i = 0, len = posts.length;
     for (i = 0; i < len; i++) {
         var distance = posts[i]["distance"];
         if (posts[i]["distance"] > 1000) {
             distance = (posts[i]["distance"] / 1000).toFixed(2) + " K"
         }
-        items.after($('<div class="post-item-div">'+
-'<a class="post-item" href="/detail/buy/' + posts[i]['post_id'] + '">'+
-    '<div>'+
-        '<img class="post-icon" src="/static/images/nearby_buy_posts/request_logo.png" />'+
-        '<span style="font-size: 18px;">' + posts[i]["title"] + '</span>'+
-    '</div>'+
-    '<div class="post-price">'+
-        '<span class="post-currency">$&nbsp;</span>' + posts[i]["min_price"]+ 
-    '</div>'+
-    '<div class="post-distance">距离你 ' + distance + ' miles</div>'+
-'</a></div>'));
+        var item = $('<div class="post-item-div">'+
+            '<a class="post-item" href="/detail/buy/' + posts[i]['post_id'] + '">'+
+                '<div>'+
+                    '<img class="post-icon" src="/static/images/nearby_buy_posts/request_logo.png" />'+
+                    '<span class="post-title">' + posts[i]["title"] + '</span>'+
+                '</div>'+
+                '<div class="post-price">'+
+                    '<span class="post-currency">$&nbsp;</span>' + posts[i]["min_price"]+ 
+                '</div>'+
+                '<div class="post-distance">距离你 ' + distance + ' miles</div>'+
+            '</a></div>');
+        
+        if (slot_pos % 2 === 0) {
+            listA.after(item);
+        } else {
+            listB.after(item);
+        }
+        slot_pos++;
         buypost_slot++;
     }
-    items.after($('<div style="clear:both"></div>'))
     
     if (len < numPerPage) {
         hasMoreBuyPost = false;
@@ -78,7 +85,8 @@ function displayBuyposts(posts) {
         hasMoreBuyPost = true;
         buyPostPageNum++;
     }
-    $("#buypost-list").append(items);
+    $("#buypost-list1").append(listA);
+    $("#buypost-list2").append(listB);
 }
 
 $(document).delegate("#nearby-buypost", "pageinit", function() {
