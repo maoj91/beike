@@ -327,3 +327,15 @@ label.error {
     text-align: center;
     display: none;
 }
+
+.form-button {
+    height: 9px !important;
+    line-height: 9px !important;
+}
+
+.mine-menu-icon {
+    display: inline;
+    width: 40px;
+    height: 40px;
+    vertical-align: middle; 
+}

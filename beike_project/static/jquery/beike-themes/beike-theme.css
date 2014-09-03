@@ -23,7 +23,8 @@ textarea,
 button,
 .ui-btn {
 	font-size: 1em;
-	line-height: 29px;
+	line-height: 1.3;
+	font-family: sans-serif /*{global-font-family}*/;
 }
 legend,
 .ui-input-text input,
@@ -75,8 +76,6 @@ label.ui-btn {
 	font-weight: bold;
 	border-width: 1px;
 	border-style: solid;
-    height: 29px !important;
-    padding: 0 !important;
 }
 .ui-btn:link {
 	text-decoration: none !important;

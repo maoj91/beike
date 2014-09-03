@@ -23,7 +23,7 @@
                         <div class="field-label-inner-div">类&nbsp;&nbsp;&nbsp;&nbsp;别</div>
                     </div>
                     <div class="ui-block-b form-right">
-                        <select name='category' id="category" data-placeholder="true">
+                        <select class="form-button" name='category' id="category" data-placeholder="true">
                             {% for category in categories %}
                             <option value={{ category.id }}>{{category.name}}</option>
                             {% endfor %}
@@ -52,7 +52,7 @@
                         <input type="text" name="zipcode" id="buy_form_zipcode" placeholder="zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改">
                     </div>
                     <div class="ui-block-c" style="width:30%;">
-                        <a href="" data-role="button" onclick="getLocationByZipcodeForBuyForm(); return false;">
+                        <a href="" class="form-button" data-role="button" onclick="getLocationByZipcodeForBuyForm(); return false;">
                             <span class="text-p">更新</span>
                         </a>
                     </div>
