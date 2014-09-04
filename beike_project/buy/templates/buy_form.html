@@ -10,131 +10,97 @@
         <div data-role="content">
             <form action="/buy/form_submit/" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="ui-grid-a form-element-grid">
-                    <div class="ui-block-a form-left">
-                        <div class="field-label-inner-div">标&nbsp;&nbsp;&nbsp;&nbsp;题</div>
-                    </div>
-                    <div class="ui-block-b form-right">
-                        <input type="text" name="title" id="title" placeholder="请输入标题" data-rule-required="true" data-rule-content="true" data-msg-required="请输入标题" />
-                    </div>
+                
+                <div class="form-left">标题</div>
+                <div class="form-right">
+                    <input type="text" name="title" id="title" placeholder="请输入标题" data-rule-required="true" data-rule-content="true" data-msg-required="请输入标题" />
                 </div>
-                <div class="ui-grid-a form-element-grid">
-                    <div class="ui-block-a form-left">
-                        <div class="field-label-inner-div">类&nbsp;&nbsp;&nbsp;&nbsp;别</div>
-                    </div>
-                    <div class="ui-block-b form-right">
-                        <select class="form-button" name='category' id="category" data-placeholder="true">
-                            {% for category in categories %}
-                            <option value={{ category.id }}>{{category.name}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                
+                <div class="form-left">类别</div>
+                <div class="form-right">
+                    <select class="form-button" name="category" id="category" data-placeholder="true">
+                        {% for category in categories %}
+                        <option value={{ category.id }}>{{category.name}}</option>
+                        {% endfor %}
+                    </select>
                 </div>
-                <div class="ui-grid-b form-element-grid">
-                    <div class="ui-block-a form-left">
-                        <div class="field-label-inner-div">心动价</div>
-                    </div>
-                    <div class="ui-block-c form-right">
-                        <input type="number" id="price" name="price" placeholder="请输入心动价格" data-rule-required="true" data-rule-content="true" data-msg-required="请输入心动价格">
-                    </div>
+                
+                <div class="form-left">心动价</div>
+                <div class="form-right">
+                    <input type="number" id="price" name="price" placeholder="请输入心动价格" data-rule-required="true" data-rule-content="true" data-msg-required="请输入心动价格">
                 </div>
-
+                
                 <div>
                     <input type="hidden" name="latitude" id="buy_form_latitude"></input>
                     <input type="hidden" name="longitude" id="buy_form_longitude"></input>
                 </div>
-
-                <div class="ui-grid-b form-element-grid">
-                    <div class="ui-block-a form-left">
-                        <div class="field-label-inner-div">邮&nbsp;&nbsp;&nbsp;&nbsp;编</div>
-                    </div>
-                    <div class="ui-block-b" style="width:50%;">
+				
+                <div class="form-left">邮编</div>
+                <div class="form-right">
+                    <div style="width: 65px; float: left;">
                         <input type="text" name="zipcode" id="buy_form_zipcode" placeholder="zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改">
                     </div>
-                    <div class="ui-block-c" style="width:30%;">
+                    <div style="width: 100px; float: right;">
                         <a href="" class="form-button" data-role="button" onclick="getLocationByZipcodeForBuyForm(); return false;">
-                            <span class="text-p">更新</span>
+                            <span>更新</span>
                         </a>
                     </div>
                 </div>
-
-                <div class="ui-grid-a form-element-grid">
-                    <div class="ui-block-a form-left">
-                        <div class="field-label-inner-div">城&nbsp;&nbsp;&nbsp;&nbsp;市</div>
-                    </div>
-                    <div class="ui-block-b form-right">
-                        <input readonly style="border: none; background-color: transparent;" data-role="none" name="city_name" id="buy_form_city_name" class="field-value-inner-div" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改"></input>
-                    </div>
+                
+                <div class="form-left">城市</div>
+                <div class="form-right">
+                    <input readonly class="readonly" data-role="none" name="city_name" id="buy_form_city_name" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改"></input>
                 </div>
-
-                <div class="ui-grid-a form-element-grid">
-                    <div class="ui-block-a form-left">
-                        <div id="prefer-contact" class="field-label-inner-div">联系方式</div>
-                    </div>
-                    <div class="ui-block-b form-right">
-
-                        <div class="ui-grid-b">
-                            <div class="ui-block-a">
-                                <img style="display:block; width: 40px; height: 40px;" id="email-icon" onclick="clickEmailContact();" src="/static/images/general/email_icon.png" />
-                                <img style="display:none; width: 40px; height: 45px;" id="email-icon-clicked" onclick="clickEmailContact();" src="/static/images/general/email_icon_clicked.png" />
-                            </div>
-                            <div class="ui-block-b">
-                                <img style="display:block; width: 40px; height: 40px;" id="phone-icon" onclick="clickPhoneContact();" src="/static/images/general/phone_icon.png" />
-                                <img style="display:none; width: 40px; height: 45px;" id="phone-icon-clicked" onclick="clickPhoneContact();" src="/static/images/general/phone_icon_clicked.png" />
-                            </div>
-                            <div class="ui-block-c">
-                                <img style="display:block; width: 40px; height: 40px;" id="sms-icon" onclick="clickSmsContact();" src="/static/images/general/sms_icon.png" />
-                                <img style="display:none; width: 40px; height: 45px;" id="sms-icon-clicked" onclick="clickSmsContact();" src="/static/images/general/sms_icon_clicked.png" />
-                            </div>
-                        </div>
-
-                        <!--Use ui-grid-a because I cannot resolve the jquery validation css issue-->
-                        <!--error message was always displayed inside the next input-->
-                        <!--TO-DO: fix this issue and use just a single div-->
-
-                        <input type="hidden" name="sms-checked" id="sms-checked" value="off"></input>
-                        <input type="hidden" name="phone-checked" id="phone-checked" value="off"></input>
-                        <input type="hidden" name="email-checked" id="email-checked" value="off"></input>
-
-                        <div id="email_div" class="ui-grid-a">
-                            <div class="ui-block-a" style="width:0"></div>
-                            <div class="ui-block-b" style="width:100%">
-                                {% if user.email and user.email != " " %}
-                                <input type="text" id="email" name="email" placeholder="Email" value="{{user.email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />{% else %}
-                                <input type="text" id="email" name="email" placeholder="Email" data-rule-required="true" data-rule-content="true" data-msg-required="请输入Email" />{% endif %}
-                            </div>
-                        </div>
-                        <div id="phone_number_div" class="ui-grid-a">
-                            <div class="ui-block-a" style="width:0"></div>
-                            <div class="ui-block-b" style="width:100%">
-                                {% if user.mobile_phone and user.mobile_phone != " " %}
-                                <input type="text" id="phone_number" name="phone_number" placeholder="手机号码" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入电话号码" />{% else %}
-                                <input type="text" id="phone_number" name="phone_number" placeholder="手机号码" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />{% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="ui-grid-solo" style="margin: 20px 0;">
-                    <div class="ui-grid-a">
+                
+                <div id="prefer-contact" class="form-left">联系方式</div>
+                <div class="form-right">
+                    <div class="ui-grid-b">
                         <div class="ui-block-a">
-                            <span class="text-p">其他描述</span>
+                            <img class="contact-icon" id="email-icon" onclick="clickEmailContact();" src="/static/images/general/email_icon.png" />
+                            <img class="contact-icon hide" id="email-icon-clicked" onclick="clickEmailContact();" src="/static/images/general/email_icon_clicked.png" />
                         </div>
                         <div class="ui-block-b">
-                            <span id="lengthCounter" class="text-p" style="float:right">0/3000</span>
+                            <img class="contact-icon" id="phone-icon" onclick="clickPhoneContact();" src="/static/images/general/phone_icon.png" />
+                            <img class="contact-icon hide" id="phone-icon-clicked" onclick="clickPhoneContact();" src="/static/images/general/phone_icon_clicked.png" />
+                        </div>
+                        <div class="ui-block-c">
+                            <img class="contact-icon" id="sms-icon" onclick="clickSmsContact();" src="/static/images/general/sms_icon.png" />
+                            <img class="contact-icon hide" id="sms-icon-clicked" onclick="clickSmsContact();" src="/static/images/general/sms_icon_clicked.png" />
                         </div>
                     </div>
-                    <div class="ui-grid-solo">
-                        <textarea name="content" id="content" style="height: 150px !important;" placeholder="描述颜色、大小、形状、新旧等需求" data-rule-required="true" data-rule-content="true" data-msg-required="请输入详细描述" maxlength="3000"></textarea>
+
+                    <input type="hidden" name="sms-checked" id="sms-checked" value="off"></input>
+                    <input type="hidden" name="phone-checked" id="phone-checked" value="off"></input>
+                    <input type="hidden" name="email-checked" id="email-checked" value="off"></input>
+
+                    <div id="email_div">
+                    {% if user.email and user.email != " " %}
+                        <input type="text" id="email" name="email" placeholder="Email" value="{{user.email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
+                    {% else %}
+                        <input type="text" id="email" name="email" placeholder="Email" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
+                    {% endif %}
+                    </div>
+                    <div id="phone_number_div">
+                    {% if user.mobile_phone and user.mobile_phone != " " %}
+                        <input type="text" id="phone_number" name="phone_number" placeholder="手机号码" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入电话号码" />
+                    {% else %}
+                        <input type="text" id="phone_number" name="phone_number" placeholder="手机号码" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
+                    {% endif %}
                     </div>
                 </div>
-                <div class="ui-grid-b" style="margin: 20px 0;">
-                    <div class = "ui-block-a"></div>
-                    <div class = "ui-block-b">
-                        <input type="image" value="Submit" id="submit_btn" width="120px" height="auto" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/04/submit.png">
-                    </div>
-                    <div class = "ui-block-c"></div>
+
+
+                
+                <div class="form-left">其他描述</div>
+                <div class="form-right">
+                    <span id="lengthCounter">0/3000</span>
                 </div>
+                <div style="clear:both"></div>
+                <div class="ui-grid-solo">
+                    <textarea name="content" id="content" style="padding: 8px;" placeholder="描述颜色、大小、形状、新旧等需求" data-rule-required="true" data-rule-content="true" data-msg-required="请输入详细描述" maxlength="3000"></textarea>
+                </div>
+                
+                <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/04/submit.png">
             </form>
         </div>
         

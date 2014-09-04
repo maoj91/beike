@@ -42,7 +42,7 @@ sudo /etc/init.d/postgresql restart
 
 sudo -u postgres createdb beike_db
 sudo -u postgres psql -d beike_db
-
+insert into data_aws(id, access_key, access_secret) values(1, 'AKIAJNBYYIQZGFJSHN5Q', '/jEdXQcaeBQ+QhFnyjC7q96KktwWncskOXwzLbo8');
 
 
 

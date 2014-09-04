@@ -86,7 +86,7 @@ function displayPosts(posts) {
                     '<img class="post-icon" src="/static/images/nearby_sell_posts/sell_logo.png" />'+
                     '<span class="post-title">' + posts[i]["title"] + '</span>'+
                 '</div>'+
-                '<img class="post-image" src="' + image_info['image_url'] + '" width="' + image_width + '" height="' + image_height + '"/>'+
+                '<img class="post-image" src="' + image_info['image_url'] + '" />'+
                 '<div class="post-price">'+
                     '<span class="post-currency">$&nbsp;</span>' + posts[i]["min_price"]+ 
                 '</div>'+
