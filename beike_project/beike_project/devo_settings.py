@@ -10,3 +10,5 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default.
     }
 }
+
+SERVER_URL = 'http://54.204.4.250'

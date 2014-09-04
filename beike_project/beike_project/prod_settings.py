@@ -8,3 +8,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+SERVER_URL = 'http://beike-lb-1803186124.us-west-2.elb.amazonaws.com'
+
