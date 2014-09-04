@@ -10,4 +10,5 @@ DATABASES = {
 }
 
 SERVER_URL = 'http://beike-lb-1803186124.us-west-2.elb.amazonaws.com'
+S3_BUCKET = 'beike-s3-prod'
 

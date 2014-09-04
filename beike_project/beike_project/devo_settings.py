@@ -12,3 +12,4 @@ DATABASES = {
 }
 
 SERVER_URL = 'http://54.204.4.250'
+S3_BUCKET = 'beike-s3'

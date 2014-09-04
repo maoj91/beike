@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.http import HttpResponseBadRequest
 from data.models import AWS
 from django.core.files.uploadedfile import UploadedFile
+from beike_project import settings
 from PIL import Image
 from PIL.ExifTags import TAGS
 import time
@@ -21,11 +22,12 @@ from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from data.image_util import ImageMetadata
 
+S3_BUCKET = settings.S3_BUCKET
+
 @csrf_exempt
 def sign(request):
     AWS_ACCESS_KEY = AWS.objects.all()[0].access_key.encode('utf8')
     AWS_SECRET_KEY = AWS.objects.all()[0].access_secret.encode('utf8')
-    S3_BUCKET = 'beike-s3'
     object_name = request.GET.get('s3_object_name')
     mime_type = request.GET.get('s3_object_type')
     expires = int(time.time() + 10000)
@@ -74,7 +76,6 @@ def upload(request):
         # Save to S3
         AWS_ACCESS_KEY = AWS.objects.all()[0].access_key.encode('utf8')
         AWS_SECRET_KEY = AWS.objects.all()[0].access_secret.encode('utf8')
-        S3_BUCKET = 'beike-s3'
         conn = S3Connection(AWS_ACCESS_KEY, AWS_SECRET_KEY)
         bucket = conn.get_bucket(S3_BUCKET)
         k = Key(bucket)
