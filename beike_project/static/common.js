@@ -11,14 +11,14 @@ function clickPhoneContact() {
         isPhoneChecked = false;
         $('#phone-checked').val('off');
         if(isSmsChecked){
-            $('#phone_number_div').css('display', 'inline');
+            $('#phone_number_div').css('display', 'block');
         } else{
             $('#phone_number_div').css('display', 'none');
         } 
     } else {
         $('#phone-icon').hide();
         $('#phone-icon-clicked').show();
-        $('#phone_number_div').css('display', 'inline');
+        $('#phone_number_div').css('display', 'block');
         isPhoneChecked = true;
         $('#phone-checked').val('on');
     }
@@ -34,7 +34,7 @@ function clickEmailContact() {
     } else {
         $('#email-icon').hide();
         $('#email-icon-clicked').show();
-        $('#email_div').css('display', 'inline');
+        $('#email_div').css('display', 'block');
         isEmailChecked = true;
         $('#email-checked').val('on');
     }
@@ -45,7 +45,7 @@ function clickSmsContact() {
         $('#sms-icon').show();
         $('#sms-icon-clicked').hide();
         if(isPhoneChecked){
-            $('#phone_number_div').css('display', 'inline');
+            $('#phone_number_div').css('display', 'block');
         } else{
             $('#phone_number_div').css('display', 'none');
         } 
@@ -54,7 +54,7 @@ function clickSmsContact() {
     } else {
         $('#sms-icon').hide();
         $('#sms-icon-clicked').show();
-        $('#phone_number_div').css('display', 'inline');
+        $('#phone_number_div').css('display', 'block');
         isSmsChecked = true;
         $('#sms-checked').val('on');
     }

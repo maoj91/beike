@@ -13,7 +13,7 @@ div, img {
 
 body {
     line-height: 1;
-    font-family: \5FAE\8F6F\96C5\9ED1, sans-serif;
+    font-family: \5FAE\8F6F\96C5\9ED1, sans-serif !important;
     font-size: 14px;
     -webkit-font-smoothing: antialiased;
 }
@@ -28,24 +28,9 @@ body {
 
 .base-style {
     font-size: 14px;
+    background-color: rgb(226,229,220);
 }
 
-.form-grid {
-    margin: 10px 0 !important;
-}
-
-.field-label-inner-div {
-    padding: 15px 0 15px 0;
-    color:#00CED1;
-}
-
-.field-value-inner-div {
-    padding: 15px 0 15px 0;
-}
-
-.text-p {
-    color:#00CED1;
-}
 /* CSS for signup page */
  #bkgd {
     margin:0;
@@ -179,19 +164,6 @@ body {
     display: none;
 }
 
-label.error {
-    color: red;
-    font-size: 14px;
-    line-height: 1.4;
-    padding-top: .5em;
-    vertical-align: top;
-    font-weight: bold;
-    width: 100%;
-    float: left;
-    display: block;
-}
-
-
 /* CSS for image uploader */
 #image-uploader {
     max-width: 600px;
@@ -203,10 +175,10 @@ label.error {
     width: 100%;
     height: 250px;
     background-color: rgb(213,213,213);
-    background-image:url('/static/images/sell_post/camera_bkg.png');
+    background-image: url('/static/images/sell_post/camera_bkg.png');
     background-size: 180px 150px;
     background-position: center;
-    background-repeat:no-repeat;
+    background-repeat: no-repeat;
 }
 
 #image_thumbnails_div {
@@ -267,14 +239,6 @@ label.error {
     border-right: solid 1px white;
 }
 
-.ui-block-a.form-left {
-    width: 20%;
-}
-
-.ui-block-b.form-right {
-    width: 80%;
-}
-
 /* CSS for buy/sell posts */
 #buypost-list1, #buypost-list2, #sellpost-list1, #sellpost-list2 {
     width: 50%;
@@ -311,19 +275,23 @@ a.post-item:hover {
 }
 
 img.post-icon {
-    display: inline;
+    display: block;
     width: 20px;
     height: 20px;
     margin-right: 7px;
     vertical-align: text-bottom;
+    float: left;
 }
 
 span.post-title {
-    text-indent: 50px;
+    display: block;
     font-size: 18px;
     color: black;
     font-weight: normal;
     line-height: 25px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 img.post-image {
@@ -351,17 +319,129 @@ div.post-distance {
     font-weight: normal;
 }
 
-#load-more {
+img#load-more {
     vertical-align: middle;
-    text-align: center;
+    width: 50px;
+    margin: 0 auto;
     display: none;
 }
 
 /* css for forms */
-.form-button {
+/*.form-button {
     height: 9px !important;
     line-height: 9px !important;
+}*/
+
+.form-grid {
+    margin: 10px 0 !important;
 }
+
+.form-left {
+    width: 24%;
+    height: 50px;
+    line-height: 50px;
+    float: left;
+    font-size: 16px;
+    clear: both;
+    color: #00CED1;
+}
+
+.form-right {
+    width: 70%;
+    float: right;
+}
+
+label.error {
+    display: block;
+    color: red;
+    font-size: 14px;
+    line-height: 1.4;
+    padding-top: .5em;
+    vertical-align: top;
+    font-weight: bold;
+    width: 200px;
+    float: left;
+}
+
+.readonly {
+    border: none;
+    background-color: transparent;
+    padding: 15px 0 15px 0;
+}
+
+#category-button.ui-btn {
+    height: 2.2em;
+    line-height: 2.1em;
+    -webkit-border-radius: .6em;
+    border-radius: .6em;
+    background-color: #fff;
+    text-shadow: 0 1px 0 #f3f3f3;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,.2);
+    border: 1px solid #dddddd;
+    text-align: left;
+    font-weight: normal;
+    padding: 1px 35px 0 6px;
+}
+
+.form-button.ui-btn {
+    height: 2.1em;
+    line-height: 2.1em;
+    -webkit-border-radius: .6em;
+    border-radius: .6em;
+    padding: 0;
+    color: #00CED1 !important;
+}
+
+.form-cond {
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    padding: 5px;
+}
+
+.form-cond-img {
+    margin: 0 auto;
+    width: 60px;
+    height: 40px;
+}
+
+.form-cond:hover {
+    cursor: pointer;
+}
+
+img.contact-icon {
+    margin: 5px auto 0;
+    width: 40px;
+}
+
+img.contact-icon:hover {
+    cursor: pointer;
+}
+
+img.contact-icon.hide {
+    display: none;
+}
+
+#email_div, #phone_number_div {
+    clear: both;
+}
+
+#lengthCounter {
+    float: right;
+    color: #00CED1;
+    line-height: 50px;
+    font-size: 14px;
+}
+
+#submit_btn {
+    display: block;
+    width: 120px;
+    height: auto;
+    margin: 30px auto;
+}
+
+
+
 
 .mine-menu-icon {
     display: inline;
