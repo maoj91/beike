@@ -19,7 +19,6 @@ SERVER_URL = settings.SERVER_URL
 
 @csrf_exempt
 def valid(request):
-	print handleText({'FromUserName': 'abc', 'ToUserName': 'def'}, 'www.amazon.com')
 	if request.method == 'GET':
 		response = HttpResponse(checkSignature(request),content_type="text/plain")
 		return response
