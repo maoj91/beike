@@ -19,6 +19,7 @@ SERVER_URL = settings.SERVER_URL
 
 @csrf_exempt
 def valid(request):
+	print handleText({'FromUserName': 'abc', 'ToUserName': 'def'}, 'www.amazon.com')
 	if request.method == 'GET':
 		response = HttpResponse(checkSignature(request),content_type="text/plain")
 		return response
@@ -82,8 +83,8 @@ def handleText(msg,url):
 	fromUserName = msg['FromUserName']
 	toUserName = msg['ToUserName']
 	queryStr = msg.get('Content','You have input nothing~')
-	title = "欢迎来到千贝"
-	description = "请点击该页面进入千贝易物平台"
+	title = unicode('欢迎来到千贝', 'utf-8')
+	description = unicode('请点击该页面进入千贝易物平台', 'utf-8')
 	picUrl = "https://s3-us-west-2.amazonaws.com/beike-s3/beike_main.jpg"
 	extTpl = extTpl % (fromUserName,toUserName,str(int(time.time())),title,description,picUrl,url)
 	return extTpl
@@ -94,8 +95,8 @@ def handleEvent(msg,url):
 	fromUserName = msg['FromUserName']
 	toUserName = msg['ToUserName']
 	queryStr = msg.get('Content','You have input nothing~')
-	title = "欢迎来到千贝!"
-	description = "请点击该页面进入千贝易物平台."
+	title = unicode('欢迎来到千贝', 'utf-8')
+	description = unicode('请点击该页面进入千贝易物平台', 'utf-8')
 	picUrl = "https://s3-us-west-2.amazonaws.com/beike-s3/beike_main.jpg"
 	extTpl = extTpl % (fromUserName,toUserName,str(int(time.time())),title,description,picUrl,url)
 	return extTpl
