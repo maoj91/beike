@@ -1,10 +1,10 @@
 <!DOCTYPE HTML>
 <html>
 
-{% include "head.html" %}
+{% include "head.html" with title="我要卖" %}
 
 <body>
-<div data-role="page" id="sellpost-form" data-theme="a" data-fullscreen="true" class="base-style">
+<div id="sell-form" data-role="page" data-fullscreen="true">
     {% include "header.html" with title="我要卖" %}
 
     <div id="image-uploader">
@@ -69,7 +69,7 @@
 
             <div class="form-left">标题</div>
             <div class="form-right">
-                <input type="text" name="title" id="title" placeholder="请输入标题" data-rule-required="true" data-rule-content="true" data-msg-required="请输入标题" />
+                <input type="text" maxlength="20" name="title" id="title" placeholder="请输入标题" data-rule-required="true" data-rule-content="true" data-msg-required="请输入标题" />
             </div>
 
             <div class="form-left">类别</div>
@@ -83,7 +83,7 @@
 
             <div class="form-left">价格</div>
             <div class="form-right">
-                <input type="number" name="price" placeholder="请标价" data-rule-required="true" data-rule-content="true" data-msg-required="请输入价格">
+                <input type="number" min="-1000" max="1000000000" name="price" placeholder="请标价" data-rule-required="true" data-rule-content="true" data-msg-required="请输入价格">
             </div>
             
             <div>
@@ -94,7 +94,7 @@
             <div class="form-left">邮编</div>
             <div class="form-right">
                 <div style="width: 65px; float: left;">
-                    <input type="text" name="zipcode" id="sell_form_zipcode" placeholder="zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改">
+                    <input type="text" maxlength="6" name="zipcode" id="sell_form_zipcode" placeholder="zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改">
                 </div>
                 <div style="width: 100px; float: right;">
                     <a href="" class="form-button" data-role="button" onclick="getLocationByZipcodeForSellForm(); return false;">
@@ -140,61 +140,57 @@
                 </div>
             <input type="hidden" id="condition-slider" value="0" />
 
-            <div id="prefer-contact" class="form-left">联系方式</div>
-                <div class="form-right">
-                    <div class="ui-grid-b">
-                        <div class="ui-block-a">
-                            <img class="contact-icon" id="email-icon" onclick="clickEmailContact();" src="/static/images/general/email_icon.png" />
-                            <img class="contact-icon hide" id="email-icon-clicked" onclick="clickEmailContact();" src="/static/images/general/email_icon_clicked.png" />
-                        </div>
-                        <div class="ui-block-b">
-                            <img class="contact-icon" id="phone-icon" onclick="clickPhoneContact();" src="/static/images/general/phone_icon.png" />
-                            <img class="contact-icon hide" id="phone-icon-clicked" onclick="clickPhoneContact();" src="/static/images/general/phone_icon_clicked.png" />
-                        </div>
-                        <div class="ui-block-c">
-                            <img class="contact-icon" id="sms-icon" onclick="clickSmsContact();" src="/static/images/general/sms_icon.png" />
-                            <img class="contact-icon hide" id="sms-icon-clicked" onclick="clickSmsContact();" src="/static/images/general/sms_icon_clicked.png" />
-                        </div>
+            <div class="form-left">联系方式</div>
+            <div class="form-right">
+                <div class="ui-grid-b">
+                    <div class="ui-block-a">
+                        <img class="contact-icon" id="email-icon" onclick="clickEmailContact();" src="/static/images/general/email_icon.png" />
+                        <img class="contact-icon hide" id="email-icon-clicked" onclick="clickEmailContact();" src="/static/images/general/email_icon_clicked.png" />
                     </div>
-
-                    <input type="hidden" name="sms-checked" id="sms-checked" value="off"></input>
-                    <input type="hidden" name="phone-checked" id="phone-checked" value="off"></input>
-                    <input type="hidden" name="email-checked" id="email-checked" value="off"></input>
-
-                    <div id="email_div">
-                    {% if user.email and user.email != " " %}
-                        <input type="text" id="email" name="email" placeholder="Email" value="{{user.email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
-                    {% else %}
-                        <input type="text" id="email" name="email" placeholder="Email" data-rule-required="true" data-rule-content="true" data-msg-required="请输入Email" />
-                    {% endif %}
+                    <div class="ui-block-b">
+                        <img class="contact-icon" id="phone-icon" onclick="clickPhoneContact();" src="/static/images/general/phone_icon.png" />
+                        <img class="contact-icon hide" id="phone-icon-clicked" onclick="clickPhoneContact();" src="/static/images/general/phone_icon_clicked.png" />
                     </div>
-                    <div id="phone_number_div">
-                    {% if user.mobile_phone and user.mobile_phone != " " %}
-                        <input type="text" id="phone_number" name="phone_number" placeholder="手机号码" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
-                    {% else %}
-                        <input type="text" id="phone_number" name="phone_number" placeholder="手机号码" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
-                    {% endif %}
+                    <div class="ui-block-c">
+                        <img class="contact-icon" id="sms-icon" onclick="clickSmsContact();" src="/static/images/general/sms_icon.png" />
+                        <img class="contact-icon hide" id="sms-icon-clicked" onclick="clickSmsContact();" src="/static/images/general/sms_icon_clicked.png" />
                     </div>
                 </div>
+
+                <input type="hidden" name="sms-checked" id="sms-checked" value="off"></input>
+                <input type="hidden" name="phone-checked" id="phone-checked" value="off"></input>
+                <input type="hidden" name="email-checked" id="email-checked" value="off"></input>
+
+                <div id="email_div">
+                {% if user.email and user.email != " " %}
+                    <input type="email" id="email" name="email" placeholder="Email" value="{{user.email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
+                {% else %}
+                    <input type="email" id="email" name="email" placeholder="Email" data-rule-required="true" data-rule-content="true" data-msg-required="请输入Email" />
+                {% endif %}
+                </div>
+                <div id="phone_number_div">
+                {% if user.mobile_phone and user.mobile_phone != " " %}
+                    <input type="tel" id="phone_number" name="phone_number" placeholder="手机号码" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
+                {% else %}
+                    <input type="tel" id="phone_number" name="phone_number" placeholder="手机号码" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
+                {% endif %}
+                </div>
+            </div>
 
             <div class="form-left">其他描述</div>
-                <div class="form-right">
-                    <span id="lengthCounter">0/3000</span>
-                </div>
-                <div style="clear:both"></div>
-                <div class="ui-grid-solo">
-                    <textarea name="content" id="content" style="padding: 8px;" placeholder="描述颜色、大小、形状、新旧等需求" data-rule-required="true" data-rule-content="true" data-msg-required="请输入详细描述" maxlength="3000"></textarea>
-                </div>
+            <div class="form-right">
+                <span id="lengthCounter">0/3000</span>
+            </div>
+            <div style="clear:both"></div>
+            <div class="ui-grid-solo">
+                <textarea name="content" id="content" style="padding: 8px;" placeholder="描述颜色、大小、形状、新旧等需求" data-rule-required="true" data-rule-content="true" data-msg-required="请输入详细描述" maxlength="3000"></textarea>
+            </div>
                 
-                <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/04/submit.png">
+            <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/04/submit.png">
         </form>
     </div>
 
     {% include "footer.html" with sell="_clicked" %}
-
-    <script type="text/javascript">
-
-    </script>
 </div>
 </body>
 

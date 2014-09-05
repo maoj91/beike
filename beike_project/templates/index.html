@@ -13,11 +13,10 @@
         <div data-role="main">
             <div class="main-top ui-grid-solo">
                 <img width="100%" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/logo.png" />
-                <!--img  class="city-background" id="city-background" src='/static/images/homepage/citybackground.png' /-->
                 <div id="city" class="city">
                 <a href="/user/{{user.id}}/" class="city-link">
                     <img class="city-mark" src='/static/images/homepage/citymark.png' />
-                    <span class="head-text-right">{{city}}</span>
+                    <span class="city-text">{{city}}</span>
                 </a>
                 </div>
             </div>
@@ -81,11 +80,7 @@
                 }
             }
             if (isAndroidWeixin()) {
-                $('#notification-banner').show();
-                $('#city').removeClass('city');
-                $('#city').addClass('city-android');   
-                $('#city-background').removeClass('city-background');
-                $('#city-background').addClass('city-background-android'); 
+                //$('#notification-banner').show();
             }
         </script>
     </div>
