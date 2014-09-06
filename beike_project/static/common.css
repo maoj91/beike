@@ -13,6 +13,13 @@ div, img {
 }
 
 body {
+/*
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;*/
     line-height: 1;
     font-family: \5FAE\8F6F\96C5\9ED1, sans-serif !important;
     font-size: 14px;
@@ -21,7 +28,7 @@ body {
 
 .header.ui-header {
     height: 50px;
-    background-color: #23c094;
+    background-color: #24c598;
     font-size: 20px;
     color: white;
     line-height: 50px;
@@ -56,7 +63,7 @@ body {
  #bkgd {
     margin:0;
     padding:0;
-    background:url(https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/green_bkgd.png) center center fixed no-repeat;
+    background: url(https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/green_bkgd.png) center center fixed no-repeat;
     -moz-background-size: 100% 100%;
     background-size: 100% 100%;
 }
@@ -86,14 +93,14 @@ div.city {
     min-width: 70px;
     padding: 11px 10px 6px 9px;
     border-radius: 6px;
-    background-color: #ffffff;
+    background-color: #fff;
     box-shadow: 0 0 6px #333;
     text-align: center;
 }
 
-a.city-link { text-decoration: none; color: #218868; }
+a.city-link { text-decoration: none; color: #24c598; }
 
-img.city-mark{
+img.city-mark {
     display: inline;
     height: 19px;
     vertical-align: text-bottom;
@@ -102,11 +109,11 @@ img.city-mark{
 
 span.city-text {
     font-size: 14px;
-    color:#24c498;
+    color: #24c498;
 }
 
 .main-bottom {
-    background-color: #dfe7da;
+    background-color: #d5e8d9;
     box-sizing: border-box;
 }
 
@@ -148,7 +155,7 @@ span.city-text {
 .image-uploader-image {
     width: 100%;
     height: 250px;
-    background-color: rgb(213,213,213);
+    background-color: #ddd;
     background-image: url('/static/images/sell_post/camera_bkg.png');
     background-size: 180px 150px;
     background-position: center;
@@ -158,7 +165,7 @@ span.city-text {
 #image_thumbnails_div {
     width: 100%;
     height: 65px;
-    background-color: rgb(213,213,213);
+    background-color: #ddd
 }
 
 #progressbar {
@@ -177,7 +184,7 @@ span.city-text {
     width: 20%;
     height:65px;
     text-align: center;
-    background-color: rgb(172,172,172);
+    background-color:#ddd;
     float: left;
 }
 
@@ -202,7 +209,7 @@ span.city-text {
     position: absolute;
     height: 6px;
     width: 100%;
-    background-color: rgb(172,172,172);
+    background-color: #ddd;
 }
 
 .image-thumbnail {
@@ -237,13 +244,21 @@ a.post-item {
     box-sizing: border-box;
     padding: 10px;
     border-radius: 8px;
-    background: #fff;
-    border: 1px solid #ddd;
+    background: #fcfcfc;
+    border: 1px solid #ccc;
     text-decoration: none;
+    box-shadow: 1px 1px 2px #ddd;
 }
 
 a.post-item:hover {
-    border-color: #bbb;
+    background: #f9f9f9;
+}
+
+a.post-item:active {
+    border-color: #ccc;
+    top: 1px;
+    left: 1px;
+    box-shadow: none;
 }
 
 img.post-icon {
@@ -260,7 +275,7 @@ span.post-title {
     font-size: 18px;
     color: black;
     font-weight: normal;
-    line-height: 25px;
+    line-height: 21px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -268,7 +283,15 @@ span.post-title {
 
 img.post-image {
     width: 100%;
-    margin: 5px 0;
+    margin: 7px 0 0;
+}
+
+div.post-price {
+    color: #666;
+    margin-top: 7px;
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: normal;
 }
 
 span.post-currency {
@@ -276,17 +299,9 @@ span.post-currency {
     font-size: 16px;
 }
 
-div.post-price {
-    color: #666;
-    padding-top: 5px;
-    font-size: 16px;
-    line-height: 16px;
-    font-weight: normal;
-}
-
 div.post-distance {
     color: #aaa;
-    padding-top: 5px;
+    margin-top: 5px;
     font-size: 12px;
     font-weight: normal;
 }
@@ -310,18 +325,23 @@ img#load-more {
 }
 
 .form-left {
-    width: 24%;
+    width: 70px;
     height: 50px;
     line-height: 50px;
     float: left;
     font-size: 16px;
     clear: both;
-    color: #00CED1;
+    color: #24c598;
+    /*text-align: right;*/
 }
 
 .form-right {
-    width: 70%;
-    float: right;
+    min-height: 50px;
+    position: relative;
+    overflow: hidden;
+    float: none;
+    padding: 0 10px;
+    box-sizing: border-box;
 }
 
 label.error {
@@ -362,7 +382,7 @@ label.error {
     -webkit-border-radius: .6em;
     border-radius: .6em;
     padding: 0;
-    color: #00CED1 !important;
+    color: #24c598 !important; 
 }
 
 .form-cond {
@@ -401,7 +421,7 @@ img.contact-icon.hide {
 
 #lengthCounter {
     float: right;
-    color: #00CED1;
+    color: #24c598; 
     line-height: 50px;
     font-size: 14px;
 }
@@ -421,4 +441,127 @@ img.contact-icon.hide {
     width: 40px;
     height: 40px;
     vertical-align: middle; 
+}
+
+
+/* CSS for post details*/
+div.detail-title-wrapper {
+    margin-bottom: 12px;
+}
+
+img.detail-icon {
+    display: block;
+    width: 35px;
+    height: 35px;
+    margin: 2px 7px 0 0;
+    float: left;
+}
+
+div.detail-title {
+    display: inline;
+    font-size: 20px;
+    color: black;
+    font-weight: normal;
+    line-height: 40px;
+    /*text-overflow: ellipsis;
+    white-space: nowrap;*/
+    /*overflow: hidden;*/
+    /*float: none;*/
+}
+
+img.share-button {
+    display: block;
+    height: 26px;
+    width: 26px;
+    /*border: 1px solid #ddd;
+    border-radius: 5px;*/
+    padding: 7px;
+    margin-left: 10px;
+    float: right;
+}
+
+img.share-button:hover { cursor: pointer; }
+
+hr {
+    border: none;
+    clear: both;
+    height: 1px;
+    background-color: #ccc;
+}
+
+span.detail-postdate {
+    color: #aaa;
+    font-size: 16px;
+}
+
+div.detail-category {
+    float: right;
+    color: #24c498;
+    font-size: 16px;
+}
+
+div.detail-price {
+    margin-top: 5px;
+    color: #666;
+    font-size: 20px;
+    line-height: 20px;
+    font-weight: normal;
+    float: left;
+}
+
+span.detail-currency {
+    color: #ff9933;
+    font-size: 20px;
+}
+
+div.detail-content {
+    clear: both;
+    color: #333;
+    font-size: 16px;
+    padding: 20px;
+    /*text-indent: 2em;*/
+}
+
+
+
+div.detail-map {
+    position: relative;
+    height: 200px;
+    width: 100%;
+    overflow: hidden;
+}
+
+div.detail-loc {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px;
+    background-color: rgba(255,255,255,0.8);
+}
+
+div.detail-map>img#map {
+    position: absolute;
+    width: 640px;
+    height: 200px;
+    left: 50%;
+    margin-left: -320px;
+}
+
+div.detail-contacts {
+    height: 50px;
+    width: 100%;
+    text-align: center;
+    margin: 10px 0;
+}
+
+a.detail-contact-link {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    margin: 0 5%;
+}
+
+img.detail-contact-icon {
+    width: 50px;
+    height: 50px;
 }
