@@ -99,8 +99,8 @@ function showPosition() {
     $("#share_msg").hide();
     }
     
-
-$(document).ready(function() {
+$(document).on("pagecreate", function() {//alert("1");
+//$(document).ready(function() {
     showPosition();
     showFollowStatus();
 });
@@ -115,8 +115,10 @@ $(document).ready(function() {
             <img class="detail-icon" src='/static/images/detail/buy_icon.png'>
             <div class="detail-title">{{post.title}}</div>
 
-            <img id="share" class="share-button" src="/static/images/detail/share.png" onclick="showShareMsg();"> 
-            <img id="follow" class="share-button" onclick="toggleFollowStatus();"> 
+            <div class="share-button-wrapper">
+                <img id="share" class="share-button" src="/static/images/detail/share.png" onclick="showShareMsg();"> 
+                <img id="follow" class="share-button" onclick="toggleFollowStatus();">
+            </div>
         </div>
 
         <hr>
@@ -134,7 +136,7 @@ $(document).ready(function() {
         <div class="detail-map">
             <img id="map" src="">
             <div class="detail-loc">
-                <img class="city-mark" src="/static/images/detail/location_icon.png">
+                <!--img class="city-mark" src="/static/images/detail/location_icon.png"-->
                 <span class="city-text">{{post.user.address.city}}</span>
             </div>
         </div>

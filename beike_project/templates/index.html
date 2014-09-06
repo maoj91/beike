@@ -1,60 +1,61 @@
 <!DOCTYPE HTML>
-<html>
+<html style="height: 100%;">
 
 {% include "head.html" %}
 
-<body>
-<!--div class="wrapper"-->
-    <div data-role="page">
-        <div data-role="header" id="notification-banner" style="display:none;">
-            <p style="color:red; margin: 0">Android版微信不支持照片上传，请点击右上方选项移步至浏览器使用</p>
+<body style="height: 100%;">
+    <div class="main-top">
+        <img width="100%" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/logo.png" />
+        <div id="city" class="city">
+            <a href="/user/{{user.id}}/" class="city-link">
+                <img class="city-mark" src='/static/images/homepage/citymark.png' />
+                <span class="city-text">{{city}}</span>
+            </a>
         </div>
+    </div>
 
-        <div data-role="main">
-            <div class="main-top ui-grid-solo">
-                <img width="100%" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/logo.png" />
-                <div id="city" class="city">
-                <a href="/user/{{user.id}}/" class="city-link">
-                    <img class="city-mark" src='/static/images/homepage/citymark.png' />
-                    <span class="city-text">{{city}}</span>
-                </a>
-                </div>
-            </div>
-
-            <div class="main-bottom ui-grid-b">
-                <div class="ui-block-a">
-                    <a href="/buy/form">
-                        <img class='main-button' src='/static/images/homepage/buy.png' />
-                    </a>
-                </div>
-                <div class="ui-block-b">
-                    <a href="/sell/form">
+    <div class="main-bottom">
+        <div class="main-item">
+            <a class='main-button' href="/buy/form/">
+                <img class='main-button' src='/static/images/homepage/buy.png' />
+            </a>
+        </div>
+                <div class="main-item">
+                    <a class='main-button' href="/sell/form/">
                         <img class='main-button' src='/static/images/homepage/sell.png' />
                     </a>
                 </div>
-                <div class="ui-block-c">
-                    <a href="/mine/">
+                <div class="main-item">
+                    <a class='main-button' href="/mine/">
                         <img class='main-button' src='/static/images/homepage/mine.png' />
                     </a>
                 </div>
-                <div class="ui-block-a">
-                    <a href="/sell/all_list/">
+                <div class="main-item">
+                    <a class='main-button' href="/sell/all_list/">
                         <img class='main-button' src='/static/images/homepage/nearbypost.png' />
                     </a>
                 </div>
-                <div class="ui-block-b">
-                    <a href="/buy/all_list/">
+                <div class="main-item">
+                    <a class='main-button' href="/buy/all_list/">
                         <img class='main-button' src='/static/images/homepage/nearbyrequest.png' />
                     </a>
                 </div>
-                <div class="ui-block-c">
-                    <a href="/about/">
+                <div class="main-item">
+                    <a class='main-button' href="/about/">
                         <img class='main-button' src='/static/images/homepage/help.png' />
                     </a>
                 </div>
-            </div>
+    </div>
+
+
+<!--div class="wrapper"-->
+    <div >
+        <div data-role="header" id="notification-banner" style="display:none;">
+            <p style="color:red; margin: 0">Android版微信不支持照片上传，请点击右上方选项移步至浏览器使用</p>
         </div>
-        <script type="text/javascript">
+</div>
+</body>
+<script type="text/javascript">
             (function(i, s, o, g, r, a, m) {
                 i['GoogleAnalyticsObject'] = r;
                 i[r] = i[r] || function() {
@@ -83,8 +84,4 @@
                 //$('#notification-banner').show();
             }
         </script>
-    </div>
-</div>
-</body>
-
 </html>

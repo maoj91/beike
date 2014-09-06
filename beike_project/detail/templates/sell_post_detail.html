@@ -12,8 +12,10 @@
             <img class="detail-icon" src='/static/images/detail/sell_icon.png'>
             <div class="detail-title">{{post.title}}</div>
 
-            <img id="share" class="share-button" src="/static/images/detail/share.png" onclick="showShareMsg();"> 
-            <img id="follow" class="share-button" onclick="toggleFollowStatus();"> 
+            <div class="share-button-wrapper">
+                <img id="share" class="share-button" src="/static/images/detail/share.png" onclick="showShareMsg();"> 
+                <img id="follow" class="share-button" onclick="toggleFollowStatus();">
+            </div>
         </div>
 
         <!-- TODO: needs to clean up -->

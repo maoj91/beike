@@ -70,5 +70,19 @@ $.validator.addMethod("digitonly", function(value) {
     return /^\d+$/.test(value);
 }, "只能包含数字");
 
-
+$(document).on("pagechange", function() {
+    var url = window.location.pathname;
+    //alert($(document).getActivePage());
+    //alert(window.location.pathname);
+    if (url === "/") {
+        $("div.ui-page").attr("style","height:100%;");
+    } else if (url.substring(0,7) === "/detail") {
+        //location.reload();
+        //alert();
+        showPosition();
+        showFollowStatus();
+    }
+    //showPosition();
+    //showFollowStatus();
+});
 
