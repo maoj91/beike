@@ -65,7 +65,8 @@
                 </div>
             </div>
 
-        <form action="/user/{{user.id}}/update/" method="post" enctype="multipart/form-data">{% csrf_token %}
+        <form action="/user/{{user.id}}/update/" method="post" enctype="multipart/form-data" data-ajax= "false">
+            {% csrf_token %}
             <input type="hidden" id="image_url" name="image_url">
             <input type="hidden" id="image_width" name="image_width">
             <input type="hidden" id="image_height" name="image_height">

@@ -172,7 +172,8 @@
             </div>
             <div class="ui-block-c" style="width: 10%"></div>
         </div>
-        <form id="user_info_form" action="/user/create/" method="post" enctype="multipart/form-data">{% csrf_token %}
+        <form id="user_info_form" action="/user/create/" method="post" enctype="multipart/form-data" data-ajax= "false">
+            {% csrf_token %}
             <div class="ui-grid-solo" style="text-align: center; margin: 20px 0 30px 0;">
                 <img style="width: 120px; height: 50px" src="/static/images/signup/location_icon.png" />
                 <div id='city' name='city'></div>
