@@ -115,6 +115,7 @@ function showFollowStatus(){
     }
 }
 
+/*
 function showPosition(lat, lon) {
     var latlonStr = lat+","+lon;
     var width = 800; //(window.innerWidth > 0) ? window.innerWidth : screen.width;
@@ -122,7 +123,7 @@ function showPosition(lat, lon) {
     var img_url = "http://maps.googleapis.com/maps/api/staticmap?center="+latlonStr+"&zoom=14&size="+width+"x"+height+"&sensor=true&markers=color:green%7C"+latlonStr;
     $("#map").attr("src",img_url);
     return img_url;
-}
+}*/
 
 
 function showShareMsg(){
@@ -135,9 +136,9 @@ function hideShareMsg(){
 
 
 // from sell post detail
-//var IMG_WIDTH = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+var IMG_WIDTH = (window.innerWidth > 0) ? window.innerWidth : screen.width;
 var currentImg=0;
-//var maxImages={{image_num}};
+var maxImages=$("#imgs").children().length;//{{image_num}};
 var speed=500;
 
 var imgs;
@@ -287,14 +288,19 @@ function showContacts() {
 
 }
 
+$(document).on("pagebeforechange", function() {
+    var ua = navigator.userAgent.toLowerCase();
+    if (!(ua.match(/MicroMessenger/i) == "micromessenger")) {
+        $(".header").show();
+    }
+});
 
 $(document).on("pagechange", function() {
     var url = window.location.pathname;
-    //alert($(document).getActivePage());
-    //alert(window.location.pathname);
     if (url === "/") {
         $("div.ui-page").attr("style","height:100%;");
-    } else if (url.substring(0,7) === "/detail") {
+    }
+    else if (url.substring(0,7) === "/detail") {
         var wx_id = $("#wx_id").val();
         var post_id = $("#post_id").val();
 
@@ -326,8 +332,6 @@ $(document).on("pagechange", function() {
             }).then(function(data) {});
         });
         
-        
-        //showPosition();
         showFollowStatus();
     }
 });

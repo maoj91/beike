@@ -5,10 +5,10 @@
 
 <body style="height: 100%;">
     <div class="main-top">
-        <img width="100%" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/logo.png" />
+        <div class="main-top-background"><img class="main-top-logo" src="/static/images/homepage/logo.png" /></div>
         <div id="city" class="city">
             <a href="/user/{{user.id}}/" class="city-link">
-                <img class="city-mark" src='/static/images/homepage/citymark.png' />
+                <img class="city-mark" src="/static/images/homepage/citymark.png" />
                 <span class="city-text">{{city}}</span>
             </a>
         </div>
@@ -16,43 +16,41 @@
 
     <div class="main-bottom">
         <div class="main-item">
-            <a class='main-button' href="/buy/form/">
-                <img class='main-button' src='/static/images/homepage/buy.png' />
+            <a class="main-button" href="/buy/form/">
+                <img class="main-button" src="/static/images/homepage/buy.png" />
             </a>
         </div>
                 <div class="main-item">
-                    <a class='main-button' href="/sell/form/">
-                        <img class='main-button' src='/static/images/homepage/sell.png' />
+                    <a class="main-button" href="/sell/form/">
+                        <img class="main-button" src="/static/images/homepage/sell.png" />
                     </a>
                 </div>
                 <div class="main-item">
-                    <a class='main-button' href="/mine/">
-                        <img class='main-button' src='/static/images/homepage/mine.png' />
+                    <a class="main-button" href="/mine/">
+                        <img class="main-button" src="/static/images/homepage/mine.png" />
                     </a>
                 </div>
                 <div class="main-item">
-                    <a class='main-button' href="/sell/all_list/">
-                        <img class='main-button' src='/static/images/homepage/nearbypost.png' />
+                    <a class="main-button" href="/sell/all_list/">
+                        <img class="main-button" src="/static/images/homepage/nearbypost.png" />
                     </a>
                 </div>
                 <div class="main-item">
-                    <a class='main-button' href="/buy/all_list/">
-                        <img class='main-button' src='/static/images/homepage/nearbyrequest.png' />
+                    <a class="main-button" href="/buy/all_list/">
+                        <img class="main-button" src="/static/images/homepage/nearbyrequest.png" />
                     </a>
                 </div>
                 <div class="main-item">
-                    <a class='main-button' href="/about/">
-                        <img class='main-button' src='/static/images/homepage/help.png' />
+                    <a class="main-button" href="/about/">
+                        <img class="main-button" src="/static/images/homepage/help.png" />
                     </a>
                 </div>
     </div>
 
-
-<!--div class="wrapper"-->
-    <div >
-        <div data-role="header" id="notification-banner" style="display:none;">
+<div>
+    <div data-role="header" id="notification-banner" style="display:none;">
             <p style="color:red; margin: 0">Android版微信不支持照片上传，请点击右上方选项移步至浏览器使用</p>
-        </div>
+    </div>
 </div>
 </body>
 <script type="text/javascript">

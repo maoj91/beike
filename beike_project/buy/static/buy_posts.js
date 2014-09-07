@@ -68,7 +68,7 @@ function displayBuyposts(posts) {
         var item = $('<div class="post-item-div">'+
             '<a class="post-item" href="/detail/buy/' + posts[i]['post_id'] + '">'+
                 '<div>'+
-                    '<img class="post-icon" src="/static/images/nearby_buy_posts/request_logo.png" />'+
+                    '<img class="post-icon" src="/static/images/general/buy_logo.png" />'+
                     '<span class="post-title">' + posts[i]["title"] + '</span>'+
                 '</div>'+
                 '<div class="post-price">'+

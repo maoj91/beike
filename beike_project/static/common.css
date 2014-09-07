@@ -1,4 +1,4 @@
-/* CSS for general elements */
+/* CSS for general style settings */
 html, body, div, img, span, p, a {
     margin: 0;
     padding: 0;
@@ -56,12 +56,6 @@ user-select: none;*/
     /**/
 }
 
-/*
-.base-style {
-    font-size: 14px;
-    background-color: rgb(226,229,220);
-}*/
-
 /* CSS for signup page */
  #bkgd {
     margin:0;
@@ -84,9 +78,26 @@ user-select: none;*/
 
 
 /* CSS for index page */
-.main-top {
+div.main-top {
     position: relative;
     height: 50%;
+}
+
+div.main-top-background {
+    width: 100%;
+    height: 100%;
+    background-image: url("/static/images/homepage/background.jpg");
+    background-repeat: repeat;
+}
+
+img.main-top-logo {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    margin: auto;
 }
 
 div.city {
@@ -222,6 +233,98 @@ span.city-text {
     height: 100%;
     border-right: solid 1px white;
 }
+
+/* images in sell post detail */
+
+#image_gallery
+{
+    width:100%;
+    height:200px;
+    overflow:hidden;
+    position:relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#imgs 
+{
+    -webkit-transition-property: -webkit-transform;
+    -webkit-transition-duration: 0.5s;
+    -webkit-transition-timing-function: ease-out;
+    padding:0px;
+    margin:0px;
+
+    width:300%;
+    height: 200px;
+
+    /*apply a transfor to kick in the hardware acceleration.  Without this, the first time we add the transform you get odd rendering of the divs (half missing) */
+    -webkit-transform: translate3d(0px,0px,0px); 
+}
+
+#imgs img
+{
+    padding:0px;
+    margin:0px;
+    max-width:100%;
+    max-height:200px;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-transform: translate3d(0px,0px,0px); 
+}
+
+/*#imgs img*/
+#imgs span
+{
+    float:left;
+    display:inline;
+    padding:0px;
+    margin:0px;
+    width:33%;
+    height:200px;
+
+    /*apply a transfor to kick in the hardware acceleration.  Without this, the first time we add the transform you get odd rendering of the divs (half missing) */
+    -webkit-transform: translate3d(0px,0px,0px); 
+}
+
+
+#image_thumbnails{
+    width: 100%;
+    height: 50px;  
+}
+
+.thumbnail_span{
+    float:left;
+    display:inline;
+    width: 80px;
+    height: 100%;    
+    margin-right:3px;
+}
+
+.thumbnail_span img{
+    padding:0px;
+    width:80px;
+    height: 48px; 
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; 
+}
+
+.thumbnail_selected{
+    border-top: 3px solid #29CF95;
+}
+
+.thumbnail_not_selected{
+    border-top:none;
+    background-color: gray;
+    opacity: .7;
+}
+
 
 /* CSS for buy/sell posts */
 #buypost-list1, #buypost-list2, #sellpost-list1, #sellpost-list2 {

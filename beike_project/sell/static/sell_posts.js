@@ -83,7 +83,7 @@ function displayPosts(posts) {
         var item = $('<div class="post-item-div">'+
             '<a class="post-item" href="/detail/sell/' + posts[i]['post_id'] + '">'+
                 '<div>'+
-                    '<img class="post-icon" src="/static/images/nearby_sell_posts/sell_logo.png" />'+
+                    '<img class="post-icon" src="/static/images/general/sell_logo.png" />'+
                     '<span class="post-title">' + posts[i]["title"] + '</span>'+
                 '</div>'+
                 '<img class="post-image" src="' + image_info['image_url'] + '" />'+
