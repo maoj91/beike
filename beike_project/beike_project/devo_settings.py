@@ -13,3 +13,10 @@ DATABASES = {
 
 SERVER_URL = 'http://54.204.4.250'
 S3_BUCKET = 'beike-s3'
+
+# Request to view all the sell posts with pagination
+# It return at maximum NUM_SELL_POST_PER_PAGE per response.
+NUM_SELL_POST_PER_PAGE = 10
+# Request to view all the buy posts with pagination
+# It return at maximum NUM_BUY_POST_PER_PAGE per response.
+NUM_BUY_POST_PER_PAGE = 10

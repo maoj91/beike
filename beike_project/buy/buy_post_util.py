@@ -1,7 +1,11 @@
 
 from data.models import FollowedBuyPost, BuyPost
 from datetime import datetime
+import logging
 from django.core.exceptions import ObjectDoesNotExist
+
+# Use package_name.module_name for logger
+logger = logging.getLogger('buy.buy_post_util')
 
 """
 Util for buy post operations
@@ -34,6 +38,7 @@ class BuyPostUtil:
         except ObjectDoesNotExist:
             post = FollowedBuyPost(user = user, post = post, last_updated_time = datetime.now(), status = 0)
             post.save()
+        logger.info("User " + str(user.id) + " successfully follow buy post " + str(post.id))
 
     def unfollow_post(self, user, post):
         try:
@@ -41,9 +46,10 @@ class BuyPostUtil:
             if post.status == 0:
                 post.status = 1
                 post.save()
+            logger.info("User " + str(user.id) + " successfully unfollow buy post " + str(post.id))
         except ObjectDoesNotExist:
             #do nothing
-            print ("No record")
+            logger.info("User " + str(user.id) + " does not follow buy post " + str(post.id))
 
     def get_followed_posts(self, user):
         user_posts = FollowedBuyPost.objects.filter(user = user, status = 0)

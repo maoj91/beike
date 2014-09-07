@@ -1,6 +1,10 @@
 from data.models import FollowedSellPost, SellPost
 from datetime import datetime
+import logging
 from django.core.exceptions import ObjectDoesNotExist
+
+# Use package_name.module_name for logger
+logger = logging.getLogger('sell.sell_post_util')
 
 class SellPostUtil:
     def __init__(self):
@@ -27,6 +31,7 @@ class SellPostUtil:
         except ObjectDoesNotExist:
             post = FollowedSellPost(user = user, post = post, last_updated_time = datetime.now(), status = 0)
             post.save()
+        logger.info("User " + str(user.id) + " successfully follow sell post " + str(post.id))
 
     def unfollow_post(self, user, post):
         try:
@@ -34,9 +39,9 @@ class SellPostUtil:
             if post.status == 0:
                 post.status = 1
                 post.save()
+                logger.info("User " + str(user.id) + " successfully unfollow sell post " + str(post.id))
         except ObjectDoesNotExist:
-            #do nothing
-            print ("No record")
+            logger.info("User " + str(user.id) + " does not follow sell post " + str(post.id))
 
     def get_followed_posts(self, user):
         user_posts = FollowedSellPost.objects.filter(user = user, status = 0)
