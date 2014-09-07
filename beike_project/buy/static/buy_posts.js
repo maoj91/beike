@@ -48,6 +48,14 @@ function getBuyposts(position) {
     });
 }
 
+function formatPrice(price) {
+    var i = parseFloat(price),
+        s = i.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if (s.indexOf('.') < 0) { s += '.00'; }
+    if (s.indexOf('.') == (s.length - 2)) { s += '0'; }
+    return s;
+}
+
 function displayBuyposts(posts) {
     var listA = $(""),
         listB = $(""),
@@ -55,7 +63,7 @@ function displayBuyposts(posts) {
     for (i = 0; i < len; i++) {
         var distance = posts[i]["distance"];
         if (posts[i]["distance"] > 1000) {
-            distance = (posts[i]["distance"] / 1000).toFixed(2) + " K"
+            distance = (posts[i]["distance"] / 1000).toFixed(2) + "k"
         }
         var item = $('<div class="post-item-div">'+
             '<a class="post-item" href="/detail/buy/' + posts[i]['post_id'] + '">'+
@@ -64,7 +72,7 @@ function displayBuyposts(posts) {
                     '<span class="post-title">' + posts[i]["title"] + '</span>'+
                 '</div>'+
                 '<div class="post-price">'+
-                    '<span class="post-currency">$&nbsp;</span>' + posts[i]["min_price"]+ 
+                    '<span class="post-currency">$&nbsp;</span>' + formatPrice(posts[i]["max_price"])+ 
                 '</div>'+
                 '<div class="post-distance">距离你 ' + distance + ' miles</div>'+
             '</a></div>');

@@ -4,121 +4,91 @@
 {% include "head.html" %}
 
 <body>
-    <div data-role="page" id="main-page" data-fullscreen="true">
-        {% include "header.html" with title="需求" %}
-        <div data_role="content">
-                <img id="share_msg" src="/static/images/detail/share_msg.png" style="display:none;width:100%;max-height:100%;position:absolute;left:0;top:0;z-index:1;background-color:black;opacity: 0.6;" onclick="hideShareMsg()">
-            
+<div data-role="page" id="main-page" data-fullscreen="true">
+    {% include "header.html" with title="需求" %}
 
-            <div style="margin-left:5%;margin-right:5%;">             
-                <div>
-                    <input type="hidden" id="is_followed" value={{is_followed}}>
-                </div>
-                <div data-role="popup" id="follow-popup">
-                </div>
-                
-                <div class="ui-grid-solo" style="clear:both;margin-top:10px;">
-                        <img id='buy_icon' src='/static/images/detail/buy_icon.png' style="vertical-align:middle;">
-                        <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.title}}</p>
-                </div>
+    <div data-role="content">
+        <div class="detail-title-wrapper">
+            <img class="detail-icon" src='/static/images/detail/buy_icon.png'>
+            <div class="detail-title">{{post.title}}</div>
 
-                <div style="margin-top:10px;margin-bottom:10px;height:1px;background-color:#d1cfd1;"></div>
-
-                <div class="ui-grid-a" style="padding:2px;">
-                    <div class="ui-block-a" style="width:75%;height:30px;">
-                        <!-- <img id='currency_icon' src='/static/images/detail/currency_icon.png' style="max-width:15px;max-height:15px;margin-left:10px;"> -->
-                        <p style="display:inline;vertical-align:middle;">${{post.max_price}}
-                        </p>
-                    </div>
-                    <div class="ui-block-b" style="width:25%;height:30px;text-align:right;">
-                        {{post.category.name}}
-                    </div>
-                </div>
-
-                <div class="ui-grid-b" style="margin-top:10px;">
-                    <div class="ui-block-b" style="width:50%">
-                        <a href="#buyer"><img src='/static/images/detail/contact_buyer.png' style="vertical-align:middle;max-height:35px;"></a>
-                    </div>
-                    <div class="ui-block-b" style="width:25%;text-align:right;">
-                        <img id='share' src='/static/images/detail/share.png' style="vertical-align:middle;weight:20px;height:20px;border:1px solid #d1cfd1;border-radius:15%;padding:7px 15px 7px 15px;"  onclick="showShareMsg()"> 
-                    </div>
-                    <div class="ui-block-c" style="width:25%;text-align:right;">
-                        <img id='follow'  style="vertical-align:middle;weight:20px;height:20px;border:1px solid #d1cfd1;border-radius:15%;padding:7px 12px 7px 12px;" onclick="toggleFollowStatus();"> 
-                    </div>
-                </div>
-
-                <div class="ui-grid-solo" id="content" style="margin-bottom:20px;margin-top:20px;">
-                    {{post.content}}
-                </div>
+            <div class="share-button-wrapper">
+                <img id="share" class="share-button" src="/static/images/detail/share.png" onclick="showShareMsg();"> 
+                <img id="follow" class="share-button" onclick="toggleFollowStatus();">
             </div>
-
-
-
-
-    <div class="ui-grid-a" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;">
-        <div class="ui-block-a" style="width:70%;">
-            <img id='location_icon' src='/static/images/detail/location_icon.png' style="max-width:15px;max-height:15px;">
-            {{post.user.address.city}}
         </div>
-        <div class="ui-block-b" style="width:30%;text-align:right;">
-            {{ post.date_published|date:"n月j日" }}
+
+        <hr>
+
+        <div class="detail-price">
+            <span class="detail-currency">$&nbsp;</span>{{post.max_price}}
         </div>
-    </div>
-    <div style="display:table;margin: 0 auto;height:200px;">
-        <img id="map" src="" style="width:100%;height:100%;">
-    </div>
+        <div class="detail-category">
+            <span class="detail-postdate">{{ post.date_published|date:"n月j日" }},</span>
+             {{post.category.name}}
+        </div>
 
-    <div style="clear:both;height:20px;"></div>
+        <div class="detail-content">{{post.content}}</div>
+        
+        <div class="detail-map">
+            <img id="map" src="http://maps.googleapis.com/maps/api/staticmap?center={{lat}},{{lon}}&zoom=14&size=640x200&sensor=true&markers=color:green%7C{{lat}},{{lon}}">
+            <div class="detail-loc">
+                <!--img class="city-mark" src="/static/images/detail/location_icon.png"-->
+                <span class="city-text">{{post.user.address.city}}</span>
+            </div>
+        </div>
 
-    {% if user_image %}
-    <div style="display:table;margin:0 auto;">
-        <a href="/user/{{post.user.id}}/">
+        <div class="detail-contacts">
+        {% if email_checked%}
+            <a class="detail-contact-link" href="mailto:{{email}}?Subject={{post.title}}"><img class="detail-contact-icon" src="/static/images/detail/email_selected.png"/></a>
+        {% endif%}
+        {% if phone_checked%}
+            <a class="detail-contact-link" href="tel:{{phone}}"><img class="detail-contact-icon" src="/static/images/detail/phone_selected.png" /></a>
+        {% endif%}
+        {% if sms_checked%}
+            <a class="detail-contact-link" href="sms:{{phone}}"><img class="detail-contact-icon" src="/static/images/detail/sms_selected.png" /></a>
+        {% endif%}
+        </div>
+
+        <!-- TODO: doesn't load image -->
+        {% if user_image %}
+        <div style="display:table;margin:0 auto;">
+            <a href="/user/{{post.user.id}}/">
             <img id='profile_image' src='{{user_image.image_url}}' style="width: 80px;height:80px;border-radius: 50%;"/>
-        </a>  
-    </div>
-    {% endif %}
-
-    {% if post.user %}
-    <div style="text-align:center;padding:2px;">
-        <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.user.name}}</p>
-    </div>
-    {% endif %} 
-
-    <a name="buyer"></a>
-    <div style="width:100%;height:60px;margin-bottom:20px;">
-        <div id="contacts" style="display:table;height:100%;margin: 0 auto; padding: 5px;">
-                    {% if email_checked%}
-                    <img style="width:50px;height:50px;" src="/static/images/detail/email_selected.png" onclick="sendEmail('{{email}}','{{post.title}}')"/>
-<!--                     <a href="">
-                    <div style='display:inline;background-image: url(/static/images/detail/email_selected.png);width:50px;height:50px;'>
-                    </div> -->
-                    </a>
-                    {% else %}
-                    <img style="width:50px;height:50px;" src="/static/images/detail/email.png" />
-                    {% endif%}
-                    {% if phone_checked%}
-                    <a href="tel:{{phone}}"><img style="margin-left:20px;margin-right:20px;width:50px;height:50px;" src="/static/images/detail/phone_selected.png" /></a>
-                    {% else %}
-                    <img style="margin-left:20px;margin-right:20px;width:50px;height:50px;" src="/static/images/detail/phone.png" />
-                    {% endif%}
-                    {% if sms_checked%}
-                    <a href="sms:{{phone}}"><img style="width:50px;height:50px;" src="/static/images/detail/sms_selected.png" /></a>
-                    {% else %}
-                    <img style="width:50px;height:50px;" src="/static/images/detail/sms.png"/>
-                    {% endif%}
+            </a>  
         </div>
-    </div>
+        {% endif %}
 
-    <div class="ui-grid-solo" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;text-align:center;">
+        <!-- TODO: needs to clean up -->
+        {% if post.user %}
+        <div style="text-align:center;padding:2px;">
+            <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.user.name}}</p>
+        </div>
+        {% endif %}
+
+        <!-- TODO: what's this? -->
+        <a name="buyer"></a>
+
+        <!-- TODO: needs to clean up -->
+        <div class="ui-grid-solo" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;text-align:center;">
             注册于{{ post.user.date_created|date:"Y年n月j日" }}
+        </div>
+
+        <!-- TODO: needs to clean up -->
+        <div class="ui-grid-solo" style="clear:both;margin-top:20px;margin-bottom:20px;float:right;">
+            <a href="/user/{{user_id}}/">
+                <img src="/static/images/detail/complete_profile.png" style="max-height:30px;">
+            </a>
+        </div>
+
     </div>
 
-    <div class="ui-grid-solo" style="clear:both;margin-top:20px;margin-bottom:20px;text-align:right;">
-        <a href="/user/{{user_id}}/">
-            <img src="/static/images/detail/complete_profile.png" style="max-height:30px;">
-        </a>
-    </div>
 
+
+    
+
+    
+<!-- TODO: what's this? -->
 <!--                 <div class="ui-block-a" style="width:33%;height:60px;">
                     <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
                     <select name="open-close-post" id="open-close-post" data-role="slider" style="vertical-align: middle;">
@@ -127,121 +97,27 @@
                     </select>
                 </div> -->
 
+    <!-- TODO: needs to clean up -->
     {% if is_owner %}
-                <!-- find this post about how to align an element vertically center in a div: http://stackoverflow.com/questions/7273338/how-to-vertically-align-an-image-inside-div-->
-                <div class="ui-grid-solo" style="width:100%;padding-top:15px;padding-bottom:15px;background-color:#d1cfd1;height:60px;text-align:center;display:inline-block;vertical-align: middle;">
-                    <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
-                    <a href="/detail/sell/{{post.id}}/edit/"><input type="image" value="修改" id="edit_btn" src="/static/images/detail/edit.png" style="max-width:80px;vertical-align: middle;"></a>
-                </div>
+    <div class="ui-grid-solo" style="width:100%;padding-top:15px;padding-bottom:15px;background-color:#d1cfd1;height:60px;text-align:center;display:inline-block;vertical-align: middle;">
+        <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
+        <a href="/detail/sell/{{post.id}}/edit/"><input type="image" value="修改" id="edit_btn" src="/static/images/detail/edit.png" style="max-width:80px;vertical-align: middle;"></a>
+    </div>
     {% endif %}
 
-<div>
-        <div>
-            <input type="hidden" id="post_id" value={{post.id}}>
-        </div>
-        <div>
-            <input type="hidden" id="wx_id" value={{wx_id}}>
-        </div>
     
-        {% include "footer.html" %}
     
-<script type="text/javascript">
-        var wx_id = $("#wx_id").val();
-        var post_id = $("#post_id").val();
-        $("#follow-post").on('slidestop', function(event) {
-            var follow_option = $("#follow-post").val();
-            return $.ajax({
-                type: "get",
-                url: "/buy/follow_post",
-                dataType: "json",
-                data: {
-                    wx_id: wx_id,
-                    post_id: post_id,
-                    follow_option: follow_option
-                }
-            }).then(function(data) {});
-        });
-        $("#open-close-post").on('slidestop', function(event) {
-            var operation = $("#open-close-post").val();
-            return $.ajax({
-                type: "get",
-                url: "/buy/open_close_post",
-                dataType: "json",
-                data: {
-                    wx_id: wx_id,
-                    post_id: post_id,
-                    operation: operation
-                }
-            }).then(function(data) {});
-        });
+    <img id="share_msg" src="/static/images/detail/share_msg.png" style="display:none;width:100%;max-height:100%;position:absolute;left:0;top:0;z-index:1;background-color:black;opacity: 0.6;" onclick="hideShareMsg()">
 
-    function toggleFollowStatus(){
-        var is_followed = $("#is_followed").val(); 
-        var follow_img = '';   
-        var popup_msg = '';
-        if( is_followed == "False"){
-            is_followed = "True";
-            follow_img = '/static/images/detail/followed.png';
-            popup_msg = '<p>关注本帖!</p>';
-        } else {
-            is_followed = "False";
-            popup_msg = '<p>取消关注！</p>';
-            follow_img = '/static/images/detail/not_followed.png';
-        }
-        $("#is_followed").val(is_followed);
-        $("#follow").attr("src", follow_img);
-        $('#follow-popup').html(popup_msg);
-        $('#follow-popup').popup("open");
-        setTimeout(function() {
-          $('#follow-popup').popup("close");
-        }, 1000);
-        $.ajax({
-            type: "get",
-            url: "/sell/follow_post",
-            dataType: "json",
-            data: {
-                wx_id: wx_id,
-                post_id: post_id,
-                is_followed: is_followed
-            }
-        }).then(function(data) {
-            
-        });
-    }
+    <div style="margin-left:5%;margin-right:5%;">
+        <div data-role="popup" id="follow-popup"></div>
+    </div>
+    <!-- TODO: doesn't add to follow list -->
+    <input type="hidden" id="is_followed" value="{{is_followed}}">
+    <input type="hidden" id="post_id" value="{{post.id}}">
+    <input type="hidden" id="wx_id" value="{{wx_id}}">
 
-
-    function showFollowStatus(){
-        var is_followed = $("#is_followed").val();
-        if( is_followed == "False"){
-            $("#follow").attr("src", '/static/images/detail/not_followed.png');
-        } else {
-            $("#follow").attr("src", '/static/images/detail/followed.png');
-        }
-    }
-
-    function showPosition() {
-        var latlonStr = {{lat}}+","+{{lon}};
-        var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-        var height = 200;
-        var img_url = "http://maps.googleapis.com/maps/api/staticmap?center="+latlonStr+"&zoom=14&size="+width+"x"+height+"&sensor=false";
-        $("#map").attr("src",img_url);
-    }
-
-
-    function showShareMsg(){
-        $("#share_msg").show();
-    }
-
-    function hideShareMsg(){
-    $("#share_msg").hide();
-    }
-    
-    $(document).ready(function() { 
-    showPosition();
-    showFollowStatus();
-    });
-</script>
+    {% include "footer.html" %}
 </div>
 </body>
-
 </html>

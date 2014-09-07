@@ -78,7 +78,7 @@ function displayPosts(posts) {
 
         var distance = posts[i]["distance"];
         if (posts[i]["distance"] > 1000) {
-            distance = (posts[i]["distance"] / 1000).toFixed(0) + "K"
+            distance = (posts[i]["distance"] / 1000).toFixed(0) + "k"
         }
         var item = $('<div class="post-item-div">'+
             '<a class="post-item" href="/detail/sell/' + posts[i]['post_id'] + '">'+
@@ -88,7 +88,7 @@ function displayPosts(posts) {
                 '</div>'+
                 '<img class="post-image" src="' + image_info['image_url'] + '" />'+
                 '<div class="post-price">'+
-                    '<span class="post-currency">$&nbsp;</span>' + posts[i]["min_price"]+ 
+                    '<span class="post-currency">$&nbsp;</span>' + formatPrice(posts[i]["price"])+ 
                 '</div>'+
                 '<div class="post-distance">距离你 ' + distance + ' miles</div>'+
             '</a></div>');

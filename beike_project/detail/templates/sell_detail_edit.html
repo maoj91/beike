@@ -1,180 +1,116 @@
 <!DOCTYPE HTML>
 <html>
 
-{% include "head.html" %}
+{% include "head.html" with title="我要卖" %}
 
 <body>
-    <div data-role="page" id="sellpost-edit" data-theme="a" data-fullscreen="true">
-        {% include "header.html" with title="我要卖" %}
-        
-        <div data-role="content">
-            <div>
-                <script id='code_1'>
+<div id="sell-edit" data-role="page" data-fullscreen="true">
+    {% include "header.html" with title="我要卖" %}
 
-                var IMG_WIDTH = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-                var currentImg=0;
-                var maxImages={{image_num}};
-                var speed=500;
+    <!-- TODO: needs to clean up -->
+    <div>
+        <div id="image_gallery">
+            <div id="imgs">
+            {% for image_metadata in image_list %}
+                <span class="img_span">
+                    <img src="{{ image_metadata.image_url }}">
+                </span>
+            {% endfor%}
+            </div>
+        </div>   
+        <div id="image_thumbnails">
+        {% for image_metadata in image_list %}
+            <span class="thumbnail_span" id="thumbnail_span{{forloop.counter0}}" onclick='selectImage({{forloop.counter0}})'>
+                <img src="{{ image_metadata.image_url }}">
+            </span>
+        {% endfor%}
+        </div>
+    </div>
+    
+    <div data-role="content">
+        <form action="/detail/sell/{{post.id}}/save/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
 
-                var imgs;
-
-                var swipeOptions=
-                {
-                    triggerOnTouchEnd : true,   
-                    swipeStatus : swipeStatus,
-                    allowPageScroll:"vertical",
-                    threshold:75            
-                }
-
-                $(function()
-                {               
-                    imgs = $("#imgs");
-                    imgs.swipe( swipeOptions );
-                });
-
-
-                /**
-                * Catch each phase of the swipe.
-                * move : we drag the div.
-                * cancel : we animate back to where we were
-                * end : we animate to the next image
-                */          
-                function swipeStatus(event, phase, direction, distance)
-                {
-                    //If we are moving before swipe, and we are going Lor R in X mode, or U or D in Y mode then drag.
-                    if( phase=="move" && (direction=="left" || direction=="right") )
-                    {
-                        var duration=0;
-
-                        if (direction == "left")
-                            scrollImages((IMG_WIDTH * currentImg) + distance, duration);
-
-                        else if (direction == "right")
-                            scrollImages((IMG_WIDTH * currentImg) - distance, duration);
-
-                    }
-
-                    else if ( phase == "cancel")
-                    {
-                        scrollImages(IMG_WIDTH * currentImg, speed);
-                    }
-
-                    else if ( phase =="end" )
-                    {
-                        if (direction == "right")
-                            previousImage()
-                        else if (direction == "left")           
-                            nextImage()
-                    }
-                }
-
-                function selectImage(i){
-                    var diff = i - currentImg;
-                    if(i>currentImg && i<=maxImages-1){
-                        for(var j=0;j<diff;j++){
-                            nextImage();
-                        }
-                    } else if(i>=0 && i<currentImg){
-                        for(var j=0;j<-diff;j++){
-                            previousImage();
-                        }
-                    }
-                }
-
-                function selectThumbnail(i){
-                    if(i>=0 && i<=maxImages-1){
-                        for(var j=0;j<=maxImages-1;j++){
-                            $("#thumbnail_span"+j).addClass("thumbnail_not_selected");
-                        }
-                        $("#thumbnail_span"+i).removeClass("thumbnail_not_selected");
-                        $("#thumbnail_span"+i).addClass("thumbnail_selected");
-                    }
-                }
-
-                function previousImage()
-                {
-                    currentImg = Math.max(currentImg-1, 0);
-                    scrollImages( IMG_WIDTH * currentImg, speed);
-                    selectThumbnail(currentImg);
-                }
-
-                function nextImage()
-                {
-                    currentImg = Math.min(currentImg+1, maxImages-1);
-                    scrollImages( IMG_WIDTH * currentImg, speed);
-                    selectThumbnail(currentImg);
-                }
-
-                /**
-                * Manuallt update the position of the imgs on drag
-                */
-                function scrollImages(distance, duration)
-                {
-                    imgs.css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
-
-                    //inverse the number we set in the css
-                    var value = (distance<0 ? "" : "-") + Math.abs(distance).toString();
-
-                    imgs.css("-webkit-transform", "translate3d("+value +"px,0px,0px)");
-                }
-                </script>
-
-                <div id="image_gallery">
-                    <div id="imgs">
-                        {% for image_metadata in image_list %}
-                        <span class="img_span">
-                            <img src="{{ image_metadata.image_url }}">
-                        </span>
-                        {% endfor%}
-                    </div>
-                </div>   
-                <div id="image_thumbnails">
-                    {% for image_metadata in image_list %}
-                    <span class="thumbnail_span" id="thumbnail_span{{forloop.counter0}}" onclick='selectImage({{forloop.counter0}})'>
-                        <img src="{{ image_metadata.image_url }}">
-                    </span>
-                    {% endfor%}
-                </div>           
+            <div class="form-left">标题</div>
+            <div class="form-right">
+                <input type="text" name="title" id="title" value="{{post.title}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入标题" />
             </div>
 
-            <form action="/detail/sell/{{post.id}}/save/" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="ui-grid-a">
-                    <div class="ui-block-a form-left">
-                        <div class="field-label-inner-div">标题</div>
-                    </div>
-                    <div class="ui-block-b form-right">
-                        <input type="text" name="title" id="title" value="{{post.title}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入标题" />
+            <div class="form-left">类别</div>
+            <div class="form-right">
+                <select class="form-button" name="category" id="category" data-placeholder="true">
+                    {% for category in categories %}
+                        {% if post.category.id == category.id %}
+                            <option value={{ category.id }} selected>{{category.name}}</option>
+                        {% else %}
+                            <option value={{ category.id }}>{{category.name}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-left">价格</div>
+            <div class="form-right">
+                <input type="number" name="price" value="{{post.price}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入价格">
+            </div>
+
+            <div>
+                <input type="hidden" name="latitude" id="buy_form_latitude"></input>
+                <input type="hidden" name="longitude" id="buy_form_longitude"></input>
+            </div>
+
+            <!-- TODO: load zip from post -->
+            <div class="form-left">邮编</div>
+            <div class="form-right">
+                <div style="width: 65px; float: left;">
+                    <input type="text" name="zipcode" id="sell_form_zipcode" placeholder="zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改">
+                </div>
+                <div style="width: 100px; float: right;">
+                    <a href="" class="form-button" data-role="button" onclick="getLocationByZipcodeForSellForm(); return false;">
+                        <span>更新</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="form-left">城市</div>
+            <div class="form-right">
+                <input readonly class="readonly" data-role="none" name="city_name" id="sell_form_city_name" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改"></input>
+            </div>
+
+            <!-- TODO: set up {{post.item_condition.value}} -->
+            <div id="prefer-contact" class="form-left">新旧度</div>
+                <div class="form-right">
+                    <div class="ui-grid-c">
+                        <div class="ui-block-a form-cond" onclick="chooseCondition(0);">
+                            <span id="condition-0-desc">新</span>
+                            <div>
+                                <img class="form-cond-img" id="condition-0-img" src="/static/images/sell_post/new.png">
+                            </div>
+                        </div>
+                        <div class="ui-block-b form-cond" onclick="chooseCondition(1);">
+                            <span id="condition-1-desc">九成新</span>
+                            <div>
+                                <img class="form-cond-img" id="condition-1-img" src="/static/images/sell_post/90-new.png">
+                            </div>
+                        </div>
+                        <div class="ui-block-c form-cond" onclick="chooseCondition(2);">
+                            <span id="condition-2-desc">七成新</span>
+                            <div>
+                                <img class="form-cond-img" id="condition-2-img" src="/static/images/sell_post/70-new.png">
+                            </div>
+                        </div>
+                        <div class="ui-block-d form-cond" onclick="chooseCondition(3);">
+                            <span id="condition-3-desc">旧</span>
+                            <div>
+                                <img class="form-cond-img" id="condition-3-img" src="/static/images/sell_post/used.png">
+                            </div>
+                        </div>
                     </div>
                 </div>
+            <input type="hidden" id="condition-slider" value="0" />
 
-                <div class="ui-grid-a">
-                    <div class="ui-block-a form-left">
-                        <div class="field-label-inner-div">类别</div>
-                    </div>
-                    <div class="ui-block-b form-right">
-                        <select name='category' id="category">
-                            {% for category in categories %}
-                                {% if post.category.id == category.id %}
-                                    <option value={{ category.id }} selected>{{category.name}}</option>
-                                {% else %}
-                                    <option value={{ category.id }}>{{category.name}}</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
 
-                <div class="ui-grid-a">
-                    <div class="ui-block-a form-left">
-                        <div class="field-label-inner-div">价格</div>
-                    </div>
-                    <div class="ui-block-b form-right">
-                        <input type="number" name="price" value="{{post.price}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入价格">
-                    </div>
-                </div>
-
-                <div class="ui-grid-solo ui-corner-all">
+                <!--div class="ui-grid-solo ui-corner-all">
                     <div style="position: relative; margin: 5px 30px 30px 10px">
                         <div class="slider-scale-common slider-scale-div1">全新</div>
                         <div class="slider-scale-common slider-scale-div2">九成新</div>
@@ -183,166 +119,62 @@
                         <div class="slider-scale-common slider-scale-div5">旧</div>
                     </div>
                     <input data-highlight="true" type="range" name="condition-slider" id="condition-slider" value="{{post.item_condition.value}}" min="0" max="4" step="1" />
-                </div>
+                </div-->
 
-                <div class="ui-grid-solo" style="margin: 15px 0 !important;">
-                    <div class="ui-grid-a">
-                        <div class="ui-block-a">
-                            <span class="text-p">其他描述</span>
-                        </div>
-                        <div class="ui-block-b">
-                            <span id="lengthCounter" class="text-p" style="float:right">0/3000</span>
-                        </div>
+            <div class="form-left">联系方式</div>
+            <div class="form-right">
+                <div class="ui-grid-b">
+                    <div class="ui-block-a">
+                        <img class="contact-icon" id="email-icon" onclick="clickEmailContact();" src="/static/images/general/email_icon.png" />
+                        <img class="contact-icon hide" id="email-icon-clicked" onclick="clickEmailContact();" src="/static/images/general/email_icon_clicked.png" />
                     </div>
-                    <div class="ui-grid-solo">
-                        <textarea name="content" id="content" style="height: 100px !important;" placeholder="描述颜色、大小、形状、新旧等需求" data-rule-required="true" data-rule-content="true" data-msg-required="请输入详细描述" maxlength="3000" value="{{post.content}}">{{post.content}}</textarea>
+                    <div class="ui-block-b">
+                        <img class="contact-icon" id="phone-icon" onclick="clickPhoneContact();" src="/static/images/general/phone_icon.png" />
+                        <img class="contact-icon hide" id="phone-icon-clicked" onclick="clickPhoneContact();" src="/static/images/general/phone_icon_clicked.png" />
                     </div>
-                </div>
-
-                <div>
-                    <input type="hidden" name="latitude" id="latitude"></input>
-                    <input type="hidden" name="longitude" id="longitude"></input>
-                </div>
-
-                <div class="ui-grid-a">
-                    <div class="ui-block-a form-left">
-                        <div id="prefer-contact" class="field-label-inner-div">联系方式</div>
-                    </div>
-                    <div class="ui-block-b form-right">
-
-                        <div class="ui-grid-b">
-                            <div class="ui-block-a">
-                                <img style="display:block;" id="email-icon" onclick="clickEmailContact();" src="/static/images/general/email_icon.png" />
-                                <img style="display:none;" id="email-icon-clicked" onclick="clickEmailContact();" src="/static/images/general/email_icon_clicked.png" />
-                            </div>
-                            <div class="ui-block-b">
-                                <img style="display:block;" id="phone-icon" onclick="clickPhoneContact();" src="/static/images/general/phone_icon.png" />
-                                <img style="display:none;" id="phone-icon-clicked" onclick="clickPhoneContact();" src="/static/images/general/phone_icon_clicked.png" />
-                            </div>
-                            <div class="ui-block-c">
-                                <img style="display:block;" id="sms-icon" onclick="clickSmsContact();" src="/static/images/general/sms_icon.png" />
-                                <img style="display:none;" id="sms-icon-clicked" onclick="clickSmsContact();" src="/static/images/general/sms_icon_clicked.png" />
-                            </div>
-                        </div>
-
-                        <!--Use ui-grid-a because I cannot resolve the jquery validation css issue-->
-                        <!--error message was always displayed inside the next input-->
-                        <!--TO-DO: fix this issue and use just a single div-->
-                        <input type="hidden" name="sms-checked" id="sms-checked" value="{{sms_checked}}"></input>
-                        <input type="hidden" name="phone-checked" id="phone-checked" value="{{phone_checked}}"></input>
-                        <input type="hidden" name="email-checked" id="email-checked" value="{{email_checked}}"></input>
-                        <div id="phone_number_div" class="ui-grid-a">
-                            <div class="ui-block-a" style="width:0"></div>
-                            <div class="ui-block-b" style="width:100%">
-                                {% if phone_checked == 'on' or sms_checked == 'on' %}
-                                <input type="text" id="phone_number" name="phone_number" placeholder="{{phone}}" value="{{phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
-                                {% else %}
-                                <input type="text" id="phone_number" name="phone_number" placeholder="手机号码" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div id="email_div" class="ui-grid-a">
-                            <div class="ui-block-a" style="width:0"></div>
-                            <div class="ui-block-b" style="width:100%">
-                                {% if email_checked == 'on' %}
-                                <input type="text" id="email" name="email" placeholder="{{email}}" value="{{email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
-                                {% else %}
-                                <input type="text" id="email" name="email" placeholder="Email" data-rule-required="true" data-rule-content="true" data-msg-required="请输入Email" />
-                                {% endif %}
-                            </div>
-                        </div>
+                    <div class="ui-block-c">
+                        <img class="contact-icon" id="sms-icon" onclick="clickSmsContact();" src="/static/images/general/sms_icon.png" />
+                        <img class="contact-icon hide" id="sms-icon-clicked" onclick="clickSmsContact();" src="/static/images/general/sms_icon_clicked.png" />
                     </div>
                 </div>
 
-                <div>
-                    <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png">
-                </div>
+                <input type="hidden" name="sms-checked" id="sms-checked" value="off"></input>
+                <input type="hidden" name="phone-checked" id="phone-checked" value="off"></input>
+                <input type="hidden" name="email-checked" id="email-checked" value="off"></input>
 
-            </form>
+                <div id="email_div">
+                {% if email_checked == 'on' %}
+                    <input type="text" id="email" name="email" placeholder="{{email}}" value="{{email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
+                {% else %}
+                    <input type="text" id="email" name="email" placeholder="Email" data-rule-required="true" data-rule-content="true" data-msg-required="请输入Email" />
+                {% endif %}
+                </div>
+                <div id="phone_number_div">
+                {% if phone_checked == 'on' or sms_checked == 'on' %}
+                    <input type="text" id="phone_number" name="phone_number" placeholder="{{phone}}" value="{{phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
+                {% else %}
+                    <input type="text" id="phone_number" name="phone_number" placeholder="手机号码" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
+                {% endif %}
+                </div>
+            </div>
+
+            <!-- TODO: refresh word counter -->
+            <div class="form-left">其他描述</div>
+            <div class="form-right">
+                <span id="lengthCounter">0/3000</span>
+            </div>
+            <div style="clear:both"></div>
+            <div class="ui-grid-solo">
+                <textarea name="content" id="content" style="padding: 8px;" placeholder="描述颜色、大小、形状、新旧等需求" data-rule-required="true" data-rule-content="true" data-msg-required="请输入详细描述" maxlength="3000" value="{{post.content}}">{{post.content}}</textarea>
+            </div>
+
+            <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png">
+        </form>
     </div>
 
-        {% include "footer.html" %}
-
-<script type="text/javascript">
-var wx_id = $("#wx_id").val();
-var post_id = $("#post_id").val();
-$("#follow-post").on('slidestop', function(event) {
-    var follow_option = $("#follow-post").val();
-    return $.ajax({
-        type: "get",
-        url: "/sell/follow_post",
-        dataType: "json",
-        data: {
-            wx_id: wx_id,
-            post_id: post_id,
-            follow_option: follow_option
-        }
-    }).then(function(data) {});
-});
-$("#open-close-post").on('slidestop', function(event) {
-    var operation = $("#open-close-post").val();
-    return $.ajax({
-        type: "get",
-        url: "/sell/open_close_post",
-        dataType: "json",
-        data: {
-            wx_id: wx_id,
-            post_id: post_id,
-            operation: operation
-        }
-    }).then(function(data) {});
-});
-
-function showPosition() {
-    var latlonStr = {{lat}}+","+{{lon}};
-    var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-    var height = 200;
-    var img_url = "http://maps.googleapis.com/maps/api/staticmap?center="+latlonStr+"&zoom=14&size="+width+"x"+height+"&sensor=false";
-    $("#map").attr("src",img_url);
-}
-
-function showContacts() { 
-    if("{{phone_checked}}" == "on" || "{{sms_checked}}" == "on" ){
-        $('#phone_number_div').css('display', 'inline');
-    } else {
-        $('#phone_number_div').css('display', 'none');
-    }
-
-    if ("{{phone_checked}}" == "on"){     
-        $('#phone-icon').hide();
-        $('#phone-icon-clicked').show();
-    } else {
-        $('#phone-icon').show();
-        $('#phone-icon-clicked').hide();
-    }
-
-    if("{{sms_checked}}" == "on" ){
-        $('#sms-icon').hide();
-        $('#sms-icon-clicked').show();
-    } else { 
-        $('#sms-icon').show();
-        $('#sms-icon-clicked').hide();
-    }
-
-    if ("{{email_checked}}"  == 'on' ){
-        $('#email_div').css('display', 'inline');
-        $('#email-icon').hide();
-        $('#email-icon-clicked').show();
-    } else { 
-        $('#email_div').css('display', 'none');
-        $('#email-icon').show();
-        $('#email-icon-clicked').hide();
-    }
-
-}
-
-$(document).ready(function() { 
-    selectThumbnail(0);
-    showPosition();
-    showContacts();
-});
-</script>
+    {% include "footer.html" %}
 </div>
+
 </body>
 
 </html>
