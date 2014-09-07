@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="zh">
 
-{% include "head.html" %}
+{% include "head.html" with title="需求" %}
 
 <body>
 <div data-role="page" id="main-page" data-fullscreen="true">
@@ -9,12 +9,12 @@
 
     <div data-role="content">
         <div class="detail-title-wrapper">
-            <img class="detail-icon" src='/static/images/detail/buy_icon.png'>
+            <img class="detail-icon" src="/static/images/general/buy_logo.png">
             <div class="detail-title">{{post.title}}</div>
 
             <div class="share-button-wrapper">
                 <img id="share" class="share-button" src="/static/images/detail/share.png" onclick="showShareMsg();"> 
-                <img id="follow" class="share-button" onclick="toggleFollowStatus();">
+                <img id="follow" class="share-button" src="/static/images/detail/not_followed.png" onclick="toggleFollowStatus();">
             </div>
         </div>
 
@@ -54,7 +54,7 @@
         {% if user_image %}
         <div style="display:table;margin:0 auto;">
             <a href="/user/{{post.user.id}}/">
-            <img id='profile_image' src='{{user_image.image_url}}' style="width: 80px;height:80px;border-radius: 50%;"/>
+            <img id="profile_image" src="{{user_image.image_url}}" style="width: 80px;height:80px;border-radius: 50%;"/>
             </a>  
         </div>
         {% endif %}
