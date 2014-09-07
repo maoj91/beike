@@ -38,7 +38,7 @@
             var longitude = position.coords.longitude;
             $.ajax({
                 type: "get",
-                url: "get_city_by_latlong",
+                url: "/user/get_info/get_city_by_latlong",
                 dataType: "json",
                 data: {
                     latitude: latitude,
@@ -82,7 +82,7 @@
             if (zipcode) {
                 $.ajax({
                     type: "get",
-                    url: "get_city",
+                    url: "/user/get_info/get_city",
                     dataType: "json",
                     data: {
                         zipcode: zipcode,
@@ -90,6 +90,7 @@
                 }).then(function(data) {
                     console.log(data);
                     $("#city").text(data.city_name);
+                    $("#city_id").val(data.city_id);
                     $("#district").text(data.lv1_district_name);
                     $("#latitude").val(data.latitude);
                     $("#longitude").val(data.longitude);
