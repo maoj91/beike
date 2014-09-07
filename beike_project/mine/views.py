@@ -13,6 +13,8 @@ from sell.sell_post_util import SellPostUtil
 from data.views import get_user
 import json, logging
 
+logger = logging.getLogger('mine.views')
+
 def index(request):
     validate_user(request)
     wx_id = request.session['wx_id']
@@ -24,6 +26,8 @@ def index(request):
 
     sell_posts = SellPost.objects.filter(user__wx_id=wx_id).order_by('-date_published')
     buy_posts = BuyPost.objects.filter(user__wx_id=wx_id).order_by('-date_published')
+    logger.info("Fetched " + str(len(sell_posts)) + " sell posts for user " + user.email)
+    logger.info("Fetched " + str(len(buy_posts)) + " buy posts for user " + user.email)
 
     followed_sell_posts = sell_post_util.get_followed_posts(user)
     followed_buy_posts = buy_post_util.get_followed_posts(user)
