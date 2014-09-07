@@ -15,18 +15,13 @@
     <link rel="stylesheet" type="text/css" href="/static/jQMProgressBar.css">
     <script type="text/javascript" src="/static/jQMProgressBar.js"></script>
 
-<<<<<<< HEAD
     <link rel="stylesheet" type="text/css" href="/static/jQMProgressBar.css">
     <script type="text/javascript" src="/static/jQMProgressBar.js"></script>
 
     <script type="text/javascript" src="/static/exif.js"></script>
     <script type="text/javascript" src="/static/binaryajax.js"></script>
 
-=======
-    <script type="text/javascript" src="/static/exif.js"></script>
-    <script type="text/javascript" src="/static/binaryajax.js"></script>
 
->>>>>>> master
     <!-- beike customized css and js -->
     <link rel="stylesheet" href="/static/common.css">
     <link rel="stylesheet" href="/static/detail.css">
@@ -34,21 +29,11 @@
     <link rel="stylesheet" href="/static/mine.css">
     <script src="/static/jquery.fileupload.js"></script>
     <script src="/static/jquery.touchSwipe.min.js"></script>
-<<<<<<< HEAD
+
     <script src="/static/common.js"></script>
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
     <script src="/static/user.js"></script>
-
-=======
-    <script src="/static/user.js"></script>
-    <script src="/static/common.js"></script>
-    <script src="/static/buy_form.js"></script>
-    <script src="/static/buy_posts.js"></script>
-    <script src="/static/sell_form.js"></script>
-    <script src="/static/sell_posts.js"></script>
-    <title>千贝科技</title>
->>>>>>> master
 </head>
 
 <body>
@@ -123,7 +108,8 @@
                         <div class="field-label-inner-div">所&nbsp;在&nbsp;地</div>
                     </div>
                     <div class="ui-block-b" style="width:65%;margin-right:5%;">
-                        <input type="text" name="address" id="address" value="{{user.address.city}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入所在地" />
+<!--                         <input type="text" name="address" id="address" value="{{user.address.city}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入所在地" /> -->
+                        <a href="/user/{{user.id}}/edit_address/" id="edit_address" data-role="button" data-icon="check">{{user.address.city}}</a>
                     </div>
             </div>
 
