@@ -7,11 +7,11 @@
     <div id="nearby-buypost" data-role="page" data-fullscreen="true">
         {% include "header.html" with title="周边需求" %}
         <div id="buy-list" data-role="main">
-            <input type="hidden" id="num-per-page" name="num-per-page" value="{{num_per_page}}" />
-            <div id="buypost-list1"></div>
-            <div id="buypost-list2"></div>
+            <input type="hidden" class="num-per-page" name="num-per-page" value="{{num_per_page}}" />
+            <div class="post-list1"></div>
+            <div class="post-list2"></div>
             <div style="clear:both"></div>
-            <img id="load-more" src="/static/images/general/loading_green.gif" />
+            <img class="load-more" src="/static/images/general/loading_green.gif" />
         </div>
         
         {% include "footer.html" with buy_list="_clicked" %}
