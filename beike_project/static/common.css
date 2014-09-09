@@ -1,28 +1,66 @@
-.base-style {
+/* CSS for general style settings */
+html, body, div, img, span, p, a {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline; 
+}
+
+html, body, div, img {
+    position: relative;
+}
+
+div, img {
+    display: block;
+}
+
+body {
+/*
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;*/
+    font-family: \5FAE\8F6F\96C5\9ED1, sans-serif !important;
     font-size: 14px;
+    -webkit-font-smoothing: antialiased;
 }
 
-.form-element-grid {
-    margin: 10px 0 !important;
+.header.ui-header {
+    height: 50px;
+    background-color: #24c598;
+    font-size: 20px;
+    color: white;
+    line-height: 50px;
+    text-align: center;
+    border-width: 0;
+    font-weight: normal;
 }
 
-.field-label-inner-div {
-    padding: 15px 0 15px 0;
-    color:#00CED1;
+.footer.ui-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    border-width: 0;
+    box-shadow: 0 0 6px #666;
 }
 
-.field-value-inner-div {
-    padding: 15px 0 15px 0;
+.wrapper { 
+    /**/
+    width: 100%; height: auto;
+    /*/
+    width: 640px; height: 1010px; 
+    /**/
 }
 
-.text-p {
-    color:#00CED1;
-}
 /* CSS for signup page */
  #bkgd {
     margin:0;
     padding:0;
-    background:url(https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/green_bkgd.png) center center fixed no-repeat;
+    background: url(https://s3-us-west-2.amazonaws.com/beike-s3/static/img/01/green_bkgd.png) center center fixed no-repeat;
     -moz-background-size: 100% 100%;
     background-size: 100% 100%;
 }
@@ -37,55 +75,84 @@
 .signup-inner {
     display: inline-block;
 }
+
+
 /* CSS for index page */
- .head_text_left {
-    float:left;
-    margin-top: 0.4em;
+div.main-top {
+    position: relative;
+    height: 50%;
 }
+
+div.main-top-background {
+    width: 100%;
+    height: 100%;
+    background-image: url("/static/images/homepage/background.jpg");
+    background-repeat: repeat;
+}
+
+img.main-top-logo {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    margin: auto;
+}
+
+div.city {
+    position: absolute;
+    right: 20px;
+    top: -6px;
+    min-width: 70px;
+    padding: 11px 10px 6px 9px;
+    border-radius: 6px;
+    background-color: #fff;
+    box-shadow: 0 0 6px #333;
+    text-align: center;
+}
+
+a.city-link { text-decoration: none; color: #24c598; }
+
+img.city-mark {
+    display: inline;
+    height: 19px;
+    vertical-align: text-bottom;
+    margin-right: 0px;
+}
+
+span.city-text {
+    font-size: 14px;
+    color: #24c498;
+}
+
+.main-bottom {
+    background-color: #d5e8d9;
+    padding-bottom: 20px;
+    width: 100%;
+    height: 50%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.main-item {
+    max-height: 50%;
+    width: 33%;
+    padding: 0px;
+    box-sizing: border-box;
+    float: left;
+}
+
 
 .main-button {
-    width: 60%;
-    margin-left:22%;
-    margin-right:7%;
-    margin-top:5%
-}
-.city_background{
-    position: absolute;
-    left: 10px;
-    top: 0px;
-    width:100px;
-    height:40px;
+    display: block;
+    height: 100%;
+    margin: 0 auto;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
-.city_background_android{
-    position: absolute;
-    left: 10px;
-    top: 50px;
-    width: 100px;
-    height: 40px;
-}
 
-.city{
-    position: absolute;
-    left: 30px;
-    top: 10px;
-}
-
-.city_android{
-    position: absolute;
-    left: 25px;
-    top: 60px;
-}
-
-.city_mark{
-    max-width:15px;
-    max-height:15px;
-}
-
-.head_text_right {
-    font-size: small;
-    color:#218868;
-}
 /* CSS for buypost creation page */
 #phone_number_div {
     display: none;
@@ -94,14 +161,530 @@
     display: none;
 }
 
+/* CSS for image uploader */
+#image-uploader {
+    max-width: 600px;
+    width: 100%;
+    height: 300px;
+}
+
+.image-uploader-image {
+    width: 100%;
+    height: 250px;
+    background-color: #ddd;
+    background-image: url('/static/images/sell_post/camera_bkg.png');
+    background-size: 180px 150px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#image_thumbnails_div {
+    width: 100%;
+    height: 65px;
+    background-color: #ddd
+}
+
+#progressbar {
+    width: 60%;
+    position: absolute;
+    top: 100px;
+    left: 20%;
+}
+
+.progressbar-wrapper {
+    position: relative; text-align: center;
+}
+
+.new-image {
+    position: relative;
+    width: 20%;
+    height:65px;
+    text-align: center;
+    background-color:#ddd;
+    float: left;
+}
+
+.new-image-icon {
+    width: 80%;
+    height: 70%;
+    position:absolute;
+    left: 10%;
+    right: 10%;
+    top: 15%;
+    bottom: 15%;
+}
+
+.image-thumbnail-box {
+    position: relative;
+    width: 25%;
+    height: 100%;
+    float: left;
+}
+
+.image-thumbnail-top {
+    position: absolute;
+    height: 6px;
+    width: 100%;
+    background-color: #ddd;
+}
+
+.image-thumbnail {
+    width: 100%;
+    height: 100%;
+    border-right: solid 1px white;
+}
+
+/* images in sell post detail */
+
+#image_gallery
+{
+    width:100%;
+    height:200px;
+    overflow:hidden;
+    position:relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#imgs 
+{
+    -webkit-transition-property: -webkit-transform;
+    -webkit-transition-duration: 0.5s;
+    -webkit-transition-timing-function: ease-out;
+    padding:0px;
+    margin:0px;
+
+    width:300%;
+    height: 200px;
+
+    /*apply a transfor to kick in the hardware acceleration.  Without this, the first time we add the transform you get odd rendering of the divs (half missing) */
+    -webkit-transform: translate3d(0px,0px,0px); 
+}
+
+#imgs img
+{
+    padding:0px;
+    margin:0px;
+    max-width:100%;
+    max-height:200px;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-transform: translate3d(0px,0px,0px); 
+}
+
+/*#imgs img*/
+#imgs span
+{
+    float:left;
+    display:inline;
+    padding:0px;
+    margin:0px;
+    width:33%;
+    height:200px;
+
+    /*apply a transfor to kick in the hardware acceleration.  Without this, the first time we add the transform you get odd rendering of the divs (half missing) */
+    -webkit-transform: translate3d(0px,0px,0px); 
+}
+
+
+#image_thumbnails{
+    width: 100%;
+    height: 50px;  
+}
+
+.thumbnail_span{
+    float:left;
+    display:inline;
+    width: 80px;
+    height: 100%;    
+    margin-right:3px;
+}
+
+.thumbnail_span img{
+    padding:0px;
+    width:80px;
+    height: 48px; 
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; 
+}
+
+.thumbnail_selected{
+    border-top: 3px solid #29CF95;
+}
+
+.thumbnail_not_selected{
+    border-top:none;
+    background-color: gray;
+    opacity: .7;
+}
+
+
+/* CSS for buy/sell posts */
+.post-list1, .post-list2 {
+    width: 50%;
+    padding: 4px;
+    float: left;
+    box-sizing: border-box;
+}
+
+.post-list1 {padding-right: 0;}
+.post-list2 {padding-left: 0;}
+
+img.load-more {
+    vertical-align: middle;
+    width: 50px;
+    margin: 0 auto;
+    display: none;
+}
+
+div.post-item-div {
+    width: 100%;
+    /*height: 100px;*/
+    box-sizing: border-box;
+    padding: 4px;
+}
+
+a.post-item {
+    display: block;
+    position: relative;
+    width: 100%;
+    /*height: 90px;*/
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 8px;
+    background: #fcfcfc;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    box-shadow: 1px 1px 2px #ddd;
+}
+
+a.post-item:hover {
+    background: #f9f9f9;
+}
+
+a.post-item:active {
+    border-color: #ccc;
+    top: 1px;
+    left: 1px;
+    box-shadow: none;
+}
+
+img.post-icon {
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin-right: 7px;
+    vertical-align: text-bottom;
+    float: left;
+}
+
+span.post-title {
+    display: block;
+    font-size: 18px;
+    color: black;
+    font-weight: normal;
+    line-height: 21px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+img.post-image {
+    width: 100%;
+    margin: 7px 0 0;
+}
+
+div.post-price {
+    color: #666;
+    margin-top: 7px;
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: normal;
+}
+
+span.post-currency {
+    color: #ff9933;
+    font-size: 16px;
+}
+
+div.post-distance {
+    color: #aaa;
+    margin-top: 5px;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+/* css for buy/sell forms */
+
+/*.form-button {
+    height: 9px !important;
+    line-height: 9px !important;
+}*/
+
+.form-grid {
+    margin: 10px 0 !important;
+}
+
+.form-left {
+    width: 70px;
+    height: 50px;
+    line-height: 50px;
+    float: left;
+    font-size: 16px;
+    clear: both;
+    color: #24c598;
+    /*text-align: right;*/
+}
+
+.form-right {
+    min-height: 50px;
+    position: relative;
+    overflow: hidden;
+    float: none;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
 label.error {
+    display: block;
     color: red;
     font-size: 14px;
     line-height: 1.4;
     padding-top: .5em;
     vertical-align: top;
-    font-weight:bold;
-    width: 100%;
+    font-weight: bold;
+    width: 200px;
     float: left;
+}
+
+.readonly {
+    border: none;
+    background-color: transparent;
+    padding: 15px 0 15px 0;
+}
+
+#category-button.ui-btn {
+    height: 2.2em;
+    line-height: 2.1em;
+    -webkit-border-radius: .6em;
+    border-radius: .6em;
+    background-color: #fff;
+    text-shadow: 0 1px 0 #f3f3f3;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,.2);
+    border: 1px solid #dddddd;
+    text-align: left;
+    font-weight: normal;
+    padding: 1px 35px 0 6px;
+}
+
+.form-button.ui-btn {
+    height: 2.1em;
+    line-height: 2.1em;
+    -webkit-border-radius: .6em;
+    border-radius: .6em;
+    padding: 0;
+    color: #24c598 !important; 
+}
+
+.form-cond {
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    padding: 5px;
+}
+
+.form-cond-img {
+    margin: 0 auto;
+    width: 60px;
+    height: 40px;
+}
+
+.form-cond:hover {
+    cursor: pointer;
+}
+
+img.contact-icon {
+    margin: 5px auto 0;
+    width: 40px;
+}
+
+img.contact-icon:hover {
+    cursor: pointer;
+}
+
+img.contact-icon.hide {
+    display: none;
+}
+
+#email_div, #phone_number_div {
+    clear: both;
+}
+
+#lengthCounter {
+    float: right;
+    color: #24c598; 
+    line-height: 50px;
+    font-size: 14px;
+}
+
+#submit_btn {
     display: block;
+    width: 120px;
+    height: auto;
+    margin: 30px auto;
+}
+
+
+
+/* CSS for mine */
+.mine-menu-icon {
+    display: inline;
+    width: 40px;
+    height: 40px;
+    vertical-align: middle; 
+}
+
+
+/* CSS for post details*/
+div.detail-title-wrapper {
+    margin-bottom: 12px;
+}
+
+img.detail-icon {
+    display: block;
+    width: 35px;
+    height: 35px;
+    margin: 2px 7px 0 0;
+    float: left;
+}
+
+div.detail-title {
+    display: inline;
+    font-size: 20px;
+    color: black;
+    font-weight: normal;
+    line-height: 40px;
+    /*text-overflow: ellipsis;
+    white-space: nowrap;*/
+    /*overflow: hidden;*/
+    /*float: none;*/
+}
+
+div.share-button-wrapper {
+    display: block;
+    width: 82px;
+    height: 26px;
+    padding: 7px;
+    float: right;
+}
+
+img.share-button {
+    display: block;
+    height: 26px;
+    width: 26px;
+    float: left;
+    /*border: 1px solid #ddd;
+    border-radius: 5px;
+    /*padding: 7px;*/
+    margin-left: 15px;
+}
+
+img.share-button:hover { cursor: pointer; }
+
+hr {
+    border: none;
+    clear: both;
+    height: 1px;
+    background-color: #ccc;
+}
+
+span.detail-postdate {
+    color: #aaa;
+    font-size: 16px;
+}
+
+div.detail-category {
+    float: right;
+    color: #24c498;
+    font-size: 16px;
+}
+
+div.detail-price-wrapper {
+    margin-top: 5px;
+    color: #666;
+    font-size: 20px;
+    line-height: 20px;
+    font-weight: normal;
+    float: left;
+}
+
+span.detail-currency {
+    display: inline-block;
+    color: #ff9933;
+    font-size: 20px;
+    width: 10px;
+}
+
+span.detail-price {
+}
+
+div.detail-content {
+    clear: both;
+    color: #333;
+    font-size: 16px;
+    padding: 20px;
+    line-height: 24px;
+    /*text-indent: 2em;*/
+}
+
+
+
+div.detail-map {
+    position: relative;
+    height: 200px;
+    max-width: 640px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+div.detail-loc {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px;
+    background-color: rgba(255,255,255,0.8);
+}
+
+div.detail-map>img#map {
+    position: absolute;
+    width: 640px;
+    height: 200px;
+    left: 50%;
+    margin-left: -320px;
+}
+
+div.detail-contacts {
+    height: 50px;
+    width: 100%;
+    text-align: center;
+    margin: 10px 0;
+}
+
+a.detail-contact-link {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    margin: 0 5%;
+}
+
+img.detail-contact-icon {
+    width: 50px;
+    height: 50px;
 }

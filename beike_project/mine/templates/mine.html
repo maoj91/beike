@@ -1,53 +1,12 @@
 <!DOCTYPE HTML>
 <html lang="zh">
 
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="UTF-8">
-    <!-- jquery library -->
-    <script type="text/javascript" src="/static/jquery/jquery-1.8.3.js "></script>
-    <script type="text/javascript" src="/static/jquery/jquery.mobile-1.4.2.js"></script>
-    <script type="text/javascript" src="/static/jquery/jquery.validate.js"></script>
-    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
-    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
-    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
-
-    <link rel="stylesheet" type="text/css" href="/static/jQMProgressBar.css">
-    <script type="text/javascript" src="/static/jQMProgressBar.js"></script>
-
-    <script type="text/javascript" src="/static/exif.js"></script>
-    <script type="text/javascript" src="/static/binaryajax.js"></script>
-
-    <!-- beike customized css and js -->
-    <link rel="stylesheet" href="/static/common.css">
-    <link rel="stylesheet" href="/static/detail.css">
-    <link rel="stylesheet" href="/static/sell.css">
-    <link rel="stylesheet" href="/static/mine.css">
-    <script src="/static/jquery.fileupload.js"></script>
-    <script src="/static/jquery.touchSwipe.min.js"></script>
-    <script src="/static/common.js"></script>
-    <script src="/static/buy_form.js"></script>
-    <script src="/static/buy_posts.js"></script>
-    <script src="/static/sell_form.js"></script>
-    <script src="/static/sell_posts.js"></script>
-    <title>千贝科技</title>
-</head>
+{% include "head.html" %}
 
 <body>
     <div data-role="page" id="main-page" data-theme="a" data-fullscreen="true">
-        <div data-role="header" data-position="fixed">
-            <div style="background-color: rgb(35,192,148);">
-                <div class="ui-grid-b">
-                    <div class="ui-block-a">
-                    </div>
-                    <div class="ui-block-b">
-                        <p style="text-align:center; color:white">我的</p>
-                    </div>
-                    <div class="ui-block-a">
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% include "header.html" with title="我的" %}
+        
         <div data-role="content">
             <div class="ui-grid-solo" style="display:table;margin:0 auto;">
                 {% if image %} {% for key, value in image.items %} {% if key == 'image_url' %}
@@ -60,7 +19,7 @@
                 <div data-role="collapsible" data-collapsed="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
 
                     <h4>
-                        <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_sell_posts.png" />我要卖</h4>
+                        <img class="mine-menu-icon" src="/static/images/my_account/my_sell_posts.png" />我要卖</h4>
                     <ul data-role="listview" data-inset="false">
                         {% for post in sell_posts %}
                         <li style="margin: 0px;">
@@ -85,7 +44,7 @@
 
                 <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
                     <h4>
-                        <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_buy_posts.png" />我要买</h4>
+                        <img class="mine-menu-icon" src="/static/images/my_account/my_buy_posts.png" />我要买</h4>
                     <ul data-role="listview" data-inset="false">
                         {% for post in buy_posts %}
                         <li style="margin: 0px;">
@@ -114,7 +73,7 @@
                 <div data-role="collapsible" data-collapsed="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
 
                     <h4>
-                        <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_fav_sell_posts.png" />关注物品</h4>
+                        <img class="mine-menu-icon" src="/static/images/my_account/my_fav_sell_posts.png" />关注物品</h4>
                     <ul data-role="listview" data-inset="false">
                         {% for post in followed_sell_posts %}
                         <li style="margin: 0px;">
@@ -141,7 +100,7 @@
 
                 <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
                     <h4>
-                        <img width="40px" height="40px" style="vertical-align:middle;" src="/static/images/my_account/my_fav_buy_posts.png" />关注需求</h4>
+                        <img class="mine-menu-icon" src="/static/images/my_account/my_fav_buy_posts.png" />关注需求</h4>
                     <ul data-role="listview" data-inset="false">
                         {% for post in followed_buy_posts %}
                         <li style="margin: 0px;">
@@ -168,35 +127,7 @@
             </div>
 
         </div>
-        <div data-role="footer" data-position="fixed">
-            <div class="ui-grid-d" style="background-color: rgb(35,192,148);">
-                <div class="ui-block-a">
-                    <a href="/">
-                        <img height="28" width="30" style="padding:10px 5px 5px 10px;" src='/static/images/navigation/homepage.png' />
-                    </a>
-                </div>
-                <div class="ui-block-b">
-                    <a href="/buy/form/">
-                        <img height="50" width="50" src='/static/images/navigation/buy_form.png' />
-                    </a>
-                </div>
-                <div class="ui-block-c">
-                    <a href="/sell/form/">
-                        <img height="50" width="50" src='/static/images/navigation/sell_form.png' />
-                    </a>
-                </div>
-                <div class="ui-block-d">
-                    <a href="/buy/all_list/">
-                        <img height="50" width="50" src='/static/images/navigation/buy_posts.png' />
-                    </a>
-                </div>
-                <div class="ui-block-e">
-                    <a href="/sell/all_list/">
-                        <img height="50" width="50" src='/static/images/navigation/sell_posts.png' />
-                    </a>
-                </div>
-            </div>
-        </div>
+        {% include "footer.html" %}
     </div>
 </body>
 

@@ -21,7 +21,6 @@
     <script type="text/javascript" src="/static/exif.js"></script>
     <script type="text/javascript" src="/static/binaryajax.js"></script>
 
-
     <!-- beike customized css and js -->
     <link rel="stylesheet" href="/static/common.css">
     <link rel="stylesheet" href="/static/detail.css">
@@ -30,10 +29,16 @@
     <script src="/static/jquery.fileupload.js"></script>
     <script src="/static/jquery.touchSwipe.min.js"></script>
 
-    <script src="/static/common.js"></script>
     <script src="/static/buy.js"></script>
     <script src="/static/sell.js"></script>
     <script src="/static/user.js"></script>
+    <script src="/static/common.js"></script>
+    <script src="/static/buy_form.js"></script>
+    <script src="/static/buy_posts.js"></script>
+    <script src="/static/sell_form.js"></script>
+    <script src="/static/sell_posts.js"></script>
+    <title>千贝科技</title>
+
 </head>
 
 <body>
@@ -42,27 +47,26 @@
         <div data-role="header" data-position="fixed">
         </div>
         <div data-role="content" style="padding:0;">
-            <div id="image-uploader" style="margin-top:10px;">
+            <div id="image-uploader">
+
                 {% if user_image %}
                 <div style="display:table;margin:0 auto;">
-                        <img id='profile_image' src='{{user_image.image_url}}' style="width: 90px;height:90px;border-radius: 50%;"/>
+                        <img id='profile_image' src='{{user_image.image_url}}' style="width: 80px;height:80px;border-radius: 50%;"/>
                 </div>
                 {% endif %}
 
-                <div style="position: relative; text-align: center;">
-                    <div id="progressbar" style=" width: 60%; position: absolute; top: 100px; left: 20%;"></div>
-                    <div id="current_image">
-                    </div>
-                </div>
-
-                <div class="ui-grid-solo" style="width:100%;padding-top:15px;padding-bottom:15px;text-align:center;">
-                    <div class="ui-block-a" style="display:inline-block;padding-left:2px;padding-right:1px;padding-top:2px;padding-bottom:2px;width:29px;height:24px;text-align:center;background-color: rgb(172,172,172);">
-                        <input style="display:none;" data-role="none" type="file" id="post_image" name="post_image" accept="image/*"/>
-                        <label for="post_image">
-                            <img src='/static/images/sell_post/upload.png' style="width:25px;">
+                <div class="ui-grid-solo" style="width:100%;padding-top:15px;padding-bottom:15px;height:30px;text-align:center;display:inline-block;vertical-align: middle;">
+                    <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
+                    <div class="ui-block-a" style="display:inline-block;width:25px;height:25px;text-align: center;background-color: rgb(172,172,172);">
+                        <input style="display:none;" data-role="none" type="file" id="user_image" name="user_image" accept="image/*"/>
+                        <label for="user_image">
+                            <img src='/static/images/sell_post/upload.png' style="width:20px;height:20px;">
                         </label>
                     </div>
                 </div>
+<!--                 <div class="hidden_file">
+                    <input type="file" id="image1" data-clear-btn="false" name="image" accept="image/*" onchange="image_s3_upload(this.id,'{{user.wx_id}}');" capture>
+                </div> -->
             </div>
 
         <form action="/user/{{user.id}}/update/" method="post" enctype="multipart/form-data" data-ajax= "false">
@@ -119,12 +123,14 @@
                 自我介绍
             </div>
 
-            <div class="ui-grid-solo" style="padding-top:10px;margin-left:5%;margin-right:5%;">
+            <div class="ui-grid-solo" style="padding-top:10px;margin-left:5%;margin-right:5%;height: 150px !important;">
                 <div class="ui-block-a">
                     <span id="lengthCounter" class="text-p" style="float:right">0/3000</span>
                 </div>
-                <div class="ui-block-a" >
-                    <textarea name="description" id="description" data-rule-content="true" value="{{user.description}}" maxlength="3000" placeholder="自我介绍" style="height: 100px !important;">{{user.description}}</textarea>
+                <div class="ui-block-a">
+                    <textarea name="description" id="description" data-rule-content="true" value="{{user.description}}" maxlength="3000" placeholder="自我介绍">
+                    {{user.description}}
+                    </textarea>
                 </div>
             </div>
 

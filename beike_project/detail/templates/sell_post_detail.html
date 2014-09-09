@@ -1,321 +1,135 @@
 <!DOCTYPE HTML>
 <html lang="zh">
 
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="UTF-8">
-    <!-- jquery library -->
-    <script type="text/javascript" src="/static/jquery/jquery-1.8.3.js "></script>
-    <script type="text/javascript" src="/static/jquery/jquery.mobile-1.4.2.js"></script>
-    <script type="text/javascript" src="/static/jquery/jquery.validate.js"></script>
-    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
-    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
-    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
-
-    <link rel="stylesheet" type="text/css" href="/static/jQMProgressBar.css">
-    <script type="text/javascript" src="/static/jQMProgressBar.js"></script>
-
-    <script type="text/javascript" src="/static/exif.js"></script>
-    <script type="text/javascript" src="/static/binaryajax.js"></script>
-
-    <!-- beike customized css and js -->
-    <link rel="stylesheet" href="/static/common.css">
-    <link rel="stylesheet" href="/static/detail.css">
-    <link rel="stylesheet" href="/static/sell.css">
-    <link rel="stylesheet" href="/static/mine.css">
-    <script src="/static/jquery.fileupload.js"></script>
-    <script src="/static/jquery.touchSwipe.min.js"></script>
-    <script src="/static/common.js"></script>
-    <script src="/static/buy_form.js"></script>
-    <script src="/static/buy_posts.js"></script>
-    <script src="/static/sell_form.js"></script>
-    <script src="/static/sell_posts.js"></script>
-    <title>千贝科技</title>
-</head>
+{% include "head.html" with title="物品" %}
 
 <body>
-    <div data-role="page" id="sell-detail-page" data-fullscreen="true">
-        <div data-role="header" data-position="fixed">
-            <div style="background-color: rgb(35,192,148);">
-                <div class="ui-grid-b">
-                    <div class="ui-block-a">
-                    </div>
-                    <div class="ui-block-b">
-                        <p style = "text-align:center; color:white">物品</p>
-                    </div>
-                    <div class="ui-block-a">
-                    </div>
-                </div>
+<div data-role="page" id="sell-detail-page" data-fullscreen="true">
+    {% include "header.html" with title="物品" %}
+
+    <div data-role="content">
+        <div class="detail-title-wrapper">
+            <img class="detail-icon" src="/static/images/general/sell_logo.png">
+            <div class="detail-title">{{post.title}}</div>
+
+            <div class="share-button-wrapper">
+                <img id="share" class="share-button" src="/static/images/detail/share.png" onclick="detailLoader.showShareMsg();"> 
+                <img id="follow" class="share-button" src="/static/images/detail/not_followed.png" onclick="detailLoader.toggleFollowStatus();">
             </div>
         </div>
 
-
-        <div data-role="content" id="content" >
-            <div>
-                <script id='code_1'>
-
-                var IMG_WIDTH = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-                var currentImg=0;
-                var maxImages={{image_num}};
-                var speed=500;
-
-                var imgs;
-
-                var swipeOptions=
-                {
-                    triggerOnTouchEnd : true,   
-                    swipeStatus : swipeStatus,
-                    allowPageScroll:"vertical",
-                    threshold:75            
-                }
-
-                $(function()
-                {               
-                    imgs = $("#imgs");
-                    imgs.swipe( swipeOptions );
-                });
-
-
-                /**
-                * Catch each phase of the swipe.
-                * move : we drag the div.
-                * cancel : we animate back to where we were
-                * end : we animate to the next image
-                */          
-                function swipeStatus(event, phase, direction, distance)
-                {
-                    //If we are moving before swipe, and we are going Lor R in X mode, or U or D in Y mode then drag.
-                    if( phase=="move" && (direction=="left" || direction=="right") )
-                    {
-                        var duration=0;
-
-                        if (direction == "left")
-                            scrollImages((IMG_WIDTH * currentImg) + distance, duration);
-
-                        else if (direction == "right")
-                            scrollImages((IMG_WIDTH * currentImg) - distance, duration);
-
-                    }
-
-                    else if ( phase == "cancel")
-                    {
-                        scrollImages(IMG_WIDTH * currentImg, speed);
-                    }
-
-                    else if ( phase =="end" )
-                    {
-                        if (direction == "right")
-                            previousImage()
-                        else if (direction == "left")           
-                            nextImage()
-                    }
-                }
-
-                function selectImage(i){
-                    var diff = i - currentImg;
-                    if(i>currentImg && i<=maxImages-1){
-                        for(var j=0;j<diff;j++){
-                            nextImage();
-                        }
-                    } else if(i>=0 && i<currentImg){
-                        for(var j=0;j<-diff;j++){
-                            previousImage();
-                        }
-                    }
-                }
-
-                function selectThumbnail(i){
-                    if(i>=0 && i<=maxImages-1){
-                        for(var j=0;j<=maxImages-1;j++){
-                            $("#thumbnail_span"+j).addClass("thumbnail_not_selected");
-                        }
-                        $("#thumbnail_span"+i).removeClass("thumbnail_not_selected");
-                        $("#thumbnail_span"+i).addClass("thumbnail_selected");
-                    }
-                }
-
-                function previousImage()
-                {
-                    currentImg = Math.max(currentImg-1, 0);
-                    scrollImages( IMG_WIDTH * currentImg, speed);
-                    selectThumbnail(currentImg);
-                }
-
-                function nextImage()
-                {
-                    currentImg = Math.min(currentImg+1, maxImages-1);
-                    scrollImages( IMG_WIDTH * currentImg, speed);
-                    selectThumbnail(currentImg);
-                }
-
-                /**
-                * Manuallt update the position of the imgs on drag
-                */
-                function scrollImages(distance, duration)
-                {
-                    imgs.css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
-
-                    //inverse the number we set in the css
-                    var value = (distance<0 ? "" : "-") + Math.abs(distance).toString();
-
-                    imgs.css("-webkit-transform", "translate3d("+value +"px,0px,0px)");
-                }
-                </script>
-
-                
-                <img id="share_msg" src="/static/images/detail/share_msg.png" style="display:none;width:100%;height:100%;position:absolute;left:0;top:0;z-index:1;" onclick="hideShareMsg()">
-            
-
-                <div id="image_gallery">
-                    <div id="imgs">
-                        {% for image_metadata in image_list %}
-                        <span class="img_span">
-                            <img src="{{ image_metadata.image_url }}">
-                        </span>
-                        {% endfor%}
-                    </div>
-                </div>   
-                <div id="image_thumbnails">
-                    {% for image_metadata in image_list %}
-                    <span class="thumbnail_span" id="thumbnail_span{{forloop.counter0}}" onclick='selectImage({{forloop.counter0}})'>
-                        <img src="{{ image_metadata.image_url }}">
-                    </span>
-                    {% endfor%}
-                </div>           
+        <!-- TODO: needs to clean up -->
+        <hr>
+        <img id="share_msg" src="/static/images/detail/share_msg.png" style="display:none;width:100%;height:100%;position:absolute;left:0;top:0;z-index:1;" onclick="detailLoader.hideShareMsg()">
+        <div id="image_gallery">
+            <div id="imgs">
+                {% for image_metadata in image_list %}
+                <span class="img_span">
+                    <img src="{{ image_metadata.image_url }}">
+                </span>
+                {% endfor%}
             </div>
+        </div>   
+        <div id="image_thumbnails">
+            {% for image_metadata in image_list %}
+            <span class="thumbnail_span" id="thumbnail_span{{forloop.counter0}}" onclick="selectImage({{forloop.counter0}})">
+                <img src="{{ image_metadata.image_url }}">
+            </span>
+            {% endfor%}
+        </div>
+        <hr>
+        
+        
+        <div class="detail-price-wrapper">
+            <span class="detail-currency">$&nbsp;</span>
+            <span class="detail-price">{{post.price}}</span>
 
+            {% if post.item_condition.name == 'Condition1' %}
+                全新
+            {% elif post.item_condition.name == 'Condition2' %}
+                九成新
+            {% elif post.item_condition.name == 'Condition3' %}
+                七成新
+            {% elif post.item_condition.name == 'Condition4' %}
+                五成新
+            {% elif post.item_condition.name == 'Condition5' %}
+                旧
+            {% endif %}
+        </div>
+        <div class="detail-category">
+            <span class="detail-postdate">{{ post.date_published|date:"n月j日" }},</span>
+             {{post.category.name}}
+        </div>
 
+        <div class="detail-content">{{post.content}}</div>
 
-
-            <div style="margin-left:5%;margin-right:5%;">             
-                <div>
-                    <input type="hidden" id="is_followed" value={{is_followed}}>
-                </div>
-                <div data-role="popup" id="follow-popup">
-                </div>
-                
-                <div class="ui-grid-solo" style="clear:both;margin-top:10px;">
-                        <img id='sell_icon' src='/static/images/detail/sell_icon.png' style="vertical-align:middle;">
-                        <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.title}}</p>
-                </div>
-
-                <div style="margin-top:10px;margin-bottom:10px;height:1px;background-color:#d1cfd1;"></div>
-
-                <div class="ui-grid-b" style="padding:2px;">
-                    <div class="ui-block-a" style="width:50%;height:30px;">
-                        <!-- <img id='currency_icon' src='/static/images/detail/currency_icon.png' style="max-width:15px;max-height:15px;margin-left:10px;"> -->
-                        <p style="display:inline;vertical-align:middle;">${{post.price}}
-                        </p>
-                    </div>
-                    <div class="ui-block-b" style="width:25%;height:30px;text-align:right;">
-                        {% if post.item_condition.name == 'Condition1' %}
-                        全新
-                        {% elif post.item_condition.name == 'Condition2' %}
-                        九成新
-                        {% elif post.item_condition.name == 'Condition3' %}
-                        七成新
-                        {% elif post.item_condition.name == 'Condition4' %}
-                        五成新
-                        {% elif post.item_condition.name == 'Condition5' %}
-                        旧
-                        {% endif %}
-                    </div>
-                    <div class="ui-block-c" style="width:25%;height:30px;text-align:right;">
-                        {{post.category.name}}
-                    </div>
-                </div>
-
-                <div class="ui-grid-b" style="margin-top:10px;">
-                    <div class="ui-block-b" style="width:50%">
-                        <a href="#seller"><img src='/static/images/detail/contact_seller.png' style="vertical-align:middle;max-height:35px;"></a>
-                    </div>
-                    <div class="ui-block-b" style="width:25%;text-align:right;">
-                        <img id='share' src='/static/images/detail/share.png' style="vertical-align:middle;weight:20px;height:20px;border:1px solid #d1cfd1;border-radius:15%;padding:7px 15px 7px 15px;"  onclick="showShareMsg()"> 
-                    </div>
-                    <div class="ui-block-c" style="width:25%;text-align:right;">
-                        <img id='follow'  style="vertical-align:middle;weight:20px;height:20px;border:1px solid #d1cfd1;border-radius:15%;padding:7px 12px 7px 12px;" onclick="toggleFollowStatus();"> 
-                    </div>
-                </div>
-
-                <div class="ui-grid-solo" id="content" style="margin-bottom:20px;margin-top:20px;">
-                    {{post.content}}
-                </div>
+        <div class="detail-map">
+            <img id="map" src="http://maps.googleapis.com/maps/api/staticmap?center={{lat}},{{lon}}&zoom=14&size=640x200&sensor=true&markers=color:green%7C{{lat}},{{lon}}">
+            <div class="detail-loc">
+                <!--img class="city-mark" src="/static/images/detail/location_icon.png"-->
+                <span class="city-text">{{post.user.address.city}}</span>
             </div>
-
-
-
-
-    <div class="ui-grid-a" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;">
-        <div class="ui-block-a" style="width:70%;">
-            <img id='location_icon' src='/static/images/detail/location_icon.png' style="max-width:15px;max-height:15px;">
-            {{post.user.address.city}}
         </div>
-        <div class="ui-block-b" style="width:30%;text-align:right;">
-            {{ post.date_published|date:"n月j日" }}
+
+<!-- TODO: what's this? -->
+<!--div class="ui-grid-b" style="margin-top:10px;">
+<div class="ui-block-b" style="width:50%">
+<a href="#seller"><img src="/static/images/detail/contact_seller.png" style="vertical-align:middle;max-height:35px;"></a>
+</div>
+</div-->
+
+        <div class="detail-contacts">
+        {% if email_checked%}
+            <a class="detail-contact-link" href="mailto:{{email}}?Subject={{post.title}}"><img class="detail-contact-icon" src="/static/images/detail/email_selected.png"/></a>
+        {% endif%}
+        {% if phone_checked%}
+            <a class="detail-contact-link" href="tel:{{phone}}"><img class="detail-contact-icon" src="/static/images/detail/phone_selected.png" /></a>
+        {% endif%}
+        {% if sms_checked%}
+            <a class="detail-contact-link" href="sms:{{phone}}"><img class="detail-contact-icon" src="/static/images/detail/sms_selected.png" /></a>
+        {% endif%}
         </div>
-    </div>
-    <div style="display:table;margin: 0 auto;height:200px;">
-        <img id="map" src="" style="width:100%;height:100%;">
-    </div>
 
-    <div style="clear:both;height:20px;"></div>
-
-    {% if user_image %}
-    <div style="display:table;margin:0 auto;">
-        <a href="/user/{{post.user.id}}/">
-            <img id='profile_image' src='{{user_image.image_url}}' style="width: 80px;height:80px;border-radius: 50%;"/>
-        </a>  
-    </div>
-    {% endif %}
-
-    {% if post.user %}
-    <div style="text-align:center;padding:2px;">
-        <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.user.name}}</p>
-    </div>
-    {% endif %} 
-
-    {% if post.user.description %}
-    <div class="ui-grid-solo" id="user_description" style="margin-bottom:20px;margin-top:20px;margin-left:5%;margin-right:5%;">
-        {{post.user.description}}
-    </div>
-    {% endif %} 
-
-    <a name="seller"></a>
-    <div style="width:100%;height:60px;margin-bottom:20px;">
-        <div id="contacts" style="display:table;height:100%;margin: 0 auto; padding: 5px;">
-                    {% if email_checked%}
-<!--                     <img style="width:50px;height:50px;" src="/static/images/detail/email_selected.png" onclick="sendEmail('{{email}}','{{post.title}}')"/> -->
-                    <a href="mailto:{{email}}?Subject=回复帖子:{{title}}"  data-shadow="false" data-theme="none" style="display:inline;">
-                        <img src="/static/images/detail/email_selected.png" border="0" style="width:50px;height:50px;"/>
-                    <!-- <div style='display:inline;background-image: url(/static/images/detail/email_selected.png);width:50px;height:50px;'> -->
-                    <!-- </div> -->
-                    </a>
-                    {% else %}
-                    <img style="width:50px;height:50px;" src="/static/images/detail/email.png" />
-                    {% endif%}
-                    {% if phone_checked%}
-                    <a href="tel:{{phone}}"><img style="margin-left:20px;margin-right:20px;width:50px;height:50px;" src="/static/images/detail/phone_selected.png" /></a>
-                    {% else %}
-                    <img style="margin-left:20px;margin-right:20px;width:50px;height:50px;" src="/static/images/detail/phone.png" />
-                    {% endif%}
-                    {% if sms_checked%}
-                    <a href="sms:{{phone}}"><img style="width:50px;height:50px;" src="/static/images/detail/sms_selected.png" /></a>
-                    {% else %}
-                    <img style="width:50px;height:50px;" src="/static/images/detail/sms.png"/>
-                    {% endif%}
+        <!-- TODO: needs to clean up -->
+        {% if user_image %}
+        <div style="display:table;margin:0 auto;">
+            <a href="/user/{{post.user.id}}/">
+                <img id="profile_image" src="{{user_image.image_url}}" style="width: 80px;height:80px;border-radius: 50%;"/>
+            </a>  
         </div>
-    </div>
+        {% endif %}
 
-    <div class="ui-grid-solo" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;text-align:center;">
+        <!-- TODO: needs to clean up -->
+        {% if post.user %}
+        <div style="text-align:center;padding:2px;">
+            <p style="display:inline;vertical-align:middle;font:20px arial,sans-serif;">{{post.user.name}}</p>
+        </div>
+        {% endif %} 
+
+        <!-- TODO: needs to clean up -->
+        {% if post.user.description %}
+        <div class="ui-grid-solo" id="user_description" style="margin-bottom:20px;margin-top:20px;margin-left:5%;margin-right:5%;">
+            {{post.user.description}}
+        </div>
+        {% endif %}
+
+        <!-- TODO: what's this? -->
+        <a name="seller"></a>
+
+        <!-- TODO: needs to clean up -->
+        <div class="ui-grid-solo" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;text-align:center;">
             注册于{{ post.user.date_created|date:"Y年n月j日" }}
-    </div>
+        </div>
 
-    <div class="ui-grid-solo" style="clear:both;margin-top:20px;margin-bottom:20px;text-align:right;">
-        <a href="/user/{{user_id}}/">
-            <img src="/static/images/detail/complete_profile.png" style="max-height:30px;">
-        </a>
+        <!-- TODO: needs to clean up -->
+        <div class="ui-grid-solo" style="clear:both;margin-top:20px;margin-bottom:20px;float:right;">
+            <a href="/user/{{user_id}}/">
+                <img src="/static/images/detail/complete_profile.png" style="max-height:30px;">
+            </a>
+        </div>
     </div>
-
+    
+<!-- TODO: what's this? -->
 <!--                 <div class="ui-block-a" style="width:33%;height:60px;">
                     <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
                     <select name="open-close-post" id="open-close-post" data-role="slider" style="vertical-align: middle;">
@@ -324,139 +138,25 @@
                     </select>
                 </div> -->
 
+    <!-- TODO: needs to clean up -->
     {% if is_owner %}
-                <!-- find this post about how to align an element vertically center in a div: http://stackoverflow.com/questions/7273338/how-to-vertically-align-an-image-inside-div-->
-                <div class="ui-grid-solo" style="width:100%;padding-top:15px;padding-bottom:15px;background-color:#d1cfd1;height:60px;text-align:center;display:inline-block;vertical-align: middle;">
-                    <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
-                    <a href="/detail/sell/{{post.id}}/edit/"><input type="image" value="修改" id="edit_btn" src="/static/images/detail/edit.png" style="max-width:80px;vertical-align: middle;"></a>
-                </div>
+    <!-- find this post about how to align an element vertically center in a div: http://stackoverflow.com/questions/7273338/how-to-vertically-align-an-image-inside-div-->
+    <div class="ui-grid-solo" style="width:100%;padding-top:15px;padding-bottom:15px;background-color:#d1cfd1;height:60px;text-align:center;display:inline-block;vertical-align: middle;">
+        <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
+        <a href="/detail/sell/{{post.id}}/edit/"><input type="image" value="修改" id="edit_btn" src="/static/images/detail/edit.png" style="max-width:80px;vertical-align: middle;"></a>
+    </div>
     {% endif %}
 
-<div>
-    <input type="hidden" id="post_id" value={{post.id}}>
-</div>
-<div>
-    <input type="hidden" id="wx_id" value={{wx_id}}>
-</div>
-<div data-role="footer" data-position="fixed">
-    <div class="ui-grid-d" style="background-color: rgb(35,192,148);">
-        <div class="ui-block-a">
-            <a href="/">
-                <img height="28" width="30" style="padding:10px 5px 5px 10px;" src='/static/images/navigation/homepage.png' />
-            </a>
-        </div>
-        <div class="ui-block-b">
-            <a href="/buy/form/">
-                <img height="50" width="50" src='/static/images/navigation/buy_form.png' />
-            </a>
-        </div>
-        <div class="ui-block-c">
-            <a href="/sell/form/">
-                <img height="50" width="50" src='/static/images/navigation/sell_form.png' />
-            </a>
-        </div>
-        <div class="ui-block-d">
-            <a href="/buy/all_list/">
-                <img height="50" width="50" src='/static/images/navigation/buy_posts.png' />
-            </a>
-        </div>
-        <div class="ui-block-e">
-            <a href="/sell/all_list/">
-                <img height="50" width="50" src='/static/images/navigation/sell_posts.png' />
-            </a>
-        </div>
+    <img id="share_msg" src="/static/images/detail/share_msg.png" style="display:none;width:100%;max-height:100%;position:absolute;left:0;top:0;z-index:1;background-color:black;opacity: 0.6;" onclick="hideShareMsg()">
+
+    <div style="margin-left:5%;margin-right:5%;">
+        <div data-role="popup" id="follow-popup"></div>
     </div>
-</div>
-<script type="text/javascript">
-var wx_id = $("#wx_id").val();
-var post_id = $("#post_id").val();
+    <input type="hidden" id="is_followed" value="{{is_followed}}">
+    <input type="hidden" id="post_id" value="{{post.id}}">
+    <input type="hidden" id="wx_id" value="{{wx_id}}">
 
-$("#open-close-post").on('slidestop', function(event) {
-    var operation = $("#open-close-post").val();
-    return $.ajax({
-        type: "get",
-        url: "/sell/open_close_post",
-        dataType: "json",
-        data: {
-            wx_id: wx_id,
-            post_id: post_id,
-            operation: operation
-        }
-    }).then(function(data) {});
-});
-
-function toggleFollowStatus(){
-    var is_followed = $("#is_followed").val(); 
-    var follow_img = '';   
-    var popup_msg = '';
-    if( is_followed == "False"){
-        is_followed = "True";
-        follow_img = '/static/images/detail/followed.png';
-        popup_msg = '<p>关注本帖!</p>';
-    } else {
-        is_followed = "False";
-        popup_msg = '<p>取消关注！</p>';
-        follow_img = '/static/images/detail/not_followed.png';
-    }
-    $("#is_followed").val(is_followed);
-    $("#follow").attr("src", follow_img);
-    $('#follow-popup').html(popup_msg);
-    $('#follow-popup').popup("open");
-    setTimeout(function() {
-      $('#follow-popup').popup("close");
-    }, 1000);
-    $.ajax({
-        type: "get",
-        url: "/sell/follow_post",
-        dataType: "json",
-        data: {
-            wx_id: wx_id,
-            post_id: post_id,
-            is_followed: is_followed
-        }
-    }).then(function(data) {
-        
-    });
-}
-
-function sendEmail(email, title){
-    window.location.assign("mailto:"+email+"?Subject=回复帖子:"+title);
-    // alert(email+","+title);
-}
-
-function showFollowStatus(){
-    var is_followed = $("#is_followed").val();
-    if( is_followed == "False"){
-        $("#follow").attr("src", '/static/images/detail/not_followed.png');
-    } else {
-        $("#follow").attr("src", '/static/images/detail/followed.png');
-    }
-}
-
-function showPosition() {
-    var latlonStr = {{lat}}+","+{{lon}};
-    var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-    var height = 200;
-    var img_url = "http://maps.googleapis.com/maps/api/staticmap?center="+latlonStr+"&zoom=14&size="+width+"x"+height+"&sensor=false";
-    $("#map").attr("src",img_url);
-}
-
-function showShareMsg(){
-    $("#share_msg").show();
-}
-
-function hideShareMsg(){
-    $("#share_msg").hide();
-}
-
-
-$(document).ready(function() { 
-    selectThumbnail(0);
-    showPosition();
-    showFollowStatus();
-});
-</script>
+{% include "footer.html" %}
 </div>
 </body>
-
 </html>

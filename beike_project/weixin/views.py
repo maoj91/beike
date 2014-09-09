@@ -9,11 +9,13 @@ from data.views import is_user_has_email
 from data.views import set_user_email
 from data.utils import getValidationKey
 from data.models import User, UserValidation
+from beike_project import settings
 
 import xml.etree.ElementTree as ET
 import urllib,urllib2,time,hashlib
 
 TOKEN = "weixin_beike_token"
+SERVER_URL = settings.SERVER_URL
 
 @csrf_exempt
 def valid(request):
@@ -58,11 +60,11 @@ def responseMsg(request):
 		if eventType == 'unsubscribe':
 			print msg
 		if eventType == 'subscribe':
-			url = 'http://54.204.4.250/?wx_id='+user_id+'&key='+validation_key
+			url = SERVER_URL + '/?wx_id=' + user_id + '&key=' + validation_key
 			print url
 			return handleEvent(msg,url)
 	if msgType == 'text':		
-		url = 'http://54.204.4.250/?wx_id='+user_id+'&key='+validation_key
+		url = SERVER_URL + '/?wx_id=' + user_id + '&key=' + validation_key
 		print url
 		return handleText(msg,url)
 
@@ -80,8 +82,8 @@ def handleText(msg,url):
 	fromUserName = msg['FromUserName']
 	toUserName = msg['ToUserName']
 	queryStr = msg.get('Content','You have input nothing~')
-	title = "Thanks for your input!"
-	description = "Click on this article to main page."
+	title = unicode('欢迎来到千贝', 'utf-8')
+	description = unicode('请点击该页面进入千贝易物平台', 'utf-8')
 	picUrl = "https://s3-us-west-2.amazonaws.com/beike-s3/beike_main.jpg"
 	extTpl = extTpl % (fromUserName,toUserName,str(int(time.time())),title,description,picUrl,url)
 	return extTpl
@@ -92,8 +94,8 @@ def handleEvent(msg,url):
 	fromUserName = msg['FromUserName']
 	toUserName = msg['ToUserName']
 	queryStr = msg.get('Content','You have input nothing~')
-	title = "欢迎来到千贝!"
-	description = "Click on this article to main page."
+	title = unicode('欢迎来到千贝', 'utf-8')
+	description = unicode('请点击该页面进入千贝易物平台', 'utf-8')
 	picUrl = "https://s3-us-west-2.amazonaws.com/beike-s3/beike_main.jpg"
 	extTpl = extTpl % (fromUserName,toUserName,str(int(time.time())),title,description,picUrl,url)
 	return extTpl

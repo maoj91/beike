@@ -178,7 +178,7 @@ function chooseCondition(conditionNum) {
     }
 }
 
-$(document).delegate("#sellpost-form", "pageinit", function() {
+$(document).delegate("#sell-form", "pageinit", function() {
     imageCount = 0;
     currentImageIndex = 0;
     isUploading = false;

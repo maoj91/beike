@@ -6,6 +6,7 @@ from data.models import BuyPost,User,Category, District
 from data.views import get_user, get_category, get_district
 from datetime import datetime
 from beike_project.views import validate_user
+from beike_project import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 from django.core.serializers.json import DjangoJSONEncoder
@@ -14,7 +15,7 @@ from buy.buy_post_util import BuyPostUtil
 from data.data_util import get_contact
 from django.contrib.gis.measure import D
 
-NUM_PER_PAGE = 20
+NUM_PER_PAGE = settings.NUM_BUY_POST_PER_PAGE
 
 def all_list(request):
     validate_user(request)

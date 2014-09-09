@@ -1,3 +1,5 @@
+DROP TABLE data_followedbuypost CASCADE;
+DROP TABLE data_followedsellpost CASCADE;
 DROP TABLE data_comment CASCADE;
 DROP TABLE data_buypost CASCADE;
 DROP TABLE data_sellpost CASCADE;

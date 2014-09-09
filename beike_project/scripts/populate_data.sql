@@ -1,12 +1,19 @@
-insert into data_category (name) values ('Book');
-insert into data_category (name) values ('Electronics');
-insert into data_category (name) values ('Other');
+insert into data_category (name) values ('居家');
+insert into data_category (name) values ('数码');
+insert into data_category (name) values ('户外');
+insert into data_category (name) values ('美妆');
+insert into data_category (name) values ('服饰');
+insert into data_category (name) values ('母婴');
+insert into data_category (name) values ('手工');
+insert into data_category (name) values ('Geek');
+insert into data_category (name) values ('设计');
+insert into data_category (name) values ('其他');
 
-insert into data_condition (name, description,value) values ('Condition1', 'Item is new.',0);
-insert into data_condition (name, description,value) values ('Condition2', 'Item is 90% new.',1);
-insert into data_condition (name, description,value) values ('Condition3', 'Item is 70% new .',2);
-insert into data_condition (name, description,value) values ('Condition4', 'Item is 50% new.',3);
-insert into data_condition (name, description,value) values ('Condition5', 'Item is old.',4);
+
+insert into data_condition (name, description,value) values ('New', 'Item is new.',0);
+insert into data_condition (name, description,value) values ('Almost New', 'Item is 90% new.',1);
+insert into data_condition (name, description,value) values ('Used', 'Item is 70% new .',2);
+insert into data_condition (name, description,value) values ('Old', 'Item is used.',3);
 
 
 insert into data_privacy (name, description)

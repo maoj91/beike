@@ -1,89 +1,57 @@
 <!DOCTYPE HTML>
-<html>
+<html style="height: 100%;">
 
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="UTF-8">
-    <!-- jquery library -->
-    <script type="text/javascript" src="/static/jquery/jquery-1.8.3.js "></script>
-    <script type="text/javascript" src="/static/jquery/jquery.mobile-1.4.2.js"></script>
-    <script type="text/javascript" src="/static/jquery/jquery.validate.js"></script>
-    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
-    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
-    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
+{% include "head.html" %}
 
-    <link rel="stylesheet" type="text/css" href="/static/jQMProgressBar.css">
-    <script type="text/javascript" src="/static/jQMProgressBar.js"></script>
-
-    <script type="text/javascript" src="/static/exif.js"></script>
-    <script type="text/javascript" src="/static/binaryajax.js"></script>
-
-    <!-- beike customized css and js -->
-    <link rel="stylesheet" href="/static/common.css">
-    <link rel="stylesheet" href="/static/detail.css">
-    <link rel="stylesheet" href="/static/sell.css">
-    <link rel="stylesheet" href="/static/mine.css">
-    <script src="/static/jquery.fileupload.js"></script>
-    <script src="/static/jquery.touchSwipe.min.js"></script>
-    <script src="/static/common.js"></script>
-    <script src="/static/buy_form.js"></script>
-    <script src="/static/buy_posts.js"></script>
-    <script src="/static/sell_form.js"></script>
-    <script src="/static/sell_posts.js"></script>
-    <title>千贝科技</title>
-</head>
-
-<body>
-    <div data-role="page">
-        <div data-role="header" id="notification-banner" style="display:none;">
-            <p style="color:red; margin: 0">Android版微信不支持照片上传，请点击右上方选项移步至浏览器使用</p>
+<body style="height: 100%;">
+    <div class="main-top">
+        <div class="main-top-background"><img class="main-top-logo" src="/static/images/homepage/logo.png" /></div>
+        <div id="city" class="city">
+            <a href="/user/{{user.id}}/" class="city-link">
+                <img class="city-mark" src="/static/images/homepage/citymark.png" />
+                <span class="city-text">{{city}}</span>
+            </a>
         </div>
+    </div>
 
-        <div data-role="main">
-            
-            <div class="ui-grid-solo">
-                <img width="100%" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/02/logo.png" />
-                <img  class="city_background" id="city_background" src='/static/images/homepage/citybackground.png' />
-                <div id="city" class="city">
-                    <img  class="city_mark" src='/static/images/detail/location_icon.png' />
-                    <span class="head_text_right">{{city}}</span>
-                </div>
-            </div>
-
-            <div class="ui-grid-b">
-                <div class="ui-block-a">
-                    <a href="/buy/form">
-                        <img class='main-button' src='/static/images/homepage/buy.png' />
-                    </a>
-                </div>
-                <div class="ui-block-b">
-                    <a href="/sell/form">
-                        <img class='main-button' src='/static/images/homepage/sell.png' />
-                    </a>
-                </div>
-                <div class="ui-block-c">
-                    <a href="/mine/">
-                        <img class='main-button' src='/static/images/homepage/mine.png' />
-                    </a>
-                </div>
-                <div class="ui-block-a">
-                    <a href="/sell/all_list/">
-                        <img class='main-button' src='/static/images/homepage/nearbypost.png' />
-                    </a>
-                </div>
-                <div class="ui-block-b">
-                    <a href="/buy/all_list/">
-                        <img class='main-button' src='/static/images/homepage/nearbyrequest.png' />
-                    </a>
-                </div>
-                <div class="ui-block-c">
-                    <a href="/about/">
-                        <img class='main-button' src='/static/images/homepage/help.png' />
-                    </a>
-                </div>
-            </div>
+    <div class="main-bottom">
+        <div class="main-item">
+            <a class="main-button" href="/buy/form/">
+                <img class="main-button" src="/static/images/homepage/buy.png" />
+            </a>
         </div>
-        <script type="text/javascript">
+        <div class="main-item">
+            <a class="main-button" href="/sell/form/">
+                <img class="main-button" src="/static/images/homepage/sell.png" />
+            </a>
+        </div>
+        <div class="main-item">
+            <a class="main-button" href="/mine/">
+                <img class="main-button" src="/static/images/homepage/mine.png" />
+            </a>
+        </div>
+        <div class="main-item">
+            <a class="main-button" href="/sell/all_list/">
+                <img class="main-button" src="/static/images/homepage/nearbypost.png" />
+            </a>
+        </div>
+        <div class="main-item">
+            <a class="main-button" href="/buy/all_list/">
+                <img class="main-button" src="/static/images/homepage/nearbyrequest.png" />
+            </a>
+        </div>
+        <div class="main-item">
+            <a class="main-button" href="/about/">
+                <img class="main-button" src="/static/images/homepage/help.png" />
+            </a>
+        </div>
+    </div>
+
+    <div data-role="header" id="notification-banner" style="display:none;">
+        <p style="color:red; margin: 0">Android版微信不支持照片上传，请点击右上方选项移步至浏览器使用</p>
+    </div>
+</body>
+<script type="text/javascript">
             (function(i, s, o, g, r, a, m) {
                 i['GoogleAnalyticsObject'] = r;
                 i[r] = i[r] || function() {
@@ -109,15 +77,7 @@
                 }
             }
             if (isAndroidWeixin()) {
-                $('#notification-banner').show();
-                $('#city').removeClass('city');
-                $('#city').addClass('city_android');   
-                $('#city_background').removeClass('city_background');
-                $('#city_background').addClass('city_background_android'); 
+                //$('#notification-banner').show();
             }
         </script>
-    </div>
-
-</body>
-
 </html>
