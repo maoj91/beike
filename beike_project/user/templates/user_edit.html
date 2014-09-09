@@ -1,45 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="zh">
 
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="UTF-8">
-    <!-- jquery library -->
-    <script type="text/javascript" src="/static/jquery/jquery-1.8.3.js "></script>
-    <script type="text/javascript" src="/static/jquery/jquery.mobile-1.4.2.js"></script>
-    <script type="text/javascript" src="/static/jquery/jquery.validate.js"></script>
-    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
-    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
-    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
-
-    <link rel="stylesheet" type="text/css" href="/static/jQMProgressBar.css">
-    <script type="text/javascript" src="/static/jQMProgressBar.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="/static/jQMProgressBar.css">
-    <script type="text/javascript" src="/static/jQMProgressBar.js"></script>
-
-    <script type="text/javascript" src="/static/exif.js"></script>
-    <script type="text/javascript" src="/static/binaryajax.js"></script>
-
-    <!-- beike customized css and js -->
-    <link rel="stylesheet" href="/static/common.css">
-    <link rel="stylesheet" href="/static/detail.css">
-    <link rel="stylesheet" href="/static/sell.css">
-    <link rel="stylesheet" href="/static/mine.css">
-    <script src="/static/jquery.fileupload.js"></script>
-    <script src="/static/jquery.touchSwipe.min.js"></script>
-
-    <script src="/static/buy.js"></script>
-    <script src="/static/sell.js"></script>
-    <script src="/static/user.js"></script>
-    <script src="/static/common.js"></script>
-    <script src="/static/buy_form.js"></script>
-    <script src="/static/buy_posts.js"></script>
-    <script src="/static/sell_form.js"></script>
-    <script src="/static/sell_posts.js"></script>
-    <title>千贝科技</title>
-
-</head>
+{% include "head.html" with title="修改资料" %}
 
 <body>
     <div data-role="page" id="user-update-page" data-theme="a">
@@ -47,26 +9,27 @@
         <div data-role="header" data-position="fixed">
         </div>
         <div data-role="content" style="padding:0;">
-            <div id="image-uploader">
-
+            <div id="image-uploader" style="margin-top:10px;">
                 {% if user_image %}
                 <div style="display:table;margin:0 auto;">
-                        <img id='profile_image' src='{{user_image.image_url}}' style="width: 80px;height:80px;border-radius: 50%;"/>
+                        <img id='profile_image' src='{{user_image.image_url}}' style="width: 90px;height:90px;border-radius: 50%;"/>
                 </div>
                 {% endif %}
 
-                <div class="ui-grid-solo" style="width:100%;padding-top:15px;padding-bottom:15px;height:30px;text-align:center;display:inline-block;vertical-align: middle;">
-                    <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
-                    <div class="ui-block-a" style="display:inline-block;width:25px;height:25px;text-align: center;background-color: rgb(172,172,172);">
-                        <input style="display:none;" data-role="none" type="file" id="user_image" name="user_image" accept="image/*"/>
-                        <label for="user_image">
-                            <img src='/static/images/sell_post/upload.png' style="width:20px;height:20px;">
+                <div style="position: relative; text-align: center;">
+                    <div id="progressbar" style=" width: 60%; position: absolute; top: 100px; left: 20%;"></div>
+                    <div id="current_image">
+                    </div>
+                </div>
+
+                <div class="ui-grid-solo" style="width:100%;padding-top:15px;padding-bottom:15px;text-align:center;">
+                    <div class="ui-block-a" style="display:inline-block;padding-left:2px;padding-right:1px;padding-top:2px;padding-bottom:2px;width:29px;height:24px;text-align:center;background-color: rgb(172,172,172);">
+                        <input style="display:none;" data-role="none" type="file" id="post_image" name="post_image" accept="image/*"/>
+                        <label for="post_image">
+                            <img src='/static/images/sell_post/upload.png' style="width:25px;">
                         </label>
                     </div>
                 </div>
-<!--                 <div class="hidden_file">
-                    <input type="file" id="image1" data-clear-btn="false" name="image" accept="image/*" onchange="image_s3_upload(this.id,'{{user.wx_id}}');" capture>
-                </div> -->
             </div>
 
         <form action="/user/{{user.id}}/update/" method="post" enctype="multipart/form-data" data-ajax= "false">
@@ -178,8 +141,7 @@
                     </div>
             </div>
 
-            <div class="ui-grid-solo" style="width:100%;padding-top:15px;padding-bottom:15px;background-color:#d1cfd1;height:60px;text-align:center;display:inline-block;vertical-align: middle;">
-                    <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
+            <div class="ui-grid-solo" style="width:100%;background-color:#d1cfd1;">
                     <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png" style="max-width:80px;vertical-align: middle;">
             </div>
         </form>
