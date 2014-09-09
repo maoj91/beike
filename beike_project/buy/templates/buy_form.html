@@ -30,18 +30,16 @@
                 <input type="number" min="0" max="1000000000" id="price" name="price" placeholder="请输入心动价格" data-rule-required="true" data-rule-content="true" data-msg-required="请输入心动价格">
             </div>
 
-            <div>
-                <input type="hidden" name="latitude" id="buy_form_latitude"></input>
-                <input type="hidden" name="longitude" id="buy_form_longitude"></input>
-            </div>
+            <input type="hidden" name="latitude" id="latitude"></input>
+            <input type="hidden" name="longitude" id="longitude"></input>
 
             <div class="form-left">邮编</div>
             <div class="form-right">
                 <div style="width: 65px; float: left;">
-                    <input type="text" maxlength="6" name="zipcode" id="buy_form_zipcode" placeholder="zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改">
+                    <input type="text" maxlength="6" name="zipcode" id="zipcode" placeholder="zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改">
                 </div>
                 <div style="width: 100px; float: right;">
-                    <a href="" class="form-button" data-role="button" onclick="getLocationByZipcodeForBuyForm(); return false;">
+                    <a href="" class="form-button" data-role="button" onclick="formLoader.getLocationByZipcode(); return false;">
                         <span>更新</span>
                     </a>
                 </div>
@@ -49,23 +47,23 @@
 
             <div class="form-left">城市</div>
             <div class="form-right">
-                <input readonly class="readonly" data-role="none" name="city_name" id="buy_form_city_name" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改"></input>
+                <input readonly class="readonly" data-role="none" name="city_name" id="city-name" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改"></input>
             </div>
 
             <div id="prefer-contact" class="form-left">联系方式</div>
             <div class="form-right">
                 <div class="ui-grid-b">
                     <div class="ui-block-a">
-                        <img class="contact-icon" id="email-icon" onclick="clickEmailContact();" src="/static/images/general/email_icon.png" />
-                        <img class="contact-icon hide" id="email-icon-clicked" onclick="clickEmailContact();" src="/static/images/general/email_icon_clicked.png" />
+                        <img class="contact-icon" id="email-icon" onclick="formLoader.clickEmailContact();" src="/static/images/general/email_icon.png" />
+                        <img class="contact-icon hide" id="email-icon-clicked" onclick="formLoader.clickEmailContact();" src="/static/images/general/email_icon_clicked.png" />
                     </div>
                     <div class="ui-block-b">
-                        <img class="contact-icon" id="phone-icon" onclick="clickPhoneContact();" src="/static/images/general/phone_icon.png" />
-                        <img class="contact-icon hide" id="phone-icon-clicked" onclick="clickPhoneContact();" src="/static/images/general/phone_icon_clicked.png" />
+                        <img class="contact-icon" id="phone-icon" onclick="formLoader.clickPhoneContact();" src="/static/images/general/phone_icon.png" />
+                        <img class="contact-icon hide" id="phone-icon-clicked" onclick="formLoader.clickPhoneContact();" src="/static/images/general/phone_icon_clicked.png" />
                     </div>
                     <div class="ui-block-c">
-                        <img class="contact-icon" id="sms-icon" onclick="clickSmsContact();" src="/static/images/general/sms_icon.png" />
-                        <img class="contact-icon hide" id="sms-icon-clicked" onclick="clickSmsContact();" src="/static/images/general/sms_icon_clicked.png" />
+                        <img class="contact-icon" id="sms-icon" onclick="formLoader.clickSmsContact();" src="/static/images/general/sms_icon.png" />
+                        <img class="contact-icon hide" id="sms-icon-clicked" onclick="formLoader.clickSmsContact();" src="/static/images/general/sms_icon_clicked.png" />
                     </div>
                 </div>
 

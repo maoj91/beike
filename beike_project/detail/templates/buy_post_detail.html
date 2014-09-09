@@ -4,7 +4,7 @@
 {% include "head.html" with title="需求" %}
 
 <body>
-<div data-role="page" id="main-page" data-fullscreen="true">
+<div data-role="page" id="buy-detail-page" data-fullscreen="true">
     {% include "header.html" with title="需求" %}
 
     <div data-role="content">
@@ -13,15 +13,16 @@
             <div class="detail-title">{{post.title}}</div>
 
             <div class="share-button-wrapper">
-                <img id="share" class="share-button" src="/static/images/detail/share.png" onclick="showShareMsg();"> 
-                <img id="follow" class="share-button" src="/static/images/detail/not_followed.png" onclick="toggleFollowStatus();">
+                <img id="share" class="share-button" src="/static/images/detail/share.png" onclick="detailLoader.showShareMsg();"> 
+                <img id="follow" class="share-button" src="/static/images/detail/not_followed.png" onclick="detailLoader.toggleFollowStatus();">
             </div>
         </div>
 
         <hr>
 
-        <div class="detail-price">
-            <span class="detail-currency">$&nbsp;</span>{{post.max_price}}
+        <div class="detail-price-wrapper">
+            <span class="detail-currency">$&nbsp;</span>
+            <span class="detail-price">{{post.max_price}}</span>
         </div>
         <div class="detail-category">
             <span class="detail-postdate">{{ post.date_published|date:"n月j日" }},</span>
@@ -107,7 +108,7 @@
 
     
     
-    <img id="share_msg" src="/static/images/detail/share_msg.png" style="display:none;width:100%;max-height:100%;position:absolute;left:0;top:0;z-index:1;background-color:black;opacity: 0.6;" onclick="hideShareMsg()">
+    <img id="share_msg" src="/static/images/detail/share_msg.png" style="display:none;width:100%;max-height:100%;position:absolute;left:0;top:0;z-index:1;background-color:black;opacity: 0.6;" onclick="detailLoader.hideShareMsg()">
 
     <div style="margin-left:5%;margin-right:5%;">
         <div data-role="popup" id="follow-popup"></div>
