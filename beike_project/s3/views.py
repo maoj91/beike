@@ -54,40 +54,50 @@ def upload(request):
         # Open the file
         file = request.FILES['post_image']
         img = Image.open(file)
-
-        # Get the exif data
         format = img.format
-        exif_data = get_exif_data(img)
-
-        # Rotate the image
-        degree = get_image_rotation_degree(exif_data.get("Orientation", 1))
-        rotated_img = img.rotate(degree)
-        width, height = rotated_img.size
-        resize_width = 300
-        resize_height = 300
-        if width > height:
-            resize_height = int((height/width) * resize_width)
-        else:
-            resize_width = int((width/height) * resize_height)
-        resize_img = rotated_img.resize((resize_width, resize_height))
-        output = StringIO.StringIO()
-        resize_img.save(output, format)
-
-        # Save to S3
-        AWS_ACCESS_KEY = AWS.objects.all()[0].access_key.encode('utf8')
-        AWS_SECRET_KEY = AWS.objects.all()[0].access_secret.encode('utf8')
-        conn = S3Connection(AWS_ACCESS_KEY, AWS_SECRET_KEY)
-        bucket = conn.get_bucket(S3_BUCKET)
-        k = Key(bucket)
-        k.key = image_prefix + "_" +str(int(time.time()))
-        url = 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, k.key)
-        k.set_contents_from_string(output.getvalue())
-        k.set_acl('public-read')
-
-        imgMetadata = ImageMetadata(url, resize_width, resize_height)
+        #resize the image
+        resized_img = resize_image(img)
+        imgMetadata = save_image_in_s3(resized_img, format, image_prefix)
         return HttpResponse(ImageMetadata.serialize(imgMetadata));
     else:
         return HttpResponseBadRequest("Invalid request.")
+
+def resize_image(img):
+    # Get the exif data
+    exif_data = get_exif_data(img)
+
+    # Rotate the image
+    degree = get_image_rotation_degree(exif_data.get("Orientation", 1))
+    rotated_img = img.rotate(degree)
+    width, height = rotated_img.size
+
+    # Resize the image but keep the height/width ratio
+    resize_width = 300
+    resize_height = 300
+    if width > height:
+        resize_height = int((height/width) * resize_width)
+    else:
+        resize_width = int((width/height) * resize_height)
+    resized_img = rotated_img.resize((resize_width, resize_height))
+    return resized_img
+
+def save_image_in_s3(img, format, image_prefix):
+    # Save to output
+    output = StringIO.StringIO()
+    img.save(output, format)
+    # Save to S3
+    AWS_ACCESS_KEY = AWS.objects.all()[0].access_key.encode('utf8')
+    AWS_SECRET_KEY = AWS.objects.all()[0].access_secret.encode('utf8')
+    conn = S3Connection(AWS_ACCESS_KEY, AWS_SECRET_KEY)
+    bucket = conn.get_bucket(S3_BUCKET)
+    k = Key(bucket)
+    # Use timestamp to uniquely name the file
+    k.key = image_prefix + "_" +str(int(time.time()))
+    url = 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, k.key)
+    k.set_contents_from_string(output.getvalue())
+    k.set_acl('public-read')
+    imgMetadata = ImageMetadata(url, img.size[0], img.size[1])
+    return imgMetadata
 
 def get_image_rotation_degree(orientation):
     if orientation == 3:
@@ -111,7 +121,4 @@ def get_exif_data(image):
     except IOError:
         print 'IOERROR'
     return ret
-
-
-
 
