@@ -6,11 +6,12 @@ Replace this with more appropriate tests for your application.
 """
 
 from django.test import TestCase
-from data.models import User, BuyPost, Notification, Privacy, Category
+from data.models import User, BuyPost, Privacy, Category
 from data.tests import DataModelBootstrap
 from buy.buy_post_util import BuyPostUtil
 import datetime
 from django.contrib.gis.geos import Point
+from django.contrib.gis.db import models
 from django.db import connection
 
 class BuyBootstrap:
@@ -37,7 +38,7 @@ class BuyBootstrap:
             location_type = 0, latlon = Point(116.3917, 39.9139), 
             user = other_user, preferred_contacts = "phone",
             is_open = True, image_urls = None)
-        Seattle_post = BuyPost.objects.create(title = "Seattle book",date_published = datetime.datetime.now(),
+        seattle_post = BuyPost.objects.create(title = "Seattle book",date_published = datetime.datetime.now(),
             open_until = None, content = "Seattle book", category = book_category,
             min_price = None, max_price = None, zipcode = None,
             location_type = 0, latlon = Point(-122.3331, 47.6097), 
@@ -92,17 +93,3 @@ class FollwedBuyPostTest(TestCase):
         # get all the users following a post
         following_users = util.get_following_users(post)
         self.assertEqual(0, len(following_users))
-
-
-class BuyPostOrderTest(TestCase):
-    def setUp(self):
-        BuyBootstrap().boot()
-
-    def test_order_by_distance(self):
-        """
-        Test 
-        """
-        origin = Point(-122.3317, 47.6244)
-        #TODO: enable spatialite to support linear distance calculations on geodetic coordinate systems
-        #query_set = BuyPost.objects.distance(origin).order_by('distance')
-
