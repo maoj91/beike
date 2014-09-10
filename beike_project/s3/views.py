@@ -17,11 +17,13 @@ import json
 import os
 import json
 import time
+import logging
 import StringIO
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from data.image_util import ImageMetadata
 
+LOGGER = logging.getLogger('s3.views')
 S3_BUCKET = settings.S3_BUCKET
 
 @csrf_exempt
@@ -119,6 +121,6 @@ def get_exif_data(image):
                     decoded = TAGS.get(tag, tag)
                     ret[decoded] = value
     except IOError:
-        print 'IOERROR'
+        LOGGER.error('IOERROR')
     return ret
 
