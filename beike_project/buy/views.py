@@ -1,6 +1,7 @@
 from django.http import Http404,HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render,render_to_response
+from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
 from data.models import BuyPost,User,Category, District
 from data.views import get_user, get_category, get_district
@@ -77,17 +78,17 @@ def follow_post(request):
         post_id = request.GET.get('post_id')
         post = buy_post_util.get_post(post_id)
 
-        follow_option = request.GET.get('follow_option')
-        if follow_option == 'follow':
+        is_followed = request.GET.get('is_followed')
+        if is_followed == 'True':
             buy_post_util.follow_post(user, post)
             return HttpResponse("{}")
-        elif follow_option == 'unfollow':
+        elif is_followed == 'False':
             buy_post_util.unfollow_post(user, post)
             return HttpResponse("{}")
         else:
-            raise Http500
+            raise ValidationError("Operation not supported")
     else:
-        raise Http500
+        raise ValidationError("Request not supported")
 
 def form(request):
     validate_user(request)

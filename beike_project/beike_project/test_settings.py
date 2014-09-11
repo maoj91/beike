@@ -1,3 +1,5 @@
+#Settings used for unit-test
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.spatialite',
