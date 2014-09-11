@@ -26,68 +26,138 @@ $.validator.addMethod("digitonly", function(value) {
     return /^\d+$/.test(value);
 }, "只能包含数字");
 
-/****************************************
- * Buy/Sell post upload form javascript *
- ****************************************/
 
-var imageCount = 0;
-var imageMaxNum = 3;
-var currentImageIndex = 0;
-
-//whether it is in the process of uploading
-var isUploading = false;
-
-var imagesInfo = new Array(3);
-var imagesHtml = new Array(3);
-
-/*
- * Check if it is allowed to upload more images
- */
-function moreImagesAllowed() {
-    if (imageCount >= imageMaxNum) {
-        alert("已经达到上限");
-    }
-    return imageCount < imageMaxNum;
-}
-
-/*
- * Add an image info and update the preview and form
- */
-function addImage(imageInfo) {
-    if (imageCount < imageMaxNum) {
-        var index = imageCount;
-        imageCount++;
-        imagesInfo[index] = imageInfo;
-        maxWidth = '450px';
-        maxHeight = '250px';
-        if (imageInfo['width'] > imageInfo['height']) {
-            maxHeight = 'auto';
-        } else {
-            maxWidth = 'auto';
+var gallerySwiper = (function($, undefined) {
+    var MAX_N_IMG = 5,
+        currentImg, nImg, img_w,
+        speed = 500,
+        $thumbnails,
+        $uploader,
+    options = {
+        triggerOnTouchEnd : true,   
+        swipeStatus : swipeStatus,
+        allowPageScroll: 'vertical',
+        //threshold: 75
+    }, 
+    init = function($initGallery) {
+        currentImg = 0;
+        img_w = $initGallery.width();
+        $gallery = $initGallery.children('.gallery-list');
+        $thumbnails = $initGallery.children('.gallery-thumbnail-list');
+        nImg = $thumbnails.children().length;
+        if ($gallery.hasClass('upload')) {
+            nImg--;
+            $uploader = $initGallery.find('.image-uploader-input');
+            $uploader.fileupload({
+                url: "/s3/upload/",
+                dataType: 'json',
+                done: function(e, data) {
+                    var imageInfo = {};
+                    imageInfo['url'] = data.result.image_url;
+                    imageInfo['width'] = data.result.width;
+                    imageInfo['height'] = data.result.height;
+                    imageInfo['orientation'] = data.result.orientation;
+                    addImage(imageInfo);
+                    console.log(JSON.stringify(imagesInfo[currentImageIndex]));
+                },
+                progressall: function(e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $uploader.attr("disabled", true);
+                    $('#progressbar').show();
+                    jQMProgressBar('progressbar').setValue(progress);
+                },
+                fail: function() { alert("照片上传出错，请重试一次"); },
+                always: function() {
+                    $uploader.attr("disabled", false);
+                    $('#progressbar').hide();
+                }
+            });
+            
+            jQMProgressBar('progressbar')
+                .isMini(false)
+                .setMax(100)
+                .setStartFrom(0)
+                .showCounter(true)
+                .build();
         }
+        $gallery.swipe(options);
+        selectThumbnail(0);
+    };
 
-        imgElement = $('<img></img>');
-        imgElement.attr("src", imageInfo['url']);
-        imgElement.css("max-width", maxWidth);
-        imgElement.css("max-height", maxHeight);
-        imagesHtml[index] = imgElement;
-
-        //add image to the thumbnail
-        imgThumbnail = $('<img src="' + imageInfo['url'] + '" width="100%" height="100%"/>');
-        $('#preview' + index).append(imgThumbnail);
-        $('#preview' + index).show();
-        //add image to the form
-        $('#image_url' + index).val(imageInfo['url']);
-        $('#image_width' + index).val(imageInfo['width']);
-        $('#image_height' + index).val(imageInfo['height']);
-        $('#image_orientation' + index).val(imageInfo['orientation']);
-        displayImage(index);
+    function addImage(imageInfo) {
+        if (nImg < MAX_N_IMG) {
+            var index = nImg,
+                url = imageInfo.url,
+                $thumbnail = $('<div class="gallery-thumbnail-box" onclick="gallerySwiper.select('+nImg+');">'+
+                        '<img class="gallery-thumbnail" src="'+url+'" />'+
+                        '<div class="gallery-thumbnail-bar"></div>'+
+                    '</div>'),
+                $img = $('<div class="gallery-image-box"><img class="gallery-image" src="'+url+'" /></div>');
+            nImg++;
+            $gallery.append($img);
+            $thumbnails.append($thumbnail);
+            selectImage(index);
+            selectThumbnail(index);
+            $('#image_url' + index).val(imageInfo['url']);
+            $('#image_width' + index).val(imageInfo['width']);
+            $('#image_height' + index).val(imageInfo['height']);
+            $('#image_orientation' + index).val(imageInfo['orientation']);
+        }
     }
-}
+    function swipeStatus(event, phase, direction, distance) {
+        img_w = $gallery.width()/5;
+        if( phase=='move' && (direction=='left' || direction=='right') )
+        {
+            var duration=0;
+            if (direction == 'left') scrollImages((img_w * currentImg) + distance, duration);
+            else if (direction == 'right') scrollImages((img_w * currentImg) - distance, duration);
+        }
+        else if ( phase == 'cancel') scrollImages(img_w * currentImg, speed);
+        else if ( phase =='end' )
+        {
+            if (direction == 'right') previousImage();
+            else if (direction == 'left') nextImage();
+        }
+    }
+    function selectImage(i) {
+        var diff = i - currentImg;
+        if (i > currentImg && i < nImg) {
+            for (var j=0; j<diff; j++) {
+                nextImage();
+            }
+        } else if (i >= 0 && i < currentImg) {
+            for (var j=0; j < -diff; j++) {
+                previousImage();
+            }
+        }
+    }
+    function previousImage () {
+        currentImg = Math.max(currentImg-1, 0);
+        scrollImages( $gallery.width()/5 * currentImg, speed);
+        selectThumbnail(currentImg);
+    }
+    function nextImage() {
+        currentImg = Math.min(currentImg+1, nImg-1);
+        scrollImages( $gallery.width()/5 * currentImg, speed);
+        selectThumbnail(currentImg);
+    }
+    function scrollImages(distance, duration) {
+        $gallery.css('-webkit-transition-duration', (duration/1000).toFixed(1) + 's');
 
-/*
- * Remove an image info and update the preview and form
- */
+        //inverse the number we set in the css
+        var value = (distance<0 ? '' : '-') + Math.abs(distance).toString();
+
+        $gallery.css('-webkit-transform', 'translate3d('+value +'px,0px,0px)');
+    }
+    function selectThumbnail(i) {
+        if (i >= 0 && i <= nImg - 1)
+            $($thumbnails.children(':not(.image-uploader)').removeClass('selected')[i]).addClass('selected');
+    }
+    
+    return {init: init, select: selectImage};
+}(jQuery));
+
+
 function removeImage(index) {
     if (index < imageCount) {
         imageCount--;
@@ -131,29 +201,10 @@ function deleteImage(index) {
 }
 
 
-/*
- * Display the image
- */
-function displayImage(index) {
-    if (imageCount == 0) {
-        $('#current_image').empty();
-        $('#imgselector0').empty();
-    }
-    if (index < imageCount) {
-        var imageInfo = imagesInfo[index];
-        //replace the image
-        $('#current_image').empty();
-        $('#current_image').append(imagesHtml[index]);
-        //move the image thumbnail
-        $('#imgselector0').empty();
-        $('#imgselector1').empty();
-        $('#imgselector2').empty();
-        var imgDeleteIcon = $('<img src="/static/images/sell_post/thumbnail_selected.png" width="100%" onclick="deleteImage(' + index + ');">');
-        $('#imgselector' + index).append(imgDeleteIcon);
-        currentImageIndex = index;
-    }
-}
 
+/****************************************
+ * Buy/Sell post upload form javascript *
+ ****************************************/
 function chooseCondition(conditionNum) {
     if (conditionNum >= 0 && conditionNum < 4) {
         for (i = 0; i < 4; i++) {
@@ -168,10 +219,6 @@ function chooseCondition(conditionNum) {
         }
     }
 }
-
-$(document).delegate("#sell-form", "pageinit", function() {
-    
-});
 
 var formLoader = (function($, undefined) {
     var loader = {},
@@ -236,56 +283,6 @@ var formLoader = (function($, undefined) {
             var contentLength = $(this).val().length;
             $page.find('#lengthCounter').html(contentLength + '/300');
         });
-        
-        
-        imageCount = 0;
-        currentImageIndex = 0;
-        isUploading = false;
-        for (var i = 0; i < imageMaxNum; i++) {
-            imagesInfo[i] = null;
-        }
-        var deviceWidth = $(window).width() * 0.90;
-        $('#image-uploader').css('width', deviceWidth);
-        
-        $('#post_image').fileupload({
-            url: "/s3/upload/",
-            dataType: 'json',
-            done: function(e, data) {
-                var imageInfo = {};
-                imageInfo['url'] = data.result.image_url;
-                imageInfo['width'] = data.result.width;
-                imageInfo['height'] = data.result.height;
-                imageInfo['orientation'] = data.result.orientation;
-                addImage(imageInfo);
-                console.log(JSON.stringify(imagesInfo[currentImageIndex]));
-            },
-            progressall: function(e, data) {
-                var progress = parseInt(data.loaded / data.total * 100, 10);
-                $('#progressbar').show();
-                jQMProgressBar('progressbar').setValue(progress);
-                isUploading = true;
-                $('#image-uploader').attr("disabled", true);
-                $('#post_image').attr("disabled", true);
-            },
-            fail: function(e, data) {
-                alert("照片上传出错，请重试一次");
-            },
-            always: function(e, data) {
-                $('#progressbar').hide();
-                isUploading = false;
-                $('#image-uploader').attr("disabled", false);
-                $('#post_image').attr("disabled", false);
-            }
-        });
-        
-        jQMProgressBar('progressbar')
-            .isMini(false)
-            .setMax(100)
-            .setStartFrom(0)
-            .showCounter(true)
-            .build();
-        $('#progressbar').hide();
-        
     };
     
     var getLocationByLatLon = function(coords) {
@@ -309,9 +306,7 @@ var formLoader = (function($, undefined) {
         });
     };
 
-    /*
-     * Use user input zipcode to get the city and latlon
-     */
+    // Use user input zipcode to get the city and latlon
     loader.getLocationByZipcode = function() {
         var zipcode = $('#'+page+'-form #zipcode').val();
         $.ajax({
@@ -327,45 +322,6 @@ var formLoader = (function($, undefined) {
             return data;
         });
     };
-    
-    /*
-function getLocationByLatlonForSellForm(position) {
-    var latitude = position.coords.latitude;
-    var longitude = position.coords.longitude;
-    $("#sell_form_latitude").val(latitude);
-    $("#sell_form_longitude").val(longitude);
-    $.ajax({
-        type: "get",
-        url: "/user/get_info/get_zipcode_by_latlong",
-        dataType: "json",
-        data: {
-            latitude: latitude,
-            longitude: longitude
-        }
-    }).then(function(data) {
-        console.log(data);
-        $('#sell_form_zipcode').val(data['zipcode']);
-        $('#sell_form_city_name').val(data['city']);
-    });
-}
-
-function getLocationByZipcodeForSellForm() {
-    var zipcode = $("#sell_form_zipcode").val();
-    $.ajax({
-        type: "get",
-        url: "/user/get_info/get_latlong_by_zipcode",
-        dataType: "json",
-        data: {
-            zipcode: zipcode
-        }
-    }).then(function(data) {
-        console.log(data);
-        $('#sell_form_city_name').val(data['city']);
-        $('#sell_form_latitude').val(data['latitude']);
-        $('#sell_form_longitude').val(data['longitude']);
-    });
-}*/
-
     
     loader.clickPhoneContact = function() {
         if (isPhoneChecked) {
@@ -426,14 +382,13 @@ function getLocationByZipcodeForSellForm() {
     return loader;
 }(jQuery));
 
-
-
 $(document).delegate('#buy-form', 'pageinit', function(event) {
     formLoader.init('buy');
 });
 
 $(document).delegate('#sell-form', 'pageinit', function(event) {
     formLoader.init('sell');
+    gallerySwiper.init($('#sell-form-gallery'));
 });
 
 /****************************************
@@ -609,10 +564,10 @@ $(document).delegate('#nearby-sellpost', 'pageinit', function() {
  *   Buy/Sell post detail javascript    *
  ****************************************/
 var detailLoader = (function($, undefined) {
-    var loader = {}, page, $page,
-        wx_id, post_id;
+    var page, $page,
+        wx_id, post_id,
 
-    loader.init = function(initPage) {
+    init = function(initPage) {
         page = initPage;
         $page = $('#'+page+'-detail-page');
         wx_id = $page.find('#wx_id').val();
@@ -649,10 +604,9 @@ var detailLoader = (function($, undefined) {
             }).then(function(data) {});
         });
         
-        loader.showFollowStatus();
-    };
-
-    loader.toggleFollowStatus = function() {
+        showFollowStatus();
+    },
+    toggleFollowStatus = function() {
         var is_followed = $page.find('#is_followed').val(); 
         var follow_img = '';   
         var popup_msg = '';
@@ -684,134 +638,30 @@ var detailLoader = (function($, undefined) {
         }).then(function(data) {
 
         });
-    };
-
-    loader.showFollowStatus = function() {
+    },
+    showFollowStatus = function() {
         var is_followed = $page.find('#is_followed').val();
         if( is_followed == 'False'){
             $page.find('#follow').attr('src', '/static/images/detail/not_followed.png');
         } else {
             $page.find('#follow').attr('src', '/static/images/detail/followed.png');
         }
-    };
-
-    loader.showShareMsg = function() {
+    },
+    showShareMsg = function() {
         $page.find('#share_msg').show();
-    }
-
-    loader.hideShareMsg = function() {
+    },
+    hideShareMsg = function() {
         $page.find('#share_msg').hide();
-    }
-
-    return loader;
-}(jQuery));
-
-var gallerySwiper = (function($, undefined) {
-    var IMG_WIDTH,
-        currentImg, nImg,
-        speed = 500,
-        $thumbnails,
-    options = {
-        triggerOnTouchEnd : true,   
-        swipeStatus : swipeStatus,
-        allowPageScroll: 'vertical',
-        //threshold: 75
-    }, 
-    init = function($initGallery) {
-        currentImg = 0;
-        IMG_WIDTH = $initGallery.width();
-        $gallery = $initGallery.children('.gallery-list');
-        $thumbnails = $initGallery.children('.gallery-thumbnail-list');
-        nImg = $thumbnails.children().length;
-        $gallery.swipe(options);
-        selectThumbnail(0);
     };
-    function swipeStatus(event, phase, direction, distance) {
-        //If we are moving before swipe, and we are going Lor R in X mode, or U or D in Y mode then drag.
-        IMG_WIDTH = $gallery.width()/5;
-        if( phase=='move' && (direction=='left' || direction=='right') )
-        {
-            var duration=0;
-            if (direction == 'left') scrollImages((IMG_WIDTH * currentImg) + distance, duration);
-            else if (direction == 'right') scrollImages((IMG_WIDTH * currentImg) - distance, duration);
-        }
-        else if ( phase == 'cancel') scrollImages(IMG_WIDTH * currentImg, speed);
-        else if ( phase =='end' )
-        {
-            if (direction == 'right') previousImage();
-            else if (direction == 'left') nextImage();
-        }
-    }
-    function selectImage(i) {
-        var diff = i - currentImg;
-        if (i > currentImg && i < nImg) {
-            for (var j=0; j<diff; j++) {
-                nextImage();
-            }
-        } else if (i >= 0 && i < currentImg) {
-            for (var j=0; j < -diff; j++) {
-                previousImage();
-            }
-        }
-    }
-    function previousImage () {
-        currentImg = Math.max(currentImg-1, 0);
-        scrollImages( $gallery.width()/5 * currentImg, speed);
-        selectThumbnail(currentImg);
-    }
-    function nextImage() {
-        currentImg = Math.min(currentImg+1, nImg-1);
-        scrollImages( $gallery.width()/5 * currentImg, speed);
-        selectThumbnail(currentImg);
-    }
-    function scrollImages(distance, duration) {
-        $gallery.css('-webkit-transition-duration', (duration/1000).toFixed(1) + 's');
 
-        //inverse the number we set in the css
-        var value = (distance<0 ? '' : '-') + Math.abs(distance).toString();
-
-        $gallery.css('-webkit-transform', 'translate3d('+value +'px,0px,0px)');
-    }
-    function selectThumbnail(i) {
-        if (i >= 0 && i <= nImg - 1)
-            $($thumbnails.children().removeClass('selected')[i]).addClass('selected');
-    }
-    return {init: init, select: selectImage};
+    return {
+        init: init, 
+        showFollowStatus: showFollowStatus,
+        toggleFollowStatus: toggleFollowStatus,
+        showShareMsg: showShareMsg,
+        hideShareMsg: hideShareMsg
+    };
 }(jQuery));
-
-function showContacts() { 
-    if("{{phone_checked}}" == "on" || "{{sms_checked}}" == "on" ){
-        $('#phone_number_div').css('display', 'inline');
-    } else {
-        $('#phone_number_div').css('display', 'none');
-    }
-
-    if ("{{phone_checked}}" == "on"){     
-        $('#phone-icon').hide();
-        $('#phone-icon-clicked').show();
-    } else {
-        $('#phone-icon').show();
-        $('#phone-icon-clicked').hide();
-    }
-
-    if("{{sms_checked}}" == "on" ){
-        $('#sms-icon').hide();
-        $('#sms-icon-clicked').show();
-    } else { 
-        $('#sms-icon').show();
-        $('#sms-icon-clicked').hide();
-    }
-
-    if ("{{email_checked}}"  == 'on' ){
-        $('#email_div').css('display', 'inline');
-        $('#email-icon').hide();
-        $('#email-icon-clicked').show();
-    } else { 
-        $('#email_div').css('display', 'none');
-        $('#email-icon').show();
-        $('#email-icon-clicked').hide();
-    }
-}
 
 $(document).on("pagebeforechange", function() {
     var ua = navigator.userAgent.toLowerCase();
@@ -893,7 +743,7 @@ var userLoader = (function($, undefined) {
     return loader;
 }(jQuery));
 
-$(document).delegate("#user-update-page", "pageinit", function() {
+$(document).delegate('#user-update-page', 'pageinit', function() {
     userLoader.init('user-update-page');
 });
 

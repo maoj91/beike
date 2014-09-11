@@ -6,49 +6,9 @@
 <body>
 <div id="sell-form" data-role="page" data-fullscreen="true">
     {% include "header.html" with title="我要卖" %}
-
-    <div id="image-uploader">
-        <div class="ui-grid-solo image-uploader-image">
-            <div class="progressbar-wrapper">
-                <div id="progressbar"></div>
-                <div id="current_image"></div>
-            </div>
-        </div>
-
-        <div id="image_thumbnails_div" class="ui-grid-a">
-            <div class="new-image">
-                <input style="display:none;" data-role="none" type="file" id="post_image" name="post_image" accept="image/*" onclick="return moreImagesAllowed();" />
-                <label for="post_image">
-                    <img class="new-image-icon" src='/static/images/sell_post/upload.png'>
-                </label>
-            </div>
-
-            <div class="ui-block-b" style="width: 80%;">
-                <div class="ui-grid-c" style="height: 65px;">
-                    <div class="image-thumbnail-box">
-                        <div id="imgselector0" class="image-thumbnail-top"></div>
-                        <div id="preview0" class="image-thumbnail" onclick="displayImage(0);"></div>
-                    </div>
-                    <div class="image-thumbnail-box">
-                        <div id="imgselector1" class="image-thumbnail-top"></div>
-                        <div id="preview1" class="image-thumbnail"onclick="displayImage(1);"></div>
-                    </div>
-                    <div class="image-thumbnail-box">
-                        <div id="imgselector2" class="image-thumbnail-top"></div>
-                        <div id="preview2" class="image-thumbnail" onclick="displayImage(2);"></div>
-                    </div>
-                    <div class="image-thumbnail-box">
-                        <div id="imgselector3" class="image-thumbnail-top"></div>
-                        <div id="preview3" class="image-thumbnail" onclick="displayImage(3);"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
+    
     <div data-role="content">
+        {% include "gallery.html" with upload="on" %}
         <form action="/sell/form_submit/" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="hidden" id="image_url0" name="image_url0" data-rule-required="true" data-rule-content="true" data-msg-required="请至少上传一张照片" />

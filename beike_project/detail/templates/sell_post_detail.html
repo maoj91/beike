@@ -18,42 +18,7 @@
             </div>
         </div>
 
-        <!-- TODO: needs to clean up -->
-        <div class="gallery-wrapper">
-        <div id="sell-detail-gallery" class="gallery">
-            <div class="gallery-list">
-            {% for image_metadata in image_list %}
-                <div class="gallery-image-box"><img class="gallery-image" src="{{ image_metadata.image_url }}" /></div>
-            {% endfor%}
-            </div>
-
-            <div class="gallery-thumbnail-list">
-                {% for image_metadata in image_list %}
-                <div class="gallery-thumbnail-box" onclick="gallerySwiper.select({{forloop.counter0}});">
-                    <img class="gallery-thumbnail" src="{{ image_metadata.image_url }}" />
-                    <div class="gallery-thumbnail-bar"></div>
-                </div>
-                {% endfor%}
-            </div>
-        </div>
-        </div>
-        <!--div id="image_gallery">
-            <div id="imgs">
-                {% for image_metadata in image_list %}
-                <span class="img_span">
-                    <img src="{{ image_metadata.image_url }}">
-                </span>
-                {% endfor%}
-            </div>
-        </div>   
-        <div id="image_thumbnails">
-            {% for image_metadata in image_list %}
-            <span class="thumbnail_span" id="thumbnail_span{{forloop.counter0}}" onclick="selectImage({{forloop.counter0}})" style="cursor:pointer;">
-                <img src="{{ image_metadata.image_url }}">
-            </span>
-            {% endfor%}
-        </div-->
-        
+        {% include "gallery.html" with image_list=image_list %}
         
         <div class="detail-price-wrapper">
             <span class="detail-currency">$&nbsp;</span>

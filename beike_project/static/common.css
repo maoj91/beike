@@ -184,16 +184,6 @@ span.city-text {
     background-color: #ddd
 }
 
-#progressbar {
-    width: 60%;
-    position: absolute;
-    top: 100px;
-    left: 20%;
-}
-
-.progressbar-wrapper {
-    position: relative; text-align: center;
-}
 
 .new-image {
     position: relative;
@@ -717,8 +707,10 @@ img.detail-contact-icon {
     height: 100%;
     float: left;
     overflow: hidden;
+background-color: purple;
 }
-
+.gallery-image-box.image-uploader { display: none; }
+.gallery-image-box.image-uploader:only-child { display: block; }
 .gallery-image {
     display: block;
     position: absolute;
@@ -734,26 +726,22 @@ img.detail-contact-icon {
 .gallery-thumbnail-list {
     clear: both;
     width: 101%;
-    height: 15.5%;
-    margin-top: 1%;
+    height: 16%;
+    margin-top: .8%;
 }
 .gallery-thumbnail-box {
     float: left;
     width: 19%;
-    height: 100%;
+    height: 99%;
     overflow: hidden;
     /*background-color: #eee;*/
     border: 1px solid #ddd;
     box-sizing: border-box;
-    margin-right: 1.2%;
+    margin-right: 1%;
     cursor: pointer;
 }
 .gallery-thumbnail-box.selected {
     border: 1px solid #24c598;
-}
-.gallery-thumbnail-box.none {
-    cursor: auto;
-    background-color: white;
 }
 .gallery-thumbnail {
     position: absolute;
@@ -763,14 +751,26 @@ img.detail-contact-icon {
     left: 0; right: 0;
     top: 0; bottom: 0;
 }
-
 .image-uploader {
-    background-image: url("static/images/sell_post/upload.png");
+    background-image: url("/static/images/sell_post/upload.png");
     background-size: 60%;
     background-repeat: no-repeat;
     background-position: center center;
-    cursor: pointer;
+    cursor: pointer; /* not working */
 }
 .thumbnail-box.image-uploader {
     background-size: 80%;
+}
+.image-uploader-input {
+    width: 100%; 
+    height: 100%;
+    opacity: 0;
+}
+.gallery-thumbnail-box.image-uploader {display: none; float: right;}
+.gallery-thumbnail-box.image-uploader:nth-last-child(n+2):nth-last-child(-n+5) {display: block; }
+#progressbar {
+    width: 60%;
+    position: absolute;
+    top: 100px;
+    left: 20%;
 }
