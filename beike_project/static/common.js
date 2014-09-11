@@ -1,3 +1,5 @@
+var a;
+
 function getCurrentPositionDeferred(options) {
     var deferred = $.Deferred();
     navigator.geolocation.getCurrentPosition(deferred.resolve, deferred.reject, options);
@@ -220,9 +222,9 @@ var formLoader = (function($, undefined) {
             getCurrentPositionDeferred({
                 enableHighAccuracy: true
             }).done(function(position) {
-                loader.getLocationByLatLon(position.coords)
+                getLocationByLatLon(position.coords)
             }).fail(function() {
-                console.log("getCurrentPosition call failed")
+                console.error("getCurrentPosition call failed")
             }).always(function() {
                 //do nothing
             });
@@ -244,10 +246,6 @@ var formLoader = (function($, undefined) {
         }
         var deviceWidth = $(window).width() * 0.90;
         $('#image-uploader').css('width', deviceWidth);
-
-    /*if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(getLocationByLatlonForSellForm);
-    }*/
         
         $('#post_image').fileupload({
             url: "/s3/upload/",
@@ -290,7 +288,7 @@ var formLoader = (function($, undefined) {
         
     };
     
-    loader.getLocationByLatLon = function(coords) {
+    var getLocationByLatLon = function(coords) {
         var latitude = coords.latitude;
         var longitude = coords.longitude;
         $latitude.val(latitude);
@@ -441,83 +439,66 @@ $(document).delegate('#sell-form', 'pageinit', function(event) {
 /****************************************
  *    Buy/Sell posts list javascript    *
  ****************************************/
-var postLoader = (function($, undefined) {
-    var loader = {}, page, // buy or sell
-        postPageNum,
-        currentPosition,
-        category = null,
-        keyword = null,
-        hasMorePost = true,
-        slotPos = 0,
-        numPerPage,
+var buyPostLoader = (function($, undefined) {
+    var page, $page, // buy or sell
         $document = $(document),
         $window = $(window),
-        $list1, $list2;
-    
-    loader.init = function(initPage) {
+        $list1, $list2, $loadmore,
+        postPageNum, numPerPage, hasMorePost, slotPos = 0,
+        currentPosition,
+        loadingPost = false,
+        category = null,
+        keyword = null,
+    init = function(initPage) {
         page = initPage;
-        postPageNum = 1;
-        numPerPage = $('#'+page+'-list>.num-per-page').val();
+        $page = $('#'+page+'-list');
         
-        $list1 = $('#'+page+'-list>.post-list1');
-        $list2 = $('#'+page+'-list>.post-list2');
-        loader.clearPosts();
+        $list1 = $page.children('.post-list1');
+        $list2 = $page.children('.post-list2');
+        $loadmore = $page.find('.load-more');
+        numPerPage = $page.find('.num-per-page').val();
+        //clearPosts();
         
         getCurrentPositionDeferred({
             enableHighAccuracy: true
         }).done(function(position) {
             currentPosition = position;
-            loader.getAndDisplayPosts();
+            clearPosts();
+            loadMorePosts();
         }).fail(function() {
             console.error("getCurrentPosition call failed");
         }).always(function() {
             //do nothing
         });
-        
-        //Refresh the posts when scrolling to the bottom
-        $window.live("hitBottom", function() {
-            loader.getAndDisplayPosts();
-        });
-        
-        $document.on("scrollstart", function() {
-            if ($document.height() > $window.height() && hasMorePost) {
-                if ($window.scrollTop() >= $document.height() - $window.height() - 200) {
-                    if (typeof currentPosition !== 'undefined') {
-                        hasMorePost = false;
-                        loader.getAndDisplayPosts();
-                    }
-                }
-            }
-        });
-
-        $document.on("scrollstop", function() {
-            if ($document.height() > $window.height() && hasMorePost) {
-                if ($window.scrollTop() >= $document.height() - $window.height() - 200) {
-                    if (typeof currentPosition !== 'undefined') {
-                        hasMorePost = false;
-                        loader.getAndDisplayPosts();
-                    }
-                }
-            }
-        });
-    };
-    
-    loader.clearPosts = function() {
+    },
+    clearPosts = function() {
+        slot_pos = 0;
+        postPageNum = 1;
+        hasMorePost = true;
         $list1.empty();
         $list2.empty();
-    };
-    
-    loader.getAndDisplayPosts = function() {
-        $('#load-more').show(); //Starting loading animation
-        
-        //Get posts and add success callback using then
-        loader.getPosts().then(function() {
-            //Stop loading animation on success
-            // $('#load-more').hide();
-        });
+    },
+    loadMorePosts = function() {
+        if (!loadingPost) {
+            loadingPost = true;
+            $loadmore.show(); //Starting loading animation
+
+            //Get posts and add success callback using then
+            getPosts().then(function() {
+                //$loadmore.hide(); //Stop loading animation on success
+            });
+            loadingPost = false;
+        }
+    },
+// TODO: This is very ugly now. This function will be called to many times and there should be a way to prevent this.
+    getMorePosts = function() {
+        if ($.mobile.activePage.attr('id') === 'nearby-'+page+'post') {//alert($window.height());
+        if (hasMorePost && (typeof currentPosition !== 'undefined') && $window.scrollTop() >= $document.height()-$window.height()-200) {
+            loadMorePosts();
+        }}
     };
 
-    loader.getPosts = function() {
+    var getPosts = function() {
         //Get posts via ajax
         return $.ajax({
             type: 'get',
@@ -531,15 +512,21 @@ var postLoader = (function($, undefined) {
                 keyword: keyword
             }
         }).then(function(posts) {
-            loader.displayPosts(posts);
+            displayPosts(posts);
         });
     };
     
-    loader.displayPosts = function(posts) {
+    var displayPosts = function(posts) {
         var tempList1 = $(''),
             tempList2 = $(''),
             i = 0, len = posts.length;
-        
+        if (len < numPerPage) {
+            hasMorePost = false;
+            $loadmore.hide();
+        } else {
+            hasMorePost = true;
+            postPageNum++;
+        }
         //process posts data
         for (i = 0; i < len; i++) {
             var distance = formatDistance(posts[i]['distance']), price, image_info_list, item;
@@ -584,62 +571,38 @@ var postLoader = (function($, undefined) {
             slotPos++;
         }
 
-        if (len < numPerPage) {
-            hasMorePost = true;
-            $('#load-more').hide();
-        } else {
-            hasMorePost = true;
-            postPageNum++;
-        }
         $list1.append(tempList1);
         $list2.append(tempList2);
     };
     
-    /* not cleaned up */
-    loader.refreshSellPosts = function() {
+    var refreshPosts = function() {
         $('#popupBasic-popup').removeClass('ui-popup-active');
         $('#popupBasic-popup').addClass('ui-popup-hidden');
         $('#popupBasic-popup').addClass('ui-popup-truncate');
-        slot_pos = 0;
-        var zipcode = $('#zipcode').val();
-        var sellPostCategory = 0;
-        sellPostCategory = $('input[name="category"]:checked').val();
-        var sellPostKeyword = $('#sellPostKeyword').val();
-        $.ajax({
-            type: "get",
-            url: "/user/get_info/get_latlong_by_zipcode",
-            dataType: "json",
-            data: {
-                zipcode: zipcode
-            }
-        }).then(function(latlon) {
-            // var latlon = jQuery.parseJSON(data);
-            sellPostCurLatLon['latitude'] = latlon['latitude'];
-            sellPostCurLatLon['longitude'] = latlon['longitude'];
-            //clear the posts and reset pageNum
-            sellPostLoader.clearPosts();
-            sellPostPageNum = 1;
-            hasMorePost = false;
-            loader.getAndDisplayPosts();
-        });
-        document.getElementById("zipcode").value = '';
-        document.getElementById("sellPostKeyword").value = '';
-        if (sellPostCategory != 0) {
-            $('input[name=category][value=]').prop("checked", true).checkboxradio("refresh");
-            $('input[name=category][value=' + sellPostCategory + ']').prop("checked", false).checkboxradio("refresh");
-        }
-        return false;
+        
+        category = $('input[name="category"]:checked').val();
+        keyword = $('#sellPostKeyword').val();
+        
+        clearPosts();
+        getMorePosts();
     };
     
-    return loader;
+    return { 
+        init: init, 
+        clearPosts: clearPosts, 
+        getMorePosts: getMorePosts, 
+        refreshPosts: refreshPosts
+    };
 }(jQuery));
 
+var sellPostLoader = Object.create(buyPostLoader);
+
 $(document).delegate('#nearby-buypost', 'pageinit', function() {
-    postLoader.init('buy');
+    buyPostLoader.init('buy');
 });
 
 $(document).delegate('#nearby-sellpost', 'pageinit', function() {
-    postLoader.init('sell');
+    sellPostLoader.init('sell');
 });
 
 /****************************************
@@ -743,114 +706,78 @@ var detailLoader = (function($, undefined) {
     return loader;
 }(jQuery));
 
-
-// from sell post detail
-var IMG_WIDTH = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-var currentImg=0;
-var maxImages=$('#imgs').children().length;//{{image_num}};
-var speed=500;
-
-var imgs;
-
-var swipeOptions=
-{
-    triggerOnTouchEnd : true,   
-    swipeStatus : swipeStatus,
-    allowPageScroll:'vertical',
-    threshold:75            
-}
-
-$(function()
-{               
-    imgs = $('#imgs');
-    imgs.swipe( swipeOptions );
-});
-
-
-/**
-* Catch each phase of the swipe.
-* move : we drag the div.
-* cancel : we animate back to where we were
-* end : we animate to the next image
-*/          
-function swipeStatus(event, phase, direction, distance)
-{
-    //If we are moving before swipe, and we are going Lor R in X mode, or U or D in Y mode then drag.
-    if( phase=='move' && (direction=='left' || direction=='right') )
-    {
-        var duration=0;
-
-        if (direction == 'left')
-            scrollImages((IMG_WIDTH * currentImg) + distance, duration);
-
-        else if (direction == 'right')
-            scrollImages((IMG_WIDTH * currentImg) - distance, duration);
-
-    }
-
-    else if ( phase == 'cancel')
-    {
-        scrollImages(IMG_WIDTH * currentImg, speed);
-    }
-
-    else if ( phase =='end' )
-    {
-        if (direction == 'right')
-            previousImage()
-        else if (direction == 'left')           
-            nextImage()
-    }
-}
-
-function selectImage(i){
-    var diff = i - currentImg;
-    if(i>currentImg && i<=maxImages-1){
-        for(var j=0;j<diff;j++){
-            nextImage();
+var gallerySwiper = (function($, undefined) {
+    var IMG_WIDTH,
+        currentImg, nImg,
+        speed = 500,
+        $thumbnails,
+    options = {
+        triggerOnTouchEnd : true,   
+        swipeStatus : swipeStatus,
+        allowPageScroll: 'vertical',
+        //threshold: 75
+    }, 
+    init = function($initGallery) {
+        currentImg = 0;
+        IMG_WIDTH = $initGallery.width();
+        $gallery = $initGallery.children('.gallery-list');
+        $thumbnails = $initGallery.children('.gallery-thumbnail-list');
+        nImg = $thumbnails.children().length;
+        $gallery.swipe(options);
+        selectThumbnail(0);
+    };
+    function swipeStatus(event, phase, direction, distance) {
+        //If we are moving before swipe, and we are going Lor R in X mode, or U or D in Y mode then drag.
+        IMG_WIDTH = $gallery.width()/5;
+        if( phase=='move' && (direction=='left' || direction=='right') )
+        {
+            var duration=0;
+            if (direction == 'left') scrollImages((IMG_WIDTH * currentImg) + distance, duration);
+            else if (direction == 'right') scrollImages((IMG_WIDTH * currentImg) - distance, duration);
         }
-    } else if(i>=0 && i<currentImg){
-        for(var j=0;j<-diff;j++){
-            previousImage();
+        else if ( phase == 'cancel') scrollImages(IMG_WIDTH * currentImg, speed);
+        else if ( phase =='end' )
+        {
+            if (direction == 'right') previousImage();
+            else if (direction == 'left') nextImage();
         }
     }
-}
-
-function selectThumbnail(i){
-    if(i>=0 && i<=maxImages-1){
-        for(var j=0;j<=maxImages-1;j++){
-            $('#thumbnail_span'+j).addClass('thumbnail_not_selected');
+    function selectImage(i) {
+        var diff = i - currentImg;
+        if (i > currentImg && i < nImg) {
+            for (var j=0; j<diff; j++) {
+                nextImage();
+            }
+        } else if (i >= 0 && i < currentImg) {
+            for (var j=0; j < -diff; j++) {
+                previousImage();
+            }
         }
-        $('#thumbnail_span'+i).removeClass('thumbnail_not_selected');
-        $('#thumbnail_span'+i).addClass('thumbnail_selected');
     }
-}
+    function previousImage () {
+        currentImg = Math.max(currentImg-1, 0);
+        scrollImages( $gallery.width()/5 * currentImg, speed);
+        selectThumbnail(currentImg);
+    }
+    function nextImage() {
+        currentImg = Math.min(currentImg+1, nImg-1);
+        scrollImages( $gallery.width()/5 * currentImg, speed);
+        selectThumbnail(currentImg);
+    }
+    function scrollImages(distance, duration) {
+        $gallery.css('-webkit-transition-duration', (duration/1000).toFixed(1) + 's');
 
-function previousImage()
-{
-    currentImg = Math.max(currentImg-1, 0);
-    scrollImages( IMG_WIDTH * currentImg, speed);
-    selectThumbnail(currentImg);
-}
+        //inverse the number we set in the css
+        var value = (distance<0 ? '' : '-') + Math.abs(distance).toString();
 
-function nextImage()
-{
-    currentImg = Math.min(currentImg+1, maxImages-1);
-    scrollImages( IMG_WIDTH * currentImg, speed);
-    selectThumbnail(currentImg);
-}
-
-/**
-* Manuallt update the position of the imgs on drag
-*/
-function scrollImages(distance, duration)
-{
-    imgs.css('-webkit-transition-duration', (duration/1000).toFixed(1) + 's');
-
-    //inverse the number we set in the css
-    var value = (distance<0 ? '' : '-') + Math.abs(distance).toString();
-
-    imgs.css('-webkit-transform', 'translate3d('+value +'px,0px,0px)');
-}
+        $gallery.css('-webkit-transform', 'translate3d('+value +'px,0px,0px)');
+    }
+    function selectThumbnail(i) {
+        if (i >= 0 && i <= nImg - 1)
+            $($thumbnails.children().removeClass('selected')[i]).addClass('selected');
+    }
+    return {init: init, select: selectImage};
+}(jQuery));
 
 function showContacts() { 
     if("{{phone_checked}}" == "on" || "{{sms_checked}}" == "on" ){
@@ -884,7 +811,6 @@ function showContacts() {
         $('#email-icon').show();
         $('#email-icon-clicked').hide();
     }
-
 }
 
 $(document).on("pagebeforechange", function() {
@@ -902,6 +828,7 @@ $(document).on("pagechange", function() {
         detailLoader.init('buy');
     } else if (url.substring(0,12) === '/detail/sell') {
         detailLoader.init('sell');
+        gallerySwiper.init($('.ui-page-active #sell-detail-gallery'));
     }
 });
 
