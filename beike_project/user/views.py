@@ -289,4 +289,3 @@ def get_age(born):
         return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
     else: 
         return '';
->>>>>>> ca9f827ccbcc1df125f35d1ae9dd244d3acd7c08
