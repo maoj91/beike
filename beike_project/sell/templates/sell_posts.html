@@ -13,8 +13,9 @@
             <div style="clear:both"></div>
             <img class="load-more" src="/static/images/general/loading_green.gif" />
         </div>
-
+        
         {% include "footer.html" with sell_list="_clicked" %}
+        <script>$(document).on("scrollstop", function() { sellPostLoader.getMorePosts(); });</script>
     </div>
 </body>
 

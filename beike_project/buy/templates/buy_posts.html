@@ -15,6 +15,7 @@
         </div>
         
         {% include "footer.html" with buy_list="_clicked" %}
+        <script>$(document).on("scrollstop", function() { buyPostLoader.getMorePosts(); });</script>
     </div>
 </body>
 

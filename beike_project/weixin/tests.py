@@ -1,16 +1,13 @@
 """
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
-
-Replace this with more appropriate tests for your application.
+Weixin views test
 """
 
 from django.test import TestCase
+from weixin import views
 
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.assertEqual(1 + 1, 2)
+class WeixinTest(TestCase):
+    def test_create_template(self):
+    	msg = {'FromUserName': 'foo', 'ToUserName': 'bar'}
+        result = views.create_template(msg, 'http://foo.bar')
+        print result

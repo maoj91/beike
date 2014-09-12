@@ -5,6 +5,8 @@ from user import views
 urlpatterns = patterns('',
 	url(r'^(\d+)/$', views.index),
 	url(r'^(\d+)/edit/$', views.edit),
+	url(r'^(\d+)/edit_address/$', views.edit_address),
+	url(r'^(\d+)/save_address/$', views.save_address),
 	url(r'^(\d+)/update/$', views.update),
 	url(r'^save_privacy/$', views.save_privacy),
 	url(r'^get_info/$', views.get_info),

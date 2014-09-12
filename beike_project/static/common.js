@@ -1,3 +1,5 @@
+var a;
+
 function getCurrentPositionDeferred(options) {
     var deferred = $.Deferred();
     navigator.geolocation.getCurrentPosition(deferred.resolve, deferred.reject, options);
@@ -24,68 +26,140 @@ $.validator.addMethod("digitonly", function(value) {
     return /^\d+$/.test(value);
 }, "只能包含数字");
 
-/****************************************
- * Buy/Sell post upload form javascript *
- ****************************************/
 
-var imageCount = 0;
-var imageMaxNum = 3;
-var currentImageIndex = 0;
-
-//whether it is in the process of uploading
-var isUploading = false;
-
-var imagesInfo = new Array(3);
-var imagesHtml = new Array(3);
-
-/*
- * Check if it is allowed to upload more images
- */
-function moreImagesAllowed() {
-    if (imageCount >= imageMaxNum) {
-        alert("已经达到上限");
-    }
-    return imageCount < imageMaxNum;
-}
-
-/*
- * Add an image info and update the preview and form
- */
-function addImage(imageInfo) {
-    if (imageCount < imageMaxNum) {
-        var index = imageCount;
-        imageCount++;
-        imagesInfo[index] = imageInfo;
-        maxWidth = '450px';
-        maxHeight = '250px';
-        if (imageInfo['width'] > imageInfo['height']) {
-            maxHeight = 'auto';
-        } else {
-            maxWidth = 'auto';
+var gallerySwiper = (function($, undefined) {
+    var MAX_N_IMG = 5,
+        currentImg, nImg, img_w,
+        speed = 500,
+        $thumbnails,
+        $uploader, upload = false,
+    options = {
+        triggerOnTouchEnd : true,
+        swipeStatus : swipeStatus,
+        allowPageScroll: 'vertical',
+        //threshold: 75
+    },
+    displayThumbnails = function() {
+console.log(nImg);
+console.log(upload);
+        if ((nImg == 0) || (nImg==1 && !upload))
+            $('.gallery-wrapper').addClass('no-thumbnails');
+        else
+            $('.gallery-wrapper').removeClass('no-thumbnails');
+    },
+    init = function($initGallery) {
+        currentImg = 0;
+        img_w = $initGallery.width();
+        $gallery = $initGallery.children('.gallery-list');
+        $thumbnails = $initGallery.children('.gallery-thumbnail-list');
+        nImg = $thumbnails.children().length;
+        if ($gallery.hasClass('upload')) {
+            nImg--; upload = true;
+            $uploader = $initGallery.find('.image-uploader-input');
+            $uploader.fileupload({
+                url: "/s3/upload/",
+                dataType: 'json',
+                done: function(e, data) {
+                    var imageInfo = {};
+                    imageInfo['url'] = data.result.image_url;
+                    imageInfo['width'] = data.result.width;
+                    imageInfo['height'] = data.result.height;
+                    imageInfo['orientation'] = data.result.orientation;
+                    addImage(imageInfo);
+                    //console.log(JSON.stringify(imagesInfo[nImg]));
+                },
+                progressall: function(e, data) {
+                    var pct = parseInt(data.loaded / data.total * 100, 10);
+                    $('.image-uploader-input').attr('disabled','true');
+                    $('#progressbar').css('width', pct+"%");
+                },
+                fail: function() { alert("照片上传出错，请重试一次"); },
+                always: function() {
+                    $('.image-uploader-input').removeAttr('disabled');
+                    $('#progressbar').css('width','0');
+                }
+            });
         }
+        $gallery.swipe(options);
+        selectThumbnail(0);
+        displayThumbnails();
+    };
 
-        imgElement = $('<img></img>');
-        imgElement.attr("src", imageInfo['url']);
-        imgElement.css("max-width", maxWidth);
-        imgElement.css("max-height", maxHeight);
-        imagesHtml[index] = imgElement;
-
-        //add image to the thumbnail
-        imgThumbnail = $('<img src="' + imageInfo['url'] + '" width="100%" height="100%"/>');
-        $('#preview' + index).append(imgThumbnail);
-        $('#preview' + index).show();
-        //add image to the form
-        $('#image_url' + index).val(imageInfo['url']);
-        $('#image_width' + index).val(imageInfo['width']);
-        $('#image_height' + index).val(imageInfo['height']);
-        $('#image_orientation' + index).val(imageInfo['orientation']);
-        displayImage(index);
+    function addImage(imageInfo) {
+        if (nImg < MAX_N_IMG) {
+            var index = nImg,
+                url = imageInfo.url,
+                $thumbnail = $('<div class="gallery-thumbnail-box" onclick="gallerySwiper.select('+nImg+');">'+
+                        '<img class="gallery-thumbnail" src="'+url+'" />'+
+                        '<div class="gallery-thumbnail-bar"></div>'+
+                    '</div>'),
+                $img = $('<div class="gallery-image-box"><img class="gallery-image" src="'+url+'" /></div>');
+            nImg++;
+            $gallery.append($img);
+            $thumbnails.append($thumbnail);
+            selectImage(index);
+            selectThumbnail(index);
+            $('#image_url' + index).val(imageInfo['url']);
+            $('#image_width' + index).val(imageInfo['width']);
+            $('#image_height' + index).val(imageInfo['height']);
+            $('#image_orientation' + index).val(imageInfo['orientation']);
+            displayThumbnails();
+        }
     }
-}
+    function swipeStatus(event, phase, direction, distance) {
+        img_w = $gallery.width()/5;
+        if( phase=='move' && (direction=='left' || direction=='right') )
+        {
+            var duration=0;
+            if (direction == 'left') scrollImages((img_w * currentImg) + distance, duration);
+            else if (direction == 'right') scrollImages((img_w * currentImg) - distance, duration);
+        }
+        else if ( phase == 'cancel') scrollImages(img_w * currentImg, speed);
+        else if ( phase =='end' )
+        {
+            if (direction == 'right') previousImage();
+            else if (direction == 'left') nextImage();
+        }
+    }
+    function selectImage(i) {
+        var diff = i - currentImg;
+        if (i > currentImg && i < nImg) {
+            for (var j=0; j<diff; j++) {
+                nextImage();
+            }
+        } else if (i >= 0 && i < currentImg) {
+            for (var j=0; j < -diff; j++) {
+                previousImage();
+            }
+        }
+    }
+    function previousImage () {
+        currentImg = Math.max(currentImg-1, 0);
+        scrollImages( $gallery.width()/5 * currentImg, speed);
+        selectThumbnail(currentImg);
+    }
+    function nextImage() {
+        currentImg = Math.min(currentImg+1, nImg-1);
+        scrollImages( $gallery.width()/5 * currentImg, speed);
+        selectThumbnail(currentImg);
+    }
+    function scrollImages(distance, duration) {
+        $gallery.css('-webkit-transition-duration', (duration/1000).toFixed(1) + 's');
 
-/*
- * Remove an image info and update the preview and form
- */
+        //inverse the number we set in the css
+        var value = (distance<0 ? '' : '-') + Math.abs(distance).toString();
+
+        $gallery.css('-webkit-transform', 'translate3d('+value +'px,0px,0px)');
+    }
+    function selectThumbnail(i) {
+        if (i >= 0 && i <= nImg - 1)
+            $($thumbnails.children(':not(.image-uploader)').removeClass('selected')[i]).addClass('selected');
+    }
+    
+    return {init: init, select: selectImage};
+}(jQuery));
+
+
 function removeImage(index) {
     if (index < imageCount) {
         imageCount--;
@@ -129,29 +203,10 @@ function deleteImage(index) {
 }
 
 
-/*
- * Display the image
- */
-function displayImage(index) {
-    if (imageCount == 0) {
-        $('#current_image').empty();
-        $('#imgselector0').empty();
-    }
-    if (index < imageCount) {
-        var imageInfo = imagesInfo[index];
-        //replace the image
-        $('#current_image').empty();
-        $('#current_image').append(imagesHtml[index]);
-        //move the image thumbnail
-        $('#imgselector0').empty();
-        $('#imgselector1').empty();
-        $('#imgselector2').empty();
-        var imgDeleteIcon = $('<img src="/static/images/sell_post/thumbnail_selected.png" width="100%" onclick="deleteImage(' + index + ');">');
-        $('#imgselector' + index).append(imgDeleteIcon);
-        currentImageIndex = index;
-    }
-}
 
+/****************************************
+ * Buy/Sell post upload form javascript *
+ ****************************************/
 function chooseCondition(conditionNum) {
     if (conditionNum >= 0 && conditionNum < 4) {
         for (i = 0; i < 4; i++) {
@@ -166,10 +221,6 @@ function chooseCondition(conditionNum) {
         }
     }
 }
-
-$(document).delegate("#sell-form", "pageinit", function() {
-    
-});
 
 var formLoader = (function($, undefined) {
     var loader = {},
@@ -214,15 +265,14 @@ var formLoader = (function($, undefined) {
 
             });
         }
-
         
         if (navigator.geolocation) {
             getCurrentPositionDeferred({
                 enableHighAccuracy: true
             }).done(function(position) {
-                loader.getLocationByLatLon(position.coords)
+                getLocationByLatLon(position.coords)
             }).fail(function() {
-                console.log("getCurrentPosition call failed")
+                console.error("getCurrentPosition call failed")
             }).always(function() {
                 //do nothing
             });
@@ -234,63 +284,9 @@ var formLoader = (function($, undefined) {
             var contentLength = $(this).val().length;
             $page.find('#lengthCounter').html(contentLength + '/300');
         });
-        
-        
-        imageCount = 0;
-        currentImageIndex = 0;
-        isUploading = false;
-        for (var i = 0; i < imageMaxNum; i++) {
-            imagesInfo[i] = null;
-        }
-        var deviceWidth = $(window).width() * 0.90;
-        $('#image-uploader').css('width', deviceWidth);
-
-    /*if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(getLocationByLatlonForSellForm);
-    }*/
-        
-        $('#post_image').fileupload({
-            url: "/s3/upload/",
-            dataType: 'json',
-            done: function(e, data) {
-                var imageInfo = {};
-                imageInfo['url'] = data.result.image_url;
-                imageInfo['width'] = data.result.width;
-                imageInfo['height'] = data.result.height;
-                imageInfo['orientation'] = data.result.orientation;
-                addImage(imageInfo);
-                console.log(JSON.stringify(imagesInfo[currentImageIndex]));
-            },
-            progressall: function(e, data) {
-                var progress = parseInt(data.loaded / data.total * 100, 10);
-                $('#progressbar').show();
-                jQMProgressBar('progressbar').setValue(progress);
-                isUploading = true;
-                $('#image-uploader').attr("disabled", true);
-                $('#post_image').attr("disabled", true);
-            },
-            fail: function(e, data) {
-                alert("照片上传出错，请重试一次");
-            },
-            always: function(e, data) {
-                $('#progressbar').hide();
-                isUploading = false;
-                $('#image-uploader').attr("disabled", false);
-                $('#post_image').attr("disabled", false);
-            }
-        });
-        
-        jQMProgressBar('progressbar')
-            .isMini(false)
-            .setMax(100)
-            .setStartFrom(0)
-            .showCounter(true)
-            .build();
-        $('#progressbar').hide();
-        
     };
     
-    loader.getLocationByLatLon = function(coords) {
+    var getLocationByLatLon = function(coords) {
         var latitude = coords.latitude;
         var longitude = coords.longitude;
         $latitude.val(latitude);
@@ -311,9 +307,7 @@ var formLoader = (function($, undefined) {
         });
     };
 
-    /*
-     * Use user input zipcode to get the city and latlon
-     */
+    // Use user input zipcode to get the city and latlon
     loader.getLocationByZipcode = function() {
         var zipcode = $('#'+page+'-form #zipcode').val();
         $.ajax({
@@ -329,45 +323,6 @@ var formLoader = (function($, undefined) {
             return data;
         });
     };
-    
-    /*
-function getLocationByLatlonForSellForm(position) {
-    var latitude = position.coords.latitude;
-    var longitude = position.coords.longitude;
-    $("#sell_form_latitude").val(latitude);
-    $("#sell_form_longitude").val(longitude);
-    $.ajax({
-        type: "get",
-        url: "/user/get_info/get_zipcode_by_latlong",
-        dataType: "json",
-        data: {
-            latitude: latitude,
-            longitude: longitude
-        }
-    }).then(function(data) {
-        console.log(data);
-        $('#sell_form_zipcode').val(data['zipcode']);
-        $('#sell_form_city_name').val(data['city']);
-    });
-}
-
-function getLocationByZipcodeForSellForm() {
-    var zipcode = $("#sell_form_zipcode").val();
-    $.ajax({
-        type: "get",
-        url: "/user/get_info/get_latlong_by_zipcode",
-        dataType: "json",
-        data: {
-            zipcode: zipcode
-        }
-    }).then(function(data) {
-        console.log(data);
-        $('#sell_form_city_name').val(data['city']);
-        $('#sell_form_latitude').val(data['latitude']);
-        $('#sell_form_longitude').val(data['longitude']);
-    });
-}*/
-
     
     loader.clickPhoneContact = function() {
         if (isPhoneChecked) {
@@ -428,96 +383,79 @@ function getLocationByZipcodeForSellForm() {
     return loader;
 }(jQuery));
 
-
-
 $(document).delegate('#buy-form', 'pageinit', function(event) {
     formLoader.init('buy');
 });
 
 $(document).delegate('#sell-form', 'pageinit', function(event) {
     formLoader.init('sell');
+    gallerySwiper.init($('#sell-form-gallery'));
 });
+
 
 /****************************************
  *    Buy/Sell posts list javascript    *
  ****************************************/
-var postLoader = (function($, undefined) {
-    var loader = {}, page, // buy or sell
-        postPageNum,
-        currentPosition,
-        category = null,
-        keyword = null,
-        hasMorePost = true,
-        slotPos = 0,
-        numPerPage,
+var buyPostLoader = (function($, undefined) {
+    var page, $page, // buy or sell
         $document = $(document),
         $window = $(window),
-        $list1, $list2;
-    
-    loader.init = function(initPage) {
+        $list1, $list2, $loadmore,
+        postPageNum, numPerPage, hasMorePost, slotPos = 0,
+        currentPosition,
+        loadingPost = false,
+        category = null,
+        keyword = null,
+    init = function(initPage) {
         page = initPage;
-        postPageNum = 1;
-        numPerPage = $('#'+page+'-list>.num-per-page').val();
+        $page = $('#'+page+'-list');
         
-        $list1 = $('#'+page+'-list>.post-list1');
-        $list2 = $('#'+page+'-list>.post-list2');
-        loader.clearPosts();
+        $list1 = $page.children('.post-list1');
+        $list2 = $page.children('.post-list2');
+        $loadmore = $page.find('.load-more');
+        numPerPage = $page.find('.num-per-page').val();
+        //clearPosts();
         
         getCurrentPositionDeferred({
             enableHighAccuracy: true
         }).done(function(position) {
             currentPosition = position;
-            loader.getAndDisplayPosts();
+            clearPosts();
+            loadMorePosts();
         }).fail(function() {
             console.error("getCurrentPosition call failed");
         }).always(function() {
             //do nothing
         });
-        
-        //Refresh the posts when scrolling to the bottom
-        $window.live("hitBottom", function() {
-            loader.getAndDisplayPosts();
-        });
-        
-        $document.on("scrollstart", function() {
-            if ($document.height() > $window.height() && hasMorePost) {
-                if ($window.scrollTop() >= $document.height() - $window.height() - 200) {
-                    if (typeof currentPosition !== 'undefined') {
-                        hasMorePost = false;
-                        loader.getAndDisplayPosts();
-                    }
-                }
-            }
-        });
-
-        $document.on("scrollstop", function() {
-            if ($document.height() > $window.height() && hasMorePost) {
-                if ($window.scrollTop() >= $document.height() - $window.height() - 200) {
-                    if (typeof currentPosition !== 'undefined') {
-                        hasMorePost = false;
-                        loader.getAndDisplayPosts();
-                    }
-                }
-            }
-        });
-    };
-    
-    loader.clearPosts = function() {
+    },
+    clearPosts = function() {
+        slot_pos = 0;
+        postPageNum = 1;
+        hasMorePost = true;
         $list1.empty();
         $list2.empty();
-    };
-    
-    loader.getAndDisplayPosts = function() {
-        $('#load-more').show(); //Starting loading animation
-        
-        //Get posts and add success callback using then
-        loader.getPosts().then(function() {
-            //Stop loading animation on success
-            // $('#load-more').hide();
-        });
+    },
+    loadMorePosts = function() {
+        if (!loadingPost) {
+            loadingPost = true;
+            $loadmore.show(); //Starting loading animation
+
+            //Get posts and add success callback using then
+            getPosts().then(function() {
+                //$loadmore.hide(); //Stop loading animation on success
+            });
+            loadingPost = false;
+        }
+    },
+// TODO: This is very ugly now. This function will be called to many times and there should be a way to prevent this.
+    getMorePosts = function() {
+        if ($.mobile.activePage.attr('id') === 'nearby-'+page+'post') {//alert($window.height());
+        if (hasMorePost && (typeof currentPosition !== 'undefined') && $window.scrollTop() >= $document.height()-$window.height()-200) {
+            loadMorePosts();
+        }}
     };
 
-    loader.getPosts = function() {
+    var getPosts = function() {
         //Get posts via ajax
         return $.ajax({
             type: 'get',
@@ -531,15 +469,21 @@ var postLoader = (function($, undefined) {
                 keyword: keyword
             }
         }).then(function(posts) {
-            loader.displayPosts(posts);
+            displayPosts(posts);
         });
     };
     
-    loader.displayPosts = function(posts) {
+    var displayPosts = function(posts) {
         var tempList1 = $(''),
             tempList2 = $(''),
             i = 0, len = posts.length;
-        
+        if (len < numPerPage) {
+            hasMorePost = false;
+            $loadmore.hide();
+        } else {
+            hasMorePost = true;
+            postPageNum++;
+        }
         //process posts data
         for (i = 0; i < len; i++) {
             var distance = formatDistance(posts[i]['distance']), price, image_info_list, item;
@@ -584,72 +528,48 @@ var postLoader = (function($, undefined) {
             slotPos++;
         }
 
-        if (len < numPerPage) {
-            hasMorePost = true;
-            $('#load-more').hide();
-        } else {
-            hasMorePost = true;
-            postPageNum++;
-        }
         $list1.append(tempList1);
         $list2.append(tempList2);
     };
     
-    /* not cleaned up */
-    loader.refreshSellPosts = function() {
+    var refreshPosts = function() {
         $('#popupBasic-popup').removeClass('ui-popup-active');
         $('#popupBasic-popup').addClass('ui-popup-hidden');
         $('#popupBasic-popup').addClass('ui-popup-truncate');
-        slot_pos = 0;
-        var zipcode = $('#zipcode').val();
-        var sellPostCategory = 0;
-        sellPostCategory = $('input[name="category"]:checked').val();
-        var sellPostKeyword = $('#sellPostKeyword').val();
-        $.ajax({
-            type: "get",
-            url: "/user/get_info/get_latlong_by_zipcode",
-            dataType: "json",
-            data: {
-                zipcode: zipcode
-            }
-        }).then(function(latlon) {
-            // var latlon = jQuery.parseJSON(data);
-            sellPostCurLatLon['latitude'] = latlon['latitude'];
-            sellPostCurLatLon['longitude'] = latlon['longitude'];
-            //clear the posts and reset pageNum
-            sellPostLoader.clearPosts();
-            sellPostPageNum = 1;
-            hasMorePost = false;
-            loader.getAndDisplayPosts();
-        });
-        document.getElementById("zipcode").value = '';
-        document.getElementById("sellPostKeyword").value = '';
-        if (sellPostCategory != 0) {
-            $('input[name=category][value=]').prop("checked", true).checkboxradio("refresh");
-            $('input[name=category][value=' + sellPostCategory + ']').prop("checked", false).checkboxradio("refresh");
-        }
-        return false;
+        
+        category = $('input[name="category"]:checked').val();
+        keyword = $('#sellPostKeyword').val();
+        
+        clearPosts();
+        getMorePosts();
     };
     
-    return loader;
+    return { 
+        init: init, 
+        clearPosts: clearPosts, 
+        getMorePosts: getMorePosts, 
+        refreshPosts: refreshPosts
+    };
 }(jQuery));
 
+var sellPostLoader = Object.create(buyPostLoader);
+
 $(document).delegate('#nearby-buypost', 'pageinit', function() {
-    postLoader.init('buy');
+    buyPostLoader.init('buy');
 });
 
 $(document).delegate('#nearby-sellpost', 'pageinit', function() {
-    postLoader.init('sell');
+    sellPostLoader.init('sell');
 });
 
 /****************************************
  *   Buy/Sell post detail javascript    *
  ****************************************/
 var detailLoader = (function($, undefined) {
-    var loader = {}, page, $page,
-        wx_id, post_id;
+    var page, $page,
+        wx_id, post_id,
 
-    loader.init = function(initPage) {
+    init = function(initPage) {
         page = initPage;
         $page = $('#'+page+'-detail-page');
         wx_id = $page.find('#wx_id').val();
@@ -686,10 +606,10 @@ var detailLoader = (function($, undefined) {
             }).then(function(data) {});
         });
         
-        loader.showFollowStatus();
-    };
-
-    loader.toggleFollowStatus = function() {
+        showFollowStatus();
+        showPostStatus();
+    },
+    toggleFollowStatus = function() {
         var is_followed = $page.find('#is_followed').val(); 
         var follow_img = '';   
         var popup_msg = '';
@@ -721,171 +641,69 @@ var detailLoader = (function($, undefined) {
         }).then(function(data) {
 
         });
-    };
-
-    loader.showFollowStatus = function() {
+    },
+    showFollowStatus = function() {
         var is_followed = $page.find('#is_followed').val();
         if( is_followed == 'False'){
             $page.find('#follow').attr('src', '/static/images/detail/not_followed.png');
         } else {
             $page.find('#follow').attr('src', '/static/images/detail/followed.png');
         }
+    },
+    showShareMsg = function() {
+        $page.find('#share_msg').show();
+    },
+    hideShareMsg = function() {
+        $page.find('#share_msg').hide();
     };
 
-    loader.showShareMsg = function() {
-        $page.find('#share_msg').show();
-    }
+    showPostStatus = function() {
+        var is_open = $page.find('#is_open').val();
+        if( is_open == 'False'){
+            $page.find('#open .ui-btn-text').text('标记为待售');
+        } else {
+            $page.find('#open .ui-btn-text').text('标记为已售');
+        }
+    };
 
-    loader.hideShareMsg = function() {
-        $page.find('#share_msg').hide();
-    }
+    togglePostStatus = function() {
+        var is_open = $page.find('#is_open').val(); 
+        
+        var msg = '';
+        if( is_open == 'False'){
+            is_open = 'True';
+            msg = "标记为已售";
+        } else {
+            is_open = 'False';
+            msg = "标记为待售";
+        }
+        $page.find('#is_open').val(is_open);
+        $page.find('#open .ui-btn-text').text(msg);
 
-    return loader;
+        $.ajax({
+            type: 'get',
+            url: '/' + page + '/toggle_post',
+            dataType: 'json',
+            data: {
+                wx_id: wx_id,
+                post_id: post_id,
+                is_open: is_open
+            }
+        }).then(function(data) {
+
+        });
+    };
+
+    return {
+        init: init, 
+        showFollowStatus: showFollowStatus,
+        toggleFollowStatus: toggleFollowStatus,
+        showShareMsg: showShareMsg,
+        hideShareMsg: hideShareMsg, 
+        showPostStatus: showPostStatus,
+        togglePostStatus: togglePostStatus
+    };
 }(jQuery));
-
-
-// from sell post detail
-var IMG_WIDTH = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-var currentImg=0;
-var maxImages=$('#imgs').children().length;//{{image_num}};
-var speed=500;
-
-var imgs;
-
-var swipeOptions=
-{
-    triggerOnTouchEnd : true,   
-    swipeStatus : swipeStatus,
-    allowPageScroll:'vertical',
-    threshold:75            
-}
-
-$(function()
-{               
-    imgs = $('#imgs');
-    imgs.swipe( swipeOptions );
-});
-
-
-/**
-* Catch each phase of the swipe.
-* move : we drag the div.
-* cancel : we animate back to where we were
-* end : we animate to the next image
-*/          
-function swipeStatus(event, phase, direction, distance)
-{
-    //If we are moving before swipe, and we are going Lor R in X mode, or U or D in Y mode then drag.
-    if( phase=='move' && (direction=='left' || direction=='right') )
-    {
-        var duration=0;
-
-        if (direction == 'left')
-            scrollImages((IMG_WIDTH * currentImg) + distance, duration);
-
-        else if (direction == 'right')
-            scrollImages((IMG_WIDTH * currentImg) - distance, duration);
-
-    }
-
-    else if ( phase == 'cancel')
-    {
-        scrollImages(IMG_WIDTH * currentImg, speed);
-    }
-
-    else if ( phase =='end' )
-    {
-        if (direction == 'right')
-            previousImage()
-        else if (direction == 'left')           
-            nextImage()
-    }
-}
-
-function selectImage(i){
-    var diff = i - currentImg;
-    if(i>currentImg && i<=maxImages-1){
-        for(var j=0;j<diff;j++){
-            nextImage();
-        }
-    } else if(i>=0 && i<currentImg){
-        for(var j=0;j<-diff;j++){
-            previousImage();
-        }
-    }
-}
-
-function selectThumbnail(i){
-    if(i>=0 && i<=maxImages-1){
-        for(var j=0;j<=maxImages-1;j++){
-            $('#thumbnail_span'+j).addClass('thumbnail_not_selected');
-        }
-        $('#thumbnail_span'+i).removeClass('thumbnail_not_selected');
-        $('#thumbnail_span'+i).addClass('thumbnail_selected');
-    }
-}
-
-function previousImage()
-{
-    currentImg = Math.max(currentImg-1, 0);
-    scrollImages( IMG_WIDTH * currentImg, speed);
-    selectThumbnail(currentImg);
-}
-
-function nextImage()
-{
-    currentImg = Math.min(currentImg+1, maxImages-1);
-    scrollImages( IMG_WIDTH * currentImg, speed);
-    selectThumbnail(currentImg);
-}
-
-/**
-* Manuallt update the position of the imgs on drag
-*/
-function scrollImages(distance, duration)
-{
-    imgs.css('-webkit-transition-duration', (duration/1000).toFixed(1) + 's');
-
-    //inverse the number we set in the css
-    var value = (distance<0 ? '' : '-') + Math.abs(distance).toString();
-
-    imgs.css('-webkit-transform', 'translate3d('+value +'px,0px,0px)');
-}
-
-function showContacts() { 
-    if("{{phone_checked}}" == "on" || "{{sms_checked}}" == "on" ){
-        $('#phone_number_div').css('display', 'inline');
-    } else {
-        $('#phone_number_div').css('display', 'none');
-    }
-
-    if ("{{phone_checked}}" == "on"){     
-        $('#phone-icon').hide();
-        $('#phone-icon-clicked').show();
-    } else {
-        $('#phone-icon').show();
-        $('#phone-icon-clicked').hide();
-    }
-
-    if("{{sms_checked}}" == "on" ){
-        $('#sms-icon').hide();
-        $('#sms-icon-clicked').show();
-    } else { 
-        $('#sms-icon').show();
-        $('#sms-icon-clicked').hide();
-    }
-
-    if ("{{email_checked}}"  == 'on' ){
-        $('#email_div').css('display', 'inline');
-        $('#email-icon').hide();
-        $('#email-icon-clicked').show();
-    } else { 
-        $('#email_div').css('display', 'none');
-        $('#email-icon').show();
-        $('#email-icon-clicked').hide();
-    }
-
-}
 
 $(document).on("pagebeforechange", function() {
     var ua = navigator.userAgent.toLowerCase();
@@ -902,6 +720,196 @@ $(document).on("pagechange", function() {
         detailLoader.init('buy');
     } else if (url.substring(0,12) === '/detail/sell') {
         detailLoader.init('sell');
+        gallerySwiper.init($('.ui-page-active .gallery'));
     }
 });
 
+
+/******************************************
+**    User info/edit                
+******************************************/
+var userLoader = (function($, undefined) {
+    var loader = {},
+        page, $page;
+
+    loader.init = function(initPage) {
+        page = initPage;
+        $page = $('#user-update-page');     
+        $page.find('#description').bind('input propertychange', function() {
+            var contentLength = $(this).val().length;
+            $page.find('#lengthCounter').html(contentLength + '/3000');
+        });
+
+        //init lengthCounter
+        var contentLength = $('#description').val().length;
+        var lengthCount = contentLength + "/" + 3000;
+        $('#lengthCounter').text(lengthCount);
+
+        var isUploading = false;
+        $('#post_image').fileupload({
+            url: "/s3/upload/",
+            dataType: 'json',
+            done: function(e, data) {
+                var imageInfo = {};
+                imageInfo['url'] = data.result.image_url;
+                imageInfo['width'] = data.result.width;
+                imageInfo['height'] = data.result.height;
+                imageInfo['orientation'] = data.result.orientation;
+                $('#image_url').val(imageInfo['url']);
+                $('#image_width').val(imageInfo['width']);
+                $('#image_height').val(imageInfo['height']);
+                $('#image_orientation').val(imageInfo['orientation']);
+                $('#profile_image').attr('src',imageInfo['url']);
+                console.log(JSON.stringify(imageInfo));
+            },
+            progressall: function(e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#progressbar').show();
+                jQMProgressBar('progressbar').setValue(progress);
+                isUploading = true;
+                $('#image-uploader').attr("disabled", true);
+                $('#post_image').attr("disabled", true);
+            },
+            fail: function(e, data) {
+                alert("照片上传出错，请重试一次");
+            },
+            always: function(e, data) {
+                $('#progressbar').hide();
+                isUploading = false;
+                $('#image-uploader').attr("disabled", false);
+                $('#post_image').attr("disabled", false);
+            }
+        });
+    };
+
+    return loader;
+}(jQuery));
+
+$(document).delegate('#user-update-page', 'pageinit', function() {
+    userLoader.init('user-update-page');
+});
+
+
+/******************************************
+**    Address edit
+******************************************/
+var addressLoader = (function($, undefined) {
+    var loader = {},
+        page, $page, 
+        $latitude, $longitude,
+        $zipcode, $cityName;
+
+    loader.init = function(initPage) {
+        $page = $('#'+initPage); 
+        if (navigator.geolocation) {
+            getCurrentPositionDeferred({
+                enableHighAccuracy: true
+            }).done(function(position) {
+                loader.getLocationByLatLon(position.coords)
+            }).fail(function() {
+                console.log("getCurrentPosition call failed")
+            }).always(function() {
+                //do nothing
+            });
+        } else {
+            console.error("Geolocation is disabled.")
+        }
+
+        $(document).on("click", "#getzipcode", function() {
+            var zipcode = $('#zipcode_input').val();
+            if (zipcode) {
+                $.ajax({
+                    type: "get",
+                    url: "/user/get_info/get_city",
+                    dataType: "json",
+                    data: {
+                        zipcode: zipcode,
+                    }
+                }).then(function(data) {
+                    console.log(data);
+                    $("#city").text(data.city_name);
+                    $("#city_id").val(data.city_id);
+                    $("#district").text(data.lv1_district_name);
+                    $("#latitude").val(data.latitude);
+                    $("#longitude").val(data.longitude);
+                });
+            }
+        });
+
+    };
+
+     loader.getLocationByLatLon = function(coords) {
+            var latitude = coords.latitude;
+            var longitude = coords.longitude;
+            $.ajax({
+                type: "get",
+                url: "/user/get_info/get_city_by_latlong",
+                dataType: "json",
+                data: {
+                    latitude: latitude,
+                    longitude: longitude
+                }
+            }).then(function(data) {
+                $("#city").text(data.city_name);
+                $("#city_id").val(data.city_id);
+                $("#district").text(data.lv1_district_name);
+                $("#zipcode").val(data.zipcode);
+                $("#latitude").val(latitude);
+                $("#longitude").val(longitude);
+            });
+    }
+
+    return loader;
+}(jQuery));
+
+$(document).delegate("#user-address-page", "pageinit", function() {
+    addressLoader.init('user-address-page');
+});
+
+
+/******************************************
+**    user getinfo 
+******************************************/
+var infoLoader = (function($, undefined) {
+    var loader = {}, $page;
+
+    loader.init = function(initPage) {
+        $page = $('#'+initPage);
+
+    };
+
+    return loader;
+}(jQuery));
+
+function validateUserInfo() {
+            $('#user_info_form').validate({
+                rules: {
+                    user_email: {
+                        required: true,
+                        email: true,
+                        remote: {
+                            url: "check_email",
+                            type: "post",
+                            async: false
+                        }
+                    }
+                },
+                messages: {
+                    user_email: {
+                        email: "该email格式不对",
+                        remote: "该email已经被使用"
+                    }
+                }
+            });
+            $('#username_input').val($('#username').val());
+            $('#email_input').val($('#user_email').val());
+            return $('#user_info_form').valid();
+}
+
+$(document).delegate("#user_info", "pageinit", function() {
+    infoLoader.init('user_info');
+});
+
+$(document).delegate("#user_location", "pageinit", function() {
+    addressLoader.init('user_location');
+});

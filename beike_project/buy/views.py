@@ -1,6 +1,7 @@
 from django.http import Http404,HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render,render_to_response
+from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
 from data.models import BuyPost,User,Category, District
 from data.views import get_user, get_category, get_district
@@ -76,17 +77,17 @@ def follow_post(request):
         post_id = request.GET.get('post_id')
         post = buy_post_util.get_post(post_id)
 
-        follow_option = request.GET.get('follow_option')
-        if follow_option == 'follow':
+        is_followed = request.GET.get('is_followed')
+        if is_followed == 'True':
             buy_post_util.follow_post(user, post)
             return HttpResponse("{}")
-        elif follow_option == 'unfollow':
+        elif is_followed == 'False':
             buy_post_util.unfollow_post(user, post)
             return HttpResponse("{}")
         else:
-            raise Http500
+            raise ValidationError("Operation not supported")
     else:
-        raise Http500
+        raise ValidationError("Request not supported")
 
 def form(request):
     if 'wx_id' not in request.session or 'key' not in request.session:
@@ -140,7 +141,7 @@ def form_submit(request):
     else: 
         raise Http404
 
-def open_close_post(request):
+def toggle_post(request):
     if request.is_ajax:
         validate_user(request)
         wx_id = request.session['wx_id']
@@ -151,12 +152,12 @@ def open_close_post(request):
         post = buy_post_util.get_post(post_id)
 
         if user.id == post.user.id:
-            operation = request.GET.get('operation')
-            if operation == 'open':
+            is_open = request.GET.get('is_open')
+            if is_open == 'True':
                 post.is_open = True
                 post.save()
                 return HttpResponse("{}")
-            elif operation == 'close':
+            elif is_open == 'False':
                 post.is_open = False
                 post.date_closed = datetime.now()
                 post.save()

@@ -10,12 +10,15 @@ from data.views import set_user_email
 from data.utils import getValidationKey
 from data.models import User, UserValidation
 from beike_project import settings
+import logging
 
 import xml.etree.ElementTree as ET
 import urllib,urllib2,time,hashlib
 
+LOGGER = logging.getLogger("weixin.views")
 TOKEN = "weixin_beike_token"
 SERVER_URL = settings.SERVER_URL
+WEIXIN_PIC_URL = settings.WEIXIN_PIC_URL
 
 @csrf_exempt
 def valid(request):
@@ -31,7 +34,7 @@ def valid(request):
 def checkSignature(request):
 	global TOKEN
 	rawStr = smart_str(request.body)
-	print rawStr
+	LOGGER.info(rawStr)
 	signature = request.GET.get("signature", None)
 	timestamp = request.GET.get("timestamp", None)
 	nonce = request.GET.get("nonce", None)
@@ -49,7 +52,7 @@ def checkSignature(request):
 
 def responseMsg(request):
 	rawStr = smart_str(request.body)
-	msg = parseInputMsg(ET.fromstring(rawStr))
+	msg = parse_input_msg(ET.fromstring(rawStr))
 	msgType  = msg['MsgType']
 	user_id = msg['FromUserName']
 	content = msg.get('Content','content')
@@ -58,47 +61,28 @@ def responseMsg(request):
 	if msgType == 'event':
 		eventType  = msg['Event']
 		if eventType == 'unsubscribe':
-			print msg
+			LOGGER.info(msg)
 		if eventType == 'subscribe':
 			url = SERVER_URL + '/?wx_id=' + user_id + '&key=' + validation_key
-			print url
-			return handleEvent(msg,url)
+			LOGGER.info("Response URL: " + url)
+			return create_template(msg,url)
 	if msgType == 'text':		
 		url = SERVER_URL + '/?wx_id=' + user_id + '&key=' + validation_key
-		print url
-		return handleText(msg,url)
+		LOGGER.info("Response URL: " + url)
+		return create_template(msg,url)
 
-def parseInputMsg(rootElem):
+def parse_input_msg(rootElem):
 	msg = {}
 	if rootElem.tag == 'xml':
 		for child in rootElem:
 			msg[child.tag] = smart_str(child.text)
 	return msg
 
-
-def handleText(msg,url):
+def create_template(msg,url):
 	extTpl ="<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>1</ArticleCount><Articles><item><Title><![CDATA[%s]]></Title><Description><![CDATA[%s]]></Description><PicUrl><![CDATA[%s]]></PicUrl><Url><![CDATA[%s]]></Url></item></Articles></xml>"
-
 	fromUserName = msg['FromUserName']
 	toUserName = msg['ToUserName']
-	queryStr = msg.get('Content','You have input nothing~')
 	title = unicode('欢迎来到千贝', 'utf-8')
 	description = unicode('请点击该页面进入千贝易物平台', 'utf-8')
-	picUrl = "https://s3-us-west-2.amazonaws.com/beike-s3/beike_main.jpg"
-	extTpl = extTpl % (fromUserName,toUserName,str(int(time.time())),title,description,picUrl,url)
+	extTpl = extTpl % (fromUserName,toUserName,str(int(time.time())),title,description,WEIXIN_PIC_URL,url)
 	return extTpl
-
-def handleEvent(msg,url):
-	extTpl ="<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>1</ArticleCount><Articles><item><Title><![CDATA[%s]]></Title><Description><![CDATA[%s]]></Description><PicUrl><![CDATA[%s]]></PicUrl><Url><![CDATA[%s]]></Url></item></Articles></xml>"
-
-	fromUserName = msg['FromUserName']
-	toUserName = msg['ToUserName']
-	queryStr = msg.get('Content','You have input nothing~')
-	title = unicode('欢迎来到千贝', 'utf-8')
-	description = unicode('请点击该页面进入千贝易物平台', 'utf-8')
-	picUrl = "https://s3-us-west-2.amazonaws.com/beike-s3/beike_main.jpg"
-	extTpl = extTpl % (fromUserName,toUserName,str(int(time.time())),title,description,picUrl,url)
-	return extTpl
-
-
-

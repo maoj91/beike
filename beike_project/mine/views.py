@@ -12,7 +12,7 @@ from sell.sell_post_util import SellPostUtil
 from data.views import get_user
 import json, logging
 
-logger = logging.getLogger('mine.views')
+LOGGER = logging.getLogger('mine.views')
 
 def index(request):
     if 'wx_id' not in request.session or 'key' not in request.session:
@@ -26,14 +26,14 @@ def index(request):
     sell_post_util = SellPostUtil()
 
     sell_posts = SellPost.objects.filter(user__wx_id=wx_id).order_by('-date_published')
-    logger.info("Fetched " + str(len(sell_posts)) + " sell posts for user " + str(user.id))
+    LOGGER.info("Fetched " + str(len(sell_posts)) + " sell posts for user " + str(user.id))
     buy_posts = BuyPost.objects.filter(user__wx_id=wx_id).order_by('-date_published')
-    logger.info("Fetched " + str(len(buy_posts)) + " buy posts for user " + str(user.id))
+    LOGGER.info("Fetched " + str(len(buy_posts)) + " buy posts for user " + str(user.id))
 
     followed_sell_posts = sell_post_util.get_followed_posts(user)
-    logger.info("Fetched " + str(len(followed_sell_posts)) + " sell posts followed by user " + str(user.id))
+    LOGGER.info("Fetched " + str(len(followed_sell_posts)) + " sell posts followed by user " + str(user.id))
     followed_buy_posts = buy_post_util.get_followed_posts(user)
-    logger.info("Fetched " + str(len(followed_buy_posts)) + " buy posts followed by user " + str(user.id))
+    LOGGER.info("Fetched " + str(len(followed_buy_posts)) + " buy posts followed by user " + str(user.id))
 
     return render_to_response('mine.html',
     	{'image':image,'sell_posts':sell_posts, 'buy_posts':buy_posts,

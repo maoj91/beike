@@ -6,28 +6,10 @@
 <body>
 <div id="sell-edit" data-role="page" data-fullscreen="true">
     {% include "header.html" with title="我要卖—修改" %}
-
-    <!-- TODO: needs to clean up -->
-    <div>
-        <div id="image_gallery">
-            <div id="imgs">
-            {% for image_metadata in image_list %}
-                <span class="img_span">
-                    <img src="{{ image_metadata.image_url }}">
-                </span>
-            {% endfor%}
-            </div>
-        </div>   
-        <div id="image_thumbnails">
-        {% for image_metadata in image_list %}
-            <span class="thumbnail_span" id="thumbnail_span{{forloop.counter0}}" onclick='selectImage({{forloop.counter0}})'>
-                <img src="{{ image_metadata.image_url }}">
-            </span>
-        {% endfor%}
-        </div>
-    </div>
     
     <div data-role="content">
+        {% include "gallery.html" with galleryId="sell-edit-gallery" upload="on" %}
+        
         <form action="/detail/sell/{{post.id}}/save/" method="post" enctype="multipart/form-data">
             {% csrf_token %}
 

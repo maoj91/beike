@@ -184,16 +184,6 @@ span.city-text {
     background-color: #ddd
 }
 
-#progressbar {
-    width: 60%;
-    position: absolute;
-    top: 100px;
-    left: 20%;
-}
-
-.progressbar-wrapper {
-    position: relative; text-align: center;
-}
 
 .new-image {
     position: relative;
@@ -341,7 +331,6 @@ img.load-more {
     vertical-align: middle;
     width: 50px;
     margin: 0 auto;
-    display: none;
 }
 
 div.post-item-div {
@@ -534,6 +523,11 @@ img.contact-icon.hide {
     font-size: 14px;
 }
 
+#content {
+    padding: 8px;
+    min-height: 70px;
+}
+
 #submit_btn {
     display: block;
     width: 120px;
@@ -617,7 +611,7 @@ div.detail-category {
 }
 
 div.detail-price-wrapper {
-    margin-top: 5px;
+    margin-top: 1px;
     color: #666;
     font-size: 20px;
     line-height: 20px;
@@ -687,4 +681,113 @@ a.detail-contact-link {
 img.detail-contact-icon {
     width: 50px;
     height: 50px;
+}
+
+.gallery-wrapper {
+    clear: both;
+    width: 100%;
+    padding-bottom: 90.5%;
+    margin-bottom: 10px;
+}
+
+.gallery-wrapper.no-thumbnails {
+    padding-bottom: 75%;
+}
+
+.gallery {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+}
+
+.gallery-list {
+    width: 500%;
+    height: 83%;
+    overflow: hidden;
+}
+
+.no-thumbnails .gallery-list {
+    height: 100%;
+}
+
+.gallery-image-box {
+    width: 20%;
+    height: 100%;
+    float: left;
+    overflow: hidden;
+background-color: #ddd;
+}
+.gallery-image-box.image-uploader { display: none; }
+.gallery-image-box.image-uploader:only-child { display: block; }
+.gallery-image {
+    display: block;
+    position: absolute;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    margin: auto;
+    left: 0; right: 0;
+    top: 0; bottom: 0;
+}
+
+.gallery-thumbnail-list {
+    clear: both;
+    width: 101%;
+    height: 16%;
+    margin-top: .8%;
+}
+
+.no-thumbnails .gallery-thumbnail-list {
+    height: 0;
+}
+
+.gallery-thumbnail-box {
+    float: left;
+    width: 19%;
+    height: 99%;
+    overflow: hidden;
+    /*background-color: #eee;*/
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    margin-right: 1%;
+    cursor: pointer;
+}
+.gallery-thumbnail-box.selected {
+    border: 1px solid #24c598;
+}
+.gallery-thumbnail {
+    position: absolute;
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+    left: 0; right: 0;
+    top: 0; bottom: 0;
+}
+.image-uploader {
+    background-image: url("/static/images/sell_post/upload.png");
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    cursor: pointer; /* not working */
+}
+.thumbnail-box.image-uploader {
+    background-size: 80%;
+}
+.image-uploader-input {
+    width: 100%; 
+    height: 100%;
+    opacity: 0;
+}
+.gallery-thumbnail-box.image-uploader {display: none; float: right;}
+.gallery-thumbnail-box.image-uploader:nth-last-child(n+2):nth-last-child(-n+5) {display: block; }
+#progressbar {
+    width: 0;
+    position: absolute;
+    top: 0; left: 0;
+    height: 5px;
+    background-color: #24c598
 }

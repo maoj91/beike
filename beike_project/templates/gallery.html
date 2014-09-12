@@ -1,0 +1,29 @@
+<div class="gallery-wrapper">
+    <div id="{{ galleryId }}" class="gallery">
+        <div class="gallery-list {% if upload %}upload{% endif %}">
+        {% for image_metadata in image_list %}
+            <div class="gallery-image-box"><img class="gallery-image" src="{{ image_metadata.image_url }}" /></div>
+        {% endfor %}
+        {% if upload %}
+            <div class="gallery-image-box image-uploader">
+                <input type="file" data-role="none" class="image-uploader-input" name="post_image" accept="image/*" />
+            </div>
+        {% endif %}
+        </div>
+
+        <div class="gallery-thumbnail-list">
+        {% if upload %}
+            <div class="gallery-thumbnail-box image-uploader">
+                <input type="file" data-role="none" class="image-uploader-input" name="post_image" accept="image/*" />
+            </div>
+        {% endif %}
+        {% for image_metadata in image_list %}
+            <div class="gallery-thumbnail-box" onclick="gallerySwiper.select({{forloop.counter0}});">
+                <img class="gallery-thumbnail" src="{{ image_metadata.image_url }}" />
+                <div class="gallery-thumbnail-bar"></div>
+            </div>
+        {% endfor %}
+        </div>
+        {% if upload %}<div id="progressbar"></div>{% endif %}
+    </div>
+</div>

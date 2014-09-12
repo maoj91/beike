@@ -13,6 +13,7 @@ DATABASES = {
 
 SERVER_URL = 'http://54.204.4.250'
 S3_BUCKET = 'beike-s3'
+WEIXIN_PIC_URL = 'https://s3-us-west-2.amazonaws.com/beike-s3/beike_main.jpg'
 
 # Request to view all the sell posts with pagination
 # It return at maximum NUM_SELL_POST_PER_PAGE per response.
