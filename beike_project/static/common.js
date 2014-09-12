@@ -32,13 +32,21 @@ var gallerySwiper = (function($, undefined) {
         currentImg, nImg, img_w,
         speed = 500,
         $thumbnails,
-        $uploader,
+        $uploader, upload = false,
     options = {
-        triggerOnTouchEnd : true,   
+        triggerOnTouchEnd : true,
         swipeStatus : swipeStatus,
         allowPageScroll: 'vertical',
         //threshold: 75
-    }, 
+    },
+    displayThumbnails = function() {
+console.log(nImg);
+console.log(upload);
+        if ((nImg == 0) || (nImg==1 && !upload))
+            $('.gallery-wrapper').addClass('no-thumbnails');
+        else
+            $('.gallery-wrapper').removeClass('no-thumbnails');
+    },
     init = function($initGallery) {
         currentImg = 0;
         img_w = $initGallery.width();
@@ -46,7 +54,7 @@ var gallerySwiper = (function($, undefined) {
         $thumbnails = $initGallery.children('.gallery-thumbnail-list');
         nImg = $thumbnails.children().length;
         if ($gallery.hasClass('upload')) {
-            nImg--;
+            nImg--; upload = true;
             $uploader = $initGallery.find('.image-uploader-input');
             $uploader.fileupload({
                 url: "/s3/upload/",
@@ -58,30 +66,23 @@ var gallerySwiper = (function($, undefined) {
                     imageInfo['height'] = data.result.height;
                     imageInfo['orientation'] = data.result.orientation;
                     addImage(imageInfo);
-                    console.log(JSON.stringify(imagesInfo[currentImageIndex]));
+                    //console.log(JSON.stringify(imagesInfo[nImg]));
                 },
                 progressall: function(e, data) {
-                    var progress = parseInt(data.loaded / data.total * 100, 10);
-                    $uploader.attr("disabled", true);
-                    $('#progressbar').show();
-                    jQMProgressBar('progressbar').setValue(progress);
+                    var pct = parseInt(data.loaded / data.total * 100, 10);
+                    $('.image-uploader-input').attr('disabled','true');
+                    $('#progressbar').css('width', pct+"%");
                 },
                 fail: function() { alert("照片上传出错，请重试一次"); },
                 always: function() {
-                    $uploader.attr("disabled", false);
-                    $('#progressbar').hide();
+                    $('.image-uploader-input').removeAttr('disabled');
+                    $('#progressbar').css('width','0');
                 }
             });
-            
-            jQMProgressBar('progressbar')
-                .isMini(false)
-                .setMax(100)
-                .setStartFrom(0)
-                .showCounter(true)
-                .build();
         }
         $gallery.swipe(options);
         selectThumbnail(0);
+        displayThumbnails();
     };
 
     function addImage(imageInfo) {
@@ -102,6 +103,7 @@ var gallerySwiper = (function($, undefined) {
             $('#image_width' + index).val(imageInfo['width']);
             $('#image_height' + index).val(imageInfo['height']);
             $('#image_orientation' + index).val(imageInfo['orientation']);
+            displayThumbnails();
         }
     }
     function swipeStatus(event, phase, direction, distance) {
@@ -263,7 +265,6 @@ var formLoader = (function($, undefined) {
 
             });
         }
-
         
         if (navigator.geolocation) {
             getCurrentPositionDeferred({
@@ -390,6 +391,7 @@ $(document).delegate('#sell-form', 'pageinit', function(event) {
     formLoader.init('sell');
     gallerySwiper.init($('#sell-form-gallery'));
 });
+
 
 /****************************************
  *    Buy/Sell posts list javascript    *
@@ -678,7 +680,7 @@ $(document).on("pagechange", function() {
         detailLoader.init('buy');
     } else if (url.substring(0,12) === '/detail/sell') {
         detailLoader.init('sell');
-        gallerySwiper.init($('.ui-page-active #sell-detail-gallery'));
+        gallerySwiper.init($('.ui-page-active .gallery'));
     }
 });
 

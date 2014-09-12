@@ -523,6 +523,11 @@ img.contact-icon.hide {
     font-size: 14px;
 }
 
+#content {
+    padding: 8px;
+    min-height: 70px;
+}
+
 #submit_btn {
     display: block;
     width: 120px;
@@ -685,6 +690,10 @@ img.detail-contact-icon {
     margin-bottom: 10px;
 }
 
+.gallery-wrapper.no-thumbnails {
+    padding-bottom: 75%;
+}
+
 .gallery {
     position: absolute;
     top: 0;
@@ -698,8 +707,10 @@ img.detail-contact-icon {
     width: 500%;
     height: 83%;
     overflow: hidden;
-    /*background-color: purple;
-    overflow: hidden;*/
+}
+
+.no-thumbnails .gallery-list {
+    height: 100%;
 }
 
 .gallery-image-box {
@@ -707,7 +718,7 @@ img.detail-contact-icon {
     height: 100%;
     float: left;
     overflow: hidden;
-background-color: purple;
+background-color: #ddd;
 }
 .gallery-image-box.image-uploader { display: none; }
 .gallery-image-box.image-uploader:only-child { display: block; }
@@ -729,6 +740,11 @@ background-color: purple;
     height: 16%;
     margin-top: .8%;
 }
+
+.no-thumbnails .gallery-thumbnail-list {
+    height: 0;
+}
+
 .gallery-thumbnail-box {
     float: left;
     width: 19%;
@@ -769,8 +785,9 @@ background-color: purple;
 .gallery-thumbnail-box.image-uploader {display: none; float: right;}
 .gallery-thumbnail-box.image-uploader:nth-last-child(n+2):nth-last-child(-n+5) {display: block; }
 #progressbar {
-    width: 60%;
+    width: 0;
     position: absolute;
-    top: 100px;
-    left: 20%;
+    top: 0; left: 0;
+    height: 5px;
+    background-color: #24c598
 }
