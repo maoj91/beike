@@ -140,7 +140,7 @@ def form_submit(request):
     else: 
         raise Http404
 
-def open_close_post(request):
+def toggle_post(request):
     if request.is_ajax:
         validate_user(request)
         wx_id = request.session['wx_id']
@@ -151,12 +151,12 @@ def open_close_post(request):
         post = buy_post_util.get_post(post_id)
 
         if user.id == post.user.id:
-            operation = request.GET.get('operation')
-            if operation == 'open':
+            is_open = request.GET.get('is_open')
+            if is_open == 'True':
                 post.is_open = True
                 post.save()
                 return HttpResponse("{}")
-            elif operation == 'close':
+            elif is_open == 'False':
                 post.is_open = False
                 post.date_closed = datetime.now()
                 post.save()

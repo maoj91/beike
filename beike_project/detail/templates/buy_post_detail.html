@@ -104,6 +104,14 @@
         <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
         <a href="/detail/sell/{{post.id}}/edit/"><input type="image" value="修改" id="edit_btn" src="/static/images/detail/edit.png" style="max-width:80px;vertical-align: middle;"></a>
     </div>
+
+    <div class="ui-grid-solo">
+        <a data-role="button" href="#" onclick="detailLoader.togglePostStatus();" id="open">
+          <span class="ui-btn-inner ui-btn-corner-all">
+            <span class="ui-btn-text"></span>
+          </span>
+        </a>
+    </div>
     {% endif %}
 
     
@@ -117,6 +125,7 @@
     <input type="hidden" id="is_followed" value="{{is_followed}}">
     <input type="hidden" id="post_id" value="{{post.id}}">
     <input type="hidden" id="wx_id" value="{{wx_id}}">
+    <input type="hidden" id="is_open" value="{{post.is_open}}">
 
     {% include "footer.html" %}
 </div>

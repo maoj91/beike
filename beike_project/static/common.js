@@ -607,6 +607,7 @@ var detailLoader = (function($, undefined) {
         });
         
         showFollowStatus();
+        showPostStatus();
     },
     toggleFollowStatus = function() {
         var is_followed = $page.find('#is_followed').val(); 
@@ -656,12 +657,51 @@ var detailLoader = (function($, undefined) {
         $page.find('#share_msg').hide();
     };
 
+    showPostStatus = function() {
+        var is_open = $page.find('#is_open').val();
+        if( is_open == 'False'){
+            $page.find('#open .ui-btn-text').text('标记为待售');
+        } else {
+            $page.find('#open .ui-btn-text').text('标记为已售');
+        }
+    };
+
+    togglePostStatus = function() {
+        var is_open = $page.find('#is_open').val(); 
+        
+        var msg = '';
+        if( is_open == 'False'){
+            is_open = 'True';
+            msg = "标记为已售";
+        } else {
+            is_open = 'False';
+            msg = "标记为待售";
+        }
+        $page.find('#is_open').val(is_open);
+        $page.find('#open .ui-btn-text').text(msg);
+
+        $.ajax({
+            type: 'get',
+            url: '/' + page + '/toggle_post',
+            dataType: 'json',
+            data: {
+                wx_id: wx_id,
+                post_id: post_id,
+                is_open: is_open
+            }
+        }).then(function(data) {
+
+        });
+    };
+
     return {
         init: init, 
         showFollowStatus: showFollowStatus,
         toggleFollowStatus: toggleFollowStatus,
         showShareMsg: showShareMsg,
-        hideShareMsg: hideShareMsg
+        hideShareMsg: hideShareMsg, 
+        showPostStatus: showPostStatus,
+        togglePostStatus: togglePostStatus
     };
 }(jQuery));
 
