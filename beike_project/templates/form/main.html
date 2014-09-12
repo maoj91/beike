@@ -1,0 +1,44 @@
+<div class="form-left">标题</div>
+            <div class="form-right">
+                <input type="text" maxlength="20" name="title" id="title" value="{{post.title}}" placeholder="请输入标题" data-rule-required="true" data-rule-content="true" data-msg-required="请输入标题" />
+            </div>
+
+            <div class="form-left">类别</div>
+            <div class="form-right">
+                <select class="form-button" name="category" id="category" data-placeholder="true">
+                    {% for category in categories %}
+                        {% if post.category.id == category.id %}
+                            <option value={{ category.id }} selected>{{category.name}}</option>
+                        {% else %}
+                            <option value={{ category.id }}>{{category.name}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-left">价格</div>
+            <div class="form-right">
+                <input type="number" min="-1000" max="1000000000" name="price" value="{{post.price}}" placeholder="请标价" data-rule-required="true" data-rule-content="true" data-msg-required="请输入价格">
+            </div>
+
+<input type="hidden" name="latitude" id="latitude"></input>
+            <input type="hidden" name="longitude" id="longitude"></input>
+
+
+<!-- TODO: load zip from post -->
+            <div class="form-left">邮编</div>
+            <div class="form-right">
+                <div style="width: 65px; float: left;">
+                    <input type="text" maxlength="6" name="zipcode" id="zipcode" placeholder="zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改">
+                </div>
+                <div style="width: 100px; float: right;">
+                    <a href="" class="form-button" data-role="button" onclick="formLoader.getLocationByZipcode();">
+                        <span>更新</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="form-left">城市</div>
+            <div class="form-right">
+                <input readonly class="readonly" data-role="none" name="city_name" id="city-name" data-rule-required="true" data-rule-content="true" data-msg-required="输入zipcode并按修改"></input>
+            </div>

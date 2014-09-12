@@ -32,59 +32,62 @@ var gallerySwiper = (function($, undefined) {
         currentImg, nImg, img_w,
         speed = 500,
         $thumbnails,
-        $uploader, upload = false,
-    options = {
+        $uploader, upload,
+    swpieOptions = {
         triggerOnTouchEnd : true,
         swipeStatus : swipeStatus,
         allowPageScroll: 'vertical',
         //threshold: 75
     },
-    displayThumbnails = function() {
-console.log(nImg);
-console.log(upload);
-        if ((nImg == 0) || (nImg==1 && !upload))
-            $('.gallery-wrapper').addClass('no-thumbnails');
-        else
-            $('.gallery-wrapper').removeClass('no-thumbnails');
+    uploadOptions = {
+        url: "/s3/upload/",
+        dataType: 'json',
+        done: function(e, data) {
+            var imageInfo = {
+                url: data.result.image_url,
+                width: data.result.width,
+                height: data.result.height,
+                orientation: data.result.orientation
+            };
+            addImage(imageInfo);
+            //console.log(JSON.stringify(imagesInfo[nImg]));
+        },
+        progressall: function(e, data) {
+            var pct = parseInt(data.loaded / data.total * 100, 10);
+            $('.image-uploader-input').attr('disabled','true');
+            $('.progressbar').css('width', pct+"%");
+        },
+        fail: function() { alert("照片上传出错，请重试一次"); },
+        always: function() {
+            $('.image-uploader-input').removeAttr('disabled');
+            $('.progressbar').css('width','0');
+        }
     },
     init = function($initGallery) {
+        console.log('gallery init');
         currentImg = 0;
         img_w = $initGallery.width();
         $gallery = $initGallery.children('.gallery-list');
         $thumbnails = $initGallery.children('.gallery-thumbnail-list');
         nImg = $thumbnails.children().length;
+        uploader = false;
         if ($gallery.hasClass('upload')) {
-            nImg--; upload = true;
+            nImg--;
+            upload = true;
             $uploader = $initGallery.find('.image-uploader-input');
-            $uploader.fileupload({
-                url: "/s3/upload/",
-                dataType: 'json',
-                done: function(e, data) {
-                    var imageInfo = {};
-                    imageInfo['url'] = data.result.image_url;
-                    imageInfo['width'] = data.result.width;
-                    imageInfo['height'] = data.result.height;
-                    imageInfo['orientation'] = data.result.orientation;
-                    addImage(imageInfo);
-                    //console.log(JSON.stringify(imagesInfo[nImg]));
-                },
-                progressall: function(e, data) {
-                    var pct = parseInt(data.loaded / data.total * 100, 10);
-                    $('.image-uploader-input').attr('disabled','true');
-                    $('#progressbar').css('width', pct+"%");
-                },
-                fail: function() { alert("照片上传出错，请重试一次"); },
-                always: function() {
-                    $('.image-uploader-input').removeAttr('disabled');
-                    $('#progressbar').css('width','0');
-                }
-            });
+            $uploader.fileupload(uploadOptions);
         }
-        $gallery.swipe(options);
+        $gallery.swipe(swpieOptions);
         selectThumbnail(0);
-        displayThumbnails();
+        ifShowThumbnails();
     };
-
+    
+    function ifShowThumbnails() {
+        if ((nImg == 0) || (nImg == 1 && !upload))
+            $('.gallery-wrapper').addClass('no-thumbnails');
+        else
+            $('.gallery-wrapper').removeClass('no-thumbnails');
+    }
     function addImage(imageInfo) {
         if (nImg < MAX_N_IMG) {
             var index = nImg,
@@ -98,12 +101,12 @@ console.log(upload);
             $gallery.append($img);
             $thumbnails.append($thumbnail);
             selectImage(index);
-            selectThumbnail(index);
+            //selectThumbnail(index);
             $('#image_url' + index).val(imageInfo['url']);
             $('#image_width' + index).val(imageInfo['width']);
             $('#image_height' + index).val(imageInfo['height']);
-            $('#image_orientation' + index).val(imageInfo['orientation']);
-            displayThumbnails();
+            //$('#image_orientation' + index).val(imageInfo['orientation']);
+            ifShowThumbnails();
         }
     }
     function swipeStatus(event, phase, direction, distance) {
@@ -231,9 +234,13 @@ var formLoader = (function($, undefined) {
         isPhoneChecked = false,
         isSmsChecked = false;
     
-    loader.init = function(initPage) {
+    loader.init = function(initPage, $initPage) {
+        console.log('form init');
         page = initPage;
-        $page = $('#'+page+'-form');
+        if ($initPage) 
+            $page = $initPage;
+        else
+            $page = $('#'+page+'-form');
         $latitude = $page.find('#latitude');
         $longitude = $page.find('#longitude');
         $zipcode = $page.find('#zipcode');
@@ -280,9 +287,11 @@ var formLoader = (function($, undefined) {
             console.error("Geolocation is disabled.")
         }
         
-        $page.find('#content').bind('input propertychange', function() {
-            var contentLength = $(this).val().length;
-            $page.find('#lengthCounter').html(contentLength + '/300');
+        var $description = $page.find('#description'),
+            $counter = $page.find('#lengthCounter');
+        $counter.html($description.val().length + '/300');
+        $description.bind('input propertychange', function() {
+            $counter.html($description.val().length + '/300');
         });
     };
     
@@ -309,7 +318,7 @@ var formLoader = (function($, undefined) {
 
     // Use user input zipcode to get the city and latlon
     loader.getLocationByZipcode = function() {
-        var zipcode = $('#'+page+'-form #zipcode').val();
+        var zipcode = $page.find('#zipcode').val();
         $.ajax({
             type: "get",
             url: "/user/get_info/get_latlong_by_zipcode",
@@ -326,57 +335,57 @@ var formLoader = (function($, undefined) {
     
     loader.clickPhoneContact = function() {
         if (isPhoneChecked) {
-            $('#phone-icon').show();
-            $('#phone-icon-clicked').hide();
+            $page.find('#phone-icon').show();
+            $page.find('#phone-icon-clicked').hide();
             isPhoneChecked = false;
-            $('#phone-checked').val('off');
+            $page.find('#phone-checked').val('off');
             if(isSmsChecked){
-                $('#phone_number_div').css('display', 'block');
+                $page.find('#phone_number_div').css('display', 'block');
             } else{
-                $('#phone_number_div').css('display', 'none');
+                $page.find('#phone_number_div').css('display', 'none');
             } 
         } else {
-            $('#phone-icon').hide();
-            $('#phone-icon-clicked').show();
-            $('#phone_number_div').css('display', 'block');
+            $page.find('#phone-icon').hide();
+            $page.find('#phone-icon-clicked').show();
+            $page.find('#phone_number_div').css('display', 'block');
             isPhoneChecked = true;
-            $('#phone-checked').val('on');
+            $page.find('#phone-checked').val('on');
         }
     };
 
     loader.clickEmailContact = function() {
         if (isEmailChecked) {
-            $('#email-icon').show();
-            $('#email-icon-clicked').hide();
-            $('#email_div').css('display', 'none');
+            $page.find('#email-icon').show();
+            $page.find('#email-icon-clicked').hide();
+            $page.find('#email_div').css('display', 'none');
             isEmailChecked = false;
-            $('#email-checked').val('off');
+            $page.find('#email-checked').val('off');
         } else {
-            $('#email-icon').hide();
-            $('#email-icon-clicked').show();
-            $('#email_div').css('display', 'block');
+            $page.find('#email-icon').hide();
+            $page.find('#email-icon-clicked').show();
+            $page.find('#email_div').css('display', 'block');
             isEmailChecked = true;
-            $('#email-checked').val('on');
+            $page.find('#email-checked').val('on');
         }
     };
 
     loader.clickSmsContact = function() {
         if (isSmsChecked) {
-            $('#sms-icon').show();
-            $('#sms-icon-clicked').hide();
+            $page.find('#sms-icon').show();
+            $page.find('#sms-icon-clicked').hide();
             if(isPhoneChecked){
-                $('#phone_number_div').css('display', 'block');
+                $page.find('#phone_number_div').css('display', 'block');
             } else{
-                $('#phone_number_div').css('display', 'none');
+                $page.find('#phone_number_div').css('display', 'none');
             } 
             isSmsChecked = false;
             $('#sms-checked').val('off');
         } else {
-            $('#sms-icon').hide();
-            $('#sms-icon-clicked').show();
-            $('#phone_number_div').css('display', 'block');
+            $page.find('#sms-icon').hide();
+            $page.find('#sms-icon-clicked').show();
+            $page.find('#phone_number_div').css('display', 'block');
             isSmsChecked = true;
-            $('#sms-checked').val('on');
+            $page.find('#sms-checked').val('on');
         }
     };
     
@@ -721,6 +730,7 @@ $(document).on("pagechange", function() {
     } else if (url.substring(0,12) === '/detail/sell') {
         detailLoader.init('sell');
         gallerySwiper.init($('.ui-page-active .gallery'));
+        formLoader.init('sell',$('#sell-edit'));
     }
 });
 
@@ -764,7 +774,7 @@ var userLoader = (function($, undefined) {
             },
             progressall: function(e, data) {
                 var progress = parseInt(data.loaded / data.total * 100, 10);
-                $('#progressbar').show();
+                $('.progressbar').show();
                 jQMProgressBar('progressbar').setValue(progress);
                 isUploading = true;
                 $('#image-uploader').attr("disabled", true);
@@ -774,7 +784,7 @@ var userLoader = (function($, undefined) {
                 alert("照片上传出错，请重试一次");
             },
             always: function(e, data) {
-                $('#progressbar').hide();
+                $('.progressbar').hide();
                 isUploading = false;
                 $('#image-uploader').attr("disabled", false);
                 $('#post_image').attr("disabled", false);

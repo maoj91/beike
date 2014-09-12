@@ -523,7 +523,7 @@ img.contact-icon.hide {
     font-size: 14px;
 }
 
-#content {
+#description {
     padding: 8px;
     min-height: 70px;
 }
@@ -784,7 +784,7 @@ background-color: #ddd;
 }
 .gallery-thumbnail-box.image-uploader {display: none; float: right;}
 .gallery-thumbnail-box.image-uploader:nth-last-child(n+2):nth-last-child(-n+5) {display: block; }
-#progressbar {
+.progressbar {
     width: 0;
     position: absolute;
     top: 0; left: 0;
