@@ -107,7 +107,7 @@ def update(request,offset):
 
 def get_info(request):
     if 'wx_id' not in request.session or 'key' not in request.session: 
-        return render_to_response('get_info.html',{'cities':cities,'default_city':'Seattle'},RequestContext(request))
+        return render_to_response('get_info.html',RequestContext(request))
     validate_user(request)
     wx_id = request.session['wx_id']
     return render_to_response('get_info.html',{'user_id':wx_id},RequestContext(request))
