@@ -9,12 +9,12 @@ def index(request):
 	if request.method == "GET":
 		wx_id = request.GET.get('wx_id')
 		key = request.GET.get('key')
-		if wx_id is None:
+		if wx_id is None and 'wx_id' in request.session:
 			 wx_id = request.session['wx_id']
-		if key is None:
+		if key is None and 'key' in request.session:
 			 key = request.session['key']		
 		if wx_id is None or key is None:
-			raise Http404
+			return render_to_response('index.html')
 		else:
 			request.session['wx_id'] = wx_id
 			request.session['key'] = key

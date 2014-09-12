@@ -26,10 +26,8 @@ def index(request):
     return HttpResponse('sell');
 
 def all_list(request):
-    validate_user(request)
     categories = Category.objects.all();
-    wx_id = request.session['wx_id']
-    return render_to_response('sell_posts.html', {'user_id':wx_id, 'categories':categories, 'num_per_page': NUM_PER_PAGE})
+    return render_to_response('sell_posts.html', {'categories':categories, 'num_per_page': NUM_PER_PAGE})
 
 def get_posts_by_page(request):
     if request.is_ajax():
@@ -138,6 +136,8 @@ def get_sell_post_summary(post, origin):
         raise ValueError("Argument should be an SellPost instance.")
 
 def form(request):
+    if 'wx_id' not in request.session or 'key' not in request.session:
+        return HttpResponseRedirect('/user/get_info/')
     validate_user(request)
     wx_id = request.session['wx_id']
     user = User.objects.get(wx_id=wx_id)

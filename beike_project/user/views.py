@@ -80,9 +80,11 @@ def update(request,offset):
     return HttpResponseRedirect('/user/'+str(offset),{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
 
 def get_info(request):
+    cities = City.objects.all()
+    if 'wx_id' not in request.session or 'key' not in request.session: 
+        return render_to_response('get_info.html',{'cities':cities,'default_city':'Seattle'},RequestContext(request))
     validate_user(request)
     wx_id = request.session['wx_id']
-    cities = City.objects.all()
     return render_to_response('get_info.html',{'user_id':wx_id,'cities':cities,'default_city':'Seattle'},RequestContext(request))
 
 def get_city_by_latlong(request):

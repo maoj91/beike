@@ -18,9 +18,8 @@ from django.contrib.gis.measure import D
 NUM_PER_PAGE = settings.NUM_BUY_POST_PER_PAGE
 
 def all_list(request):
-    validate_user(request)
-    wx_id = request.session['wx_id']
-    return render_to_response('buy_posts.html', {'user_id':wx_id, 'num_per_page': NUM_PER_PAGE})
+
+    return render_to_response('buy_posts.html', {'num_per_page': NUM_PER_PAGE})
 
 def get_posts_by_page(request):
     if request.is_ajax():
@@ -90,6 +89,8 @@ def follow_post(request):
         raise Http500
 
 def form(request):
+    if 'wx_id' not in request.session or 'key' not in request.session:
+        return HttpResponseRedirect('/user/get_info/')
     validate_user(request)
     wx_id = request.session['wx_id']
     user = User.objects.get(wx_id=wx_id)
