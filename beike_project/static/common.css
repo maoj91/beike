@@ -8,14 +8,9 @@ html, body, div, img, span, p, a {
     vertical-align: baseline; 
 }
 
-html, body, div, img {
-    position: relative;
-}
-
-div, img {
-    display: block;
-}
-
+html, body, div, img { position: relative; }
+div, img { display: block; }
+textarea { resize: none !important; }
 body {
 /*
 -webkit-touch-callout: none;
@@ -42,6 +37,7 @@ user-select: none;*/
 
 .footer.ui-footer {
     position: fixed;
+    margin-top: -50px;
     bottom: 0;
     width: 100%;
     border-width: 0;
@@ -732,6 +728,28 @@ background-color: #ddd;
     margin: auto;
     left: 0; right: 0;
     top: 0; bottom: 0;
+}
+.gallery-delete {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    width: 70px;
+    height: 70px;
+    background-color: #24c598;
+    -webkit-border-bottom-left-radius: 70px;
+    -moz-border-radius-bottomleft: 70px;
+    border-bottom-left-radius: 70px;
+    box-shadow: 0 0 10px #333;
+    cursor: pointer;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    line-height: 50px;
+}
+.gallery-delete:active {
+    right: 0px;
+    top: 0px;
+    box-shadow: 0 0 5px #333;
 }
 
 .gallery-thumbnail-list {

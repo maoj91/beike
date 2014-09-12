@@ -2,12 +2,12 @@
     <div id="{{ galleryId }}" class="gallery">
         <div class="gallery-list {% if upload %}upload{% endif %}">
         {% for image_metadata in image_list %}
-            <div class="gallery-image-box"><img class="gallery-image" src="{{ image_metadata.image_url }}" /></div>
+            <div class="gallery-image-box">
+                <img class="gallery-image" src="{{ image_metadata.image_url }}" />
+            </div>
         {% endfor %}
         {% if upload %}
-            <div class="gallery-image-box image-uploader">
-                <input type="file" data-role="none" class="image-uploader-input" name="post_image" accept="image/*" />
-            </div>
+            <div class="gallery-image-box image-uploader"><input type="file" data-role="none" class="image-uploader-input" name="post_image" accept="image/*" /></div>
         {% endif %}
         </div>
 
@@ -24,30 +24,33 @@
             </div>
         {% endfor %}
         </div>
-        {% if upload %}<div class="progressbar"></div>{% endif %}
+        {% if upload %}
+            <div class="gallery-delete" onclick="gallerySwiper.deleteImage()">delete</div>
+            <div class="progressbar"></div>
+        {% endif %}
     </div>
 </div>
 
 {% if upload %}
-<input type="hidden" id="image_url0" name="image_url0" data-rule-required="true" data-rule-content="true" data-msg-required="请至少上传一张照片" />
-<input type="hidden" id="image_width0" name="image_width0" />
-<input type="hidden" id="image_height0" name="image_height0" />
+<input type="hidden" id="image_url0" name="image_url0" value="{{ image_list.0.image_url }}" data-rule-required="true" data-rule-content="true" data-msg-required="请至少上传一张照片" />
+<input type="hidden" id="image_width0" name="image_width0" value="{{ image_list.0.width }}" />
+<input type="hidden" id="image_height0" name="image_height0" value="{{ image_list.0.height }}" />
 
-<input type="hidden" id="image_url1" name="image_url1" />
-<input type="hidden" id="image_width1" name="image_width1" />
-<input type="hidden" id="image_height1" name="image_height1" />
+<input type="hidden" id="image_url1" name="image_url1" value="{{ image_list.1.image_url }}" />
+<input type="hidden" id="image_width1" name="image_width1" value="{{ image_list.0.width }}" />
+<input type="hidden" id="image_height1" name="image_height1" value="{{ image_list.0.height }}" />
 
-<input type="hidden" id="image_url2" name="image_url2" />
-<input type="hidden" id="image_width2" name="image_width2" />
-<input type="hidden" id="image_height2" name="image_height2" />
+<input type="hidden" id="image_url2" name="image_url2" value="{{ image_list.2.image_url }}" />
+<input type="hidden" id="image_width2" name="image_width2" value="{{ image_list.0.width }}" />
+<input type="hidden" id="image_height2" name="image_height2" value="{{ image_list.0.height }}" />
 
-<input type="hidden" id="image_url3" name="image_url3" />
-<input type="hidden" id="image_width3" name="image_width3" />
-<input type="hidden" id="image_height3" name="image_height3" />
+<input type="hidden" id="image_url3" name="image_url3" value="{{ image_list.3.image_url }}" />
+<input type="hidden" id="image_width3" name="image_width3" value="{{ image_list.0.width }}" />
+<input type="hidden" id="image_height3" name="image_height3" value="{{ image_list.0.height }}" />
 
-<input type="hidden" id="image_url4" name="image_url4" />
-<input type="hidden" id="image_width4" name="image_width4" />
-<input type="hidden" id="image_height4" name="image_height4" />
+<input type="hidden" id="image_url4" name="image_url4" value="{{ image_list.4.image_url }}" />
+<input type="hidden" id="image_width4" name="image_width4" value="{{ image_list.0.width }}" />
+<input type="hidden" id="image_height4" name="image_height4" value="{{ image_list.0.height }}" />
 
 <input type="hidden" id="image_orientation0" name="image_orientation0" />
 <input type="hidden" id="image_orientation1" name="image_orientation1" />

@@ -31,8 +31,8 @@ var gallerySwiper = (function($, undefined) {
     var MAX_N_IMG = 5,
         currentImg, nImg, img_w,
         speed = 500,
-        $thumbnails,
-        $uploader, upload,
+        $gallery, $thumbnails,
+        $uploader, canUpload,
     swpieOptions = {
         triggerOnTouchEnd : true,
         swipeStatus : swipeStatus,
@@ -69,46 +69,86 @@ var gallerySwiper = (function($, undefined) {
         img_w = $initGallery.width();
         $gallery = $initGallery.children('.gallery-list');
         $thumbnails = $initGallery.children('.gallery-thumbnail-list');
-        nImg = $thumbnails.children().length;
-        uploader = false;
+        nImg = $thumbnails.children(':not(.image-uploader)').length;
+        canUpload = false;
         if ($gallery.hasClass('upload')) {
-            nImg--;
-            upload = true;
+            canUpload = true;
             $uploader = $initGallery.find('.image-uploader-input');
             $uploader.fileupload(uploadOptions);
         }
         $gallery.swipe(swpieOptions);
-        selectThumbnail(0);
+        selectImage(0);
         ifShowThumbnails();
+    },
+    deleteImage = function() {
+        if (confirm("要删除该照片吗?") == true) {
+            nImg--;
+            for (var i = currentImg; i < nImg; i++) {
+                $('#image_url' + i).val($('#image_url' + (i+1)).val());
+                $('#image_width' + i).val($('#image_width' + (i+1)).val());
+                $('#image_height' + i).val($('#image_height' + (i+1)).val());
+                $($thumbnails.children(':not(.image-uploader)')[i+1]).attr('onclick','gallerySwiper.select('+i+');');
+            }
+            $('#image_url' + nImg).val('');
+            $('#image_width' + nImg).val('');
+            $('#image_height' + nImg).val('');
+            
+            $gallery[0].children[currentImg+1].remove();
+            $thumbnails.children('.selected').remove();
+            
+            if (currentImg == nImg)
+                selectImage(currentImg - 1);
+            selectImage(currentImg);
+            ifShowThumbnails();
+        }
+    },
+    selectImage = function(i) {
+        if (i >= 0 && i <= nImg - 1) {
+            var diff = i - currentImg;
+            if (i > currentImg && i < nImg) {
+                for (var j = 0; j < diff; j++) nextImage();
+            } else if (i >= 0 && i < currentImg) {
+                for (var j = 0; j < -diff; j++) previousImage();
+            }
+            currentImg = i;
+            $($thumbnails.children(':not(.image-uploader)').removeClass('selected')[i]).addClass('selected');
+        }
     };
     
     function ifShowThumbnails() {
-        if ((nImg == 0) || (nImg == 1 && !upload))
+        if ((nImg == 0) || (nImg == 1 && !canUpload))
             $('.gallery-wrapper').addClass('no-thumbnails');
         else
             $('.gallery-wrapper').removeClass('no-thumbnails');
+
+        if (nImg == 0)
+            $('.gallery-delete').hide();
+        else if (canUpload)
+            $('.gallery-delete').show();
     }
     function addImage(imageInfo) {
         if (nImg < MAX_N_IMG) {
             var index = nImg,
                 url = imageInfo.url,
                 $thumbnail = $('<div class="gallery-thumbnail-box" onclick="gallerySwiper.select('+nImg+');">'+
-                        '<img class="gallery-thumbnail" src="'+url+'" />'+
-                        '<div class="gallery-thumbnail-bar"></div>'+
+                    '<img class="gallery-thumbnail" src="'+url+'" />'+
+                    '<div class="gallery-thumbnail-bar"></div>'+
                     '</div>'),
                 $img = $('<div class="gallery-image-box"><img class="gallery-image" src="'+url+'" /></div>');
             nImg++;
             $gallery.append($img);
             $thumbnails.append($thumbnail);
-            selectImage(index);
-            //selectThumbnail(index);
+            
             $('#image_url' + index).val(imageInfo['url']);
             $('#image_width' + index).val(imageInfo['width']);
             $('#image_height' + index).val(imageInfo['height']);
             //$('#image_orientation' + index).val(imageInfo['orientation']);
+            
+            selectImage(index);
             ifShowThumbnails();
         }
     }
+
     function swipeStatus(event, phase, direction, distance) {
         img_w = $gallery.width()/5;
         if( phase=='move' && (direction=='left' || direction=='right') )
@@ -124,27 +164,13 @@ var gallerySwiper = (function($, undefined) {
             else if (direction == 'left') nextImage();
         }
     }
-    function selectImage(i) {
-        var diff = i - currentImg;
-        if (i > currentImg && i < nImg) {
-            for (var j=0; j<diff; j++) {
-                nextImage();
-            }
-        } else if (i >= 0 && i < currentImg) {
-            for (var j=0; j < -diff; j++) {
-                previousImage();
-            }
-        }
-    }
     function previousImage () {
         currentImg = Math.max(currentImg-1, 0);
         scrollImages( $gallery.width()/5 * currentImg, speed);
-        selectThumbnail(currentImg);
     }
     function nextImage() {
         currentImg = Math.min(currentImg+1, nImg-1);
         scrollImages( $gallery.width()/5 * currentImg, speed);
-        selectThumbnail(currentImg);
     }
     function scrollImages(distance, duration) {
         $gallery.css('-webkit-transition-duration', (duration/1000).toFixed(1) + 's');
@@ -154,57 +180,9 @@ var gallerySwiper = (function($, undefined) {
 
         $gallery.css('-webkit-transform', 'translate3d('+value +'px,0px,0px)');
     }
-    function selectThumbnail(i) {
-        if (i >= 0 && i <= nImg - 1)
-            $($thumbnails.children(':not(.image-uploader)').removeClass('selected')[i]).addClass('selected');
-    }
     
-    return {init: init, select: selectImage};
+    return {init: init, select: selectImage, deleteImage: deleteImage};
 }(jQuery));
-
-
-function removeImage(index) {
-    if (index < imageCount) {
-        imageCount--;
-        for (var i = index; i < imageMaxNum; i++) {
-            if (i < imageCount) {
-                imagesInfo[i] = imagesInfo[i + 1];
-                imagesHtml[i] = imagesHtml[i + 1];
-                //replace image in the thumbnail
-                imgThumbnail = $('<img src="' + imagesInfo[i]['url'] + '" width="100%" height="100%"/>')
-                $('#preview' + i).empty();
-                $('#preview' + i).append(imgThumbnail);
-                //add image to the form
-                $('#image_url' + i).val(imagesInfo[i]['url']);
-                $('#image_width' + i).val(imagesInfo[i]['width']);
-                $('#image_height' + i).val(imagesInfo[i]['height']);
-            } else {
-                imagesInfo[i] = null;
-                imagesHtml[i] = null;
-                //remove image in the thumbnail
-                $('#preview' + i).empty();
-                //remove image to the form
-                $('#image_url' + i).val('');
-                $('#image_width' + i).val('');
-                $('#image_height' + i).val('');
-            }
-        }
-    }
-}
-
-/*
- * Delete the image
- */
-function deleteImage(index) {
-    if (!isUploading) {
-        var toDelete = confirm("要删除该照片吗?");
-        if (toDelete == true) {
-            removeImage(index);
-            displayImage(0);
-        }
-    }
-}
-
 
 
 /****************************************
@@ -245,6 +223,9 @@ var formLoader = (function($, undefined) {
         $longitude = $page.find('#longitude');
         $zipcode = $page.find('#zipcode');
         $cityName = $page.find('#city-name');
+        
+        $('input:not([readonly]), textarea').focusin(function() { $('.footer').css('position', 'relative'); });
+        $('input:not([readonly]), textarea').focusout(function() { $('.footer').css('position', 'fixed'); });
         
         isEmailChecked = false;
         isPhoneChecked = false;
@@ -405,7 +386,7 @@ $(document).delegate('#sell-form', 'pageinit', function(event) {
 /****************************************
  *    Buy/Sell posts list javascript    *
  ****************************************/
-var buyPostLoader = (function($, undefined) {
+var postLoader = (function($, undefined) {
     var page, $page, // buy or sell
         $document = $(document),
         $window = $(window),
@@ -421,21 +402,22 @@ var buyPostLoader = (function($, undefined) {
         
         $list1 = $page.children('.post-list1');
         $list2 = $page.children('.post-list2');
-        $loadmore = $page.find('.load-more');
+        $loadmore = $page.find('.load-more').show();
         numPerPage = $page.find('.num-per-page').val();
-        //clearPosts();
+        clearPosts();
         
         getCurrentPositionDeferred({
             enableHighAccuracy: true
         }).done(function(position) {
             currentPosition = position;
-            clearPosts();
-            loadMorePosts();
+            getAndDisplayPosts();
         }).fail(function() {
             console.error("getCurrentPosition call failed");
         }).always(function() {
             //do nothing
         });
+        $(document).off("scrollstop");
+        $(document).on("scrollstop", function() { getAndDisplayPosts(); });
     },
     clearPosts = function() {
         slot_pos = 0;
@@ -444,27 +426,12 @@ var buyPostLoader = (function($, undefined) {
         $list1.empty();
         $list2.empty();
     },
-    loadMorePosts = function() {
-        if (!loadingPost) {
-            loadingPost = true;
-            $loadmore.show(); //Starting loading animation
-
-            //Get posts and add success callback using then
-            getPosts().then(function() {
-                //$loadmore.hide(); //Stop loading animation on success
-            });
-            loadingPost = false;
+    getAndDisplayPosts = function() {
+        if (hasMorePost && (typeof currentPosition !== 'undefined') && $window.scrollTop()>=$document.height()-$window.height()-200) {
+            getPosts();
         }
     },
-// TODO: This is very ugly now. This function will be called to many times and there should be a way to prevent this.
-    getMorePosts = function() {
-        if ($.mobile.activePage.attr('id') === 'nearby-'+page+'post') {//alert($window.height());
-        if (hasMorePost && (typeof currentPosition !== 'undefined') && $window.scrollTop() >= $document.height()-$window.height()-200) {
-            loadMorePosts();
-        }}
-    };
-
-    var getPosts = function() {
+    getPosts = function() {
         //Get posts via ajax
         return $.ajax({
             type: 'get',
@@ -480,9 +447,8 @@ var buyPostLoader = (function($, undefined) {
         }).then(function(posts) {
             displayPosts(posts);
         });
-    };
-    
-    var displayPosts = function(posts) {
+    },
+    displayPosts = function(posts) {
         var tempList1 = $(''),
             tempList2 = $(''),
             i = 0, len = posts.length;
@@ -539,9 +505,8 @@ var buyPostLoader = (function($, undefined) {
 
         $list1.append(tempList1);
         $list2.append(tempList2);
-    };
-    
-    var refreshPosts = function() {
+    },
+    refreshPosts = function() {
         $('#popupBasic-popup').removeClass('ui-popup-active');
         $('#popupBasic-popup').addClass('ui-popup-hidden');
         $('#popupBasic-popup').addClass('ui-popup-truncate');
@@ -550,25 +515,21 @@ var buyPostLoader = (function($, undefined) {
         keyword = $('#sellPostKeyword').val();
         
         clearPosts();
-        getMorePosts();
+        getAndDisplayPosts();
     };
     
     return { 
-        init: init, 
-        clearPosts: clearPosts, 
-        getMorePosts: getMorePosts, 
+        init: init,
         refreshPosts: refreshPosts
     };
 }(jQuery));
 
-var sellPostLoader = Object.create(buyPostLoader);
-
 $(document).delegate('#nearby-buypost', 'pageinit', function() {
-    buyPostLoader.init('buy');
+    postLoader.init('buy');
 });
 
 $(document).delegate('#nearby-sellpost', 'pageinit', function() {
-    sellPostLoader.init('sell');
+    postLoader.init('sell');
 });
 
 /****************************************
