@@ -93,7 +93,7 @@ var gallerySwiper = (function($, undefined) {
             $('#image_width' + nImg).val('');
             $('#image_height' + nImg).val('');
             
-            $gallery[0].children[currentImg+1].remove();
+            $gallery[0].children[currentImg].remove();
             $thumbnails.children('.selected').remove();
             
             if (currentImg == nImg)
@@ -151,17 +151,18 @@ var gallerySwiper = (function($, undefined) {
 
     function swipeStatus(event, phase, direction, distance) {
         img_w = $gallery.width()/5;
-        if( phase=='move' && (direction=='left' || direction=='right') )
+        if(phase=='move' && (direction=='left' || direction=='right'))
         {
             var duration=0;
             if (direction == 'left') scrollImages((img_w * currentImg) + distance, duration);
             else if (direction == 'right') scrollImages((img_w * currentImg) - distance, duration);
         }
-        else if ( phase == 'cancel') scrollImages(img_w * currentImg, speed);
-        else if ( phase =='end' )
+        else if (phase == 'cancel') scrollImages(img_w * currentImg, speed);
+        else if (phase == 'end')
         {
             if (direction == 'right') previousImage();
             else if (direction == 'left') nextImage();
+            $($thumbnails.children(':not(.image-uploader)').removeClass('selected')[currentImg]).addClass('selected');
         }
     }
     function previousImage () {
