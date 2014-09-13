@@ -6,6 +6,7 @@
 <body>
     <div id="nearby-sellpost" data-role="page" data-fullscreen="true">
         {% include "header.html" with title="周边物品" search="on" %}
+        {% include "search.html" with categories=categories %}
         <div id="sell-list" data-role="main">
             <input type="hidden" class="num-per-page" name="num-per-page" value="{{num_per_page}}" />
             <div class="post-list1"></div>

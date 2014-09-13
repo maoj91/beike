@@ -1,0 +1,154 @@
+<style>
+.search-bar-wrapper {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
+    overflow: hidden;
+    -webkit-transition: height .5s;
+    transition: height .5s;
+}
+.search-bar-wrapper.search-category {
+    height: 240px;
+}
+    
+.search-category-box {
+    position: absolute;
+    left: 0; right: 0;
+    height: auto;
+    overflow: hidden;
+    padding: 50px 5px 0px;
+    top: 0;
+    background-color: #fff;
+}
+    
+.search-bar {
+    width: 300%;
+    height: 49px;
+    background-color: white;
+    left: -100%;
+    -webkit-transition: left .5s;
+    transition: left .5s;
+}
+.search-bar.search-keyword { left: 0%; }
+.search-bar.search-location { left: -200%; }
+
+
+.search-item {
+    width: 11.1%;
+    height: 50px;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
+    float: left;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+}
+
+.search-item:nth-child(3) {
+    border-bottom: none;
+}
+
+div.search-keyword-box {
+    width: 33.4%;
+    height: 100%;
+    float: left;
+}
+div.search-input {
+    height: 100%;
+    padding: 0 10px;
+    float: none;
+    overflow: hidden;
+}
+.search-keyword-back {
+    float: right;
+    width: 50px;
+    height: 100%;
+    padding: 10px 18px 13px 5px;
+    box-sizing: border-box;
+}
+.search-icon {height: 27px; cursor: pointer;}
+.search-location-box {
+    width: 33.3%;
+    height: 100%;
+    float: left;
+}
+.search-location-back {
+    float: left;
+    width: 50px;
+    height: 100%;
+    padding: 10px 0 10px 20px;
+    box-sizing: border-box;
+}
+
+}
+</style>
+
+<div class="search-bar-wrapper">
+    <div class="search-category-box">
+
+<fieldset data-role="controlgroup">
+<input type="radio" name="category" id=0 value='' checked="checked" />
+<label for=0>All</label>
+{% for category in categories %}
+<input type="radio" name="category" id={{ category.id }} value={{ category.id }} />
+<label for={{ category.id }}>{{category.name}}</label>
+{% endfor %}
+</fieldset>
+    </div>
+    <div class="search-bar">
+        <div class="search-keyword-box">
+            <div class="search-keyword-back" onclick="toggleKeyword();">
+                <img class="search-icon" src="/static/images/search.png" />
+            </div>
+            <div class="search-input">
+                <input id="sellPostKeyword" type="text" maxlength="30" name="keyword" placeholder="请输入关键字">
+            </div>
+            
+        </div>
+        <div class="search-item" onclick="toggleKeyword();">搜 索</div>
+        <div class="search-item" onclick="toggleCategory();">类 别</div>
+        <div class="search-item" onclick="toggleLocation();">地 点</div>
+        <div class="search-location-box">
+            <div class="search-location-back" onclick="toggleLocation();">
+                <img class="search-icon" src="/static/images/left_arrow.png" />
+            </div>
+            <div class="search-input">
+                <input id="zipcode" type="text" maxlength="6" name="location" placeholder="请输入ZipCode" ></div>
+            </div>
+    </div>
+</div>
+
+<script>
+function toggleKeyword() {
+    $('.search-bar').toggleClass('search-keyword');
+    if ( $('.search-bar').hasClass('search-keyword') )
+        setTimeout(function() {$('#sellPostKeyword').focus();}, 600);
+    else
+        postLoader.refreshPosts();
+}
+function toggleLocation() {
+    $('.search-bar').toggleClass('search-location');
+    if ( $('.search-bar').hasClass('search-location') )
+        setTimeout(function() {$('#zipcode').focus();}, 600);
+    else
+        postLoader.refreshPosts();
+}
+function toggleCategory() {
+    $('.search-bar-wrapper').toggleClass('search-category');
+    if ( !$('.search-bar-wrapper').hasClass('search-category') )
+        postLoader.refreshPosts();
+}
+$('#sellPostKeyword').keypress(function (e) {
+    if (e.which == 13) {
+        toggleKeyword();
+    }
+});
+$('#zipcode').keypress(function (e) {
+    if (e.which == 13) {
+        toggleLocation();
+    }
+});
+</script>
