@@ -193,12 +193,12 @@ function chooseCondition(conditionNum) {
     if (conditionNum >= 0 && conditionNum < 4) {
         for (i = 0; i < 4; i++) {
             if (i == conditionNum) {
-                $('#condition-' + i + '-desc').hide();
-                $('#condition-' + i + '-img').show();
+                $('#condition-' + i).hide();
+                $('#condition-' + i + '-clicked').show();
                 $("#condition-slider").val(conditionNum)
             } else {
-                $('#condition-' + i + '-desc').show();
-                $('#condition-' + i + '-img').hide();
+                $('#condition-' + i).show();
+                $('#condition-' + i + '-clicked').hide();
             }
         }
     }
