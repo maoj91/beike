@@ -46,9 +46,9 @@ user-select: none;*/
 
 .wrapper { 
     /**/
-    width: 100%; height: auto;
+    width: 100%; height: 100%;
     /*/
-    width: 640px; height: 1010px; 
+    width: 320px; height: 505px; 
     /**/
 }
 
@@ -61,8 +61,8 @@ user-select: none;*/
     background-size: 100% 100%;
 }
 #logo {
-    margin-top:3em;
-    margin-left:5em;
+    margin-top: 3em;
+    margin-left: 5em;
 }
 .signup-outer {
     width: 100%;
@@ -76,13 +76,14 @@ user-select: none;*/
 /* CSS for index page */
 div.main-top {
     position: relative;
-    height: 50%;
+    height: 54%;
 }
 
 div.main-top-background {
     width: 100%;
     height: 100%;
-    background-image: url("/static/images/homepage/background.jpg");
+    background-image: url("http://54.204.4.250/static/images/homepage/background.png");
+    background-size: 16px;
     background-repeat: repeat;
 }
 
@@ -92,7 +93,7 @@ img.main-top-logo {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 40%;
+    height: 35%;
     margin: auto;
 }
 
@@ -124,15 +125,16 @@ span.city-text {
 
 .main-bottom {
     background-color: #d5e8d9;
-    padding-bottom: 20px;
+    padding: 14px 10px 17px;
     width: 100%;
-    height: 50%;
+    height: 46%;
     box-sizing: border-box;
     overflow: hidden;
 }
 
 .main-item {
     max-height: 50%;
+    height: 50%;
     width: 33%;
     padding: 0px;
     box-sizing: border-box;
@@ -144,7 +146,7 @@ span.city-text {
     display: block;
     height: 100%;
     margin: 0 auto;
-    padding: 10px;
+    padding: 4px;
     box-sizing: border-box;
 }
 
@@ -156,161 +158,6 @@ span.city-text {
 #email_div {
     display: none;
 }
-
-/* CSS for image uploader */
-#image-uploader {
-    max-width: 600px;
-    width: 100%;
-    height: 300px;
-}
-
-.image-uploader-image {
-    width: 100%;
-    height: 250px;
-    background-color: #ddd;
-    background-image: url('/static/images/sell_post/camera_bkg.png');
-    background-size: 180px 150px;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-#image_thumbnails_div {
-    width: 100%;
-    height: 65px;
-    background-color: #ddd
-}
-
-
-.new-image {
-    position: relative;
-    width: 20%;
-    height:65px;
-    text-align: center;
-    background-color:#ddd;
-    float: left;
-}
-
-.new-image-icon {
-    width: 80%;
-    height: 70%;
-    position:absolute;
-    left: 10%;
-    right: 10%;
-    top: 15%;
-    bottom: 15%;
-}
-
-.image-thumbnail-box {
-    position: relative;
-    width: 25%;
-    height: 100%;
-    float: left;
-}
-
-.image-thumbnail-top {
-    position: absolute;
-    height: 6px;
-    width: 100%;
-    background-color: #ddd;
-}
-
-.image-thumbnail {
-    width: 100%;
-    height: 100%;
-    border-right: solid 1px white;
-}
-
-/* images in sell post detail */
-
-#image_gallery
-{
-    width:100%;
-    height:200px;
-    overflow:hidden;
-    position:relative;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#imgs 
-{
-    -webkit-transition-property: -webkit-transform;
-    -webkit-transition-duration: 0.5s;
-    -webkit-transition-timing-function: ease-out;
-    padding:0px;
-    margin:0px;
-
-    width:300%;
-    height: 200px;
-
-    /*apply a transfor to kick in the hardware acceleration.  Without this, the first time we add the transform you get odd rendering of the divs (half missing) */
-    -webkit-transform: translate3d(0px,0px,0px); 
-}
-
-#imgs img
-{
-    padding:0px;
-    margin:0px;
-    max-width:100%;
-    max-height:200px;
-    position: absolute;
-    margin: auto;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    -webkit-transform: translate3d(0px,0px,0px); 
-}
-
-/*#imgs img*/
-#imgs span
-{
-    float:left;
-    display:inline;
-    padding:0px;
-    margin:0px;
-    width:33%;
-    height:200px;
-
-    /*apply a transfor to kick in the hardware acceleration.  Without this, the first time we add the transform you get odd rendering of the divs (half missing) */
-    -webkit-transform: translate3d(0px,0px,0px); 
-}
-
-
-#image_thumbnails{
-    width: 100%;
-    height: 50px;  
-}
-
-.thumbnail_span{
-    float:left;
-    display:inline;
-    width: 80px;
-    height: 100%;    
-    margin-right:3px;
-}
-
-.thumbnail_span img{
-    padding:0px;
-    width:80px;
-    height: 48px; 
-    margin: auto;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0; 
-}
-
-.thumbnail_selected{
-    border-top: 3px solid #29CF95;
-}
-
-.thumbnail_not_selected{
-    border-top:none;
-    background-color: gray;
-    opacity: .7;
-}
-
 
 /* CSS for buy/sell posts */
 .post-list1, .post-list2 {
@@ -679,6 +526,7 @@ img.detail-contact-icon {
     height: 50px;
 }
 
+/* CSS for image uploader */
 .gallery-wrapper {
     clear: both;
     width: 100%;
@@ -786,7 +634,7 @@ background-color: #ddd;
     top: 0; bottom: 0;
 }
 .image-uploader {
-    background-image: url("/static/images/sell_post/upload.png");
+    background-image: url("http://54.204.4.250/static/images/sell_post/upload.png");
     background-size: 60%;
     background-repeat: no-repeat;
     background-position: center center;

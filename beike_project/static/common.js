@@ -93,7 +93,7 @@ var gallerySwiper = (function($, undefined) {
             $('#image_width' + nImg).val('');
             $('#image_height' + nImg).val('');
             
-            $gallery[0].children[currentImg].remove();
+            $gallery[0].children[currentImg+1].remove();
             $thumbnails.children('.selected').remove();
             
             if (currentImg == nImg)
@@ -225,8 +225,8 @@ var formLoader = (function($, undefined) {
         $zipcode = $page.find('#zipcode');
         $cityName = $page.find('#city-name');
         
-        $('input:not([readonly]), textarea').focusin(function() { $('.footer').css('position', 'relative'); });
-        $('input:not([readonly]), textarea').focusout(function() { $('.footer').css('position', 'fixed'); });
+        $('input:not([readonly], .image-uploader-input), textarea').focusin(function() { $('.footer').css('position', 'relative'); });
+        $('input:not([readonly], .image-uploader-input), textarea').focusout(function() { $('.footer').css('position', 'fixed'); });
         
         isEmailChecked = false;
         isPhoneChecked = false;
