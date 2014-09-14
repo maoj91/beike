@@ -11,6 +11,14 @@ html, body, div, img, span, p, a {
 html, body, div, img { position: relative; }
 div, img { display: block; }
 textarea { resize: none !important; }
+
+hr {
+    border: none;
+    clear: both;
+    height: 1px;
+    background-color: #ccc;
+}
+
 body {
 /*
 -webkit-touch-callout: none;
@@ -73,11 +81,18 @@ user-select: none;*/
 }
 
 
-/* CSS for index page */
-div.main-top {
-    position: relative;
-    height: 54%;
+/* CSS for mine */
+.mine-menu-icon {
+    display: inline;
+    width: 40px;
+    height: 40px;
+    vertical-align: middle; 
 }
+
+
+
+/* CSS for index page */
+div.main-top { height: 54%; }
 
 div.main-top-background {
     width: 100%;
@@ -89,15 +104,13 @@ div.main-top-background {
 
 img.main-top-logo {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
     height: 35%;
     margin: auto;
 }
 
-div.city {
+div.main-city-box {
     position: absolute;
     right: 20px;
     top: -6px;
@@ -109,21 +122,21 @@ div.city {
     text-align: center;
 }
 
-a.city-link { text-decoration: none; color: #24c598; }
+a.main-city { text-decoration: none; color: #24c598; }
 
-img.city-mark {
+img.main-city-icon {
     display: inline;
     height: 19px;
     vertical-align: text-bottom;
     margin-right: 0px;
 }
 
-span.city-text {
+span.main-city-text {
     font-size: 14px;
     color: #24c498;
 }
 
-.main-bottom {
+div.main-bottom {
     background-color: #d5e8d9;
     padding: 14px 10px 17px;
     width: 100%;
@@ -132,7 +145,7 @@ span.city-text {
     overflow: hidden;
 }
 
-.main-item {
+div.main-button-box {
     max-height: 50%;
     height: 50%;
     width: 33%;
@@ -141,8 +154,7 @@ span.city-text {
     float: left;
 }
 
-
-.main-button {
+a.main-button {
     display: block;
     height: 100%;
     margin: 0 auto;
@@ -170,15 +182,8 @@ span.city-text {
 .post-list1 {padding-right: 0;}
 .post-list2 {padding-left: 0;}
 
-img.load-more {
-    vertical-align: middle;
-    width: 50px;
-    margin: 0 auto;
-}
-
-div.post-item-div {
+div.post-item-box {
     width: 100%;
-    /*height: 100px;*/
     box-sizing: border-box;
     padding: 4px;
 }
@@ -196,11 +201,7 @@ a.post-item {
     text-decoration: none;
     box-shadow: 1px 1px 2px #ddd;
 }
-
-a.post-item:hover {
-    background: #f9f9f9;
-}
-
+a.post-item:hover { background: #f9f9f9; }
 a.post-item:active {
     border-color: #ccc;
     top: 1px;
@@ -216,7 +217,6 @@ img.post-icon {
     vertical-align: text-bottom;
     float: left;
 }
-
 span.post-title {
     display: block;
     font-size: 18px;
@@ -227,12 +227,10 @@ span.post-title {
     white-space: nowrap;
     overflow: hidden;
 }
-
 img.post-image {
     width: 100%;
     margin: 7px 0 0;
 }
-
 div.post-price {
     color: #666;
     margin-top: 7px;
@@ -240,30 +238,109 @@ div.post-price {
     line-height: 16px;
     font-weight: normal;
 }
-
 span.post-currency {
     color: #ff9933;
     font-size: 16px;
 }
-
 div.post-distance {
     color: #aaa;
     margin-top: 5px;
     font-size: 12px;
     font-weight: normal;
 }
-
-/* css for buy/sell forms */
-
-/*.form-button {
-    height: 9px !important;
-    line-height: 9px !important;
-}*/
-
-.form-grid {
-    margin: 10px 0 !important;
+img.post-load-more {
+    vertical-align: middle;
+    width: 50px;
+    margin: 0 auto;
 }
 
+/* CSS for search */
+div.search-bar-wrapper {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
+    overflow: hidden;
+    -webkit-transition: height .5s;
+    transition: height .5s;
+}
+div.search-bar-wrapper.search-category {
+    height: 240px;
+}
+    
+div.search-category-box {
+    position: absolute;
+    left: 0; right: 0;
+    height: auto;
+    overflow: hidden;
+    padding: 50px 5px 0px;
+    top: 0;
+    background-color: #fff;
+}
+    
+div.search-bar {
+    width: 300%;
+    height: 49px;
+    background-color: white;
+    left: -100%;
+    -webkit-transition: left .5s;
+    transition: left .5s;
+}
+div.search-bar.search-keyword { left: 0%; }
+div.search-bar.search-location { left: -200%; }
+
+
+div.search-item {
+    width: 11.1%;
+    height: 50px;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
+    float: left;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+}
+
+div.search-item:nth-child(3) {
+    border-bottom: none;
+}
+
+div.search-keyword-box {
+    width: 33.4%;
+    height: 100%;
+    float: left;
+}
+div.search-input {
+    height: 100%;
+    padding: 0 10px;
+    float: none;
+    overflow: hidden;
+}
+div.search-keyword-back {
+    float: right;
+    width: 50px;
+    height: 100%;
+    padding: 10px 18px 13px 5px;
+    box-sizing: border-box;
+}
+img.search-icon {height: 27px; cursor: pointer;}
+div.search-location-box {
+    width: 33.3%;
+    height: 100%;
+    float: left;
+}
+div.search-location-back {
+    float: left;
+    width: 50px;
+    height: 100%;
+    padding: 10px 0 10px 20px;
+    box-sizing: border-box;
+}
+
+
+/* CSS for buy/sell forms */
 .form-left {
     width: 70px;
     height: 50px;
@@ -274,7 +351,6 @@ div.post-distance {
     color: #24c598;
     /*text-align: right;*/
 }
-
 .form-right {
     min-height: 50px;
     position: relative;
@@ -284,6 +360,15 @@ div.post-distance {
     box-sizing: border-box;
 }
 
+img.form-icon {
+    margin: 5px auto 0;
+    width: 40px;
+    cursor: pointer;
+}
+img.form-icon.hide { display: none; }
+
+
+    /* need to clean up the following */ 
 label.error {
     display: block;
     color: red;
@@ -325,36 +410,6 @@ label.error {
     color: #24c598 !important; 
 }
 
-.form-cond {
-    height: 50px;
-    line-height: 50px;
-    text-align: center;
-    padding: 5px;
-}
-
-.form-cond-img {
-    margin: 0 auto;
-    width: 60px;
-    height: 40px;
-}
-
-.form-cond:hover {
-    cursor: pointer;
-}
-
-img.contact-icon {
-    margin: 5px auto 0;
-    width: 40px;
-}
-
-img.contact-icon:hover {
-    cursor: pointer;
-}
-
-img.contact-icon.hide {
-    display: none;
-}
-
 #email_div, #phone_number_div {
     clear: both;
 }
@@ -378,21 +433,8 @@ img.contact-icon.hide {
     margin: 30px auto;
 }
 
-
-
-/* CSS for mine */
-.mine-menu-icon {
-    display: inline;
-    width: 40px;
-    height: 40px;
-    vertical-align: middle; 
-}
-
-
 /* CSS for post details*/
-div.detail-title-wrapper {
-    margin-bottom: 12px;
-}
+div.detail-title-wrapper { margin-bottom: 12px; }
 
 img.detail-icon {
     display: block;
@@ -401,7 +443,6 @@ img.detail-icon {
     margin: 2px 7px 0 0;
     float: left;
 }
-
 div.detail-title {
     display: inline;
     font-size: 20px;
@@ -421,7 +462,6 @@ div.share-button-wrapper {
     padding: 7px;
     float: right;
 }
-
 img.share-button {
     display: block;
     height: 26px;
@@ -431,28 +471,18 @@ img.share-button {
     border-radius: 5px;
     /*padding: 7px;*/
     margin-left: 15px;
-}
-
-img.share-button:hover { cursor: pointer; }
-
-hr {
-    border: none;
-    clear: both;
-    height: 1px;
-    background-color: #ccc;
+    cursor: pointer;
 }
 
 span.detail-postdate {
     color: #aaa;
     font-size: 16px;
 }
-
 div.detail-category {
     float: right;
     color: #24c498;
     font-size: 16px;
 }
-
 div.detail-price-wrapper {
     margin-top: 1px;
     color: #666;
@@ -461,16 +491,13 @@ div.detail-price-wrapper {
     font-weight: normal;
     float: left;
 }
-
 span.detail-currency {
     display: inline-block;
     color: #ff9933;
     font-size: 20px;
     width: 10px;
 }
-
-span.detail-price {
-}
+span.detail-price {}
 
 div.detail-content {
     clear: both;
@@ -481,16 +508,13 @@ div.detail-content {
     /*text-indent: 2em;*/
 }
 
-
-
-div.detail-map {
+div.detail-map-box {
     position: relative;
     height: 200px;
     max-width: 640px;
     margin: 0 auto;
     overflow: hidden;
 }
-
 div.detail-loc {
     position: absolute;
     top: 0;
@@ -498,8 +522,7 @@ div.detail-loc {
     padding: 5px;
     background-color: rgba(255,255,255,0.8);
 }
-
-div.detail-map>img#map {
+img.detail-map {
     position: absolute;
     width: 640px;
     height: 200px;
@@ -533,10 +556,7 @@ img.detail-contact-icon {
     padding-bottom: 90.5%;
     margin-bottom: 10px;
 }
-
-.gallery-wrapper.no-thumbnails {
-    padding-bottom: 75%;
-}
+.gallery-wrapper.gallery-no-thumbnails { padding-bottom: 75%; }
 
 .gallery {
     position: absolute;
@@ -552,20 +572,14 @@ img.detail-contact-icon {
     height: 83%;
     overflow: hidden;
 }
-
-.no-thumbnails .gallery-list {
-    height: 100%;
-}
-
+.gallery-no-thumbnails .gallery-list { height: 100%; }
 .gallery-image-box {
     width: 20%;
     height: 100%;
     float: left;
     overflow: hidden;
-background-color: #ddd;
+    background-color: #eee;
 }
-.gallery-image-box.image-uploader { display: none; }
-.gallery-image-box.image-uploader:only-child { display: block; }
 .gallery-image {
     display: block;
     position: absolute;
@@ -577,28 +591,6 @@ background-color: #ddd;
     left: 0; right: 0;
     top: 0; bottom: 0;
 }
-.gallery-delete {
-    position: absolute;
-    top: -1px;
-    right: -1px;
-    width: 70px;
-    height: 70px;
-    background-color: #24c598;
-    -webkit-border-bottom-left-radius: 70px;
-    -moz-border-radius-bottomleft: 70px;
-    border-bottom-left-radius: 70px;
-    box-shadow: 0 0 10px #333;
-    cursor: pointer;
-    color: white;
-    font-size: 16px;
-    text-align: center;
-    line-height: 50px;
-}
-.gallery-delete:active {
-    right: 0px;
-    top: 0px;
-    box-shadow: 0 0 5px #333;
-}
 
 .gallery-thumbnail-list {
     clear: both;
@@ -606,11 +598,7 @@ background-color: #ddd;
     height: 16%;
     margin-top: .8%;
 }
-
-.no-thumbnails .gallery-thumbnail-list {
-    height: 0;
-}
-
+.gallery-no-thumbnails .gallery-thumbnail-list { height: 0; }
 .gallery-thumbnail-box {
     float: left;
     width: 19%;
@@ -633,24 +621,48 @@ background-color: #ddd;
     left: 0; right: 0;
     top: 0; bottom: 0;
 }
-.image-uploader {
+
+.gallery-uploader {
     background-image: url("http://54.204.4.250/static/images/sell_post/upload.png");
     background-size: 60%;
     background-repeat: no-repeat;
     background-position: center center;
     cursor: pointer; /* not working */
 }
-.thumbnail-box.image-uploader {
-    background-size: 80%;
-}
-.image-uploader-input {
+.gallery-thumbnail-box.gallery-uploader { background-size: 80%; }
+input.gallery-uploader-input {
     width: 100%; 
     height: 100%;
     opacity: 0;
 }
-.gallery-thumbnail-box.image-uploader {display: none; float: right;}
-.gallery-thumbnail-box.image-uploader:nth-last-child(n+2):nth-last-child(-n+5) {display: block; }
-.progressbar {
+.gallery-image-box.gallery-uploader { display: none; }
+.gallery-image-box.gallery-uploader:only-child { display: block; }
+.gallery-thumbnail-box.gallery-uploader {display: none; float: right;}
+.gallery-thumbnail-box.gallery-uploader:nth-last-child(n+2):nth-last-child(-n+5) {display: block; }
+
+.gallery-delete {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    width: 70px;
+    height: 70px;
+    background-color: #24c598;
+    -webkit-border-bottom-left-radius: 70px;
+    -moz-border-radius-bottomleft: 70px;
+    border-bottom-left-radius: 70px;
+    box-shadow: 0 0 10px #333;
+    cursor: pointer;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    line-height: 50px;
+}
+.gallery-delete:active {
+    right: 0px;
+    top: 0px;
+    box-shadow: 0 0 5px #333;
+}
+.gallery-progressbar {
     width: 0;
     position: absolute;
     top: 0; left: 0;

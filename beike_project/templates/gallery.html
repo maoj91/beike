@@ -1,8 +1,8 @@
 <div class="gallery-wrapper">
     <div id="{{ galleryId }}" class="gallery">
-        <div class="gallery-list {% if upload %}upload{% endif %}">
-        {% if upload %}
-            <div class="gallery-image-box image-uploader"><input type="file" data-role="none" class="image-uploader-input" name="post_image" accept="image/*" /></div>
+        <div class="gallery-list {% if canUpload %}gallery-canupload{% endif %}">
+        {% if canUpload %}
+            <div class="gallery-image-box gallery-uploader"><input type="file" data-role="none" class="gallery-uploader-input" name="post_image" accept="image/*" /></div>
         {% endif %}
         {% for image_metadata in image_list %}
             <div class="gallery-image-box">
@@ -12,9 +12,9 @@
         </div>
 
         <div class="gallery-thumbnail-list">
-        {% if upload %}
-            <div class="gallery-thumbnail-box image-uploader">
-                <input type="file" data-role="none" class="image-uploader-input" name="post_image" accept="image/*" />
+        {% if canUpload %}
+            <div class="gallery-thumbnail-box gallery-uploader">
+                <input type="file" data-role="none" class="gallery-uploader-input" name="post_image" accept="image/*" />
             </div>
         {% endif %}
         {% for image_metadata in image_list %}
@@ -24,14 +24,14 @@
             </div>
         {% endfor %}
         </div>
-        {% if upload %}
+        {% if canUpload %}
             <div class="gallery-delete" onclick="gallerySwiper.deleteImage()">delete</div>
-            <div class="progressbar"></div>
+            <div class="gallery-progressbar"></div>
         {% endif %}
     </div>
 </div>
 
-{% if upload %}
+{% if canUpload %}
 <input type="hidden" id="image_url0" name="image_url0" value="{{ image_list.0.image_url }}" data-rule-required="true" data-rule-content="true" data-msg-required="请至少上传一张照片" />
 <input type="hidden" id="image_width0" name="image_width0" value="{{ image_list.0.width }}" />
 <input type="hidden" id="image_height0" name="image_height0" value="{{ image_list.0.height }}" />

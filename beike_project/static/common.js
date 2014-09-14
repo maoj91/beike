@@ -33,6 +33,7 @@ var gallerySwiper = (function($, undefined) {
         speed = 500,
         $gallery, $thumbnails,
         $uploader, canUpload,
+        $progressbar,
     swpieOptions = {
         triggerOnTouchEnd : true,
         swipeStatus : swipeStatus,
@@ -54,13 +55,13 @@ var gallerySwiper = (function($, undefined) {
         },
         progressall: function(e, data) {
             var pct = parseInt(data.loaded / data.total * 100, 10);
-            $('.image-uploader-input').attr('disabled','true');
-            $('.progressbar').css('width', pct+"%");
+            $('.gallery-uploader-input').attr('disabled','true');
+            $progressbar.css('width', pct+"%");
         },
         fail: function() { alert("照片上传出错，请重试一次"); },
         always: function() {
-            $('.image-uploader-input').removeAttr('disabled');
-            $('.progressbar').css('width','0');
+            $('.gallery-uploader-input').removeAttr('disabled');
+            $progressbar.css('width','0');
         }
     },
     init = function($initGallery) {
@@ -69,11 +70,12 @@ var gallerySwiper = (function($, undefined) {
         img_w = $initGallery.width();
         $gallery = $initGallery.children('.gallery-list');
         $thumbnails = $initGallery.children('.gallery-thumbnail-list');
-        nImg = $thumbnails.children(':not(.image-uploader)').length;
+        nImg = $thumbnails.children(':not(.gallery-uploader)').length;
         canUpload = false;
-        if ($gallery.hasClass('upload')) {
+        if ($gallery.hasClass('canUpload')) {
             canUpload = true;
-            $uploader = $initGallery.find('.image-uploader-input');
+            $uploader = $initGallery.find('.gallery-uploader-input');
+            $progressbar = $initGallery.find('.gallery-progressbar');
             $uploader.fileupload(uploadOptions);
         }
         $gallery.swipe(swpieOptions);
@@ -111,15 +113,15 @@ var gallerySwiper = (function($, undefined) {
                 for (var j = 0; j < -diff; j++) previousImage();
             }
             currentImg = i;
-            $($thumbnails.children(':not(.image-uploader)').removeClass('selected')[i]).addClass('selected');
+            $($thumbnails.children(':not(.gallery-uploader)').removeClass('selected')[i]).addClass('selected');
         }
     };
     
     function ifShowThumbnails() {
         if ((nImg == 0) || (nImg == 1 && !canUpload))
-            $('.gallery-wrapper').addClass('no-thumbnails');
+            $('.gallery-wrapper').addClass('gallery-no-thumbnails');
         else
-            $('.gallery-wrapper').removeClass('no-thumbnails');
+            $('.gallery-wrapper').removeClass('gallery-no-thumbnails');
 
         if (nImg == 0)
             $('.gallery-delete').hide();
@@ -162,7 +164,7 @@ var gallerySwiper = (function($, undefined) {
         {
             if (direction == 'right') previousImage();
             else if (direction == 'left') nextImage();
-            $($thumbnails.children(':not(.image-uploader)').removeClass('selected')[currentImg]).addClass('selected');
+            $($thumbnails.children(':not(.gallery-uploader)').removeClass('selected')[currentImg]).addClass('selected');
         }
     }
     function previousImage () {
@@ -403,7 +405,7 @@ var postLoader = (function($, undefined) {
         
         $list1 = $page.children('.post-list1');
         $list2 = $page.children('.post-list2');
-        $loadmore = $page.find('.load-more').show();
+        $loadmore = $page.find('.post-load-more').show();
         numPerPage = $page.find('.num-per-page').val();
         clearPosts();
         
@@ -484,7 +486,7 @@ var postLoader = (function($, undefined) {
                 price = formatPrice(posts[i]["max_price"]);
             }
             
-            item = '<div class="post-item-div">' +
+            item = '<div class="post-item-box">' +
                 '<a class="post-item" href="/detail/' + page + '/' + posts[i]['post_id'] + '">' +
                     '<div>' +
                         '<img class="post-icon" src="/static/images/general/' + page + '_logo.png" />' +

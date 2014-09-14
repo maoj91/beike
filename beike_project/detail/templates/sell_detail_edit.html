@@ -10,7 +10,7 @@
     <div data-role="content">
         <form action="/detail/sell/{{post.id}}/save/" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {% include "gallery.html" with galleryId="sell-edit-gallery" upload="on" image_list=image_list %}
+            {% include "gallery.html" with galleryId="sell-edit-gallery" canUpload="true" image_list=image_list %}
             {% include "form/main.html" with post=post categories=categories %}
             {% include "form/condition.html" with condition=post.item_condition.value %}
             {% include "form/contact.html" with email=email phone=phone %}
