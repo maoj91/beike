@@ -33,6 +33,7 @@ user-select: none;*/
 }
 
 .header.ui-header {
+    z-index: 100;
     height: 50px;
     background-color: #24c598;
     font-size: 20px;
@@ -154,7 +155,7 @@ div.main-button-box {
     float: left;
 }
 
-a.main-button {
+.main-button {
     display: block;
     height: 100%;
     margin: 0 auto;
@@ -261,25 +262,27 @@ div.search-bar-wrapper {
     height: 50px;
     border-bottom: 1px solid #ddd;
     box-sizing: border-box;
-    overflow: hidden;
-    -webkit-transition: height .5s;
-    transition: height .5s;
-}
-div.search-bar-wrapper.search-category {
-    height: 240px;
 }
     
 div.search-category-box {
+    z-index: 10;
     position: absolute;
     left: 0; right: 0;
     height: auto;
     overflow: hidden;
-    padding: 50px 5px 0px;
-    top: 0;
+    padding: 5px 5px 0px;
+    bottom: 0;
     background-color: #fff;
+    -webkit-transition: bottom .5s;
+    transition: bottom .5s;
 }
+div.search-category-box.search-category {
+    bottom: -200px;
+}
+
     
 div.search-bar {
+    z-index: 20;
     width: 300%;
     height: 49px;
     background-color: white;

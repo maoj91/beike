@@ -4,11 +4,11 @@
 {% include "head.html" with title="物品" %}
 
 <body>
-<div data-role="page" id="sell-detail-page" data-fullscreen="true">
+<div data-role="page" id="sell-detail" data-fullscreen="true">
     {% include "header.html" with title="物品" %}
 
     <div data-role="content">
-        {% include "detal/title.html" with page="sell" post=post}
+        {% include "detail/title.html" with page="sell" post=post %}
 
         {% include "gallery.html" with galleryId="sell-detail-gallery" image_list=image_list %}
         
