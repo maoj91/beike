@@ -665,6 +665,10 @@ var detailLoader = (function($, undefined) {
         });
     };
 
+    sendEmail = function(to,title) {
+        window.open('mailto:'+to+'?subject='+title);
+    }
+
     return {
         init: init, 
         showFollowStatus: showFollowStatus,
@@ -672,7 +676,8 @@ var detailLoader = (function($, undefined) {
         showShareMsg: showShareMsg,
         hideShareMsg: hideShareMsg, 
         showPostStatus: showPostStatus,
-        togglePostStatus: togglePostStatus
+        togglePostStatus: togglePostStatus,
+        sendEmail: sendEmail
     };
 }(jQuery));
 
@@ -692,7 +697,7 @@ $(document).on("pagechange", function() {
     } else if (url.substring(0,12) === '/detail/sell') {
         detailLoader.init('sell');
         gallerySwiper.init($('.ui-page-active .gallery'));
-        formLoader.init('sell',$('#sell-edit'));
+        // formLoader.init('sell',$('#sell-edit'));
     }
 });
 
