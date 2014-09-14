@@ -62,7 +62,7 @@
         {% if email_checked %}
 <!--             <a class="detail-contact-link" href="mailto:{{email}}?Subject={{post.title}}"><img class="detail-contact-icon" src="/static/images/detail/email_selected.png"/></a> -->
 <!--             <img class="detail-contact-icon" src="/static/images/detail/email_selected.png" onclick="detailLoader.sendEmail('{{email}}','{{post.title}}');"> -->
-        <a data-role="button" href="mailto:{{email}}?Subject={{post.title}}">email</a>
+        <a id="email-button" class="detail-contact-link" data-role="button" href="mailto:{{email}}?Subject={{post.title}}" onclick="sendEmail();">email</a>
         {% endif %}
         {% if phone_checked%}
             <a class="detail-contact-link" href="tel:{{phone}}"><img class="detail-contact-icon" src="/static/images/detail/phone_selected.png" /></a>

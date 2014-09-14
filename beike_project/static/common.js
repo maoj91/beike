@@ -665,8 +665,10 @@ var detailLoader = (function($, undefined) {
         });
     };
 
-    sendEmail = function(to,title) {
-        window.location.href = 'mailto:'+to+'?subject='+title;
+    sendEmail = function() {
+        // window.location.href = 'mailto:'+to+'?subject='+title;
+        $('#email-button').trigger( "taphold" );
+        alert('test');
     }
 
     return {
@@ -697,8 +699,13 @@ $(document).on("pagechange", function() {
     } else if (url.substring(0,12) === '/detail/sell') {
         detailLoader.init('sell');
         gallerySwiper.init($('.ui-page-active .gallery'));
-        // formLoader.init('sell',$('#sell-edit'));
     }
+});
+
+
+
+$(document).delegate('#sell-edit', 'pageinit', function() {
+    formLoader.init('sell',$('#sell-edit'));
 });
 
 
