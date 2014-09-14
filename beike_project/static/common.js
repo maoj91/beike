@@ -665,9 +665,6 @@ var detailLoader = (function($, undefined) {
         });
     };
 
-    sendEmail = function() {
-    }
-
     return {
         init: init, 
         showFollowStatus: showFollowStatus,
@@ -676,7 +673,6 @@ var detailLoader = (function($, undefined) {
         hideShareMsg: hideShareMsg, 
         showPostStatus: showPostStatus,
         togglePostStatus: togglePostStatus,
-        sendEmail: sendEmail
     };
 }(jQuery));
 
