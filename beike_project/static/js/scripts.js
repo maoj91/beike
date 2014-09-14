@@ -703,6 +703,7 @@ $(document).delegate('#sell-detail', 'pagebeforeshow', function(event) {
     gallerySwiper.init($('#sell-detail .gallery'));
 });
 
+//<<<<<<< HEAD:beike_project/static/js/scripts.js
 $(document).delegate('#buy-detail', 'pagebeforeshow', function(event) {
     detailLoader.init('buy');
 });
@@ -906,7 +907,24 @@ $('#sellPostKeyword').keypress(function (e) {
 $('#zipcode').keypress(function (e) {
     if (e.which == 13) {
         toggleLocation();
+//=======
+$(document).on("pagechange", function() {
+    var url = window.location.pathname;
+    if (url === "/") {
+        $('div.ui-page').attr('style','height:100%;');
+    } else if (url.substring(0,11) === '/detail/buy') {
+        detailLoader.init('buy');
+    } else if (url.substring(0,12) === '/detail/sell') {
+        detailLoader.init('sell');
+        gallerySwiper.init($('.ui-page-active .gallery'));
+//>>>>>>> origin/master:beike_project/static/common.js
     }
+});
+
+
+
+$(document).delegate('#sell-edit', 'pageinit', function() {
+    formLoader.init('sell',$('#sell-edit'));
 });
 
 
