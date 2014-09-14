@@ -41,7 +41,6 @@ $(document).on("pagechange", function() {
     }
 });
 
-
 // gallery.js
 var gallerySwiper = (function($, undefined) {
     var MAX_N_IMG = 5,
@@ -703,181 +702,19 @@ $(document).delegate('#sell-detail', 'pagebeforeshow', function(event) {
     gallerySwiper.init($('#sell-detail .gallery'));
 });
 
-//<<<<<<< HEAD:beike_project/static/js/scripts.js
 $(document).delegate('#buy-detail', 'pagebeforeshow', function(event) {
     detailLoader.init('buy');
 });
 
 $(document).delegate('#sell-edit', 'pagebeforeshow', function(event) {
-    formLoader.init('sell',$('#sell-edit'));
+    formLoader.init('sell', $('#sell-edit'));
     gallerySwiper.init($('#sell-edit .gallery'));
 });
 
 $(document).delegate('#buy-edit', 'pagebeforeshow', function(event) {
-    formLoader.init('buy',$('#buy-edit'));
+    formLoader.init('buy', $('#buy-edit'));
 });
 
-
-/****************************************
- *   Buy/Sell post detail javascript    *
- ****************************************/
-var detailLoader = (function($, undefined) {
-    var page, $page,
-        wx_id, post_id,
-
-    init = function(initPage) {
-        page = initPage;
-        $page = $('#'+page+'-detail');
-        wx_id = $page.find('#wx_id').val();
-        post_id = $page.find('#post_id').val();
-
-        var $price = $page.find('.detail-price');
-        $price.html(formatPrice($price.html()));
-        
-        $page.find('#follow-post').on('slidestop', function(event) {
-            var follow_option = $(this).val();
-            return $.ajax({
-                type: "get",
-                url: '/'+page+'/follow_post',
-                dataType: "json",
-                data: {
-                    wx_id: wx_id,
-                    post_id: post_id,
-                    follow_option: follow_option
-                }
-            }).then(function(data) {});
-        });
-
-        $page.find('#open-close-post').on('slidestop', function(event) {
-            var operation = $(this).val();
-            return $.ajax({
-                type: "get",
-                url: '/'+page+'/open_close_post',
-                dataType: "json",
-                data: {
-                    wx_id: wx_id,
-                    post_id: post_id,
-                    operation: operation
-                }
-            }).then(function(data) {});
-        });
-        
-        showFollowStatus();
-        showPostStatus();
-    },
-    toggleFollowStatus = function() {
-        var is_followed = $page.find('#is_followed').val(); 
-        var follow_img = '';   
-        var popup_msg = '';
-        if( is_followed == 'False'){
-            is_followed = 'True';
-            follow_img = '/static/images/detail/followed.png';
-            popup_msg = '<p>关注本帖!</p>';
-        } else {
-            is_followed = 'False';
-            popup_msg = '<p>取消关注！</p>';
-            follow_img = '/static/images/detail/not_followed.png';
-        }
-        $page.find('#is_followed').val(is_followed);
-        $page.find('#follow').attr('src', follow_img);
-        $page.find('#follow-popup').html(popup_msg);
-        $page.find('#follow-popup').popup('open');
-        setTimeout(function() {
-            $page.find('#follow-popup').popup('close');
-        }, 1000);
-        $.ajax({
-            type: 'get',
-            url: '/' + page + '/follow_post',
-            dataType: 'json',
-            data: {
-                wx_id: wx_id,
-                post_id: post_id,
-                is_followed: is_followed
-            }
-        }).then(function(data) {
-
-        });
-    },
-    showFollowStatus = function() {
-        var is_followed = $page.find('#is_followed').val();
-        if( is_followed == 'False'){
-            $page.find('#follow').attr('src', '/static/images/detail/not_followed.png');
-        } else {
-            $page.find('#follow').attr('src', '/static/images/detail/followed.png');
-        }
-    },
-    showShareMsg = function() {
-        $page.find('#share_msg').show();
-    },
-    hideShareMsg = function() {
-        $page.find('#share_msg').hide();
-    };
-
-    showPostStatus = function() {
-        var is_open = $page.find('#is_open').val();
-        if( is_open == 'False'){
-            $page.find('#open .ui-btn-text').text('标记为待售');
-        } else {
-            $page.find('#open .ui-btn-text').text('标记为已售');
-        }
-    };
-
-    togglePostStatus = function() {
-        var is_open = $page.find('#is_open').val(); 
-        
-        var msg = '';
-        if( is_open == 'False'){
-            is_open = 'True';
-            msg = "标记为已售";
-        } else {
-            is_open = 'False';
-            msg = "标记为待售";
-        }
-        $page.find('#is_open').val(is_open);
-        $page.find('#open .ui-btn-text').text(msg);
-
-        $.ajax({
-            type: 'get',
-            url: '/' + page + '/toggle_post',
-            dataType: 'json',
-            data: {
-                wx_id: wx_id,
-                post_id: post_id,
-                is_open: is_open
-            }
-        }).then(function(data) {
-
-        });
-    };
-
-    return {
-        init: init, 
-        showFollowStatus: showFollowStatus,
-        toggleFollowStatus: toggleFollowStatus,
-        showShareMsg: showShareMsg,
-        hideShareMsg: hideShareMsg, 
-        showPostStatus: showPostStatus,
-        togglePostStatus: togglePostStatus
-    };
-}(jQuery));
-
-$(document).delegate('#sell-detail', 'pagebeforeshow', function(event) {
-    detailLoader.init('sell');
-    gallerySwiper.init($('#sell-detail .gallery'));
-});
-
-$(document).delegate('#buy-detail', 'pagebeforeshow', function(event) {
-    detailLoader.init('buy');
-});
-
-$(document).delegate('#sell-edit', 'pagebeforeshow', function(event) {
-    formLoader.init('sell',$('#sell-edit'));
-    gallerySwiper.init($('#sell-edit .gallery'));
-});
-
-$(document).delegate('#buy-edit', 'pagebeforeshow', function(event) {
-    formLoader.init('buy',$('#buy-edit'));
-});
 
 // search
 function toggleKeyword() {
@@ -907,24 +744,7 @@ $('#sellPostKeyword').keypress(function (e) {
 $('#zipcode').keypress(function (e) {
     if (e.which == 13) {
         toggleLocation();
-//=======
-$(document).on("pagechange", function() {
-    var url = window.location.pathname;
-    if (url === "/") {
-        $('div.ui-page').attr('style','height:100%;');
-    } else if (url.substring(0,11) === '/detail/buy') {
-        detailLoader.init('buy');
-    } else if (url.substring(0,12) === '/detail/sell') {
-        detailLoader.init('sell');
-        gallerySwiper.init($('.ui-page-active .gallery'));
-//>>>>>>> origin/master:beike_project/static/common.js
     }
-});
-
-
-
-$(document).delegate('#sell-edit', 'pageinit', function() {
-    formLoader.init('sell',$('#sell-edit'));
 });
 
 
@@ -1042,24 +862,24 @@ var addressLoader = (function($, undefined) {
     };
 
      loader.getLocationByLatLon = function(coords) {
-        var latitude = coords.latitude;
-        var longitude = coords.longitude;
-        $.ajax({
-            type: "get",
-            url: "/user/get_info/get_city_by_latlong",
-            dataType: "json",
-            data: {
-                latitude: latitude,
-                longitude: longitude
-            }
-        }).then(function(data) {
-            $("#city").text(data.city_name);
-            $("#city_id").val(data.city_id);
-            $("#district").text(data.lv1_district_name);
-            $("#zipcode").val(data.zipcode);
-            $("#latitude").val(latitude);
-            $("#longitude").val(longitude);
-        });
+            var latitude = coords.latitude;
+            var longitude = coords.longitude;
+            $.ajax({
+                type: "get",
+                url: "/user/get_info/get_city_by_latlong",
+                dataType: "json",
+                data: {
+                    latitude: latitude,
+                    longitude: longitude
+                }
+            }).then(function(data) {
+                $("#city").text(data.city_name);
+                $("#city_id").val(data.city_id);
+                $("#district").text(data.lv1_district_name);
+                $("#zipcode").val(data.zipcode);
+                $("#latitude").val(latitude);
+                $("#longitude").val(longitude);
+            });
     }
 
     return loader;
@@ -1085,28 +905,28 @@ var infoLoader = (function($, undefined) {
 }(jQuery));
 
 function validateUserInfo() {
-    $('#user_info_form').validate({
-        rules: {
-            user_email: {
-                required: true,
-                email: true,
-                remote: {
-                    url: "check_email",
-                    type: "post",
-                    async: false
+            $('#user_info_form').validate({
+                rules: {
+                    user_email: {
+                        required: true,
+                        email: true,
+                        remote: {
+                            url: "check_email",
+                            type: "post",
+                            async: false
+                        }
+                    }
+                },
+                messages: {
+                    user_email: {
+                        email: "该email格式不对",
+                        remote: "该email已经被使用"
+                    }
                 }
-            }
-        },
-        messages: {
-            user_email: {
-                email: "该email格式不对",
-                remote: "该email已经被使用"
-            }
-        }
-    });
-    $('#username_input').val($('#username').val());
-    $('#email_input').val($('#user_email').val());
-    return $('#user_info_form').valid();
+            });
+            $('#username_input').val($('#username').val());
+            $('#email_input').val($('#user_email').val());
+            return $('#user_info_form').valid();
 }
 
 $(document).delegate("#user_info", "pageinit", function() {
@@ -1116,3 +936,4 @@ $(document).delegate("#user_info", "pageinit", function() {
 $(document).delegate("#user_location", "pageinit", function() {
     addressLoader.init('user_location');
 });
+

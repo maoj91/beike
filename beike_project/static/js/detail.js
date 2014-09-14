@@ -151,11 +151,11 @@ $(document).delegate('#buy-detail', 'pagebeforeshow', function(event) {
 });
 
 $(document).delegate('#sell-edit', 'pagebeforeshow', function(event) {
-    formLoader.init('sell',$('#sell-edit'));
+    formLoader.init('sell', $('#sell-edit'));
     gallerySwiper.init($('#sell-edit .gallery'));
 });
 
 $(document).delegate('#buy-edit', 'pagebeforeshow', function(event) {
-    formLoader.init('buy',$('#buy-edit'));
+    formLoader.init('buy', $('#buy-edit'));
 });
 
