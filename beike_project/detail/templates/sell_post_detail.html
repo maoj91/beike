@@ -4,41 +4,13 @@
 {% include "head.html" with title="物品" %}
 
 <body>
-<div data-role="page" id="sell-detail-page" data-fullscreen="true">
+<div data-role="page" id="sell-detail" data-fullscreen="true">
     {% include "header.html" with title="物品" %}
 
     <div data-role="content">
-        <div class="detail-title-wrapper">
-            <img class="detail-icon" src="/static/images/general/sell_logo.png">
-            <div class="detail-title">{{post.title}}</div>
+        {% include "detail/title.html" with page="sell" post=post %}
 
-            <div class="share-button-wrapper">
-                <img id="share" class="share-button" src="/static/images/detail/share.png" onclick="detailLoader.showShareMsg();"> 
-                <img id="follow" class="share-button" src="/static/images/detail/not_followed.png" onclick="detailLoader.toggleFollowStatus();">
-            </div>
-        </div>
-
-        <!-- TODO: needs to clean up -->
-        <hr>
-        <img id="share_msg" src="/static/images/detail/share_msg.png" style="display:none;width:100%;height:100%;position:absolute;left:0;top:0;z-index:1;" onclick="detailLoader.hideShareMsg()">
-        <div id="image_gallery">
-            <div id="imgs">
-                {% for image_metadata in image_list %}
-                <span class="img_span">
-                    <img src="{{ image_metadata.image_url }}">
-                </span>
-                {% endfor%}
-            </div>
-        </div>   
-        <div id="image_thumbnails">
-            {% for image_metadata in image_list %}
-            <span class="thumbnail_span" id="thumbnail_span{{forloop.counter0}}" onclick="selectImage({{forloop.counter0}})">
-                <img src="{{ image_metadata.image_url }}">
-            </span>
-            {% endfor%}
-        </div>
-        <hr>
-        
+        {% include "gallery.html" with galleryId="sell-detail-gallery" image_list=image_list %}
         
         <div class="detail-price-wrapper">
             <span class="detail-currency">$&nbsp;</span>
@@ -62,9 +34,9 @@
         </div>
 
         <div class="detail-content">{{post.content}}</div>
-
-        <div class="detail-map">
-            <img id="map" src="http://maps.googleapis.com/maps/api/staticmap?center={{lat}},{{lon}}&zoom=14&size=640x200&sensor=true&markers=color:green%7C{{lat}},{{lon}}">
+        
+        <div class="detail-map-box">
+            <img class="detail-map" src="http://maps.googleapis.com/maps/api/staticmap?center={{lat}},{{lon}}&zoom=14&size=640x200&sensor=true&markers=color:green%7C{{lat}},{{lon}}">
             <div class="detail-loc">
                 <!--img class="city-mark" src="/static/images/detail/location_icon.png"-->
                 <span class="city-text">{{post.user.address.city}}</span>
@@ -79,9 +51,9 @@
 </div-->
 
         <div class="detail-contacts">
-        {% if email_checked%}
-            <a class="detail-contact-link" href="mailto:{{email}}?Subject={{post.title}}"><img class="detail-contact-icon" src="/static/images/detail/email_selected.png"/></a>
-        {% endif%}
+        {% if email_checked %}
+        <a id="email-button" class="detail-contact-link" data-role="button" href="mailto:{{email}}?Subject={{post.title}}">email</a>
+        {% endif %}
         {% if phone_checked%}
             <a class="detail-contact-link" href="tel:{{phone}}"><img class="detail-contact-icon" src="/static/images/detail/phone_selected.png" /></a>
         {% endif%}
@@ -145,9 +117,17 @@
         <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
         <a href="/detail/sell/{{post.id}}/edit/"><input type="image" value="修改" id="edit_btn" src="/static/images/detail/edit.png" style="max-width:80px;vertical-align: middle;"></a>
     </div>
+    <div class="ui-grid-solo">
+        <a data-role="button" href="#" onclick="detailLoader.togglePostStatus();" id="open">
+          <span class="ui-btn-inner ui-btn-corner-all">
+            <span class="ui-btn-text"></span>
+          </span>
+        </a>
+    </div>
+
     {% endif %}
 
-    <img id="share_msg" src="/static/images/detail/share_msg.png" style="display:none;width:100%;max-height:100%;position:absolute;left:0;top:0;z-index:1;background-color:black;opacity: 0.6;" onclick="hideShareMsg()">
+    <img id="share_msg" src="/static/images/detail/share_msg.png" style="display:none;width:100%;max-height:100%;position:absolute;left:0;top:0;z-index:1;background-color:black;opacity: 0.6;" onclick="detailLoader.hideShareMsg()">
 
     <div style="margin-left:5%;margin-right:5%;">
         <div data-role="popup" id="follow-popup"></div>
@@ -155,6 +135,7 @@
     <input type="hidden" id="is_followed" value="{{is_followed}}">
     <input type="hidden" id="post_id" value="{{post.id}}">
     <input type="hidden" id="wx_id" value="{{wx_id}}">
+    <input type="hidden" id="is_open" value="{{post.is_open}}">
 
 {% include "footer.html" %}
 </div>

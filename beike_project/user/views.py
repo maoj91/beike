@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from data.models import User,Country,State,City,District,Address,Privacy
-from data.views import create_user,is_email_valid, is_name_valid
+from data.views import create_user,is_email_valid, is_name_valid, update_user_address
 from beike_project.views import validate_user
 from geolocation import get_location_by_latlong, get_location_by_zipcode    
 import json, logging
@@ -50,6 +50,32 @@ def edit(request,offset):
     user_image = ImageMetadata.deserialize_list(user.image_url)[0]
     return render_to_response('user_edit.html',{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities},RequestContext(request))
 
+
+def edit_address(request,offset):
+    try:
+        offset = int(offset)
+    except ValueError:
+        raise Http404()
+    validate_user(request)
+    wx_id = request.session['wx_id']
+    user = User.objects.get(id=offset)
+    return render_to_response('user_edit_address.html',{'user':user},RequestContext(request))
+
+def save_address(request, offset):
+    validate_user(request)
+    wx_id = request.session['wx_id']
+    user = User.objects.get(id=offset)
+    if request.method == 'POST':
+        city_id = request.POST.get('city_id')
+        zipcode = request.POST.get('zipcode')
+        latitude = request.POST.get('latitude')
+        longitude = request.POST.get('longitude')     
+        update_user_address(user.id, city_id, zipcode, latitude, longitude)
+        return HttpResponseRedirect('/user/'+str(user.id))
+
+
+
+
 def update(request,offset):
     try:
         offset = int(offset)
@@ -80,10 +106,11 @@ def update(request,offset):
     return HttpResponseRedirect('/user/'+str(offset),{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
 
 def get_info(request):
+    if 'wx_id' not in request.session or 'key' not in request.session: 
+        return render_to_response('get_info.html',RequestContext(request))
     validate_user(request)
     wx_id = request.session['wx_id']
-    cities = City.objects.all()
-    return render_to_response('get_info.html',{'user_id':wx_id,'cities':cities,'default_city':'Seattle'},RequestContext(request))
+    return render_to_response('get_info.html',{'user_id':wx_id},RequestContext(request))
 
 def get_city_by_latlong(request):
     if request.is_ajax():
@@ -262,4 +289,3 @@ def get_age(born):
         return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
     else: 
         return '';
-    

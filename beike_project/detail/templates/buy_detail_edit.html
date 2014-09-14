@@ -1,18 +1,18 @@
 <!DOCTYPE HTML>
 <html>
 
-{% include "head.html" with title="我要卖—修改" %}
+{% include "head.html" with title="我要买—修改" %}
 
 <body>
 <div id="sell-edit" data-role="page" data-fullscreen="true">
-    {% include "header.html" with title="我要卖 | 修改" %}
+    {% include "header.html" with title="我要买 | 修改" %}
     
     <div data-role="content">
-        <form action="/detail/sell/{{post.id}}/save/" method="post" enctype="multipart/form-data">
+        <form action="/detail/buy/{{post.id}}/save/" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {% include "gallery.html" with galleryId="sell-edit-gallery" canUpload="true" image_list=image_list %}
+            
             {% include "form/main.html" with post=post categories=categories %}
-            {% include "form/condition.html" with condition=post.item_condition.value %}
+            
             {% include "form/contact.html" with email=email phone=phone %}
             {% include "form/description.html" with content=post.content %}
 

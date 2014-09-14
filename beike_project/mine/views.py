@@ -15,6 +15,8 @@ import json, logging
 LOGGER = logging.getLogger('mine.views')
 
 def index(request):
+    if 'wx_id' not in request.session or 'key' not in request.session:
+        return HttpResponseRedirect('/user/get_info/')
     validate_user(request)
     wx_id = request.session['wx_id']
     user = get_user(wx_id)

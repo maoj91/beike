@@ -1,131 +1,9 @@
 <!DOCTYPE HTML>
 <html lang="zh">
 
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="UTF-8">
-    <!-- jquery library -->
-    <script type="text/javascript" src="/static/jquery/jquery-1.8.3.js "></script>
-    <script type="text/javascript" src="/static/jquery/jquery.mobile-1.4.2.js"></script>
-    <script type="text/javascript" src="/static/jquery/jquery.validate.js"></script>
-    <link rel="stylesheet" type="text/css" href="/static/jquery/jquery.mobile-1.4.2.css">
-    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/beike-theme.css">
-    <link rel="stylesheet" type="text/css" href="/static/jquery/beike-themes/jquery.mobile.icons.min.css">
-
-    <link rel="stylesheet" type="text/css" href="/static/jQMProgressBar.css">
-    <script type="text/javascript" src="/static/jQMProgressBar.js"></script>
-
-    <script type="text/javascript" src="/static/exif.js"></script>
-    <script type="text/javascript" src="/static/binaryajax.js"></script>
-
-    <!-- beike customized css and js -->
-    <link rel="stylesheet" href="/static/common.css">
-    <link rel="stylesheet" href="/static/detail.css">
-    <link rel="stylesheet" href="/static/sell.css">
-    <link rel="stylesheet" href="/static/mine.css">
-    <script src="/static/jquery.fileupload.js"></script>
-    <script src="/static/jquery.touchSwipe.min.js"></script>
-    <script src="/static/common.js"></script>
-    <script src="/static/buy_form.js"></script>
-    <script src="/static/buy_posts.js"></script>
-    <script src="/static/sell_form.js"></script>
-    <script src="/static/sell_posts.js"></script>
-    <title>千贝科技</title>
-
-    <script type="text/javascript">
-        function getLatitudeLongtitude(position) {
-            var latitude = position.coords.latitude;
-            var longitude = position.coords.longitude;
-            $.ajax({
-                type: "get",
-                url: "get_city_by_latlong",
-                dataType: "json",
-                data: {
-                    latitude: latitude,
-                    longitude: longitude
-                }
-            }).then(function(data) {
-                $("#city").text(data.city_name);
-                $("#city_id").val(data.city_id);
-                $("#district").text(data.lv1_district_name);
-                $("#zipcode").val(data.zipcode);
-                $("#latitude").val(latitude);
-                $("#longitude").val(longitude);
-            });
-        }
-
-        function getCurrentPositionDeferred(options) {
-            var deferred = $.Deferred();
-            navigator.geolocation.getCurrentPosition(deferred.resolve, deferred.reject, options);
-            return deferred.promise();
-        };
-
-        $(document).ready(function() {
-            if (navigator.geolocation) {
-                // navigator.geolocation.getCurrentPosition(getLatitudeLongtitude);
-                getCurrentPositionDeferred({
-                    enableHighAccuracy: true
-                }).done(function(position) {
-                    getLatitudeLongtitude(position)
-                }).fail(function() {
-                    console.log("getCurrentPositionDeferred call failed")
-                }).always(function() {
-                    //do nothing
-                });
-            } else {
-                alert("not enabled.")
-            }
-        });
-
-        $(document).on("click", "#getzipcode", function() {
-            var zipcode = $('#zipcode_input').val();
-            if (zipcode) {
-                $.ajax({
-                    type: "get",
-                    url: "get_city",
-                    dataType: "json",
-                    data: {
-                        zipcode: zipcode,
-                    }
-                }).then(function(data) {
-                    console.log(data);
-                    $("#city").text(data.city_name);
-                    $("#district").text(data.lv1_district_name);
-                    $("#latitude").val(data.latitude);
-                    $("#longitude").val(data.longitude);
-                });
-            }
-        });
-
-        function validateUserInfo() {
-            $('#user_info_form').validate({
-                rules: {
-                    user_email: {
-                        required: true,
-                        email: true,
-                        remote: {
-                            url: "check_email",
-                            type: "post",
-                            async: false
-                        }
-                    }
-                },
-                messages: {
-                    user_email: {
-                        email: "该email格式不对",
-                        remote: "该email已经被使用"
-                    }
-                }
-            });
-            $('#username_input').val($('#username').val());
-            $('#email_input').val($('#user_email').val());
-            return $('#user_info_form').valid();
-        }
-    </script>
-</head>
+{% include "head.html" %}
 
 <body>
-
     <div style="background-color: rgb(47,189,133);" data-role="page" id="user_info">
         <form id="user_info_form">
             <div class="ui-grid-solo" style="height: 200px;">
@@ -171,7 +49,8 @@
             </div>
             <div class="ui-block-c" style="width: 10%"></div>
         </div>
-        <form id="user_info_form" action="/user/create/" method="post" enctype="multipart/form-data">{% csrf_token %}
+        <form id="user_info_form" action="/user/create/" method="post" enctype="multipart/form-data" data-ajax= "false">
+            {% csrf_token %}
             <div class="ui-grid-solo" style="text-align: center; margin: 20px 0 30px 0;">
                 <img style="width: 120px; height: 50px" src="/static/images/signup/location_icon.png" />
                 <div id='city' name='city'></div>

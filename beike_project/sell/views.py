@@ -26,10 +26,8 @@ def index(request):
     return HttpResponse('sell');
 
 def all_list(request):
-    validate_user(request)
     categories = Category.objects.all();
-    wx_id = request.session['wx_id']
-    return render_to_response('sell_posts.html', {'user_id':wx_id, 'categories':categories, 'num_per_page': NUM_PER_PAGE})
+    return render_to_response('sell_posts.html', {'categories':categories, 'num_per_page': NUM_PER_PAGE})
 
 def get_posts_by_page(request):
     if request.is_ajax():
@@ -85,7 +83,7 @@ def follow_post(request):
     else:
         raise ValidationError("Request not supported")
 
-def open_close_post(request):
+def toggle_post(request):
     if request.is_ajax:
         validate_user(request)
         wx_id = request.session['wx_id']
@@ -95,12 +93,12 @@ def open_close_post(request):
         post_id = request.GET.get('post_id')
         post = sell_post_util.get_post(post_id)
         if user.id == post.user.id:
-            operation = request.GET.get('operation')
-            if operation == 'open':
+            is_open = request.GET.get('is_open')
+            if is_open == 'True':
                 post.is_open = True
                 post.save()
                 return HttpResponse("{}")
-            elif operation == 'close':
+            elif is_open == 'False':
                 post.is_open = False
                 post.date_closed = datetime.now()
                 post.save()
@@ -138,6 +136,8 @@ def get_sell_post_summary(post, origin):
         raise ValueError("Argument should be an SellPost instance.")
 
 def form(request):
+    if 'wx_id' not in request.session or 'key' not in request.session:
+        return HttpResponseRedirect('/user/get_info/')
     validate_user(request)
     wx_id = request.session['wx_id']
     user = User.objects.get(wx_id=wx_id)

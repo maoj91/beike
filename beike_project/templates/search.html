@@ -1,0 +1,34 @@
+<div class="search-bar-wrapper">
+    <div class="search-category-box">
+
+<fieldset data-role="controlgroup">
+<input type="radio" name="category" id=0 value='' checked="checked" />
+<label for=0>All</label>
+{% for category in categories %}
+<input type="radio" name="category" id={{ category.id }} value={{ category.id }} />
+<label for={{ category.id }}>{{category.name}}</label>
+{% endfor %}
+</fieldset>
+    </div>
+    <div class="search-bar">
+        <div class="search-keyword-box">
+            <div class="search-keyword-back" onclick="toggleKeyword();">
+                <img class="search-icon" src="/static/images/search.png" />
+            </div>
+            <div class="search-input">
+                <input id="sellPostKeyword" type="text" maxlength="30" name="keyword" placeholder="请输入关键字">
+            </div>
+            
+        </div>
+        <div class="search-item" onclick="toggleKeyword();">搜 索</div>
+        <div class="search-item" onclick="toggleCategory();">类 别</div>
+        <div class="search-item" onclick="toggleLocation();">地 点</div>
+        <div class="search-location-box">
+            <div class="search-location-back" onclick="toggleLocation();">
+                <img class="search-icon" src="/static/images/left_arrow.png" />
+            </div>
+            <div class="search-input">
+                <input id="zipcode" type="text" maxlength="6" name="location" placeholder="请输入ZipCode" ></div>
+            </div>
+    </div>
+</div>

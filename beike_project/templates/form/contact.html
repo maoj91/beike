@@ -1,0 +1,36 @@
+<div class="form-left">联系方式</div>
+<div class="form-right">
+    <div class="ui-grid-b">
+        <div class="ui-block-a">
+            <img class="form-icon" id="email-icon" onclick="formLoader.clickEmailContact();" src="/static/images/general/email_icon.png" />
+            <img class="form-icon hide" id="email-icon-clicked" onclick="formLoader.clickEmailContact();" src="/static/images/general/email_icon_clicked.png" />
+        </div>
+        <div class="ui-block-b">
+            <img class="form-icon" id="phone-icon" onclick="formLoader.clickPhoneContact();" src="/static/images/general/phone_icon.png" />
+            <img class="form-icon hide" id="phone-icon-clicked" onclick="formLoader.clickPhoneContact();" src="/static/images/general/phone_icon_clicked.png" />
+        </div>
+        <div class="ui-block-c">
+            <img class="form-icon" id="sms-icon" onclick="formLoader.clickSmsContact();" src="/static/images/general/sms_icon.png" />
+            <img class="form-icon hide" id="sms-icon-clicked" onclick="formLoader.clickSmsContact();" src="/static/images/general/sms_icon_clicked.png" />
+        </div>
+    </div>
+
+    <input type="hidden" name="sms-checked" id="sms-checked" value="off"></input>
+    <input type="hidden" name="phone-checked" id="phone-checked" value="off"></input>
+    <input type="hidden" name="email-checked" id="email-checked" value="off"></input>
+
+    <div id="email_div">
+    {% if email and email != " " %}
+        <input type="email" id="email" name="email" placeholder="Email" value="{{email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
+    {% else %}
+        <input type="email" id="email" name="email" placeholder="Email" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
+    {% endif %}
+    </div>
+    <div id="phone_number_div">
+    {% if phone and phone != " " %}
+        <input type="tel" id="phone_number" name="phone_number" placeholder="手机号码" value="{{phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入电话号码" />
+    {% else %}
+        <input type="tel" id="phone_number" name="phone_number" placeholder="手机号码" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
+    {% endif %}
+    </div>
+</div>

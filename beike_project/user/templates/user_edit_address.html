@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html lang="zh">
+
+{% include "head.html" %}
+<body>
+
+    <div style="background-color: rgb(204,227,221);" data-role="page" id="user-address-page">
+        <form id="user_info_form" action="/user/{{user.id}}/save_address/" method="post" enctype="multipart/form-data" data-ajax= "false">
+            {% csrf_token %}
+            <div class="ui-grid-solo" style="text-align: center; margin: 20px 0 30px 0;">
+                <img style="width: 120px; height: 50px" src="/static/images/signup/location_icon.png" />
+                <div id='city' name='city'></div>
+            </div>
+            <input type="hidden" id="username_input" name="username_input" />
+            <input type="hidden" id="email_input" name="email_input" />
+            <div class="ui-grid-solo" style="margin: 30px 0 30px 0;">
+                <input type="hidden" id="city_id" name="city_id" value="" />
+                <input type="hidden" id="zipcode" name="zipcode" />
+                <div class="ui-grid-b">
+                    <div class="ui-block-a" style="width: 10%"></div>
+                    <div class="ui-block-b" style="width: 80%">
+                        <input id="zipcode_input" name="zipcode_input" placeholder="手动输入正确的zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="请输入zipcode" />
+                    </div>
+                    <div class="ui-block-c" style="width: 10%"></div>
+                </div>
+                <div class="ui-grid-b">
+                    <div class="ui-block-a" style="width: 10%"></div>
+                    <div class="ui-block-b" style="width: 80%">
+                        <a href="#" id="getzipcode" data-role="button" data-icon="check">获取城市</a>
+                    </div>
+                    <div class="ui-block-c" style="width: 10%"></div>
+                </div>
+            </div>
+            <input type="hidden" name="latitude" id="latitude" />
+            <input type="hidden" name="longitude" id="longitude" />
+            <div class="ui-grid-b" style="margin: 30px 0 10px 0;">
+                <div class="ui-block-a" style="width: 10%"></div>
+                <div class="ui-block-b" style="width: 80%">
+                    <input type="submit" value="使用当前地址" style="color: rgb(47,189,133);"></input>
+                </div>
+                <div class="ui-block-c" style="width: 10%"></div>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

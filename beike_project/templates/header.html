@@ -1,54 +1,6 @@
 <div data-role="header" class="header" style="display: none;">
     <div class="ui-grid-b">
         <div class="ui-block-a">
-            {% if search == "on" %}
-            <a href="#popupBasic" data-rel="popup" data-role="button">高级搜索</a>
-            <div class="ui-popup ui-overlay-shadow ui-corner-all" data-role="popup" id="popupBasic">
-                <div class="ui-collapsible-set ui-corner-all" style="margin:0; width:250px;" data-expanded-icon="arrow-d" data-collapsed-icon="arrow-r" data-role="collapsible-set">
-                    <div data-inset="false" data-role="collapsible" data-collapsed="false">
-                        <h3 style="font-size: 15px;">
-                            关键字
-                        </h3>
-                        <div data-role="fieldcontain">
-                            <form action="#" method="post" enctype="multipart/form-data" onsubmit="return refreshSellPosts();">
-                                <input type="text" name="sellPostKeyword" id="sellPostKeyword" placeholder="请输入关键字" />
-                                <input type="submit" value="提交" id="keyword_submit_btn">
-                            </form>
-                        </div>
-                    </div>
-                    <div data-inset="false" data-role="collapsible">
-                        <h3 style="font-size: 15px;">
-                            种类
-                        </h3>
-                        <div data-role="fieldcontain">
-                            <fieldset data-role="controlgroup">
-                                <form action="#" method="post" enctype="multipart/form-data" onsubmit="return refreshSellPosts();">
-                                    <legend>请选择种类:</legend>
-                                    <input type="radio" name="category" id=0 value='' checked="checked" />
-                                    <label for=0>All</label>
-                                    {% for category in categories %}
-                                    <input type="radio" name="category" id={{ category.id }} value={{ category.id }} />
-                                    <label for={{ category.id }}>{{category.name}}</label>
-                                    {% endfor %}
-                                    <input type="submit" value="提交" id="category_submit_btn">
-                                </form>
-                            </fieldset>
-                        </div>
-                    </div>
-                    <div data-inset="false" data-role="collapsible">
-                        <h3 style="font-size: 15px;">
-                            地址
-                        </h3>
-                        <div data-role="fieldcontain">
-                            <form action="#" method="post" enctype="multipart/form-data" onsubmit="return refreshSellPosts();">
-                                <input type="number" name="zipcode" id="zipcode" placeholder="请输入ZipCode" />
-                                <input type="submit" value="提交" id="address_submit_btn">
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
         </div>
         <div class="ui-block-b">
             <p>{{title}}</p>
