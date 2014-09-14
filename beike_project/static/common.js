@@ -666,7 +666,7 @@ var detailLoader = (function($, undefined) {
     };
 
     sendEmail = function(to,title) {
-        window.open('mailto:'+to+'?subject='+title);
+        window.location.href = 'mailto:'+to+'?subject='+title);
     }
 
     return {
