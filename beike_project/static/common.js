@@ -666,9 +666,6 @@ var detailLoader = (function($, undefined) {
     };
 
     sendEmail = function() {
-        // window.location.href = 'mailto:'+to+'?subject='+title;
-        $('#email-button').trigger( "taphold" );
-        alert('test');
     }
 
     return {
