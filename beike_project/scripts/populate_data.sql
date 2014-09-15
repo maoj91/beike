@@ -35,12 +35,12 @@ select 'Guangdong', id from data_country where name = 'China';
 insert into data_state (name, country_id)
 select 'Zhejiang', id from data_country where name = 'China';
 
-insert into data_city (name, state_id, country_id, image_url, image_selected_url)
-select 'Seattle', id, country_id, 'https://s3-us-west-2.amazonaws.com/beike-s3/static/img/cities/seattle.png', 'https://s3-us-west-2.amazonaws.com/beike-s3/static/img/cities/seattle_selected.png'
+insert into data_city (name, state_id, country_id)
+select 'Seattle', id, country_id
 from data_state where name='Washington';
 
-insert into data_city (name, state_id, country_id, image_url, image_selected_url)
-select 'Beijing', null, id, 'https://s3-us-west-2.amazonaws.com/beike-s3/static/img/cities/beijing.png', 'https://s3-us-west-2.amazonaws.com/beike-s3/static/img/cities/beijing_selected.png'
+insert into data_city (name, state_id, country_id)
+select 'Beijing', null, id
 from data_country where name='China';
 
 insert into data_district (name, city_id, first_level_district_id, zip_code)
