@@ -12,7 +12,7 @@ var postLoader = (function($, undefined) {
         category = null,
         keyword = null,
     init = function(initPage) {
-        page = initPage;
+        page = initPage;console.log(page+" init");
         $page = $('#'+page+'-list');
         
         $list1 = $page.children('.post-list1');
@@ -21,18 +21,13 @@ var postLoader = (function($, undefined) {
         numPerPage = $page.find('.num-per-page').val();
         clearPosts();
         
-        getCurrentPositionDeferred({
-            enableHighAccuracy: true
-        }).done(function(position) {
-            currentPosition = position;
+
+        locUtil.getLocation(function(data) {
+            currentPosition = data;
             getAndDisplayPosts();
-        }).fail(function() {
-            console.error('getCurrentPosition call failed');
-        }).always(function() {
-            //do nothing
         });
         
-        $(document).on('scrollstop', function() {console.log(page); getAndDisplayPosts(); });
+        $(document).on('scrollstop', function() { getAndDisplayPosts(); });
     },
     clearPosts = function() {
         slot_pos = 0;
@@ -54,8 +49,8 @@ var postLoader = (function($, undefined) {
             dataType: 'json',
             data: {
                 pageNum: postPageNum,
-                latitude: currentPosition.coords.latitude,
-                longitude: currentPosition.coords.longitude,
+                latitude: currentPosition.latitude,
+                longitude: currentPosition.longitude,
                 category: category,
                 keyword: keyword
             }
@@ -89,17 +84,15 @@ var postLoader = (function($, undefined) {
                 }
                 
                 item = '<img class="post-image" src="' + image_info['image_url'] + '" />'; 
-                price = formatPrice(posts[i]["price"]);+ 
-                        '</div>'+
-                        '<div class="post-distance">距离你 ' + distance + ' miles</div>'+
-                    '</a></div>';
+                price = formatPrice(posts[i]["price"]);
             } else if (page === 'buy') {
                 item = '';
                 price = formatPrice(posts[i]["max_price"]);
             }
             
             item = '<div class="post-item-box">' +
-                '<a class="post-item" href="/detail/' + page + '/' + posts[i]['post_id'] + '" data-transition="slide">' +
+                //'<a class="post-item" href="/detail/' + page + '/' + posts[i]['post_id'] + '" data-transition="slide">' +
+                '<a class="post-item" onmousedown="postLoader.loadPage('+posts[i]['post_id']+');" onmouseup="postLoader.changePage('+posts[i]['post_id']+');">' +
                     '<div>' +
                         '<img class="post-icon" src="/static/images/general/' + page + '_logo.png" />' +
                         '<span class="post-title">' + posts[i]["title"] + '</span>' +
@@ -121,6 +114,25 @@ var postLoader = (function($, undefined) {
         $list1.append(tempList1);
         $list2.append(tempList2);
     },
+    loadPage = function(id) {
+        /*setTimeout(function() {$('body').pagecontainer('load', '/detail/'+page+'/'+id).on('pagecontainerload', function() {
+            console.log('loaded');aaloaded=true;$('body').off('pagecontainerload');});
+        }, 300);*/
+    },
+    changePage = function(id) {
+//console.log('change');
+        //if (aaloaded) {
+            //$('body').off('pagecontainerload'); aaloaded = false; console.log('why');
+            $('body').pagecontainer('change', '/detail/'+page+'/'+id);//$('body').off('pagecontainerload');
+        /*}
+        else
+            $('body').on('pagecontainerload', function(event, ui) {
+                console.log('loaded2');
+                $('body').off('pagecontainerload'); aaloaded = false;
+                $('body').pagecontainer('change', ui.content, {transition: 'slide'});$('body').off('pagecontainerload');
+            });*/
+        
+    },
     refreshPosts = function() {
         $('#popupBasic-popup').removeClass('ui-popup-active');
         $('#popupBasic-popup').addClass('ui-popup-hidden');
@@ -128,23 +140,33 @@ var postLoader = (function($, undefined) {
         
         category = $('input[name="category"]:checked').val();
         keyword = $('#sellPostKeyword').val();
-        
-        clearPosts();
-        getAndDisplayPosts();
+        locUtil.getLocationByZipcode($('#zipcode').val(), function(data) {
+            currentPosition = data;
+            clearPosts();
+            getAndDisplayPosts();
+        });
     };
     
     return { 
         init: init,
-        refreshPosts: refreshPosts
+        refreshPosts: refreshPosts,
+        loadPage: loadPage,
+        changePage: changePage
     };
 }(jQuery));
 
 $(document).delegate('#nearby-buypost', 'pagebeforeshow', function() {
-    $(document).off('scrollstop');
-    postLoader.init('buy');
+    if ($('.ui-page-active').attr('id') !== 'buy-detail')
+    {
+        $(document).off('scrollstop');
+        postLoader.init('buy');
+    }
 });
 
 $(document).delegate('#nearby-sellpost', 'pagebeforeshow', function() {
-    $(document).off('scrollstop');
-    postLoader.init('sell');
+    if ($('.ui-page-active').attr('id') !== 'sell-detail')
+    {
+        $(document).off('scrollstop');
+        postLoader.init('sell'); //console.log('refresh');
+    }
 });

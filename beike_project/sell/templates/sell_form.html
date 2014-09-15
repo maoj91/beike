@@ -6,7 +6,6 @@
 <body>
 <div id="sell-form" data-role="page" data-fullscreen="true">
     {% include "header.html" with title="我要卖" %}
-    
     <div data-role="content">
         <form action="/sell/form_submit/" method="post" enctype="multipart/form-data">
             {% csrf_token %}
