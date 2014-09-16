@@ -27,6 +27,8 @@ var formLoader = (function($, undefined) {
     
     loader.init = function(initPage, $initPage) {
         console.log('form init');
+        locUtil.getLocation();
+        
         page = initPage;
         if ($initPage) 
             $page = $initPage;
@@ -38,8 +40,15 @@ a=$page;
         $zipcode = $page.find('#zipcode');
         $cityName = $page.find('#city-name');
         
-        $('input:not([readonly], .image-uploader-input), textarea').focusin(function() { $('.footer').css('position', 'relative'); });
-        $('input:not([readonly], .image-uploader-input), textarea').focusout(function() { $('.footer').css('position', 'fixed'); });
+        // hide footer when user entering
+        $('input:not([readonly], .gallery-uploader-input), textarea').focusin(function() { 
+            $('.footer').toggleClass('bottom');
+            $('.ui-content').css('margin-bottom', '0px');
+        });
+        $('input:not([readonly], .gallery-uploader-input), textarea').focusout(function() {
+            $('.footer').toggleClass('bottom');
+            $('.ui-content').css('margin-bottom', '50px');
+        });
         
         isEmailChecked = false;
         isPhoneChecked = false;
@@ -68,20 +77,13 @@ a=$page;
             });
         }
         
-        if (navigator.geolocation) {
-            getCurrentPositionDeferred({
-                enableHighAccuracy: true
-            }).done(function(position) {
-                getLocationByLatLon(position.coords)
-            }).fail(function() {
-                console.error("getCurrentPosition call failed")
-            }).always(function() {
-                //do nothing
-            });
-        } else {
-            console.error("Geolocation is disabled.")
-        }
-        
+        locUtil.getLocation(function(data) {
+            $zipcode.val(data.zipcode);
+            $cityName.val(data.city+', '+data.state);
+            $latitude.val(data.latitude);
+            $longitude.val(data.longitude);
+        });
+
         var $description = $page.find('#description'),
             $counter = $page.find('#lengthCounter');
         $counter.html($description.val().length + '/300');
@@ -90,41 +92,13 @@ a=$page;
         });
     };
     
-    var getLocationByLatLon = function(coords) {
-        var latitude = coords.latitude;
-        var longitude = coords.longitude;
-        $latitude.val(latitude);
-        $longitude.val(longitude);
-        $.ajax({
-            type: "get",
-            url: "/user/get_info/get_zipcode_by_latlong",
-            dataType: "json",
-            data: {
-                latitude: latitude,
-                longitude: longitude
-            }
-        }).then(function(data) {
-            $zipcode.val(data.zipcode);
-            $cityName.val(data.city);
-            console.log(data);
-            return data;
-        });
-    };
-
     // Use user input zipcode to get the city and latlon
     loader.getLocationByZipcode = function() {
-        var zipcode = $page.find('#zipcode').val();
-        $.ajax({
-            type: "get",
-            url: "/user/get_info/get_latlong_by_zipcode",
-            dataType: "json",
-            data: { zipcode: zipcode }
-        }).then(function(data) {
-            $cityName.val(data.city);
+        locUtil.getLocByZip($zipcode.val(), function(data) {
+            $zipcode.val(data.zipcode);
+            $cityName.val(data.city+', '+data.state);
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
-            console.log(data);
-            return data;
         });
     };
     

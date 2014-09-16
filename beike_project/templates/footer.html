@@ -1,29 +1,33 @@
-<div style="height: 50px; clear: both;"></div>
-<div data-role="footer" class="footer">
-    <div class="ui-grid-d" style="background-color: rgb(35,192,148);">
-        <div class="ui-block-a">
+<div data-role="footer" class="footer" data-position="fixed" data-tap-toggle="false" data-hide-during-focus="input">
+<!-- data-id="footer" -->
+        <div class="footer-left">
             <a href="/">
-                <img height="28px" width="30px" style="padding:10px 5px 5px 10px;" src='/static/images/navigation/homepage.png' />
+                <img height="28px" width="30px" style="padding:10px 5px 5px 10px;" src="/static/images/navigation/homepage.png" />
             </a>
         </div>
-        <div class="ui-block-b">
-            <a href="/buy/form/">
-                <img height="50px" width="50px" src='/static/images/navigation/buy_form{{ buy|default:"" }}.png' />
+    <div class="footer-right">
+        <div class="footer-item">
+            <a class="footer-link" href="/buy/form/">
+                <img class="footer-icon" src="/static/images/navigation/buy_form{{ buy|default:'' }}.png" />
+                <div class="footer-text {{ buy|default:'' }}">我要买</div>
             </a>
         </div>
-        <div class="ui-block-c">
-            <a href="/sell/all_list/">
-                <img height="50px" width="50px" src='/static/images/navigation/sell_posts{{ sell_list|default:"" }}.png' />
+        <div class="footer-item">
+            <a class="footer-link" href="/sell/all_list/">
+                <img class="footer-icon" src="/static/images/navigation/sell_posts{{ sell_list|default:'' }}.png" />
+                <div class="footer-text {{ sell_list|default:'' }}">周边物品</div>
             </a>
         </div>
-        <div class="ui-block-d">
-            <a href="/sell/form/">
-                <img height="50px" width="50px" src='/static/images/navigation/sell_form{{ sell|default:"" }}.png' />
+        <div class="footer-item">
+            <a class="footer-link" href="/sell/form/">
+                <img class="footer-icon" width="50px" src="/static/images/navigation/sell_form{{ sell|default:'' }}.png" />
+                <div class="footer-text {{ sell|default:'' }}">我要卖</div>
             </a>
         </div>
-        <div class="ui-block-e">
-            <a href="/buy/all_list/">
-                <img height="50px" width="50px" src='/static/images/navigation/buy_posts{{ buy_list|default:"" }}.png' />
+        <div class="footer-item">
+            <a class="footer-link" href="/buy/all_list/">
+                <img class="footer-icon" width="50px" src="/static/images/navigation/buy_posts{{ buy_list|default:'' }}.png" />
+                <div class="footer-text {{ buy_list|default:'' }}">周边需求</div>
             </a>
         </div>
     </div>

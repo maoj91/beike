@@ -142,6 +142,7 @@ var detailLoader = (function($, undefined) {
 }(jQuery));
 
 $(document).delegate('#sell-detail', 'pagebeforeshow', function(event) {
+//$("body").on('pagecontainerbeforetransition', function() {
     detailLoader.init('sell');
     gallerySwiper.init($('#sell-detail .gallery'));
 });
