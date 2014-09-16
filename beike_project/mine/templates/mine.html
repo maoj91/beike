@@ -18,22 +18,23 @@
             <div data-role="collapsible-set" data-corners="false">
                 <div data-role="collapsible" data-collapsed="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
 
-                    <h4>
-                        <img class="mine-menu-icon" src="/static/images/my_account/my_sell_posts.png" />我要卖</h4>
+                    <img class="mine-menu-icon" src="/static/images/my_account/my_sell_posts.png" />
+					<h4 class="mine-menu-title">我要卖</h4>
                     <ul data-role="listview" data-inset="false">
                         {% for post in sell_posts %}
                         <li style="margin: 0px;">
-                            <a href="/detail/sell/{{post.id}}">
-                                <div style="font-size: 18px;">
-                                    {{post.title}}
-                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                    <span style="color: #ff9933;">$</span>
-                                    {{post.price}}
+                            <a class="mine-link-box" href="/detail/sell/{{post.id}}">
+                                <div class="mine-title-price">
+                                    <span class="mine-title">{{post.title}}</span>
+                                    <span class="mine-price-wrapper">
+										<span class="mine-currency">$</span>
+										<span class="mine-price">{{post.price}}</span>
+									</span>
                                 </div>
-                                <div style="font-size: 14px; font-weight: normal;">
+                                <div class="mine-postdate">
                                     发布于 {{post.date_published|date:"M d, Y"}}
                                 </div>
-                                <div style="font-size: 14px; font-weight: normal;">
+                                <div class="mine-content">
                                     描述:{{post.content}}
                                 </div>
                             </a>
@@ -43,22 +44,24 @@
                 </div>
 
                 <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
-                    <h4>
-                        <img class="mine-menu-icon" src="/static/images/my_account/my_buy_posts.png" />我要买</h4>
+                    
+                    <img class="mine-menu-icon" src="/static/images/my_account/my_buy_posts.png" />
+					<h4 class="mine-menu-title">我要买</h4>
                     <ul data-role="listview" data-inset="false">
                         {% for post in buy_posts %}
                         <li style="margin: 0px;">
-                            <a href="/detail/buy/{{post.id}}">
-                                <div style="font-size: 18px;">
-                                    {{post.title}}
-                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                    <span style="color: #ff9933;">$</span>
-                                    {{post.max_price}}
+							<a class="mine-link-box" href="/detail/buy/{{post.id}}">
+                                <div class="mine-title-price">
+                                    <span class="mine-title">{{post.title}}</span>
+                                    <span class="mine-price-wrapper">
+										<span class="mine-currency">$</span>
+										<span class="mine-price">{{post.max_price}}</span>
+									</span>
                                 </div>
-                                <div style="font-size: 14px; font-weight: normal;">
+                                <div class="mine-postdate">
                                     发布于 {{post.date_published|date:"M d, Y"}}
                                 </div>
-                                <div style="font-size: 14px; font-weight: normal;">
+                                <div class="mine-content">
                                     描述:{{post.content}}
                                 </div>
                             </a>
@@ -72,8 +75,9 @@
             <div data-role="collapsible-set" data-corners="false">
                 <div data-role="collapsible" data-collapsed="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
 
-                    <h4>
-                        <img class="mine-menu-icon" src="/static/images/my_account/my_fav_sell_posts.png" />关注物品</h4>
+                    
+                    <img class="mine-menu-icon" src="/static/images/my_account/my_fav_sell_posts.png" />
+					<h4 class="mine-menu-title">关注物品</h4>
                     <ul data-role="listview" data-inset="false">
                         {% for post in followed_sell_posts %}
                         <li style="margin: 0px;">
@@ -99,8 +103,9 @@
                 </div>
 
                 <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
-                    <h4>
-                        <img class="mine-menu-icon" src="/static/images/my_account/my_fav_buy_posts.png" />关注需求</h4>
+                    
+                    <img class="mine-menu-icon" src="/static/images/my_account/my_fav_buy_posts.png" />
+					<h4 class="mine-menu-title">关注需求</h4>
                     <ul data-role="listview" data-inset="false">
                         {% for post in followed_buy_posts %}
                         <li style="margin: 0px;">

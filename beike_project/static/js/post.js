@@ -94,7 +94,7 @@ var postLoader = (function($, undefined) {
                 //'<a class="post-item" href="/detail/' + page + '/' + posts[i]['post_id'] + '" data-transition="slide">' +
                 '<a class="post-item" onmousedown="postLoader.loadPage('+posts[i]['post_id']+');" onmouseup="postLoader.changePage('+posts[i]['post_id']+');">' +
                     '<div>' +
-                        '<img class="post-icon" src="/static/images/general/' + page + '_logo.png" />' +
+                        '<img class="post-icon" src="/static/images/general/' + page + '_icon_40.png" />' +
                         '<span class="post-title">' + posts[i]["title"] + '</span>' +
                     '</div>' + item + 
                     '<div class="post-price">' +
