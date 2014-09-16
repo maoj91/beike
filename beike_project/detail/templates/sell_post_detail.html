@@ -35,13 +35,13 @@
 
         <div class="detail-content">{{post.content}}</div>
         
-        <div class="detail-map-box">
+        <a class="detail-map-box" href="http://maps.apple.com/?q={{lat}},{{lon}}">
             <img class="detail-map" src="http://maps.googleapis.com/maps/api/staticmap?center={{lat}},{{lon}}&zoom=14&size=640x200&sensor=true&markers=color:green%7C{{lat}},{{lon}}">
             <div class="detail-loc">
                 <!--img class="city-mark" src="/static/images/detail/location_icon.png"-->
                 <span class="city-text">{{post.user.address.city}}</span>
             </div>
-        </div>
+        </a>
 
 <!-- TODO: what's this? -->
 <!--div class="ui-grid-b" style="margin-top:10px;">
@@ -52,7 +52,7 @@
 
         <div class="detail-contacts">
         {% if email_checked %}
-        <a id="email-button" class="detail-contact-link" data-role="button" href="mailto:{{email}}?Subject={{post.title}}">email</a>
+            <a id="email-button" class="detail-contact-link" data-role="button" href="mailto:{{email}}?Subject={{post.title}}">Email<!--img class="detail-contact-icon" src="/static/images/detail/email_selected.png"/--></a>
         {% endif %}
         {% if phone_checked%}
             <a class="detail-contact-link" href="tel:{{phone}}"><img class="detail-contact-icon" src="/static/images/detail/phone_selected.png" /></a>

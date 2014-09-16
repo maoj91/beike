@@ -82,7 +82,7 @@ var locUtil = (function() {
             data: { zipcode: zipcode }
         }).then(function(data) {
             locData.city = data.city;
-            locData.state = data.state;
+            locData.state = convert_state(data.state,'abbrev');
             locData.latitude = data.latitude;
             locData.longitude = data.longitude;
             if (callback && callback.apply !== undefined)
@@ -104,7 +104,7 @@ var locUtil = (function() {
             }
         }).then(function(data) {
             locData.city = data.city;
-            locData.state = data.state;
+            locData.state = convert_state(data.state,'abbrev');
             locData.zipcode = data.zipcode;
             if (callback && callback.apply !== undefined)
                 callback.apply(null, [locData]);

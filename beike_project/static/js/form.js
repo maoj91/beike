@@ -79,7 +79,7 @@ a=$page;
         
         locUtil.getLocation(function(data) {
             $zipcode.val(data.zipcode);
-            $cityName.val(data.city);
+            $cityName.val(data.city+', '+data.state);
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
         });
@@ -96,7 +96,7 @@ a=$page;
     loader.getLocationByZipcode = function() {
         locUtil.getLocByZip($zipcode.val(), function(data) {
             $zipcode.val(data.zipcode);
-            $cityName.val(data.city);
+            $cityName.val(data.city+', '+data.state);
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
         });

@@ -140,7 +140,7 @@ var postLoader = (function($, undefined) {
         
         category = $('input[name="category"]:checked').val();
         keyword = $('#sellPostKeyword').val();
-        locUtil.getLocationByZipcode($('#zipcode').val(), function(data) {
+        locUtil.getLocByZip($('#zipcode').val(), function(data) {
             currentPosition = data;
             clearPosts();
             getAndDisplayPosts();
