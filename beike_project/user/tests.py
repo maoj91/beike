@@ -1,5 +1,5 @@
 from django.test import TestCase
-from geolocation import Geolocation
+from geolocation import Geolocation, get_geolocation_by_zipcode
 import json
 from django.test import Client
 from data.models import Country, State, City
@@ -24,6 +24,11 @@ class GeolocationTest(TestCase):
         self.assertEqual(locationJson['city'], 'Seattle')
         self.assertEqual(locationJson['state'], 'Washington')
         self.assertEqual(locationJson['zipcode'], '98109')
+
+    def test_get_geolocation_by_zipcode(self):
+        geolocation = get_geolocation_by_zipcode('98117')
+        self.assertEqual(geolocation.city, 'Seattle')
+        self.assertEqual(geolocation.state, 'Washington')
 
 class UserViewTest(TestCase):
     def setUp(self):

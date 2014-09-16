@@ -1,5 +1,8 @@
 from pygeocoder import Geocoder
 import json
+import logging
+
+LOGGER = logging.getLogger('user.geolocation')
 
 def get_geolocation_by_latlong(latitude, longitude):
     # call google geolocation service to get the location detail
@@ -45,7 +48,7 @@ def get_geolocation_by_zipcode(zipcode):
     results = Geocoder.geocode(zipcode)
     if results is not None and len(results) > 0:
         google_location = results.raw[0]
-        print google_location
+        LOGGER.info('Created google geo object: ' + str(google_location))
         location = Geolocation()
         location.latitude = google_location['geometry']['location']['lat']
         location.longitude = google_location['geometry']['location']['lng']

@@ -82,15 +82,14 @@ def create(request):
         city_id = request.POST.get('city_id')
         zipcode = request.POST.get('zipcode')
         latitude = request.POST.get('latitude')
-        longitude = request.POST.get('longitude')  
-        print "latitude: " + latitude
-        print "longitude" + longitude
+        longitude = request.POST.get('longitude')
         email = request.POST.get('email_input')
         name = request.POST.get('username_input')
         email_valid_type = is_email_valid(email)
         name_valid_type = is_name_valid(name)
         if email_valid_type ==0 and email_valid_type==0:
-            print wx_id + " " + email + " " + city_id
+            LOGGER.info("Creating [user: %s, email: %s, zipcode: %s, latitude: %s, longitude: %s]."
+                % (name, email, zipcode, latitude, longitude ))
             create_user(wx_id, name, email, city_id, zipcode, latitude, longitude)
             return HttpResponseRedirect('/')
         else: 
@@ -150,8 +149,8 @@ def get_and_create_location_by_latlong(request):
         LOGGER.info('Getting and creating location using latlon: (' + str(latitude) + ', ' + str(longitude) + ')')
         geolocation = get_geolocation_by_latlong(latitude, longitude)
         # Create the state/city/district if they don't exist yet in DB.
-        create_location_if_not_exist(geolocation)
-        return HttpResponse(json.dumps(geolocation.to_json(), cls=DjangoJSONEncoder))
+        result = create_location_if_not_exist(geolocation)
+        return HttpResponse(json.dumps(result, cls=DjangoJSONEncoder))
     else:
         raise ValidationError("Operation is not allowed")
 
@@ -161,7 +160,7 @@ def get_location_by_latlong(request):
         longitude = float(request.GET.get('longitude'))
         LOGGER.info('Getting location using latlon: (' + str(latitude) + ', ' + str(longitude) + ')')
         geolocation = get_geolocation_by_latlong(latitude, longitude)
-        return HttpResponse(json.dumps(geolocation, cls=DjangoJSONEncoder))
+        return HttpResponse(json.dumps(geolocation.to_json(), cls=DjangoJSONEncoder))
     else:
         raise ValidationError("Operation is not allowed")
 
@@ -173,8 +172,8 @@ def get_and_create_location_by_zipcode(request):
         zipcode = request.GET.get("zipcode")
         LOGGER.info('Getting and possibily creating location using zipcode:' + str(zipcode))
         geolocation = get_geolocation_by_zipcode(zipcode)
-        create_location_if_not_exist(geolocation)
-        return HttpResponse(json.dumps(geolocation.to_json(), cls=DjangoJSONEncoder))
+        result = create_location_if_not_exist(geolocation)
+        return HttpResponse(json.dumps(result, cls=DjangoJSONEncoder))
     else:
         raise ValidationError("Operation is not allowed")
 
@@ -221,10 +220,12 @@ def create_location_if_not_exist(geolocation):
             lv1_district.city = city
             lv1_district.save()
 
-    location = {'city_id': city.id, 'city_name': city.name,
-        'lv1_district_id': lv1_district.id, 'lv1_district_name': lv1_district.name,
-        'zipcode': geolocation.zipcode, 'latitude': geolocation.latitude, 'longitude': geolocation.longitude}
-    return location
+    result = geolocation.to_json()
+    # adding some some location object ids
+    result['city_id'] = city.id
+    result['state_id'] = state.id
+    result['lv1_district_id'] = lv1_district.id
+    return result
 
 @csrf_exempt
 def check_email(request):

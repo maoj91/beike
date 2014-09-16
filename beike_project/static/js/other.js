@@ -100,9 +100,8 @@ var addressLoader = (function($, undefined) {
                     }
                 }).then(function(data) {
                     console.log(data);
-                    $("#city").text(data.city_name);
+                    $("#city").text(data.city);
                     $("#city_id").val(data.city_id);
-                    $("#district").text(data.lv1_district_name);
                     $("#latitude").val(data.latitude);
                     $("#longitude").val(data.longitude);
                 });
@@ -123,9 +122,8 @@ var addressLoader = (function($, undefined) {
                     longitude: longitude
                 }
             }).then(function(data) {
-                $("#city").text(data.city_name);
+                $("#city").text(data.city);
                 $("#city_id").val(data.city_id);
-                $("#district").text(data.lv1_district_name);
                 $("#zipcode").val(data.zipcode);
                 $("#latitude").val(latitude);
                 $("#longitude").val(longitude);
