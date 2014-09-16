@@ -1,7 +1,7 @@
 from pygeocoder import Geocoder
 import json
 
-def get_location_by_latlong(latitude, longitude):
+def get_geolocation_by_latlong(latitude, longitude):
     # call google geolocation service to get the location detail
     results = Geocoder.reverse_geocode(latitude, longitude)
     if results is not None and len(results) > 0:
@@ -41,7 +41,7 @@ def get_zipcode_by_latlong(latitude, longitude):
                 return component['long_name']
     return None
 
-def get_location_by_zipcode(zipcode):
+def get_geolocation_by_zipcode(zipcode):
     results = Geocoder.geocode(zipcode)
     if results is not None and len(results) > 0:
         google_location = results.raw[0]
@@ -62,6 +62,8 @@ def get_location_by_zipcode(zipcode):
             if 'postal_code' in component['types']:
                 location.zipcode = component['long_name']
         return location
+    else:
+        return None
 
 class Geolocation(object):
 
@@ -166,3 +168,8 @@ class Geolocation(object):
     @zipcode.setter
     def zipcode(self, value):
         self._zipcode = value
+
+    def to_json(self):
+        return {'latitude': self.latitude, 'longitude': self.longitude,
+                'street_name': self.street_name, 'lv1_district': self.lv1_district, 'lv2_district': self.lv2_district,
+                'city': self.city, 'state': self.state, 'country': self.country, 'zipcode': self.zipcode}

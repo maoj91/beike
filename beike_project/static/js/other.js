@@ -93,7 +93,7 @@ var addressLoader = (function($, undefined) {
             if (zipcode) {
                 $.ajax({
                     type: "get",
-                    url: "/user/get_info/get_city",
+                    url: "/user/get_info/get_city_by_zipcode",
                     dataType: "json",
                     data: {
                         zipcode: zipcode,

@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from data.models import User,Country,State,City,District,Address,Privacy
 from data.views import create_user,is_email_valid, is_name_valid, update_user_address
 from beike_project.views import validate_user
-from geolocation import get_location_by_latlong, get_location_by_zipcode    
+from geolocation import get_geolocation_by_latlong, get_geolocation_by_zipcode    
 import json, logging
 from django.core.serializers.json import DjangoJSONEncoder
 from data.image_util import ImageMetadata
@@ -16,7 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 from datetime import date
 
-
+LOGGER = logging.getLogger('user.views')
 
 def index(request,offset):
     try:
@@ -73,8 +73,36 @@ def save_address(request, offset):
         update_user_address(user.id, city_id, zipcode, latitude, longitude)
         return HttpResponseRedirect('/user/'+str(user.id))
 
-
-
+def create(request):
+    validate_user(request)
+    wx_id = request.session['wx_id']
+    error = ''
+    email_valid_type = 0;
+    if request.method == 'POST':
+        city_id = request.POST.get('city_id')
+        zipcode = request.POST.get('zipcode')
+        latitude = request.POST.get('latitude')
+        longitude = request.POST.get('longitude')  
+        print "latitude: " + latitude
+        print "longitude" + longitude
+        email = request.POST.get('email_input')
+        name = request.POST.get('username_input')
+        email_valid_type = is_email_valid(email)
+        name_valid_type = is_name_valid(name)
+        if email_valid_type ==0 and email_valid_type==0:
+            print wx_id + " " + email + " " + city_id
+            create_user(wx_id, name, email, city_id, zipcode, latitude, longitude)
+            return HttpResponseRedirect('/')
+        else: 
+            if email_valid_type == 1: 
+                error += 'User name can not be empty.'
+            if email_valid_type == 1:
+                error += 'Email is not valid. Please try again.' 
+            if email_valid_type == 2: 
+                error += 'Email already exist.'
+            return render_to_response('get_info.html',{'wx_id':wx_id,'cities':cities,'default_city':default_city,'error':error},RequestContext(request))
+    else: 
+        raise Http404
 
 def update(request,offset):
     try:
@@ -112,100 +140,54 @@ def get_info(request):
     wx_id = request.session['wx_id']
     return render_to_response('get_info.html',{'user_id':wx_id},RequestContext(request))
 
-def get_city_by_latlong(request):
+# Utilize latitude and longitude to retrieve location information
+# including district, city, state, country etc.
+# Internally it is calling Google geolocation service
+def get_and_create_location_by_latlong(request):
     if request.is_ajax():
         latitude = float(request.GET.get('latitude'))
         longitude = float(request.GET.get('longitude'))
-        print("latitude: " + request.GET.get('latitude') + ", longitude: " + request.GET.get('longitude'))
-        geolocation = get_location_by_latlong(latitude, longitude)
-        city_district = get_city_district(geolocation)
-        return HttpResponse(json.dumps(city_district, cls=DjangoJSONEncoder))
+        LOGGER.info('Getting and creating location using latlon: (' + str(latitude) + ', ' + str(longitude) + ')')
+        geolocation = get_geolocation_by_latlong(latitude, longitude)
+        # Create the state/city/district if they don't exist yet in DB.
+        create_location_if_not_exist(geolocation)
+        return HttpResponse(json.dumps(geolocation.to_json(), cls=DjangoJSONEncoder))
     else:
         raise ValidationError("Operation is not allowed")
 
-def get_latlon_by_zipcode(request):
-    if request.is_ajax():
-        wx_id = request.session['wx_id']
-        user = User.objects.get(wx_id=wx_id)
-        zipcode = request.GET.get('zipcode')
-        geolocation = get_location_by_zipcode(user.address.zip_code)
-        if zipcode:
-            geolocation = get_location_by_zipcode(zipcode)
-        
-        return HttpResponse(json.dumps({'latitude': geolocation.latitude, 'longitude': geolocation.longitude,
-            'city': geolocation.city}, cls=DjangoJSONEncoder))
-    else:
-        raise ValidationError("Operation is not allowed")
-
-def get_zipcode_by_latlong(request):
+def get_location_by_latlong(request):
     if request.is_ajax():
         latitude = float(request.GET.get('latitude'))
         longitude = float(request.GET.get('longitude'))
-        print("latitude: " + request.GET.get('latitude') + ", longitude: " + request.GET.get('longitude'))
-        geolocation = get_location_by_latlong(latitude, longitude)
-        return HttpResponse(json.dumps({'zipcode': geolocation.zipcode, 'city': geolocation.city}, cls=DjangoJSONEncoder))
+        LOGGER.info('Getting location using latlon: (' + str(latitude) + ', ' + str(longitude) + ')')
+        geolocation = get_geolocation_by_latlong(latitude, longitude)
+        return HttpResponse(json.dumps(geolocation, cls=DjangoJSONEncoder))
     else:
-        raise Http404
+        raise ValidationError("Operation is not allowed")
 
-def get_city_by_zipcode(request):
+# Utilize zipcode to retrieve location information
+# including district, city, state, country etc.
+# Internally it is calling Google geolocation service
+def get_and_create_location_by_zipcode(request):
     if request.is_ajax():
         zipcode = request.GET.get("zipcode")
-        geolocation = get_location_by_zipcode(zipcode)
-        city_district = get_city_district(geolocation)
-        return HttpResponse(json.dumps(city_district, cls=DjangoJSONEncoder))
+        LOGGER.info('Getting and possibily creating location using zipcode:' + str(zipcode))
+        geolocation = get_geolocation_by_zipcode(zipcode)
+        create_location_if_not_exist(geolocation)
+        return HttpResponse(json.dumps(geolocation.to_json(), cls=DjangoJSONEncoder))
     else:
-        raise Http404
+        raise ValidationError("Operation is not allowed")
 
-def get_name(request):
-    return render_to_response('get_name.html')
-
-@csrf_exempt
-def check_email(request):
-    if request.method == 'POST':
-        email = request.POST.get('user_email')
-        user = User.objects.filter(email = email)
-        if user:
-            return HttpResponse('false')
-        else:
-            return HttpResponse('true')
+def get_location_by_zipcode(request):
+    if request.is_ajax():
+        zipcode = request.GET.get("zipcode")
+        LOGGER.info('Getting location using zipcode:' + str(zipcode))
+        geolocation = get_geolocation_by_zipcode(zipcode)
+        return HttpResponse(json.dumps(geolocation.to_json(), cls=DjangoJSONEncoder))
     else:
-        raise Http500
+        raise ValidationError("Operation is not allowed")
 
-
-def create(request):
-    validate_user(request)
-    wx_id = request.session['wx_id']
-    error = ''
-    email_valid_type = 0;
-    if request.method == 'POST':
-        city_id = request.POST.get('city_id')
-        zipcode = request.POST.get('zipcode')
-        latitude = request.POST.get('latitude')
-        longitude = request.POST.get('longitude')  
-        print "latitude: " + latitude
-        print "longitude" + longitude
-        email = request.POST.get('email_input')
-        name = request.POST.get('username_input')
-        email_valid_type = is_email_valid(email)
-        name_valid_type = is_name_valid(name)
-        if email_valid_type ==0 and email_valid_type==0:
-            print wx_id + " " + email + " " + city_id
-            create_user(wx_id, name, email, city_id, zipcode, latitude, longitude)
-            return HttpResponseRedirect('/')
-        else: 
-            if email_valid_type == 1: 
-                error += 'User name can not be empty.'
-            if email_valid_type == 1:
-                error += 'Email is not valid. Please try again.' 
-            if email_valid_type == 2: 
-                error += 'Email already exist.'
-            return render_to_response('get_info.html',{'wx_id':wx_id,'cities':cities,'default_city':default_city,'error':error},RequestContext(request))
-    else: 
-        raise Http404
-
-
-
-def get_city_district(geolocation):
+def create_location_if_not_exist(geolocation):
     # create the country if it does not yet exist DB
     try:
         country = Country.objects.get(name__iexact=geolocation.country)
@@ -239,10 +221,22 @@ def get_city_district(geolocation):
             lv1_district.city = city
             lv1_district.save()
 
-    cityDistrict={'city_id': city.id, 'city_name': city.name,
+    location = {'city_id': city.id, 'city_name': city.name,
         'lv1_district_id': lv1_district.id, 'lv1_district_name': lv1_district.name,
         'zipcode': geolocation.zipcode, 'latitude': geolocation.latitude, 'longitude': geolocation.longitude}
-    return cityDistrict
+    return location
+
+@csrf_exempt
+def check_email(request):
+    if request.method == 'POST':
+        email = request.POST.get('user_email')
+        user = User.objects.filter(email = email)
+        if user:
+            return HttpResponse('false')
+        else:
+            return HttpResponse('true')
+    else:
+        raise Http500
     
 
 def save_privacy(request):
@@ -259,8 +253,6 @@ def save_privacy(request):
             user.privacy = privacy
             user.save()
     return HttpResponseRedirect('/user/',{'user':user,'error':error})
-
-
 
 def validate_profile(user_name,user_email,address_city,address_state):
     error = ""
