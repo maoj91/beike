@@ -22,24 +22,158 @@ function formatPrice(price) {
     return s;
 }
 
+	
+function convert_state(name, to) {
+    var name = name.toUpperCase();
+    var states = new Array(
+        {'name':'Alabama', 'abbrev':'AL'},          {'name':'Alaska', 'abbrev':'AK'},
+        {'name':'Arizona', 'abbrev':'AZ'},          {'name':'Arkansas', 'abbrev':'AR'},         {'name':'California', 'abbrev':'CA'},
+        {'name':'Colorado', 'abbrev':'CO'},         {'name':'Connecticut', 'abbrev':'CT'},      {'name':'Delaware', 'abbrev':'DE'},
+        {'name':'Florida', 'abbrev':'FL'},          {'name':'Georgia', 'abbrev':'GA'},          {'name':'Hawaii', 'abbrev':'HI'},
+        {'name':'Idaho', 'abbrev':'ID'},            {'name':'Illinois', 'abbrev':'IL'},         {'name':'Indiana', 'abbrev':'IN'},
+        {'name':'Iowa', 'abbrev':'IA'},             {'name':'Kansas', 'abbrev':'KS'},           {'name':'Kentucky', 'abbrev':'KY'},
+        {'name':'Louisiana', 'abbrev':'LA'},        {'name':'Maine', 'abbrev':'ME'},            {'name':'Maryland', 'abbrev':'MD'},
+        {'name':'Massachusetts', 'abbrev':'MA'},    {'name':'Michigan', 'abbrev':'MI'},         {'name':'Minnesota', 'abbrev':'MN'},
+        {'name':'Mississippi', 'abbrev':'MS'},      {'name':'Missouri', 'abbrev':'MO'},         {'name':'Montana', 'abbrev':'MT'},
+        {'name':'Nebraska', 'abbrev':'NE'},         {'name':'Nevada', 'abbrev':'NV'},           {'name':'New Hampshire', 'abbrev':'NH'},
+        {'name':'New Jersey', 'abbrev':'NJ'},       {'name':'New Mexico', 'abbrev':'NM'},       {'name':'New York', 'abbrev':'NY'},
+        {'name':'North Carolina', 'abbrev':'NC'},   {'name':'North Dakota', 'abbrev':'ND'},     {'name':'Ohio', 'abbrev':'OH'},
+        {'name':'Oklahoma', 'abbrev':'OK'},         {'name':'Oregon', 'abbrev':'OR'},           {'name':'Pennsylvania', 'abbrev':'PA'},
+        {'name':'Rhode Island', 'abbrev':'RI'},     {'name':'South Carolina', 'abbrev':'SC'},   {'name':'South Dakota', 'abbrev':'SD'},
+        {'name':'Tennessee', 'abbrev':'TN'},        {'name':'Texas', 'abbrev':'TX'},            {'name':'Utah', 'abbrev':'UT'},
+        {'name':'Vermont', 'abbrev':'VT'},          {'name':'Virginia', 'abbrev':'VA'},         {'name':'Washington', 'abbrev':'WA'},
+        {'name':'West Virginia', 'abbrev':'WV'},    {'name':'Wisconsin', 'abbrev':'WI'},        {'name':'Wyoming', 'abbrev':'WY'}
+    );
+    var returnthis = false;
+    $.each(states, function(index, value){
+        if (to == 'name') {
+            if (value.abbrev == name){
+                returnthis = value.name;
+                return false;
+            }
+        } else if (to == 'abbrev') {
+            if (value.name.toUpperCase() == name){
+                returnthis = value.abbrev;
+                return false;
+            }
+        }
+    });
+    return returnthis;
+}
+
+var locUtil = (function() {
+    var location = null,
+        locData = {
+            latitude: null, longitude: null, 
+            city: null, state: null, zipcode: null
+        },
+        defaultCallback = function(data) { console.log(data); },
+    getCurrentLocationDeferred = function(options) {
+        var deferred = $.Deferred();
+        navigator.geolocation.getCurrentPosition(deferred.resolve, deferred.reject, options);
+        return deferred.promise();
+    },
+    getLocByZip = function(zipcode, callback) {
+        locData.zipcode = zipcode;
+        $.ajax({
+            type: "get",
+            url: "/user/get_info/get_latlong_by_zipcode",
+            dataType: "json",
+            data: { zipcode: zipcode }
+        }).then(function(data) {
+            locData.city = data.city;
+            locData.state = convert_state(data.state,'abbrev');
+            locData.latitude = data.latitude;
+            locData.longitude = data.longitude;
+            if (callback && callback.apply !== undefined)
+                callback.apply(null, [locData]);
+            else
+                defaultCallback.apply(null, [locData]);
+        });
+    },
+    getLocByLatLon = function(LatLon, callback) {
+        locData.latitude = LatLon.latitude;
+        locData.longitude = LatLon.longitude;
+        $.ajax({
+            type: "get",
+            url: "/user/get_info/get_zipcode_by_latlong",
+            dataType: "json",
+            data: {
+                latitude: LatLon.latitude,
+                longitude: LatLon.longitude
+            }
+        }).then(function(data) {
+            locData.city = data.city;
+            locData.state = convert_state(data.state,'abbrev');
+            locData.zipcode = data.zipcode;
+            if (callback && callback.apply !== undefined)
+                callback.apply(null, [locData]);
+            else
+                defaultCallback.apply(null, [locData]);
+        });
+    },
+    refreshLocation = function(callback) {
+        if (navigator.geolocation) {
+            getCurrentLocationDeferred({
+                enableHighAccuracy: true
+            }).done(function (loc) {
+                location = loc;
+                getLocByLatLon(loc.coords, callback);
+            }).fail(function() {
+                console.error("getLocation call failed");
+            }).always(function() {
+                //do nothing
+            });
+        } else {
+            console.error("Geolocation is disabled.");
+        }
+        //return locData;
+    },
+    getLocation = function(callback) {
+        if (!location)
+            refreshLocation(callback);
+        else if (callback && callback.apply !== undefined)
+            callback.apply(null, [locData]);
+        else
+            defaultCallback.apply(null, [locData]);
+    };
+    
+    return {
+        refreshLocation: refreshLocation,
+        //getLocByLatLon: getLocByLatLon,
+        getLocByZip: getLocByZip,
+        getLocation: getLocation
+    };
+}());
+
 
 $.validator.addMethod("digitonly", function(value) {
     return /^\d+$/.test(value);
 }, "只能包含数字");
 
+
 $(document).on("pagebeforeshow", function() {
     var ua = navigator.userAgent.toLowerCase();
     if (!(ua.match(/MicroMessenger/i) == "micromessenger")) {
         $(".header").show();
+
+        var lastScroll = 0;
+        window.onscroll = function(event) {
+            var t = $(this).scrollTop();
+            if (t > lastScroll)
+                $('.header').css('position','absolute');
+            else
+                $('.header').css('position','fixed');
+        lastScroll = t;
+        };
     }
 });
 
-$(document).on("pagechange", function() {
-    var url = window.location.pathname;
-    if (url === "/") {
-        $('div.ui-page').attr('style','height:100%;');
-    }
-});
+
+//$('.header').toolbar({ hideDuringFocus: "button" });
+//$( ".footer" ).toolbar( "option", "hideDuringFocus", "input" );
+//$('.footer').toolbar({ hideDuringFocus: "input"});
+//$("[data-role=footer]").fixedtoolbar({ hideDuringFocus: "input, select" });
 
 // gallery.js
 var gallerySwiper = (function($, undefined) {
@@ -202,7 +336,6 @@ var gallerySwiper = (function($, undefined) {
     return {init: init, select: selectImage, deleteImage: deleteImage};
 }(jQuery));
 
-
 /****************************************
  *     Buy/Sell new form javascript     *
  ****************************************/
@@ -232,6 +365,8 @@ var formLoader = (function($, undefined) {
     
     loader.init = function(initPage, $initPage) {
         console.log('form init');
+        locUtil.getLocation();
+        
         page = initPage;
         if ($initPage) 
             $page = $initPage;
@@ -243,8 +378,15 @@ a=$page;
         $zipcode = $page.find('#zipcode');
         $cityName = $page.find('#city-name');
         
-        $('input:not([readonly], .image-uploader-input), textarea').focusin(function() { $('.footer').css('position', 'relative'); });
-        $('input:not([readonly], .image-uploader-input), textarea').focusout(function() { $('.footer').css('position', 'fixed'); });
+        // hide footer when user entering
+        $('input:not([readonly], .gallery-uploader-input), textarea').focusin(function() { 
+            $('.footer').toggleClass('bottom');
+            $('.ui-content').css('margin-bottom', '0px');
+        });
+        $('input:not([readonly], .gallery-uploader-input), textarea').focusout(function() {
+            $('.footer').toggleClass('bottom');
+            $('.ui-content').css('margin-bottom', '50px');
+        });
         
         isEmailChecked = false;
         isPhoneChecked = false;
@@ -273,20 +415,13 @@ a=$page;
             });
         }
         
-        if (navigator.geolocation) {
-            getCurrentPositionDeferred({
-                enableHighAccuracy: true
-            }).done(function(position) {
-                getLocationByLatLon(position.coords)
-            }).fail(function() {
-                console.error("getCurrentPosition call failed")
-            }).always(function() {
-                //do nothing
-            });
-        } else {
-            console.error("Geolocation is disabled.")
-        }
-        
+        locUtil.getLocation(function(data) {
+            $zipcode.val(data.zipcode);
+            $cityName.val(data.city+', '+data.state);
+            $latitude.val(data.latitude);
+            $longitude.val(data.longitude);
+        });
+
         var $description = $page.find('#description'),
             $counter = $page.find('#lengthCounter');
         $counter.html($description.val().length + '/300');
@@ -295,41 +430,13 @@ a=$page;
         });
     };
     
-    var getLocationByLatLon = function(coords) {
-        var latitude = coords.latitude;
-        var longitude = coords.longitude;
-        $latitude.val(latitude);
-        $longitude.val(longitude);
-        $.ajax({
-            type: "get",
-            url: "/user/get_info/get_zipcode_by_latlong",
-            dataType: "json",
-            data: {
-                latitude: latitude,
-                longitude: longitude
-            }
-        }).then(function(data) {
-            $zipcode.val(data.zipcode);
-            $cityName.val(data.city);
-            console.log(data);
-            return data;
-        });
-    };
-
     // Use user input zipcode to get the city and latlon
     loader.getLocationByZipcode = function() {
-        var zipcode = $page.find('#zipcode').val();
-        $.ajax({
-            type: "get",
-            url: "/user/get_info/get_latlong_by_zipcode",
-            dataType: "json",
-            data: { zipcode: zipcode }
-        }).then(function(data) {
-            $cityName.val(data.city);
+        locUtil.getLocByZip($zipcode.val(), function(data) {
+            $zipcode.val(data.zipcode);
+            $cityName.val(data.city+', '+data.state);
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
-            console.log(data);
-            return data;
         });
     };
     
@@ -401,7 +508,6 @@ $(document).delegate('#sell-form', 'pagebeforeshow', function(event) {
     gallerySwiper.init($('#sell-form-gallery'));
 });
 
-
 /****************************************
  *    Buy/Sell posts list javascript    *
  ****************************************/
@@ -416,7 +522,7 @@ var postLoader = (function($, undefined) {
         category = null,
         keyword = null,
     init = function(initPage) {
-        page = initPage;
+        page = initPage;console.log(page+" init");
         $page = $('#'+page+'-list');
         
         $list1 = $page.children('.post-list1');
@@ -425,18 +531,13 @@ var postLoader = (function($, undefined) {
         numPerPage = $page.find('.num-per-page').val();
         clearPosts();
         
-        getCurrentPositionDeferred({
-            enableHighAccuracy: true
-        }).done(function(position) {
-            currentPosition = position;
+
+        locUtil.getLocation(function(data) {
+            currentPosition = data;
             getAndDisplayPosts();
-        }).fail(function() {
-            console.error('getCurrentPosition call failed');
-        }).always(function() {
-            //do nothing
         });
         
-        $(document).on('scrollstop', function() {console.log(page); getAndDisplayPosts(); });
+        $(document).on('scrollstop', function() { getAndDisplayPosts(); });
     },
     clearPosts = function() {
         slot_pos = 0;
@@ -458,8 +559,8 @@ var postLoader = (function($, undefined) {
             dataType: 'json',
             data: {
                 pageNum: postPageNum,
-                latitude: currentPosition.coords.latitude,
-                longitude: currentPosition.coords.longitude,
+                latitude: currentPosition.latitude,
+                longitude: currentPosition.longitude,
                 category: category,
                 keyword: keyword
             }
@@ -493,19 +594,17 @@ var postLoader = (function($, undefined) {
                 }
                 
                 item = '<img class="post-image" src="' + image_info['image_url'] + '" />'; 
-                price = formatPrice(posts[i]["price"]);+ 
-                        '</div>'+
-                        '<div class="post-distance">距离你 ' + distance + ' miles</div>'+
-                    '</a></div>';
+                price = formatPrice(posts[i]["price"]);
             } else if (page === 'buy') {
                 item = '';
                 price = formatPrice(posts[i]["max_price"]);
             }
             
             item = '<div class="post-item-box">' +
-                '<a class="post-item" href="/detail/' + page + '/' + posts[i]['post_id'] + '" data-transition="slide">' +
+                //'<a class="post-item" href="/detail/' + page + '/' + posts[i]['post_id'] + '" data-transition="slide">' +
+                '<a class="post-item" onmousedown="postLoader.loadPage('+posts[i]['post_id']+');" onmouseup="postLoader.changePage('+posts[i]['post_id']+');">' +
                     '<div>' +
-                        '<img class="post-icon" src="/static/images/general/' + page + '_logo.png" />' +
+                        '<img class="post-icon" src="/static/images/general/' + page + '_icon_40.png" />' +
                         '<span class="post-title">' + posts[i]["title"] + '</span>' +
                     '</div>' + item + 
                     '<div class="post-price">' +
@@ -525,6 +624,25 @@ var postLoader = (function($, undefined) {
         $list1.append(tempList1);
         $list2.append(tempList2);
     },
+    loadPage = function(id) {
+        /*setTimeout(function() {$('body').pagecontainer('load', '/detail/'+page+'/'+id).on('pagecontainerload', function() {
+            console.log('loaded');aaloaded=true;$('body').off('pagecontainerload');});
+        }, 300);*/
+    },
+    changePage = function(id) {
+//console.log('change');
+        //if (aaloaded) {
+            //$('body').off('pagecontainerload'); aaloaded = false; console.log('why');
+            $('body').pagecontainer('change', '/detail/'+page+'/'+id);//$('body').off('pagecontainerload');
+        /*}
+        else
+            $('body').on('pagecontainerload', function(event, ui) {
+                console.log('loaded2');
+                $('body').off('pagecontainerload'); aaloaded = false;
+                $('body').pagecontainer('change', ui.content, {transition: 'slide'});$('body').off('pagecontainerload');
+            });*/
+        
+    },
     refreshPosts = function() {
         $('#popupBasic-popup').removeClass('ui-popup-active');
         $('#popupBasic-popup').addClass('ui-popup-hidden');
@@ -532,27 +650,36 @@ var postLoader = (function($, undefined) {
         
         category = $('input[name="category"]:checked').val();
         keyword = $('#sellPostKeyword').val();
-        
-        clearPosts();
-        getAndDisplayPosts();
+        locUtil.getLocByZip($('#zipcode').val(), function(data) {
+            currentPosition = data;
+            clearPosts();
+            getAndDisplayPosts();
+        });
     };
     
     return { 
         init: init,
-        refreshPosts: refreshPosts
+        refreshPosts: refreshPosts,
+        loadPage: loadPage,
+        changePage: changePage
     };
 }(jQuery));
 
 $(document).delegate('#nearby-buypost', 'pagebeforeshow', function() {
-    $(document).off('scrollstop');
-    postLoader.init('buy');
+    if ($('.ui-page-active').attr('id') !== 'buy-detail')
+    {
+        $(document).off('scrollstop');
+        postLoader.init('buy');
+    }
 });
 
 $(document).delegate('#nearby-sellpost', 'pagebeforeshow', function() {
-    $(document).off('scrollstop');
-    postLoader.init('sell');
+    if ($('.ui-page-active').attr('id') !== 'sell-detail')
+    {
+        $(document).off('scrollstop');
+        postLoader.init('sell'); //console.log('refresh');
+    }
 });
-
 
 /****************************************
  *   Buy/Sell post detail javascript    *
@@ -698,6 +825,7 @@ var detailLoader = (function($, undefined) {
 }(jQuery));
 
 $(document).delegate('#sell-detail', 'pagebeforeshow', function(event) {
+//$("body").on('pagecontainerbeforetransition', function() {
     detailLoader.init('sell');
     gallerySwiper.init($('#sell-detail .gallery'));
 });
@@ -843,16 +971,15 @@ var addressLoader = (function($, undefined) {
             if (zipcode) {
                 $.ajax({
                     type: "get",
-                    url: "/user/get_info/get_city",
+                    url: "/user/get_info/get_city_by_zipcode",
                     dataType: "json",
                     data: {
                         zipcode: zipcode,
                     }
                 }).then(function(data) {
                     console.log(data);
-                    $("#city").text(data.city_name);
+                    $("#city").text(data.city);
                     $("#city_id").val(data.city_id);
-                    $("#district").text(data.lv1_district_name);
                     $("#latitude").val(data.latitude);
                     $("#longitude").val(data.longitude);
                 });
@@ -873,9 +1000,8 @@ var addressLoader = (function($, undefined) {
                     longitude: longitude
                 }
             }).then(function(data) {
-                $("#city").text(data.city_name);
+                $("#city").text(data.city);
                 $("#city_id").val(data.city_id);
-                $("#district").text(data.lv1_district_name);
                 $("#zipcode").val(data.zipcode);
                 $("#latitude").val(latitude);
                 $("#longitude").val(longitude);
@@ -936,4 +1062,3 @@ $(document).delegate("#user_info", "pageinit", function() {
 $(document).delegate("#user_location", "pageinit", function() {
     addressLoader.init('user_location');
 });
-
