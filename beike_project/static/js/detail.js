@@ -141,11 +141,11 @@ var detailLoader = (function($, undefined) {
     };
 }(jQuery));
 
-//$(document).delegate('#sell-detail', 'pagebeforeshow', function(event) {
-/*$("body").on('pagecontainerbeforetransition', function() {
+$(document).delegate('#sell-detail', 'pagebeforeshow', function(event) {
+//$("body").on('pagecontainerbeforetransition', function() {
     detailLoader.init('sell');
     gallerySwiper.init($('#sell-detail .gallery'));
-});*/
+});
 
 $(document).delegate('#buy-detail', 'pagebeforeshow', function(event) {
     detailLoader.init('buy');

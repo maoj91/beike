@@ -133,7 +133,7 @@ def get_latlon_by_zipcode(request):
             geolocation = get_location_by_zipcode(zipcode)
         
         return HttpResponse(json.dumps({'latitude': geolocation.latitude, 'longitude': geolocation.longitude,
-            'city': geolocation.city}, cls=DjangoJSONEncoder))
+            'city': geolocation.city, 'state': geolocation.state}, cls=DjangoJSONEncoder))
     else:
         raise ValidationError("Operation is not allowed")
 
@@ -143,7 +143,7 @@ def get_zipcode_by_latlong(request):
         longitude = float(request.GET.get('longitude'))
         print("latitude: " + request.GET.get('latitude') + ", longitude: " + request.GET.get('longitude'))
         geolocation = get_location_by_latlong(latitude, longitude)
-        return HttpResponse(json.dumps({'zipcode': geolocation.zipcode, 'city': geolocation.city}, cls=DjangoJSONEncoder))
+        return HttpResponse(json.dumps({'zipcode': geolocation.zipcode, 'city': geolocation.city, 'state': geolocation.state}, cls=DjangoJSONEncoder))
     else:
         raise Http404
 
