@@ -175,7 +175,9 @@ def buy_post_detail(request,offset):
     sms_checked = contact['sms_checked'] == 'on' 
     phone = contact['phone_number']
     email = contact['email']
-    return render_to_response('buy_post_detail.html', {'post':post,'lat':lat,'lon':lon, 'is_open':is_open,'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner,
+    user_image = ImageMetadata.deserialize_list(post.user.image_url)[0]
+
+    return render_to_response('buy_post_detail.html', {'post':post,'lat':lat,'lon':lon, 'is_open':is_open,'is_followed': is_followed, 'wx_id':wx_id, 'is_owner': is_owner, 'user_image':user_image,
         'phone_checked':phone_checked,'email_checked':email_checked,'sms_checked':sms_checked,'phone':phone,
         'email':email})
 

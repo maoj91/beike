@@ -1,0 +1,36 @@
+{% if user_image %}
+<div class="user-image-box">
+    <a href="/user/{{post.user.id}}/">
+        <img class="user-image" src="{{user_image.image_url}}"/>
+    </a>  
+</div>
+{% endif %}
+
+{% if post.user %}
+<div class="user-name"><p>{{post.user.name}}</p></div>
+{% endif %}
+
+{% if post.user.description %}
+<hr>
+<div class="user-description">{{post.user.description}}</div>
+{% endif %}
+<hr>
+<div class="user-reg-date">
+    注册于{{ post.user.date_created|date:"Y年n月j日" }}
+</div>
+
+{% if is_owner %}
+<div class="user-complete">
+    <a href="/user/{{user_id}}/">
+        <img src="/static/images/detail/complete_profile.png" style="max-height:30px;">
+    </a>
+</div>
+
+<div class="detail-edit-box">
+    <a class="detail-edit-button" href="/detail/{{page}}/{{post.id}}/edit/"><input type="image" value="修改" id="edit_btn" src="/static/images/detail/edit.png" style="max-width:80px;vertical-align: middle;"></a>
+
+    <a class="detail-edit-button" data-role="button" href="#" onclick="detailLoader.togglePostStatus();" id="open">
+aa</a>
+
+</div>
+{% endif %}
