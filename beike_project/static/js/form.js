@@ -34,7 +34,8 @@ var formLoader = (function($, undefined) {
             $page = $initPage;
         else
             $page = $('#'+page+'-form');
-a=$page;
+        $('.form-loc-1').show();
+        $('.form-loc-2').hide();
         $latitude = $page.find('#latitude');
         $longitude = $page.find('#longitude');
         $zipcode = $page.find('#zipcode');
@@ -92,6 +93,22 @@ a=$page;
         });
     };
     
+    loader.changeLocation = function() {
+        $('.ui-page-active').find('.form-loc-1').hide();
+        $('.ui-page-active').find('.form-loc-2').show();
+    };
+    
+    loader.refreshLocation = function() {
+        locUtil.refreshLocation(function(data) {
+            $zipcode.val(data.zipcode);
+            $cityName.val(data.city+', '+data.state);
+            $latitude.val(data.latitude);
+            $longitude.val(data.longitude);
+        });
+        $('.ui-page-active').find('.form-loc-1').show();
+        $('.ui-page-active').find('.form-loc-2').hide();
+    };
+
     // Use user input zipcode to get the city and latlon
     loader.getLocationByZipcode = function() {
         locUtil.getLocByZip($zipcode.val(), function(data) {
@@ -100,6 +117,8 @@ a=$page;
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
         });
+        $('.ui-page-active').find('.form-loc-1').show();
+        $('.ui-page-active').find('.form-loc-2').hide();
     };
     
     loader.clickPhoneContact = function() {

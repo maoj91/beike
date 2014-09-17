@@ -402,8 +402,8 @@ label.error {
 
 .readonly {
     border: none;
-    background-color: transparent;
-    padding: 15px 0 15px 0;
+    background-color: none;
+    padding: 14px 0;
 }
 
 #category-button.ui-btn {
