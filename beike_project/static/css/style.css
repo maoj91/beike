@@ -216,6 +216,7 @@ a.post-item {
     border: 1px solid #ccc;
     text-decoration: none;
     box-shadow: 1px 1px 2px #ddd;
+    cursor: pointer;
 }
 a.post-item:hover { background: #f9f9f9; }
 a.post-item:active {
@@ -401,8 +402,8 @@ label.error {
 
 .readonly {
     border: none;
-    background-color: transparent;
-    padding: 15px 0 15px 0;
+    background-color: none;
+    padding: 14px 0;
 }
 
 #category-button.ui-btn {
@@ -566,6 +567,20 @@ a.detail-contact-link {
     margin: 0 5%;
 }
 
+#email-button.ui-btn {
+    background: #24c598;
+    width: 50px;
+    height: 50px;
+    border: none;
+    padding: 0;
+    margin: 0 5%;
+    box-shadow: none;
+    border-radius: 25px;
+    line-height: 50px;
+    color: white;
+    font-weight: normal;
+}
+
 img.detail-contact-icon {
     width: 50px;
     height: 50px;
@@ -693,19 +708,7 @@ input.gallery-uploader-input {
 }
 
 
-#email-button.ui-btn {
-    background: #24c598;
-    width: 50px;
-    height: 50px;
-    border: none;
-    padding: 0;
-    margin: 0;
-    box-shadow: none;
-    border-radius: 25px;
-    line-height: 50px;
-    color: white;
-    font-weight: normal;
-}
+
 /*.ui-btn, .ui-input-text { border-radius: 0px !important; }*/
 .footer-left {float: left; width: 50px; height: 50px; /*background-color: pink;*/}
 .footer-right {float: none; overflow: hidden; height: 50px;}
@@ -714,3 +717,46 @@ input.gallery-uploader-input {
 .footer-icon {width: 20px; height: 20px; margin: 6px auto 1px;}
 .footer-text {margin: 0 auto; width: 50px; color: #009966; font-size: 12px; line-height: 23px; text-align: center; }
 .footer-text._clicked {color: white; font-weight: normal;}
+
+div.user-image-box { 
+    width: 80px; 
+    height: 80px;
+    margin: 0 auto; 
+    border-radius: 50%;
+    border: 1px solid #bbb;
+}
+img.user-image { width: 80px; height: 80px; border-radius: 50%; }
+div.user-name { margin: 15px auto; text-align: center; font-size: 16pt;}
+div.user-description {
+    clear: both;
+    color: #333;
+    font-size: 16px;
+    padding: 15px;
+    line-height: 24px;
+}
+
+div.user-reg-date {
+    clear: both;
+    margin: 15px 0 20px;
+    color: #888;
+    text-align:center;
+}
+
+div.user-complete {
+    clear:both;
+    margin: 0 -15px 20px 0;
+    float: right;
+}
+
+div.detail-edit-box {
+    width: 100%;
+    margin: 0 -14px -14px -14px;
+    padding: 15px;
+    background-color: #ddd;
+}
+a.detail-edit-button {
+    display: block;
+    width: 80px;
+    height: auto;
+    margin: 30px auto;
+}

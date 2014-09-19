@@ -156,7 +156,7 @@ var postLoader = (function($, undefined) {
 }(jQuery));
 
 $(document).delegate('#nearby-buypost', 'pagebeforeshow', function() {
-    if ($('.ui-page-active').attr('id') !== 'buy-detail')
+    //if ($('.ui-page-active').attr('id') !== 'buy-detail')
     {
         $(document).off('scrollstop');
         postLoader.init('buy');
@@ -164,7 +164,7 @@ $(document).delegate('#nearby-buypost', 'pagebeforeshow', function() {
 });
 
 $(document).delegate('#nearby-sellpost', 'pagebeforeshow', function() {
-    if ($('.ui-page-active').attr('id') !== 'sell-detail')
+    //if ($('.ui-page-active').attr('id') !== 'sell-detail')
     {
         $(document).off('scrollstop');
         postLoader.init('sell'); //console.log('refresh');
