@@ -41,7 +41,14 @@ def get_district(district_id):
     return district
 
 # User
-def is_user_exist(user_id):
+def get_user(wx_id):
+    qs = User.objects.filter(wx_id = wx_id)
+    if qs.exists():
+        return qs[0]
+    else:
+        return None
+
+def does_user_exist(user_id):
     exist = User.objects.filter(wx_id=user_id).exists()
     if(exist):
         user = User.objects.get(wx_id=user_id)
@@ -49,13 +56,32 @@ def is_user_exist(user_id):
         user.save()
     return exist
 
+def create_user(wx_id, user_name = None, email = None, city_id = None, zipcode = None, latitude = None, longitude = None):
+    if not does_user_exist(wx_id):
+        user = User()
+        user.wx_id = wx_id
+        if user_name:
+            user.name = user_name
+        user.gender = 0
+        user.email = email
+        # create address
+        if city_id and zipcode and latitude and longitude:
+            address = Address()
+            city = City.objects.get(pk = city_id)
+            address.city = city
+            address.zip_code = zipcode
+            address.latlon = Point(float(longitude), float(latitude), srid=4326)
+            address.save()
+            user.address = address
+        user.save()
+        return user
+    else:
+        raise ValueError("User" + wx_id + "already exists")
+
+ 
 def get_lastlogin(user_id):
     user = User.objects.get(wx_id=user_id)
     return user.lastlogin
-
-def get_user(wx_id):
-    user = User.objects.get(wx_id=wx_id)
-    return user
 
 # Category
 def get_category(category_id):
@@ -75,23 +101,6 @@ def is_user_has_email(user_id):
         return False
     else:
         return True
-
-def create_user(wx_id, user_name, email, city_id, zipcode, latitude, longitude):
-    if not is_user_exist(wx_id):
-        user = User()
-        user.wx_id = wx_id
-        user.name = user_name
-        user.gender = 0
-        # create address
-        address = Address()
-        city = City.objects.get(pk=city_id)
-        address.city = city
-        address.zip_code = zipcode
-        address.latlon = Point(float(longitude), float(latitude), srid=4326)
-        address.save()
-        user.address = address
-        user.email = email
-        user.save()
 
 def update_user_address(user_id, city_id, zipcode, latitude, longitude):
         user = User.objects.get(id=user_id)
@@ -118,7 +127,6 @@ def is_email_valid(email):
     if User.objects.filter(email=email):
         type = 2
     return type
-
 
 def is_name_valid(name):
     type = 0

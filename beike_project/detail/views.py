@@ -6,11 +6,11 @@ from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
 from data.models import SellPost, BuyPost, User, Category, Condition
 from data.views import get_user, get_category
+from user.session_util import is_request_valid
 from data.data_util import get_contact, get_condition
 from detail.forms import CommentForm
 import smtplib
 from email.mime.text import MIMEText
-from beike_project.views import validate_user
 from buy.buy_post_util import *
 from sell.sell_post_util import *
 from data.views import get_user
@@ -23,7 +23,8 @@ logger = logging.getLogger(__name__)
 
 
 def sell_post_detail(request,offset):
-    validate_user(request)
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
     wx_id = request.session['wx_id']
     user = get_user(wx_id)
     try:
@@ -56,7 +57,8 @@ def sell_post_detail(request,offset):
 
 
 def sell_detail_edit(request,offset):
-    validate_user(request)
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
     wx_id = request.session['wx_id']
     user = get_user(wx_id)
     try:
@@ -87,7 +89,8 @@ def sell_detail_edit(request,offset):
         'email':email,'user_image':user_image, 'categories':categories},RequestContext(request))
 
 def sell_detail_save(request,offset):
-    validate_user(request)
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
     wx_id = request.session['wx_id']
     user = get_user(wx_id)
     try:
@@ -118,7 +121,8 @@ def sell_detail_save(request,offset):
 
 def buy_detail_edit(request,offset):
     # please check if this buy_detail_edit response is correct
-    validate_user(request)
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
     wx_id = request.session['wx_id']
     user = get_user(wx_id)
     try:
@@ -155,7 +159,8 @@ def buy_detail_save(request,offset):
 
 
 def buy_post_detail(request,offset):
-    validate_user(request)
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
     wx_id = request.session['wx_id']
     user = get_user(wx_id)
     try:

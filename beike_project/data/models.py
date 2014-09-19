@@ -60,11 +60,11 @@ class Address(models.Model):
 
 
 class User(models.Model):
-    name = models.CharField(max_length=255, default='张三')
-    gender = models.IntegerField(default=0,null=False) # 1 for male, 2 for female
+    name = models.CharField(max_length=255, null=True, default='匿名')
+    gender = models.IntegerField(default=0, null=False) # 1 for male, 2 for female
     date_of_birth = models.DateTimeField(null=True, blank=True)
-    wx_id = models.CharField(max_length=255,unique=True)
-    wx_name = models.CharField(max_length=255)
+    wx_id = models.CharField(max_length=255,unique=True,null=False)
+    wx_name = models.CharField(max_length=255, null=True)
     qq_number = models.CharField(max_length=255, null=True)
     mobile_phone = models.CharField(max_length=255, null=True)
     home_phone = models.CharField(max_length=255, null=True)
@@ -73,8 +73,8 @@ class User(models.Model):
     privacy = models.ForeignKey(Privacy, default= get_default_privacy)
     image_url = models.CharField(max_length= 255, null=True, default = get_default_image())
     date_created = models.DateTimeField(default=datetime.now, blank=False)
-    description = models.CharField(max_length=3000, default="",null=False)
-    organization = models.CharField(max_length=255, default="",null=True)
+    description = models.CharField(max_length=3000, default="", null=False)
+    organization = models.CharField(max_length=255, default="", null=True)
     def __unicode__(self):
         return self.name
 

@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from data.models import BuyPost,User,Category, District
 from data.views import get_user, get_category, get_district
 from datetime import datetime
-from beike_project.views import validate_user
+from user.session_util import is_request_valid
 from beike_project import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
@@ -69,7 +69,8 @@ def get_buy_post_summary(post, origin):
 
 def follow_post(request):
     if request.is_ajax:
-        validate_user(request)
+        if not is_request_valid(request):
+            return HttpResponseRedirect('/user/user_guide')
         wx_id = request.session['wx_id']
         user = get_user(wx_id)
 
@@ -90,9 +91,8 @@ def follow_post(request):
         raise ValidationError("Request not supported")
 
 def form(request):
-    if 'wx_id' not in request.session or 'key' not in request.session:
-        return HttpResponseRedirect('/user/get_info/')
-    validate_user(request)
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
     wx_id = request.session['wx_id']
     user = User.objects.get(wx_id=wx_id)
     categories = Category.objects.all()
@@ -100,7 +100,8 @@ def form(request):
     return render_to_response('buy_form.html',{'user':user, 'categories':categories, 'districts':districts},RequestContext(request))
 
 def form_submit(request):
-    validate_user(request)
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
     wx_id = request.session['wx_id']
     user = User.objects.get(wx_id=wx_id)
     if request.method == 'POST':
@@ -143,7 +144,8 @@ def form_submit(request):
 
 def toggle_post(request):
     if request.is_ajax:
-        validate_user(request)
+        if not is_request_valid(request):
+            return HttpResponseRedirect('/user/user_guide')
         wx_id = request.session['wx_id']
         user = get_user(wx_id)
 

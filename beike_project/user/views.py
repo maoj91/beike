@@ -6,7 +6,7 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from data.models import User,Country,State,City,District,Address,Privacy
 from data.views import create_user,is_email_valid, is_name_valid, update_user_address
-from beike_project.views import validate_user
+from user.session_util import is_request_valid
 from geolocation import get_geolocation_by_latlong, get_geolocation_by_zipcode    
 import json, logging
 from django.core.serializers.json import DjangoJSONEncoder
@@ -23,7 +23,8 @@ def index(request,offset):
         offset = int(offset)
     except ValueError:
         raise Http404()
-    validate_user(request)
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
     wx_id = request.session['wx_id']
     user = User.objects.get(id=offset)
     is_owner = user.wx_id == wx_id
@@ -34,13 +35,16 @@ def index(request,offset):
     age = get_age(user.date_of_birth)
     return render_to_response('user.html',{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities,'age':age},RequestContext(request))
 
+def user_guide(request):
+    return render_to_response('user_guide.html')
 
 def edit(request,offset):
     try:
         offset = int(offset)
     except ValueError:
         raise Http404()
-    validate_user(request)
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
     wx_id = request.session['wx_id']
     user = User.objects.get(id=offset)
     is_owner = user.wx_id == wx_id
@@ -56,13 +60,15 @@ def edit_address(request,offset):
         offset = int(offset)
     except ValueError:
         raise Http404()
-    validate_user(request)
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
     wx_id = request.session['wx_id']
     user = User.objects.get(id=offset)
     return render_to_response('user_edit_address.html',{'user':user},RequestContext(request))
 
 def save_address(request, offset):
-    validate_user(request)
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
     wx_id = request.session['wx_id']
     user = User.objects.get(id=offset)
     if request.method == 'POST':
@@ -74,7 +80,8 @@ def save_address(request, offset):
         return HttpResponseRedirect('/user/'+str(user.id))
 
 def create(request):
-    validate_user(request)
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
     wx_id = request.session['wx_id']
     error = ''
     email_valid_type = 0;
@@ -108,7 +115,8 @@ def update(request,offset):
         offset = int(offset)
     except ValueError:
         raise Http404()
-    validate_user(request)
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
     wx_id = request.session['wx_id']
     user = User.objects.get(id=offset)
     is_owner = user.wx_id == wx_id
@@ -135,7 +143,8 @@ def update(request,offset):
 def get_info(request):
     if 'wx_id' not in request.session or 'key' not in request.session: 
         return render_to_response('get_info.html',RequestContext(request))
-    validate_user(request)
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
     wx_id = request.session['wx_id']
     return render_to_response('get_info.html',{'user_id':wx_id},RequestContext(request))
 
@@ -241,7 +250,8 @@ def check_email(request):
     
 
 def save_privacy(request):
-    validate_user(request)
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
     wx_id = request.session['wx_id']
     user = User.objects.get(wx_id=wx_id)
     error = ""

@@ -1,44 +1,19 @@
-from django.http import Http404,HttpResponse
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from data.models import User,State,City,Privacy,UserValidation
-from data.views import is_user_exist
+from data.views import get_user, create_user
+from user.session_util import is_request_valid
 
 def index(request):
-	#TO-DO: 
-	if request.method == "GET":
-		wx_id = request.GET.get('wx_id')
-		key = request.GET.get('key')
-		if wx_id is None and 'wx_id' in request.session:
-			 wx_id = request.session['wx_id']
-		if key is None and 'key' in request.session:
-			 key = request.session['key']		
-		if wx_id is None or key is None:
-			return render_to_response('index.html')
-		else:
-			request.session['wx_id'] = wx_id
-			request.session['key'] = key
-			validate_user(request)
-			if not is_user_exist(wx_id):
-				return HttpResponseRedirect('/user/get_info/')
-			else:
-				user = User.objects.get(wx_id=request.session['wx_id'])
-				city = user.address.city 
-		        return render_to_response('index.html',{'user':user, 'city':city})
+	if is_request_valid(request):
+		user = get_user(request.session['wx_id'])
+		#TO-DO: fix city issue
+		if not user:
+			create_user(request.session['wx_id'])
+		return render_to_response('index.html',{'user':user, 'city': ''})
+			
+	else:
+		return HttpResponseRedirect('/user/user_guide')
 
 def healthcheck(request):
 	return render_to_response('health_check.html')
-
-def validate_user(request):
-	wx_id = request.session['wx_id']
-	key = request.session['key']
-	if wx_id is None or wx_id  == '':
-		raise Http404
-	if key is None or key == '':
-		raise Http404
-	if UserValidation.objects.filter(user_id=wx_id).exists():
-		stored_key = UserValidation.objects.get(user_id=wx_id)
-		if key!=stored_key.key:
-			raise Http404
-	else:
-		raise Http404

@@ -3,10 +3,6 @@ from django.http import HttpResponse
 from django.template import RequestContext, Template
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.encoding import smart_str, smart_unicode
-from data.views import is_user_exist
-from data.views import get_user
-from data.views import is_user_has_email
-from data.views import set_user_email
 from data.utils import getValidationKey
 from data.models import User, UserValidation
 from beike_project import settings

@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from data.models import SellPost,User,Category,Condition
 from data.views import get_user, get_category
 from django.forms.formsets import formset_factory
-from beike_project.views import validate_user
+from user.session_util import is_request_valid
 from datetime import datetime 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
@@ -63,7 +63,8 @@ def get_posts_by_page(request):
 
 def follow_post(request):
     if request.is_ajax:
-        validate_user(request)
+        if not is_request_valid(request):
+            return HttpResponseRedirect('/user/user_guide')
         wx_id = request.session['wx_id']
         user = get_user(wx_id)
 
@@ -85,7 +86,8 @@ def follow_post(request):
 
 def toggle_post(request):
     if request.is_ajax:
-        validate_user(request)
+        if not is_request_valid(request):
+            return HttpResponseRedirect('/user/user_guide')
         wx_id = request.session['wx_id']
         user = get_user(wx_id)
 
@@ -136,9 +138,8 @@ def get_sell_post_summary(post, origin):
         raise ValueError("Argument should be an SellPost instance.")
 
 def form(request):
-    if 'wx_id' not in request.session or 'key' not in request.session:
-        return HttpResponseRedirect('/user/get_info/')
-    validate_user(request)
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
     wx_id = request.session['wx_id']
     user = User.objects.get(wx_id=wx_id)
     categories = Category.objects.all();
@@ -146,9 +147,10 @@ def form(request):
 
 
 def form_submit(request):
-    validate_user(request)
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
     wx_id = request.session['wx_id']
-    user = User.objects.get(wx_id=wx_id)
+    user = User.objects.get(wx_id = wx_id)
     error = ''
     if request.method == 'POST':
         new_post = SellPost()

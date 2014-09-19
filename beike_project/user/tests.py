@@ -1,8 +1,10 @@
 from django.test import TestCase
 from geolocation import Geolocation, get_geolocation_by_zipcode
+from session_util import is_request_valid
 import json
 from django.test import Client
-from data.models import Country, State, City
+from data.models import Country, State, City, UserValidation
+from django.http import HttpRequest
 
 class GeolocationTest(TestCase):
 
@@ -62,3 +64,23 @@ class UserViewTest(TestCase):
         self.assertEqual(state.name, 'Washington')
         city = City.objects.get(name = 'Seattle')
         self.assertEqual(city.name, 'Seattle')
+
+class SessionUtilTest(TestCase):
+    def setUp(self):
+        UserValidation.objects.create(user_id = 'user1234', key = 'key1234')
+
+    def test_request_validation(self):
+        request = HttpRequest()
+        request.method = 'GET'
+        request.GET = {}
+        request.session = {}
+        result1 = is_request_valid(request)
+        self.assertFalse(result1)
+        request.GET['wx_id'] = 'user1234'
+        request.GET['key'] = 'key1234'
+        result2 = is_request_valid(request)
+        self.assertTrue(result2)
+        self.assertEqual('user1234', request.session.get('wx_id'))
+        self.assertEqual('key1234', request.session.get('key'))
+
+
