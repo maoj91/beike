@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 
-{% include "head.html" with title="我要买—修改" %}
+{% include "head.html" with title="我要买 | 修改" %}
 
 <body>
 <div id="sell-edit" data-role="page" data-fullscreen="true">
@@ -16,7 +16,7 @@
             {% include "form/contact.html" with email=email phone=phone %}
             {% include "form/description.html" with content=post.content %}
 
-            <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png">
+            <button class="submit-button" type="submit" id="submit_btn">提 交</button>
         </form>
     </div>
 

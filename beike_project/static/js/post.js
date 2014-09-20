@@ -91,8 +91,8 @@ var postLoader = (function($, undefined) {
             }
             
             item = '<div class="post-item-box">' +
-                //'<a class="post-item" href="/detail/' + page + '/' + posts[i]['post_id'] + '" data-transition="slide">' +
-                '<a class="post-item" onmousedown="postLoader.loadPage('+posts[i]['post_id']+');" onmouseup="postLoader.changePage('+posts[i]['post_id']+');">' +
+                '<a class="post-item" href="/detail/' + page + '/' + posts[i]['post_id'] + '" data-transition="slide">' +
+                //'<a class="post-item" onmousedown="postLoader.loadPage('+posts[i]['post_id']+');" onmouseup="postLoader.changePage('+posts[i]['post_id']+');">' +
                     '<div>' +
                         '<img class="post-icon" src="/static/images/general/' + page + '_icon_40.png" />' +
                         '<span class="post-title">' + posts[i]["title"] + '</span>' +
@@ -156,17 +156,19 @@ var postLoader = (function($, undefined) {
 }(jQuery));
 
 $(document).delegate('#nearby-buypost', 'pagebeforeshow', function() {
-    //if ($('.ui-page-active').attr('id') !== 'buy-detail')
+    if ($('.ui-page-active').attr('id') !== 'buy-detail')
     {
         $(document).off('scrollstop');
         postLoader.init('buy');
+        //WeixinApi.ready(function() {WeixinApi.hideOptionMenu();WeixinApi.showOptionMenu();});
     }
 });
 
 $(document).delegate('#nearby-sellpost', 'pagebeforeshow', function() {
-    //if ($('.ui-page-active').attr('id') !== 'sell-detail')
+    if ($('.ui-page-active').attr('id') !== 'sell-detail')
     {
         $(document).off('scrollstop');
         postLoader.init('sell'); //console.log('refresh');
+        //WeixinApi.ready(function() {WeixinApi.hideOptionMenu();WeixinApi.showOptionMenu();});
     }
 });

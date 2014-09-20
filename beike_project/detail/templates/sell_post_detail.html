@@ -5,9 +5,8 @@
 
 <body>
 <div data-role="page" id="sell-detail" data-fullscreen="true">
-    {% include "header.html" with title="物品" %}
-
-    <div data-role="content">
+{% include "header.html" with title="物品" %}
+<div data-role="content">
         {% include "detail/title.html" with page="sell" post=post %}
 
         {% include "gallery.html" with galleryId="sell-detail-gallery" image_list=image_list %}
@@ -35,24 +34,13 @@
 
         <div class="detail-content">{{post.content}}</div>
         
-        <a class="detail-map-box" href="http://maps.apple.com/?q={{lat}},{{lon}}">
+        <div class="detail-map-box" onclick="$('#buy-detail #map-page').toggleClass('show');">
+        <!--a class="detail-map-box" href="http://maps.apple.com/?q={{lat}},{{lon}}"-->
             <img class="detail-map" src="http://maps.googleapis.com/maps/api/staticmap?center={{lat}},{{lon}}&zoom=14&size=640x200&sensor=true&markers=color:green%7C{{lat}},{{lon}}">
             <div class="detail-loc">
                 <!--img class="city-mark" src="/static/images/detail/location_icon.png"-->
                 <span class="city-text">{{post.user.address.city}}</span>
             </div>
-        </a>
-
-        <div class="detail-contacts">
-        {% if email_checked %}
-            <a id="email-button" class="detail-contact-link" data-role="button" href="mailto:{{email}}?Subject={{post.title}}">Email<!--img class="detail-contact-icon" src="/static/images/detail/email_selected.png"/--></a>
-        {% endif %}
-        {% if phone_checked%}
-            <a class="detail-contact-link" href="tel:{{phone}}"><img class="detail-contact-icon" src="/static/images/detail/phone_selected.png" /></a>
-        {% endif%}
-        {% if sms_checked%}
-            <a class="detail-contact-link" href="sms:{{phone}}"><img class="detail-contact-icon" src="/static/images/detail/sms_selected.png" /></a>
-        {% endif%}
         </div>
 
         {% include "detail/user.html" with page="sell" post_image=post_image post=post is_owner=is_owner %}
@@ -78,8 +66,16 @@
     <input type="hidden" id="post_id" value="{{post.id}}">
     <input type="hidden" id="wx_id" value="{{wx_id}}">
     <input type="hidden" id="is_open" value="{{post.is_open}}">
-
+</div>
 {% include "footer.html" %}
+
+<div id="map-page">
+<iframe style="width:100%;height: 100%; border: 0" frameborder="0"
+src="https://www.google.com/maps/embed/v1/place?q={{lat}},{{lon}}&key=AIzaSyCfXaxI-WLfgmAcDU05AaV7cpWMSOTL_z8"></iframe>
+<div class="map-close" onclick="$('#buy-detail #map-page').toggleClass('show');">close</div>
+</div>
+
+
 </div>
 </body>
 </html>

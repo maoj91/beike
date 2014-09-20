@@ -3,8 +3,8 @@
 <div class="form-right">
     <div class="ui-grid-c">
         <div class="ui-block-a" onclick="chooseCondition(0);">
-            <img class="form-icon" id="condition-0" src="/static/images/general/new.png" />
-            <img class="form-icon hide" id="condition-0-clicked" src="/static/images/general/new_clicked.png">
+            <img class="form-icon hide" id="condition-0" src="/static/images/general/new.png" />
+            <img class="form-icon" id="condition-0-clicked" src="/static/images/general/new_clicked.png">
         </div>
         <div class="ui-block-b" onclick="chooseCondition(1);">
             <img class="form-icon" id="condition-1" src="/static/images/general/90.png" />
@@ -20,4 +20,4 @@
         </div>
     </div>
 </div>
-<input type="hidden" id="condition-slider" value="0" />
+<input type="hidden" id="condition-slider" value="{{post.item_condition.value|default:'0'}}" />

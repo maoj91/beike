@@ -18,7 +18,7 @@ function chooseCondition(conditionNum) {
 
 var formLoader = (function($, undefined) {
     var loader = {},
-        page, $page, 
+        page, $page,
         $latitude, $longitude,
         $zipcode, $cityName,
         isEmailChecked = false,
@@ -34,13 +34,15 @@ var formLoader = (function($, undefined) {
             $page = $initPage;
         else
             $page = $('#'+page+'-form');
-        $('.form-loc-1').show();
-        $('.form-loc-2').hide();
+        $('.form-loc-state1').show();
+        $('.form-loc-state2').hide();
         $latitude = $page.find('#latitude');
         $longitude = $page.find('#longitude');
         $zipcode = $page.find('#zipcode');
         $cityName = $page.find('#city-name');
-        
+
+        chooseCondition($("#condition-slider").val());
+
         // hide footer when user entering
         $('input:not([readonly], .gallery-uploader-input), textarea').focusin(function() { 
             $('.footer').toggleClass('bottom');
@@ -55,27 +57,33 @@ var formLoader = (function($, undefined) {
         isPhoneChecked = false;
         isSmsChecked = false;
         
+        var validateOptions = {
+            ignore: '',
+            focusCleanup: true,
+            rules: {
+                phone_number: 'digitonly',
+                zipcode: 'digitonly'
+            },
+            errorPlacement: function(error, element) {
+                element.attr('placeholder', error.html());
+                element.addClass('hasError');
+                if (element[0].id === 'zipcode') {
+                    $('.ui-page-active').find('.form-loc-state1').hide();
+                    $('.ui-page-active').find('.form-loc-state2').show();
+                }
+            }
+        };
         // add more validations here
         if (page === 'buy') {
-            $page.find('form').validate({
-                rules: {
-                    phone_number: "digitonly",
-                    zipcode: "digitonly"
-                }
-            });
+            $page.find('form').validate(validateOptions);
         } else if (page === 'sell') {
-            $page.find('form').validate({
-            rules: {
-                    phone_number: "digitonly",
-                    zipcode: "digitonly"
-                },
+            $page.find('form').validate($.extend({
                 submitHandler: function(form) {
                     if ($(form).valid() && $('#image_url0').valid())
                         form.submit();
                     return false; // prevent normal form posting
                 }
-
-            });
+            }, validateOptions));
         }
         
         locUtil.getLocation(function(data) {
@@ -94,8 +102,8 @@ var formLoader = (function($, undefined) {
     };
     
     loader.changeLocation = function() {
-        $('.ui-page-active').find('.form-loc-1').hide();
-        $('.ui-page-active').find('.form-loc-2').show();
+        $('.ui-page-active').find('.form-loc-state1').hide();
+        $('.ui-page-active').find('.form-loc-state2').show();
     };
     
     loader.refreshLocation = function() {
@@ -105,8 +113,8 @@ var formLoader = (function($, undefined) {
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
         });
-        $('.ui-page-active').find('.form-loc-1').show();
-        $('.ui-page-active').find('.form-loc-2').hide();
+        $('.ui-page-active').find('.form-loc-state1').show();
+        $('.ui-page-active').find('.form-loc-state2').hide();
     };
 
     // Use user input zipcode to get the city and latlon
@@ -117,8 +125,8 @@ var formLoader = (function($, undefined) {
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
         });
-        $('.ui-page-active').find('.form-loc-1').show();
-        $('.ui-page-active').find('.form-loc-2').hide();
+        $('.ui-page-active').find('.form-loc-state1').show();
+        $('.ui-page-active').find('.form-loc-state2').hide();
     };
     
     loader.clickPhoneContact = function() {
@@ -182,9 +190,51 @@ var formLoader = (function($, undefined) {
 
 $(document).delegate('#buy-form', 'pagebeforeshow', function(event) {
     formLoader.init('buy');
+    //WeixinApi.ready(function() {WeixinApi.hideOptionMenu();});
+});
+
+$(document).delegate('#buy-form', 'pageshow', function(event) {
+/*
+WeixinApi.ready(function(Api) {
+var wxData = {
+"appId": "", // 服务号可以填写appId
+"imgUrl" : 'http://www.baidufe.com/fe/blog/static/img/weixin-qrcode-2.jpg',
+"link" : 'http://www.baidufe.com',
+"desc" : '大家好，我是Alien',
+"title" : "大家好，我是赵先烈"
+};
+
+var wxCallbacks = {
+ready : function() {
+//alert("准备分享");
+},
+cancel : function(resp) {
+//alert("分享被取消，msg=" + resp.err_msg);
+},
+fail : function(resp) {
+//alert("分享失败，msg=" + resp.err_msg);
+},
+confirm : function(resp) {
+//alert("分享成功，msg=" + resp.err_msg);
+},
+all : function(resp,shareTo) {
+//alert("分享" + (shareTo ? "到" + shareTo : "") + "结束，msg=" + resp.err_msg);
+}
+};
+
+Api.shareToFriend(wxData, wxCallbacks);
+Api.shareToTimeline(wxData, wxCallbacks);
+Api.shareToWeibo(wxData, wxCallbacks);
+Api.generalShare(wxData,wxCallbacks);
+WeixinApi.hideOptionMenu();
+WeixinApi.showOptionMenu();
+WeixinApi.hideToolbar();
+WeixinApi.showToolbar();
+});*/
 });
 
 $(document).delegate('#sell-form', 'pagebeforeshow', function(event) {
     formLoader.init('sell');
+    //WeixinApi.ready(function() {WeixinApi.hideOptionMenu();});
     gallerySwiper.init($('#sell-form-gallery'));
 });

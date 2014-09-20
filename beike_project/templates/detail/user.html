@@ -10,6 +10,18 @@
 <div class="user-name"><p>{{post.user.name}}</p></div>
 {% endif %}
 
+<div class="user-contacts">
+{% if email_checked %}
+    <a id="email-button" class="user-contact-link" data-role="button" href="mailto:{{email}}?Subject={{post.title}}">Email<!--img class="detail-contact-icon" src="/static/images/detail/email_selected.png"/--></a>
+{% endif %}
+{% if phone_checked%}
+    <a class="user-contact-link" href="tel:{{phone}}"><img class="user-contact-icon" src="/static/images/detail/phone_selected.png" /></a>
+{% endif%}
+{% if sms_checked%}
+    <a class="user-contact-link" href="sms:{{phone}}"><img class="user-contact-icon" src="/static/images/detail/sms_selected.png" /></a>
+{% endif%}
+</div>
+
 {% if post.user.description %}
 <hr>
 <div class="user-description">{{post.user.description}}</div>
@@ -20,17 +32,15 @@
 </div>
 
 {% if is_owner %}
-<div class="user-complete">
+<div class="user-complete-profile">
     <a href="/user/{{user_id}}/">
         <img src="/static/images/detail/complete_profile.png" style="max-height:30px;">
     </a>
 </div>
 
 <div class="detail-edit-box">
-    <a class="detail-edit-button" href="/detail/{{page}}/{{post.id}}/edit/"><input type="image" value="修改" id="edit_btn" src="/static/images/detail/edit.png" style="max-width:80px;vertical-align: middle;"></a>
-
-    <a class="detail-edit-button" data-role="button" href="#" onclick="detailLoader.togglePostStatus();" id="open">
-aa</a>
-
+    <a class="detail-bottom-button" href="/detail/{{page}}/{{post.id}}/edit/"><button class="submit-button">修 改</button></a>
+    <div class="detail-bottom-button"><button class="submit-button" onclick="detailLoader.togglePostStatus();">Hide</button></div>
+    <div style="clear:both;"></div>
 </div>
 {% endif %}

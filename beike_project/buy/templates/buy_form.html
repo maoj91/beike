@@ -16,7 +16,7 @@
             {% include "form/contact.html" with email=user.email phone=user.mobile_phone %}
             {% include "form/description.html" with content=post.content %}
 
-            <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/04/submit.png">
+            <button class="submit-button" type="submit" id="submit_btn">提 交</button>
         </form>
     </div>
 

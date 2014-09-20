@@ -156,7 +156,7 @@ $(document).on("pagebeforeshow", function() {
     var ua = navigator.userAgent.toLowerCase();
     if (!(ua.match(/MicroMessenger/i) == "micromessenger")) {
         $(".header").show();
-
+/*
         var lastScroll = 0;
         window.onscroll = function(event) {
             var t = $(this).scrollTop();
@@ -165,12 +165,6 @@ $(document).on("pagebeforeshow", function() {
             else
                 $('.header').css('position','fixed');
         lastScroll = t;
-        };
+        };*/
     }
 });
-
-
-//$('.header').toolbar({ hideDuringFocus: "button" });
-//$( ".footer" ).toolbar( "option", "hideDuringFocus", "input" );
-//$('.footer').toolbar({ hideDuringFocus: "input"});
-//$("[data-role=footer]").fixedtoolbar({ hideDuringFocus: "input, select" });
