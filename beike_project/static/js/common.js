@@ -74,17 +74,22 @@ var locUtil = (function() {
         return deferred.promise();
     },
     getLocByZip = function(zipcode, callback) {
-        locData.zipcode = zipcode;
         $.ajax({
             type: "get",
             url: "/user/get_info/get_latlong_by_zipcode",
             dataType: "json",
             data: { zipcode: zipcode }
         }).then(function(data) {
+            locData.zipcode = zipcode;
             locData.city = data.city;
             locData.state = convert_state(data.state,'abbrev');
             locData.latitude = data.latitude;
             locData.longitude = data.longitude;
+            if (callback && callback.apply !== undefined)
+                callback.apply(null, [locData]);
+            else
+                defaultCallback.apply(null, [locData]);
+        }).fail(function() {
             if (callback && callback.apply !== undefined)
                 callback.apply(null, [locData]);
             else

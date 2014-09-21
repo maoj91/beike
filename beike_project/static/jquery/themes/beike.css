@@ -24,7 +24,8 @@ button,
 .ui-btn {
 	font-size: 1em;
 	line-height: 1.3;
-        padding: 0.45em 0;
+        padding-top: 0.45em;
+        padding-bottom: 0.45em;
 	 font-family: sans-serif /*{global-font-family}*/;
 }
 legend,
@@ -333,12 +334,6 @@ html .ui-bar-a .ui-btn.ui-btn-active,
 html .ui-body-a .ui-btn.ui-btn-active,
 html body .ui-group-theme-a .ui-btn.ui-btn-active,
 html head + body .ui-btn.ui-btn-a.ui-btn-active,
-/* Active checkbox icon */
-.ui-page-theme-a .ui-checkbox-on:after,
-html .ui-bar-a .ui-checkbox-on:after,
-html .ui-body-a .ui-checkbox-on:after,
-html body .ui-group-theme-a .ui-checkbox-on:after,
-.ui-btn.ui-checkbox-on.ui-btn-a:after,
 /* Active flipswitch background */
 .ui-page-theme-a .ui-flipswitch-active,
 html .ui-bar-a .ui-flipswitch-active,
@@ -351,7 +346,15 @@ html .ui-bar-a .ui-slider-track .ui-btn-active,
 html .ui-body-a .ui-slider-track .ui-btn-active,
 html body .ui-group-theme-a .ui-slider-track .ui-btn-active,
 html body div.ui-slider-track.ui-body-a .ui-btn-active {
-	/*background-color: #3388cc /*{a-active-background-color}*/;
+border-color: #3388cc /*{a-active-border}*/;
+}
+/* Active checkbox icon */
+.ui-page-theme-a .ui-checkbox-on:after,
+html .ui-bar-a .ui-checkbox-on:after,
+html .ui-body-a .ui-checkbox-on:after,
+html body .ui-group-theme-a .ui-checkbox-on:after,
+.ui-btn.ui-checkbox-on.ui-btn-a:after {
+	background-color: #24c598 /*{a-active-background-color}*/;
 	border-color: #3388cc /*{a-active-border}*/;
 	/*color: #ffffff /*{a-active-color}*/;
 	/*text-shadow: 0 1px 0 #005599;*/

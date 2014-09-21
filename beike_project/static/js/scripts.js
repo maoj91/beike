@@ -74,17 +74,22 @@ var locUtil = (function() {
         return deferred.promise();
     },
     getLocByZip = function(zipcode, callback) {
-        locData.zipcode = zipcode;
         $.ajax({
             type: "get",
             url: "/user/get_info/get_latlong_by_zipcode",
             dataType: "json",
             data: { zipcode: zipcode }
         }).then(function(data) {
+            locData.zipcode = zipcode;
             locData.city = data.city;
             locData.state = convert_state(data.state,'abbrev');
             locData.latitude = data.latitude;
             locData.longitude = data.longitude;
+            if (callback && callback.apply !== undefined)
+                callback.apply(null, [locData]);
+            else
+                defaultCallback.apply(null, [locData]);
+        }).fail(function() {
             if (callback && callback.apply !== undefined)
                 callback.apply(null, [locData]);
             else
@@ -156,7 +161,7 @@ $(document).on("pagebeforeshow", function() {
     var ua = navigator.userAgent.toLowerCase();
     if (!(ua.match(/MicroMessenger/i) == "micromessenger")) {
         $(".header").show();
-
+/*
         var lastScroll = 0;
         window.onscroll = function(event) {
             var t = $(this).scrollTop();
@@ -165,15 +170,9 @@ $(document).on("pagebeforeshow", function() {
             else
                 $('.header').css('position','fixed');
         lastScroll = t;
-        };
+        };*/
     }
 });
-
-
-//$('.header').toolbar({ hideDuringFocus: "button" });
-//$( ".footer" ).toolbar( "option", "hideDuringFocus", "input" );
-//$('.footer').toolbar({ hideDuringFocus: "input"});
-//$("[data-role=footer]").fixedtoolbar({ hideDuringFocus: "input, select" });
 
 // gallery.js
 var gallerySwiper = (function($, undefined) {
@@ -356,7 +355,7 @@ function chooseCondition(conditionNum) {
 
 var formLoader = (function($, undefined) {
     var loader = {},
-        page, $page, 
+        page, $page,
         $latitude, $longitude,
         $zipcode, $cityName,
         isEmailChecked = false,
@@ -372,13 +371,15 @@ var formLoader = (function($, undefined) {
             $page = $initPage;
         else
             $page = $('#'+page+'-form');
-        $('.form-loc-1').show();
-        $('.form-loc-2').hide();
+        $('.form-loc-state1').show();
+        $('.form-loc-state2').hide();
         $latitude = $page.find('#latitude');
         $longitude = $page.find('#longitude');
         $zipcode = $page.find('#zipcode');
         $cityName = $page.find('#city-name');
-        
+
+        chooseCondition($("#condition-slider").val());
+
         // hide footer when user entering
         $('input:not([readonly], .gallery-uploader-input), textarea').focusin(function() { 
             $('.footer').toggleClass('bottom');
@@ -393,27 +394,33 @@ var formLoader = (function($, undefined) {
         isPhoneChecked = false;
         isSmsChecked = false;
         
+        var validateOptions = {
+            ignore: '',
+            focusCleanup: true,
+            rules: {
+                phone_number: 'digitonly',
+                zipcode: 'digitonly'
+            },
+            errorPlacement: function(error, element) {
+                element.attr('placeholder', error.html());
+                element.addClass('hasError');
+                if (element[0].id === 'zipcode') {
+                    $('.ui-page-active').find('.form-loc-state1').hide();
+                    $('.ui-page-active').find('.form-loc-state2').show();
+                }
+            }
+        };
         // add more validations here
         if (page === 'buy') {
-            $page.find('form').validate({
-                rules: {
-                    phone_number: "digitonly",
-                    zipcode: "digitonly"
-                }
-            });
+            $page.find('form').validate(validateOptions);
         } else if (page === 'sell') {
-            $page.find('form').validate({
-            rules: {
-                    phone_number: "digitonly",
-                    zipcode: "digitonly"
-                },
+            $page.find('form').validate($.extend({
                 submitHandler: function(form) {
                     if ($(form).valid() && $('#image_url0').valid())
                         form.submit();
                     return false; // prevent normal form posting
                 }
-
-            });
+            }, validateOptions));
         }
         
         locUtil.getLocation(function(data) {
@@ -432,8 +439,8 @@ var formLoader = (function($, undefined) {
     };
     
     loader.changeLocation = function() {
-        $('.ui-page-active').find('.form-loc-1').hide();
-        $('.ui-page-active').find('.form-loc-2').show();
+        $('.ui-page-active').find('.form-loc-state1').hide();
+        $('.ui-page-active').find('.form-loc-state2').show();
     };
     
     loader.refreshLocation = function() {
@@ -443,8 +450,8 @@ var formLoader = (function($, undefined) {
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
         });
-        $('.ui-page-active').find('.form-loc-1').show();
-        $('.ui-page-active').find('.form-loc-2').hide();
+        $('.ui-page-active').find('.form-loc-state1').show();
+        $('.ui-page-active').find('.form-loc-state2').hide();
     };
 
     // Use user input zipcode to get the city and latlon
@@ -455,8 +462,8 @@ var formLoader = (function($, undefined) {
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
         });
-        $('.ui-page-active').find('.form-loc-1').show();
-        $('.ui-page-active').find('.form-loc-2').hide();
+        $('.ui-page-active').find('.form-loc-state1').show();
+        $('.ui-page-active').find('.form-loc-state2').hide();
     };
     
     loader.clickPhoneContact = function() {
@@ -520,10 +527,52 @@ var formLoader = (function($, undefined) {
 
 $(document).delegate('#buy-form', 'pagebeforeshow', function(event) {
     formLoader.init('buy');
+    //WeixinApi.ready(function() {WeixinApi.hideOptionMenu();});
+});
+
+$(document).delegate('#buy-form', 'pageshow', function(event) {
+/*
+WeixinApi.ready(function(Api) {
+var wxData = {
+"appId": "", // 服务号可以填写appId
+"imgUrl" : 'http://www.baidufe.com/fe/blog/static/img/weixin-qrcode-2.jpg',
+"link" : 'http://www.baidufe.com',
+"desc" : '大家好，我是Alien',
+"title" : "大家好，我是赵先烈"
+};
+
+var wxCallbacks = {
+ready : function() {
+//alert("准备分享");
+},
+cancel : function(resp) {
+//alert("分享被取消，msg=" + resp.err_msg);
+},
+fail : function(resp) {
+//alert("分享失败，msg=" + resp.err_msg);
+},
+confirm : function(resp) {
+//alert("分享成功，msg=" + resp.err_msg);
+},
+all : function(resp,shareTo) {
+//alert("分享" + (shareTo ? "到" + shareTo : "") + "结束，msg=" + resp.err_msg);
+}
+};
+
+Api.shareToFriend(wxData, wxCallbacks);
+Api.shareToTimeline(wxData, wxCallbacks);
+Api.shareToWeibo(wxData, wxCallbacks);
+Api.generalShare(wxData,wxCallbacks);
+WeixinApi.hideOptionMenu();
+WeixinApi.showOptionMenu();
+WeixinApi.hideToolbar();
+WeixinApi.showToolbar();
+});*/
 });
 
 $(document).delegate('#sell-form', 'pagebeforeshow', function(event) {
     formLoader.init('sell');
+    //WeixinApi.ready(function() {WeixinApi.hideOptionMenu();});
     gallerySwiper.init($('#sell-form-gallery'));
 });
 
@@ -550,13 +599,16 @@ var postLoader = (function($, undefined) {
         numPerPage = $page.find('.num-per-page').val();
         clearPosts();
         
-
+        hasMorePost = true;
         locUtil.getLocation(function(data) {
             currentPosition = data;
             getAndDisplayPosts();
         });
         
-        $(document).on('scrollstop', function() { getAndDisplayPosts(); });
+        $(document).on('scrollstop', function() { 
+            if ($window.scrollTop() >= $document.height() - $window.height() - 200)
+                getAndDisplayPosts();
+        });
     },
     clearPosts = function() {
         slot_pos = 0;
@@ -566,7 +618,7 @@ var postLoader = (function($, undefined) {
         $list2.empty();
     },
     getAndDisplayPosts = function() {
-        if (hasMorePost && (typeof currentPosition !== 'undefined') && $window.scrollTop()>=$document.height()-$window.height()-200) {
+        if (hasMorePost && (typeof currentPosition !== 'undefined')) {
             getPosts();
         }
     },
@@ -620,8 +672,8 @@ var postLoader = (function($, undefined) {
             }
             
             item = '<div class="post-item-box">' +
-                //'<a class="post-item" href="/detail/' + page + '/' + posts[i]['post_id'] + '" data-transition="slide">' +
-                '<a class="post-item" onmousedown="postLoader.loadPage('+posts[i]['post_id']+');" onmouseup="postLoader.changePage('+posts[i]['post_id']+');">' +
+                '<a class="post-item" href="/detail/' + page + '/' + posts[i]['post_id'] + '" data-transition="slide">' +
+                //'<a class="post-item" onmousedown="postLoader.loadPage('+posts[i]['post_id']+');" onmouseup="postLoader.changePage('+posts[i]['post_id']+');">' +
                     '<div>' +
                         '<img class="post-icon" src="/static/images/general/' + page + '_icon_40.png" />' +
                         '<span class="post-title">' + posts[i]["title"] + '</span>' +
@@ -685,20 +737,45 @@ var postLoader = (function($, undefined) {
 }(jQuery));
 
 $(document).delegate('#nearby-buypost', 'pagebeforeshow', function() {
-    //if ($('.ui-page-active').attr('id') !== 'buy-detail')
+    if ($('.ui-page-active').attr('id') !== 'buy-detail')
     {
         $(document).off('scrollstop');
         postLoader.init('buy');
+        //WeixinApi.ready(function() {WeixinApi.hideOptionMenu();WeixinApi.showOptionMenu();});
     }
+$('#zipcode').keypress(function (e) { if (e.which == 13) toggleExtra(); });
+$('#sellPostKeyword').keypress(function (e) { if (e.which == 13) {hideCategory();$(this).blur();} });
 });
 
 $(document).delegate('#nearby-sellpost', 'pagebeforeshow', function() {
-    //if ($('.ui-page-active').attr('id') !== 'sell-detail')
+    if ($('.ui-page-active').attr('id') !== 'sell-detail')
     {
         $(document).off('scrollstop');
         postLoader.init('sell'); //console.log('refresh');
+        //WeixinApi.ready(function() {WeixinApi.hideOptionMenu();WeixinApi.showOptionMenu();});
     }
+$('#zipcode').keypress(function (e) { if (e.which == 13) {toggleExtra();$(this).blur();} });
+$('#sellPostKeyword').keypress(function (e) { if (e.which == 13) {hideCategory();$(this).blur();} });
+$('.ui-checkbox').on('click', function() { $('#sellPostKeyword').focus(); });
+//$('.search-icon.location-go').on('click', function() { toggleExtra(); });
 });
+
+
+function toggleExtra() {
+    $('.search-bar').toggleClass('search-extra');
+    if ( $('.search-bar').hasClass('search-extra') )
+        setTimeout(function() {$('#zipcode').focus();}, 600);
+    else
+        postLoader.refreshPosts();
+}
+function showCategory() {
+    $('.search-category-box').addClass('search-category-on');
+}
+function hideCategory() {
+    $('.search-category-box').removeClass('search-category-on');
+    postLoader.refreshPosts();
+}
+
 
 /****************************************
  *   Buy/Sell post detail javascript    *
@@ -861,39 +938,6 @@ $(document).delegate('#sell-edit', 'pagebeforeshow', function(event) {
 $(document).delegate('#buy-edit', 'pagebeforeshow', function(event) {
     formLoader.init('buy', $('#buy-edit'));
 });
-
-
-// search
-function toggleKeyword() {
-    $('.search-bar').toggleClass('search-keyword');
-    if ( $('.search-bar').hasClass('search-keyword') )
-        setTimeout(function() {$('#sellPostKeyword').focus();}, 600);
-    else
-        postLoader.refreshPosts();
-}
-function toggleLocation() {
-    $('.search-bar').toggleClass('search-location');
-    if ( $('.search-bar').hasClass('search-location') )
-        setTimeout(function() {$('#zipcode').focus();}, 600);
-    else
-        postLoader.refreshPosts();
-}
-function toggleCategory() {
-    $('.search-category-box').toggleClass('search-category');
-    if ( !$('.search-category-box').hasClass('search-category') )
-        postLoader.refreshPosts();
-}
-$('#sellPostKeyword').keypress(function (e) {
-    if (e.which == 13) {
-        toggleKeyword();
-    }
-});
-$('#zipcode').keypress(function (e) {
-    if (e.which == 13) {
-        toggleLocation();
-    }
-});
-
 
 /******************************************
 **    User info/edit                

@@ -21,13 +21,16 @@ var postLoader = (function($, undefined) {
         numPerPage = $page.find('.num-per-page').val();
         clearPosts();
         
-
+        hasMorePost = true;
         locUtil.getLocation(function(data) {
             currentPosition = data;
             getAndDisplayPosts();
         });
         
-        $(document).on('scrollstop', function() { getAndDisplayPosts(); });
+        $(document).on('scrollstop', function() { 
+            if ($window.scrollTop() >= $document.height() - $window.height() - 200)
+                getAndDisplayPosts();
+        });
     },
     clearPosts = function() {
         slot_pos = 0;
@@ -37,7 +40,7 @@ var postLoader = (function($, undefined) {
         $list2.empty();
     },
     getAndDisplayPosts = function() {
-        if (hasMorePost && (typeof currentPosition !== 'undefined') && $window.scrollTop()>=$document.height()-$window.height()-200) {
+        if (hasMorePost && (typeof currentPosition !== 'undefined')) {
             getPosts();
         }
     },
@@ -162,6 +165,8 @@ $(document).delegate('#nearby-buypost', 'pagebeforeshow', function() {
         postLoader.init('buy');
         //WeixinApi.ready(function() {WeixinApi.hideOptionMenu();WeixinApi.showOptionMenu();});
     }
+$('#zipcode').keypress(function (e) { if (e.which == 13) toggleExtra(); });
+$('#sellPostKeyword').keypress(function (e) { if (e.which == 13) {hideCategory();$(this).blur();} });
 });
 
 $(document).delegate('#nearby-sellpost', 'pagebeforeshow', function() {
@@ -171,4 +176,25 @@ $(document).delegate('#nearby-sellpost', 'pagebeforeshow', function() {
         postLoader.init('sell'); //console.log('refresh');
         //WeixinApi.ready(function() {WeixinApi.hideOptionMenu();WeixinApi.showOptionMenu();});
     }
+$('#zipcode').keypress(function (e) { if (e.which == 13) {toggleExtra();$(this).blur();} });
+$('#sellPostKeyword').keypress(function (e) { if (e.which == 13) {hideCategory();$(this).blur();} });
+$('.ui-checkbox').on('click', function() { $('#sellPostKeyword').focus(); });
+//$('.search-icon.location-go').on('click', function() { toggleExtra(); });
 });
+
+
+function toggleExtra() {
+    $('.search-bar').toggleClass('search-extra');
+    if ( $('.search-bar').hasClass('search-extra') )
+        setTimeout(function() {$('#zipcode').focus();}, 600);
+    else
+        postLoader.refreshPosts();
+}
+function showCategory() {
+    $('.search-category-box').addClass('search-category-on');
+}
+function hideCategory() {
+    $('.search-category-box').removeClass('search-category-on');
+    postLoader.refreshPosts();
+}
+
