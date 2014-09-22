@@ -96,16 +96,16 @@ var locUtil = (function() {
                 defaultCallback.apply(null, [locData]);
         });
     },
-    getLocByLatLon = function(LatLon, callback) {
-        locData.latitude = LatLon.latitude;
-        locData.longitude = LatLon.longitude;
+    getLocByLatLon = function(latlon, callback) {
+        locData.latitude = latlon.latitude;
+        locData.longitude = latlon.longitude;
         $.ajax({
             type: "get",
             url: "/user/get_info/get_zipcode_by_latlong",
             dataType: "json",
             data: {
-                latitude: LatLon.latitude,
-                longitude: LatLon.longitude
+                latitude: latlon.latitude,
+                longitude: latlon.longitude
             }
         }).then(function(data) {
             locData.city = data.city;
@@ -117,7 +117,7 @@ var locUtil = (function() {
                 defaultCallback.apply(null, [locData]);
         });
     },
-    refreshLocation = function(callback) {
+    refreshLocation = function(callback, failCallback) {
         if (navigator.geolocation) {
             getCurrentLocationDeferred({
                 enableHighAccuracy: true
@@ -126,6 +126,8 @@ var locUtil = (function() {
                 getLocByLatLon(loc.coords, callback);
             }).fail(function() {
                 console.error("getLocation call failed");
+                if (failCallback && failCallback.apply !== undefined)
+                    failCallback.apply(null);
             }).always(function() {
                 //do nothing
             });
@@ -134,9 +136,9 @@ var locUtil = (function() {
         }
         //return locData;
     },
-    getLocation = function(callback) {
+    getLocation = function(callback, failCallback) {
         if (!location)
-            refreshLocation(callback);
+            refreshLocation(callback, failCallback);
         else if (callback && callback.apply !== undefined)
             callback.apply(null, [locData]);
         else

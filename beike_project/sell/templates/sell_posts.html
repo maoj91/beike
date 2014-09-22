@@ -5,7 +5,7 @@
 
 <body>
     <div id="nearby-sellpost" data-role="page" data-fullscreen="true">
-        {% include "header.html" with title="周边物品" search="on" %}
+        {% include "header.html" with title="周边物品" %}
         {% include "search.html" with categories=categories %}
         <div id="sell-list" data-role="main">
             <input type="hidden" class="num-per-page" name="num-per-page" value="{{num_per_page}}" />
@@ -13,6 +13,8 @@
             <div class="post-list2"></div>
             <div style="clear:both"></div>
             <img class="post-load-more" src="/static/images/general/loading_green.gif" />
+            <div class="post-ask-location" style="display:none;">Please enter location</div>
+            <div class="post-empty" style="display:none;">empty</div>
         </div>
         
         {% include "footer.html" with sell_list="_clicked" %}

@@ -6,18 +6,39 @@ var postLoader = (function($, undefined) {
         $document = $(document),
         $window = $(window),
         $list1, $list2, $loadmore,
+        $searchbar, $searchbox, $zip,
         postPageNum, numPerPage, hasMorePost, slotPos = 0,
         currentPosition,
         loadingPost = false,
         category = null,
         keyword = null,
+    toggleExtra = function() {
+        $searchbar.toggleClass('search-extra');
+        if ( $searchbar.hasClass('search-extra') )
+            setTimeout(function() { $zip.focus(); }, 600);
+        else {
+            postLoader.refreshPosts();
+            $page.find(".post-ask-location").hide();
+        }
+    },
+    showCategory = function() {
+        $searchbox.addClass('search-category-on');
+    },
+    hideCategory = function(refresh) {
+        $searchbox.removeClass('search-category-on');
+        if (refresh) postLoader.refreshPosts();
+    },
     init = function(initPage) {
-        page = initPage;console.log(page+" init");
-        $page = $('#'+page+'-list');
-        
-        $list1 = $page.children('.post-list1');
-        $list2 = $page.children('.post-list2');
+        console.log(initPage+" init");
+        page = initPage;
+        $page = $('#nearby-'+page+'post');
+
+        $list1 = $page.find('.post-list1');
+        $list2 = $page.find('.post-list2');
         $loadmore = $page.find('.post-load-more').show();
+        $zip = $page.find('#zipcode');
+        $searchbar = $page.find('.search-bar');
+        $searchbox = $page.find('.search-category-box');
         numPerPage = $page.find('.num-per-page').val();
         clearPosts();
         
@@ -25,11 +46,27 @@ var postLoader = (function($, undefined) {
         locUtil.getLocation(function(data) {
             currentPosition = data;
             getAndDisplayPosts();
+        }, function() {
+            toggleExtra();
+            $loadmore.hide();
+            $page.find(".post-ask-location").show();
         });
         
         $(document).on('scrollstop', function() { 
             if ($window.scrollTop() >= $document.height() - $window.height() - 200)
                 getAndDisplayPosts();
+        });
+
+        $page.find('#zipcode').keypress(function (e) { 
+            if (e.which == 13) { toggleExtra(); $(this).blur(); }
+        });
+
+        $page.find('#sellPostKeyword').keypress(function (e) { 
+            if (e.which == 13) { hideCategory(1); $(this).blur(); } 
+        });
+
+        $page.find('.ui-radio').on('click', function() {
+            $page.find('#sellPostKeyword').focus();
         });
     },
     clearPosts = function() {
@@ -116,6 +153,9 @@ var postLoader = (function($, undefined) {
 
         $list1.append(tempList1);
         $list2.append(tempList2);
+        
+        if ($list1.is(":empty") && $list2.is(":empty")) $page.find(".post-empty").show();
+        else $page.find(".post-empty").hide();
     },
     loadPage = function(id) {
         /*setTimeout(function() {$('body').pagecontainer('load', '/detail/'+page+'/'+id).on('pagecontainerload', function() {
@@ -137,13 +177,13 @@ var postLoader = (function($, undefined) {
         
     },
     refreshPosts = function() {
-        $('#popupBasic-popup').removeClass('ui-popup-active');
-        $('#popupBasic-popup').addClass('ui-popup-hidden');
-        $('#popupBasic-popup').addClass('ui-popup-truncate');
+        $page.find('#popupBasic-popup').removeClass('ui-popup-active');
+        $page.find('#popupBasic-popup').addClass('ui-popup-hidden');
+        $page.find('#popupBasic-popup').addClass('ui-popup-truncate');
         
-        category = $('input[name="category"]:checked').val();
-        keyword = $('#sellPostKeyword').val();
-        locUtil.getLocByZip($('#zipcode').val(), function(data) {
+        category = $page.find('input[name="category"]:checked').val();
+        keyword = $page.find('#sellPostKeyword').val();
+        locUtil.getLocByZip($zip.val(), function(data) {
             currentPosition = data;
             clearPosts();
             getAndDisplayPosts();
@@ -154,47 +194,30 @@ var postLoader = (function($, undefined) {
         init: init,
         refreshPosts: refreshPosts,
         loadPage: loadPage,
-        changePage: changePage
+        changePage: changePage,
+        toggleExtra: toggleExtra,
+        showCategory: showCategory,
+        hideCategory: hideCategory
     };
 }(jQuery));
+
 
 $(document).delegate('#nearby-buypost', 'pagebeforeshow', function() {
     if ($('.ui-page-active').attr('id') !== 'buy-detail')
     {
         $(document).off('scrollstop');
         postLoader.init('buy');
-        //WeixinApi.ready(function() {WeixinApi.hideOptionMenu();WeixinApi.showOptionMenu();});
     }
-//$('#zipcode').keypress(function (e) { if (e.which == 13) toggleExtra(); });
-//$('#sellPostKeyword').keypress(function (e) { if (e.which == 13) {hideCategory(1);$(this).blur();} });
 });
 
 $(document).delegate('#nearby-sellpost', 'pagebeforeshow', function() {
     if ($('.ui-page-active').attr('id') !== 'sell-detail')
     {
         $(document).off('scrollstop');
-        postLoader.init('sell'); //console.log('refresh');
-        //WeixinApi.ready(function() {WeixinApi.hideOptionMenu();WeixinApi.showOptionMenu();});
+        postLoader.init('sell');
     }
-$('#zipcode').keypress(function (e) { if (e.which == 13) {toggleExtra();$(this).blur();} });
-$('#sellPostKeyword').keypress(function (e) { if (e.which == 13) {hideCategory(1);$(this).blur();} });
-$('.ui-checkbox:not(.up)').on('click', function() { $('#sellPostKeyword').focus(); });
-//$('.search-icon.location-go').on('click', function() { toggleExtra(); });
 });
 
 
-function toggleExtra() {
-    $('.search-bar').toggleClass('search-extra');
-    if ( $('.search-bar').hasClass('search-extra') )
-        setTimeout(function() {$('#zipcode').focus();}, 600);
-    else
-        postLoader.refreshPosts();
-}
-function showCategory() {
-    $('.search-category-box').addClass('search-category-on');
-}
-function hideCategory(refresh) {
-    $('.search-category-box').removeClass('search-category-on');
-    if (refresh) postLoader.refreshPosts();
-}
+
 
