@@ -1,6 +1,6 @@
 // gallery.js
 var gallerySwiper = (function($, undefined) {
-    var MAX_N_IMG = 5,
+    var MAX_N_IMG = 4,
         currentImg, nImg, img_w,
         speed = 500,
         $gallery, $thumbnails,
@@ -124,7 +124,7 @@ var gallerySwiper = (function($, undefined) {
     }
 
     function swipeStatus(event, phase, direction, distance) {
-        img_w = $gallery.width()/5;
+        img_w = $gallery.width()/MAX_N_IMG;
         if(phase=='move' && (direction=='left' || direction=='right'))
         {
             var duration=0;
@@ -141,11 +141,11 @@ var gallerySwiper = (function($, undefined) {
     }
     function previousImage () {
         currentImg = Math.max(currentImg-1, 0);
-        scrollImages( $gallery.width()/5 * currentImg, speed);
+        scrollImages( $gallery.width()/MAX_N_IMG * currentImg, speed);
     }
     function nextImage() {
         currentImg = Math.min(currentImg+1, nImg-1);
-        scrollImages( $gallery.width()/5 * currentImg, speed);
+        scrollImages( $gallery.width()/MAX_N_IMG * currentImg, speed);
     }
     function scrollImages(distance, duration) {
         $gallery.css('-webkit-transition-duration', (duration/1000).toFixed(1) + 's');

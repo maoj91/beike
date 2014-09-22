@@ -1,11 +1,14 @@
-<div class="search-bar-wrapper" onblur="console.log('a');">
+<div class="search-bar-wrapper">
 <div class="search-category-box">
 <div style="clear:both"></div>
 <input type="checkbox" name="category" id="0" value="" checked="checked" />
-<label class="search-category" for=0>All</label>
+<label class="search-category" for=0>all</label>
+<input type="checkbox" name="category" id="1" value="-1" />
+<label class="search-category" for=1>none</label>
+<div class="ui-checkbox up"><button onclick="hideCategory(0);" style="height:34px;">up</button></div>
 {% for category in categories %}
-<input type="checkbox" name="category" id="{{ category.id }}" value="{{ category.id }}" />
-<label class="search-category" for={{ category.id }}>{{category.name}}</label>
+<input type="checkbox" name="category" id="{{ category.id|add:"1" }}" value="{{ category.id }}" checked="checked" />
+<label class="search-category" for={{ category.id|add:"1" }}>{{category.name}}</label>
 {% endfor %}
 <div style="clear:both"></div>
 </div>
@@ -17,7 +20,7 @@
             <!--div class="search-magnifier" onclick="toggleCategory();">
                 <img class="search-magnifier-icon" src="/static/images/search.png" />
             </div-->
-            <div class="search-icon magnifier" onclick="hideCategory();">
+            <div class="search-icon magnifier" onclick="hideCategory(1);">
                 <img class="search-icon-img" src="/static/images/search.png" />
             </div>
             <div class="search-input">

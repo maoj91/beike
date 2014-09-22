@@ -165,8 +165,8 @@ $(document).delegate('#nearby-buypost', 'pagebeforeshow', function() {
         postLoader.init('buy');
         //WeixinApi.ready(function() {WeixinApi.hideOptionMenu();WeixinApi.showOptionMenu();});
     }
-$('#zipcode').keypress(function (e) { if (e.which == 13) toggleExtra(); });
-$('#sellPostKeyword').keypress(function (e) { if (e.which == 13) {hideCategory();$(this).blur();} });
+//$('#zipcode').keypress(function (e) { if (e.which == 13) toggleExtra(); });
+//$('#sellPostKeyword').keypress(function (e) { if (e.which == 13) {hideCategory(1);$(this).blur();} });
 });
 
 $(document).delegate('#nearby-sellpost', 'pagebeforeshow', function() {
@@ -177,8 +177,8 @@ $(document).delegate('#nearby-sellpost', 'pagebeforeshow', function() {
         //WeixinApi.ready(function() {WeixinApi.hideOptionMenu();WeixinApi.showOptionMenu();});
     }
 $('#zipcode').keypress(function (e) { if (e.which == 13) {toggleExtra();$(this).blur();} });
-$('#sellPostKeyword').keypress(function (e) { if (e.which == 13) {hideCategory();$(this).blur();} });
-$('.ui-checkbox').on('click', function() { $('#sellPostKeyword').focus(); });
+$('#sellPostKeyword').keypress(function (e) { if (e.which == 13) {hideCategory(1);$(this).blur();} });
+$('.ui-checkbox:not(.up)').on('click', function() { $('#sellPostKeyword').focus(); });
 //$('.search-icon.location-go').on('click', function() { toggleExtra(); });
 });
 
@@ -193,8 +193,8 @@ function toggleExtra() {
 function showCategory() {
     $('.search-category-box').addClass('search-category-on');
 }
-function hideCategory() {
+function hideCategory(refresh) {
     $('.search-category-box').removeClass('search-category-on');
-    postLoader.refreshPosts();
+    if (refresh) postLoader.refreshPosts();
 }
 

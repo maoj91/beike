@@ -36,37 +36,6 @@ user-select: none;*/
     -webkit-font-smoothing: antialiased;
 }
 
-#map-page {
-    opacity: 0;
-    height: 100%;
-    width: 100%;
-    position: fixed;
-    top: 100%;
-    left: 0;
-    z-index: 200;
-    -webkit-transition: top 1s, opacity 0.5s;
-    transition: top 1s, opacity 0.5s;
-}
-#map-page.show { opacity: 1; top:0;}
-.map-close {
-    z-index: 300;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 50px;
-    height: 58px;
-    border-radius: 2px;
-    background-color: white;
-    box-shadow: 1px 1px 1px #c4c4c4;
-    color: #59f;
-    line-height: 58px;
-    text-align: center;
-    cursor: pointer;
-}
-.map-close:hover {
-    text-decoration: underline;
-}
-
 .ui-page { padding-top: 0 !important; padding-bottom: 0px !important; }
 .ui-content { margin-bottom: 50px; overflow: hidden;}
 
@@ -83,7 +52,7 @@ user-select: none;*/
     box-shadow: 0 0 6px #888;
     background-color: #24c598;
 }
-
+#nearby-sellpost>.header { box-shadow: none; }
 .footer.ui-footer {
     z-index: 100;
     bottom: 0;
@@ -156,7 +125,7 @@ div.main-top { height: 54%; }
 div.main-top-background {
     width: 100%;
     height: 100%;
-    background-image: url("http://54.204.4.250/static/images/homepage/background.png");
+    background-image: url("/static/images/homepage/background.png");
     background-size: 16px;
     background-repeat: repeat;
 }
@@ -313,7 +282,7 @@ div.search-bar-wrapper {
     position: relative;
     width: 100%;
     height: 50px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #ccc;
     box-sizing: border-box;
 }
     
@@ -328,7 +297,8 @@ div.search-category-box {
     top: -200px;
     box-sizing: border-box;
     background-color: white;
-    box-shadow: 0 0 10px #888;
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 0 3px 0px #eee;
     -webkit-transition: top .5s;
     transition: top .5s;
 }
@@ -337,7 +307,8 @@ div.search-category-box.search-category-on {
     top: 100%;
 }
 .ui-checkbox {
-    width: 50%;
+    width: 33%;
+    height: 34px;
     margin: 0;
     float: left;
 }
@@ -514,7 +485,8 @@ textarea.form-description {
     margin: 20px auto;
     background-color: #fefefe;
     border-color: #24c598 !important;
-    color: black;
+    color: #24c598 !important;
+    font-size: 13pt;
 }
 
 
@@ -633,7 +605,7 @@ img.detail-map {
 .gallery-wrapper {
     clear: both;
     width: 100%;
-    padding-bottom: 90.5%;
+    padding-bottom: 94%;
     margin-bottom: 10px;
 }
 .gallery-wrapper.gallery-no-thumbnails { padding-bottom: 75%; }
@@ -648,13 +620,13 @@ img.detail-map {
 }
 
 .gallery-list {
-    width: 500%;
-    height: 83%;
+    width: 400%;
+    height: 80%;
     overflow: hidden;
 }
 .gallery-no-thumbnails .gallery-list { height: 100%; }
 .gallery-image-box {
-    width: 20%;
+    width: 25%;
     height: 100%;
     float: left;
     overflow: hidden;
@@ -674,22 +646,25 @@ img.detail-map {
 
 .gallery-thumbnail-list {
     clear: both;
-    width: 101%;
-    height: 16%;
-    margin-top: .8%;
+    width: 102%;
+    height: 18%;
+    margin-top: 2%;
 }
 .gallery-no-thumbnails .gallery-thumbnail-list { height: 0; }
 .gallery-thumbnail-box {
     float: left;
-    width: 19%;
+    width: 23%;
     height: 99%;
     overflow: hidden;
-    /*background-color: #eee;*/
-    border: 1px solid #ddd;
+    background-color: #fff;
+    border: 1px solid #dddddd;
+    -webkit-border-radius: .4em;
+    border-radius: .4em;
     box-sizing: border-box;
-    margin-right: 1%;
-    cursor: pointer;
+    margin-right: 2%;
+    cursor: pointer; /* not working */
 }
+
 .gallery-thumbnail-box.selected {
     border: 1px solid #24c598;
 }
@@ -703,11 +678,11 @@ img.detail-map {
 }
 
 .gallery-uploader {
-    background-image: url("http://54.204.4.250/static/images/sell_post/upload.png");
+    background-image: url("/static/images/sell_post/upload.png");
     background-size: 60%;
     background-repeat: no-repeat;
     background-position: center center;
-    cursor: pointer; /* not working */
+    cursor: pointer;
 }
 .gallery-thumbnail-box.gallery-uploader { background-size: 70%; }
 input.gallery-uploader-input {
@@ -718,29 +693,29 @@ input.gallery-uploader-input {
 .gallery-image-box.gallery-uploader { display: none; }
 .gallery-image-box.gallery-uploader:only-child { display: block; }
 .gallery-thumbnail-box.gallery-uploader { display: none; float: right; }
-.gallery-thumbnail-box.gallery-uploader:nth-last-child(n+2):nth-last-child(-n+5) { display: block; }
+.gallery-thumbnail-box.gallery-uploader:nth-last-child(n+2):nth-last-child(-n+4) { display: block; }
 
 .gallery-delete {
     position: absolute;
-    top: -1px;
-    right: -1px;
-    width: 70px;
-    height: 70px;
-    background-color: #24c598;
-    -webkit-border-bottom-left-radius: 70px;
+    top: 15px;
+    right: 15px;
+    width: 50px;
+    height: 50px;
+    background-color: #fff;
+    border: 1px solid #24c598;
+    /*-webkit-border-bottom-left-radius: 70px;
     -moz-border-radius-bottomleft: 70px;
-    border-bottom-left-radius: 70px;
-    box-shadow: 0 0 10px #666;
+    border-bottom-left-radius: 70px;*/
+    border-radius: 25px;
+    /*box-shadow: 0 0 3px -1px #aaa;*/
     cursor: pointer;
-    color: white;
+    color: #24c598;
     font-size: 16px;
     text-align: center;
     line-height: 50px;
 }
 .gallery-delete:active {
-    right: 0px;
-    top: 0px;
-    box-shadow: 0 0 5px #333;
+    width: 48px; height: 48px; top: 16px; right: 16px;
 }
 .gallery-progressbar {
     width: 0;
@@ -758,7 +733,7 @@ div.user-image-box {
     height: 80px;
     margin: 0 auto; 
     border-radius: 50%;
-    border: 1px solid #bbb;
+    border: 1px solid #ccc;
 }
 img.user-image { width: 80px; height: 80px; border-radius: 50%; }
 div.user-name { margin: 15px auto; text-align: center; font-size: 16pt;}
@@ -803,7 +778,7 @@ div.user-description {
 div.user-reg-date {
     clear: both;
     margin: 15px 0 20px;
-    color: #888;
+    color: #aaa;
     text-align:center;
 }
 
@@ -826,4 +801,35 @@ div.detail-edit-box {
     display: block;
     width: 50%;
     float: left;
+}
+
+#map-page {
+    opacity: 0;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 100%;
+    left: 0;
+    z-index: 200;
+    -webkit-transition: top 1s, opacity 0.5s;
+    transition: top 1s, opacity 0.5s;
+}
+#map-page.show { opacity: 1; top:0;}
+.map-close {
+    z-index: 300;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 50px;
+    height: 58px;
+    border-radius: 2px;
+    background-color: white;
+    box-shadow: 1px 1px 1px #c4c4c4;
+    color: #59f;
+    line-height: 58px;
+    text-align: center;
+    cursor: pointer;
+}
+.map-close:hover {
+    text-decoration: underline;
 }
