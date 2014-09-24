@@ -37,7 +37,7 @@ user-select: none;*/
 }
 
 .ui-page { padding-top: 0 !important; padding-bottom: 0px !important; }
-.ui-content { margin-bottom: 50px; overflow: hidden;}
+.ui-content { margin-bottom: 50px; overflow: hidden; }
 
 .header.ui-header {
     z-index: 100;
@@ -276,12 +276,24 @@ img.post-load-more {
     width: 50px;
     margin: 0 auto;
 }
-div.post-ask-location, div.post-empty {
+div.post-ask-location {
     position: absolute;
     top: 0;
     width: 100%;
     height: 300px;
-    background-color: pink;
+    background-image: url('/static/images/postlist/ask-location.png');
+    background-repeat: no-repeat;
+    background-position: center center; 
+}
+
+div.post-empty {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 300px;
+    background-image: url('/static/images/postlist/icon.png');
+    background-repeat: no-repeat;
+    background-position: center center; 
 }
 
 /* CSS for search */
@@ -350,10 +362,10 @@ div.search-icon {
     float: right;
     width: 50px;
     height: 100%;
-    padding: 10px 18px 13px 5px;
+    padding: 10px 18px 13px 5px; /* need to optimize */
     box-sizing: border-box;
 }
-img.search-icon-img {height: 27px; cursor: pointer;}
+img.search-icon-img {height: 25px; width: 25px; cursor: pointer;}
 
 /*
 div.search-item {

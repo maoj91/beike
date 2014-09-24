@@ -3,29 +3,28 @@
 <div style="clear:both"></div>
 <input type="radio" name="category" id="0" value="" checked="checked" />
 <label class="search-category" for=0>全部</label>
-<input type="radio" name="category" id="1" value="-1" />
-<label class="search-category" for=1>清空</label>
-<div class="ui-checkbox-up"><input type="button" onclick="postLoader.hideCategory(0);" style="height:34px;" value="返回" /></div>
+<div class="ui-checkbox-up"><input type="button" onclick="" style="height:34px;" value="清空" /></div>
+<div class="ui-checkbox-up"><input type="button" onclick="{{page}}PostLoader.hideCategory(0);" style="height:34px;" value="返回" /></div>
 {% for category in categories %}
-<input type="radio" name="category" id="{{ category.id|add:"1" }}" value="{{ category.id }}" checked="checked" />
-<label class="search-category" for={{ category.id|add:"1" }}>{{category.name}}</label>
+<input type="radio" name="category" id="{{ category.id }}" value="{{ category.id }}" />
+<label class="search-category" for={{ category.id }}>{{category.name}}</label>
 {% endfor %}
 <div style="clear:both"></div>
 </div>
     <div class="search-bar">
         <div class="search-keyword-box">
-            <div class="search-icon location-go" onclick="postLoader.toggleExtra();">
-                <img class="search-icon-img" src="/static/images/search.png" />
+            <div class="search-icon location-go" onclick="{{page}}PostLoader.toggleExtra();">
+                <img class="search-icon-img" src="/static/images/postlist/ask-location.png" />
             </div>
-            <div class="search-icon magnifier" onclick="postLoader.hideCategory(1);">
-                <img class="search-icon-img" src="/static/images/search.png" />
+            <div class="search-icon magnifier" onclick="{{page}}PostLoader.hideCategory(1);">
+                <img class="search-icon-img" src="/static/images/postlist/search.png" />
             </div>
             <div class="search-input">
-                <input id="sellPostKeyword" type="text" maxlength="30" name="keyword" onfocus="postLoader.showCategory();" placeholder="请输入关键字">
+                <input id="searchKeyword" type="text" maxlength="30" name="keyword" onfocus="{{page}}PostLoader.showCategory();" placeholder="请输入关键字">
             </div>
         </div>
         <div class="search-extra-box">
-            <div class="search-location-back" onclick="postLoader.toggleExtra();">
+            <div class="search-location-back" onclick="{{page}}PostLoader.toggleExtra();">
                 <img class="search-icon" src="/static/images/left_arrow.png" />
             </div>
             <div class="search-input">

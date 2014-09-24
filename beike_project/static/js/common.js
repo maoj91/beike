@@ -61,7 +61,7 @@ function convert_state(name, to) {
     return returnthis;
 }
 
-var locUtil = (function() {
+var locUtil = (function($, undefined) {
     var location = null,
         locData = {
             latitude: null, longitude: null, 
@@ -151,27 +151,8 @@ var locUtil = (function() {
         getLocByZip: getLocByZip,
         getLocation: getLocation
     };
-}());
-
+}(jQuery));
 
 $.validator.addMethod("digitonly", function(value) {
     return /^\d+$/.test(value);
 }, "只能包含数字");
-
-
-$(document).on("pagebeforeshow", function() {
-    var ua = navigator.userAgent.toLowerCase();
-    if (!(ua.match(/MicroMessenger/i) == "micromessenger")) {
-        $(".header").show();
-/*
-        var lastScroll = 0;
-        window.onscroll = function(event) {
-            var t = $(this).scrollTop();
-            if (t > lastScroll)
-                $('.header').css('position','absolute');
-            else
-                $('.header').css('position','fixed');
-        lastScroll = t;
-        };*/
-    }
-});

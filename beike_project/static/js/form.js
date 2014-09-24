@@ -1,31 +1,17 @@
 /****************************************
  *     Buy/Sell new form javascript     *
  ****************************************/
-function chooseCondition(conditionNum) {
-    if (conditionNum >= 0 && conditionNum < 4) {
-        for (i = 0; i < 4; i++) {
-            if (i == conditionNum) {
-                $('#condition-' + i).hide();
-                $('#condition-' + i + '-clicked').show();
-                $("#condition-slider").val(conditionNum)
-            } else {
-                $('#condition-' + i).show();
-                $('#condition-' + i + '-clicked').hide();
-            }
-        }
-    }
-}
-
 var formLoader = (function($, undefined) {
-    var loader = {},
-        page, $page,
+    var page, $page,
         $latitude, $longitude,
         $zipcode, $cityName,
+        $locState1, $locState2,
+        $condition,
         isEmailChecked = false,
         isPhoneChecked = false,
         isSmsChecked = false;
     
-    loader.init = function(initPage, $initPage) {
+    var init = function(initPage, $initPage) {
         console.log('form init');
         locUtil.getLocation();
         
@@ -34,16 +20,19 @@ var formLoader = (function($, undefined) {
             $page = $initPage;
         else
             $page = $('#'+page+'-form');
-        $('.form-loc-state1').show();
-        $('.form-loc-state2').hide();
+        
         $latitude = $page.find('#latitude');
         $longitude = $page.find('#longitude');
         $zipcode = $page.find('#zipcode');
         $cityName = $page.find('#city-name');
+        $locState1 = $page.find('.form-loc-state1').show();
+        $locState2 = $page.find('.form-loc-state2').hide();
+        $condition = $page.find('#condition-slider');
 
-        chooseCondition($("#condition-slider").val());
+        chooseCondition($condition.val());
 
         // hide footer when user entering
+/*
         $('input:not([readonly], .gallery-uploader-input), textarea').focusin(function() { 
             $('.footer').toggleClass('bottom');
             $('.ui-content').css('margin-bottom', '0px');
@@ -51,7 +40,7 @@ var formLoader = (function($, undefined) {
         $('input:not([readonly], .gallery-uploader-input), textarea').focusout(function() {
             $('.footer').toggleClass('bottom');
             $('.ui-content').css('margin-bottom', '50px');
-        });
+        });*/
         
         isEmailChecked = false;
         isPhoneChecked = false;
@@ -68,8 +57,8 @@ var formLoader = (function($, undefined) {
                 element.attr('placeholder', error.html());
                 element.addClass('hasError');
                 if (element[0].id === 'zipcode') {
-                    $('.ui-page-active').find('.form-loc-state1').hide();
-                    $('.ui-page-active').find('.form-loc-state2').show();
+                    $locState1.hide();
+                    $locState2.show();
                 }
             }
         };
@@ -99,37 +88,32 @@ var formLoader = (function($, undefined) {
         $description.bind('input propertychange', function() {
             $counter.html($description.val().length + '/300');
         });
-    };
-    
-    loader.changeLocation = function() {
-        $('.ui-page-active').find('.form-loc-state1').hide();
-        $('.ui-page-active').find('.form-loc-state2').show();
-    };
-    
-    loader.refreshLocation = function() {
+    },
+    changeLocation = function() {
+        $locState1.hide();
+        $locState2.show();
+    },
+    refreshLocation = function() {
         locUtil.refreshLocation(function(data) {
             $zipcode.val(data.zipcode);
             $cityName.val(data.city+', '+data.state);
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
         });
-        $('.ui-page-active').find('.form-loc-state1').show();
-        $('.ui-page-active').find('.form-loc-state2').hide();
-    };
-
-    // Use user input zipcode to get the city and latlon
-    loader.getLocationByZipcode = function() {
+        $locState1.show();
+        $locState2.hide();
+    },
+    getLocationByZipcode = function() {
         locUtil.getLocByZip($zipcode.val(), function(data) {
             $zipcode.val(data.zipcode);
             $cityName.val(data.city+', '+data.state);
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
         });
-        $('.ui-page-active').find('.form-loc-state1').show();
-        $('.ui-page-active').find('.form-loc-state2').hide();
-    };
-    
-    loader.clickPhoneContact = function() {
+        $locState1.show();
+        $locState2.hide();
+    },
+    clickPhoneContact = function() {
         if (isPhoneChecked) {
             $page.find('#phone-icon').show();
             $page.find('#phone-icon-clicked').hide();
@@ -147,9 +131,8 @@ var formLoader = (function($, undefined) {
             isPhoneChecked = true;
             $page.find('#phone-checked').val('on');
         }
-    };
-
-    loader.clickEmailContact = function() {
+    },
+    clickEmailContact = function() {
         if (isEmailChecked) {
             $page.find('#email-icon').show();
             $page.find('#email-icon-clicked').hide();
@@ -163,9 +146,8 @@ var formLoader = (function($, undefined) {
             isEmailChecked = true;
             $page.find('#email-checked').val('on');
         }
-    };
-
-    loader.clickSmsContact = function() {
+    },
+    clickSmsContact = function() {
         if (isSmsChecked) {
             $page.find('#sms-icon').show();
             $page.find('#sms-icon-clicked').hide();
@@ -183,58 +165,31 @@ var formLoader = (function($, undefined) {
             isSmsChecked = true;
             $page.find('#sms-checked').val('on');
         }
+    },
+    chooseCondition = function(conditionNum) {
+        if (conditionNum >= 0 && conditionNum < 4) {
+            for (i = 0; i < 4; i++) {
+                if (i == conditionNum) {
+                    $page.find('#condition-' + i).hide();
+                    $page.find('#condition-' + i + '-clicked').show();
+                    $page.find("#condition-slider").val(conditionNum)
+                } else {
+                    $page.find('#condition-' + i).show();
+                    $page.find('#condition-' + i + '-clicked').hide();
+                }
+            }
+        }
     };
     
-    return loader;
+    return {
+        init: init,
+        changeLocation: changeLocation,
+        refreshLocation: refreshLocation,
+        getLocationByZipcode: getLocationByZipcode,
+        clickPhoneContact: clickPhoneContact,
+        clickEmailContact: clickEmailContact,
+        clickSmsContact: clickSmsContact,
+        chooseCondition: chooseCondition
+    };
 }(jQuery));
 
-$(document).delegate('#buy-form', 'pagebeforeshow', function(event) {
-    formLoader.init('buy');
-    //WeixinApi.ready(function() {WeixinApi.hideOptionMenu();});
-});
-
-$(document).delegate('#buy-form', 'pageshow', function(event) {
-/*
-WeixinApi.ready(function(Api) {
-var wxData = {
-"appId": "", // 服务号可以填写appId
-"imgUrl" : 'http://www.baidufe.com/fe/blog/static/img/weixin-qrcode-2.jpg',
-"link" : 'http://www.baidufe.com',
-"desc" : '大家好，我是Alien',
-"title" : "大家好，我是赵先烈"
-};
-
-var wxCallbacks = {
-ready : function() {
-//alert("准备分享");
-},
-cancel : function(resp) {
-//alert("分享被取消，msg=" + resp.err_msg);
-},
-fail : function(resp) {
-//alert("分享失败，msg=" + resp.err_msg);
-},
-confirm : function(resp) {
-//alert("分享成功，msg=" + resp.err_msg);
-},
-all : function(resp,shareTo) {
-//alert("分享" + (shareTo ? "到" + shareTo : "") + "结束，msg=" + resp.err_msg);
-}
-};
-
-Api.shareToFriend(wxData, wxCallbacks);
-Api.shareToTimeline(wxData, wxCallbacks);
-Api.shareToWeibo(wxData, wxCallbacks);
-Api.generalShare(wxData,wxCallbacks);
-WeixinApi.hideOptionMenu();
-WeixinApi.showOptionMenu();
-WeixinApi.hideToolbar();
-WeixinApi.showToolbar();
-});*/
-});
-
-$(document).delegate('#sell-form', 'pagebeforeshow', function(event) {
-    formLoader.init('sell');
-    //WeixinApi.ready(function() {WeixinApi.hideOptionMenu();});
-    gallerySwiper.init($('#sell-form-gallery'));
-});
