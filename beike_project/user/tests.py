@@ -1,6 +1,6 @@
 from django.test import TestCase
 from geolocation import Geolocation, get_geolocation_by_zipcode
-from session_util import is_request_valid
+from session_util import is_request_valid, get_wx_id
 import json
 from django.test import Client
 from data.models import Country, State, City, UserValidation
@@ -82,5 +82,26 @@ class SessionUtilTest(TestCase):
         self.assertTrue(result2)
         self.assertEqual('user1234', request.session.get('wx_id'))
         self.assertEqual('key1234', request.session.get('key'))
+
+    def test_get_wxid(self):
+        request = HttpRequest()
+        request.method = 'GET'
+        request.GET = {}
+        request.session = {}
+        wx_id = get_wx_id(request)
+        self.assertEqual(None, wx_id)
+
+        request.session['wx_id'] = 'user123'
+        wx_id = get_wx_id(request)
+        self.assertEqual('user123', wx_id)
+
+        request.GET['wx_id'] = 'user1234'
+        request.method = "GET"
+        wx_id = get_wx_id(request)
+        self.assertEqual('user1234', wx_id)
+
+
+
+
 
 

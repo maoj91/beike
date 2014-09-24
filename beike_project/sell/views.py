@@ -145,7 +145,6 @@ def form(request):
     categories = Category.objects.all();
     return render_to_response('sell_form.html',{'user':user,'user_id':wx_id, 'categories':categories},RequestContext(request)); 
 
-
 def form_submit(request):
     if not is_request_valid(request):
         return HttpResponseRedirect('/user/user_guide')

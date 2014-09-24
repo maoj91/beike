@@ -19,7 +19,6 @@ from django.contrib.gis.measure import D
 NUM_PER_PAGE = settings.NUM_BUY_POST_PER_PAGE
 
 def all_list(request):
-
     return render_to_response('buy_posts.html', {'num_per_page': NUM_PER_PAGE})
 
 def get_posts_by_page(request):

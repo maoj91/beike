@@ -24,3 +24,12 @@ def is_request_valid(request):
                 return True
         else:
             return False
+
+def get_wx_id(request):
+    wx_id = None
+    if request.method == "GET":
+        wx_id = request.GET.get('wx_id')
+    if wx_id:
+        return wx_id
+    else:
+        return request.session.get('wx_id')
