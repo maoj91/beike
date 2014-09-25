@@ -32,16 +32,6 @@
         </div>
         {% include "detail/user.html" with page="buy" post_image=post_image post=post is_owner=is_owner %}
     
-<!-- TODO: what's this? -->
-<!--                 <div class="ui-block-a" style="width:33%;height:60px;">
-                    <span class="helper" style="display:inline-block;height:100%;vertical-align: middle;"></span>
-                    <select name="open-close-post" id="open-close-post" data-role="slider" style="vertical-align: middle;">
-                        <option value="open"{% if is_open %} selected {% endif %}>待售</option>
-                        <option value="close"{% if not is_open %} selected {% endif %}>已售</option>
-                    </select>
-                </div> -->
-    
-    
     <img id="share_msg" src="/static/images/detail/share_msg.png" style="display:none;width:100%;max-height:100%;position:absolute;left:0;top:0;z-index:1;background-color:black;opacity: 0.6;" onclick="detailLoader.hideShareMsg()">
 
     <div style="margin-left:5%;margin-right:5%;">

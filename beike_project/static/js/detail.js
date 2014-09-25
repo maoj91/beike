@@ -4,45 +4,14 @@
 var detailLoader = (function($, undefined) {
     var page, $page,
         wx_id, post_id,
-
     init = function(initPage) {
         page = initPage;
-        $page = $('#'+page+'-detail');
+        $page = $('.ui-page-active');
         wx_id = $page.find('#wx_id').val();
         post_id = $page.find('#post_id').val();
 
         var $price = $page.find('.detail-price');
         $price.html(formatPrice($price.html()));
-        
-        $page.find('#follow-post').on('slidestop', function(event) {
-            var follow_option = $(this).val();
-            return $.ajax({
-                type: "get",
-                url: '/'+page+'/follow_post',
-                dataType: "json",
-                data: {
-                    wx_id: wx_id,
-                    post_id: post_id,
-                    follow_option: follow_option
-                }
-            }).then(function(data) {
-            });
-        });
-
-        $page.find('#open-close-post').on('slidestop', function(event) {
-            var operation = $(this).val();
-            return $.ajax({
-                type: "get",
-                url: '/'+page+'/open_close_post',
-                dataType: "json",
-                data: {
-                    wx_id: wx_id,
-                    post_id: post_id,
-                    operation: operation
-                }
-            }).then(function(data) {
-            });
-        });
         
         showFollowStatus();
         showPostStatus();
@@ -92,8 +61,7 @@ var detailLoader = (function($, undefined) {
     },
     hideShareMsg = function() {
         $page.find('#share_msg').hide();
-    };
-
+    },
     showPostStatus = function() {
         var is_open = $page.find('#is_open').val();
         if( is_open == 'False'){
@@ -101,8 +69,7 @@ var detailLoader = (function($, undefined) {
         } else {
             $page.find('#open .ui-btn-text').text('标记为已售');
         }
-    };
-
+    },
     togglePostStatus = function() {
         var is_open = $page.find('#is_open').val(); 
         

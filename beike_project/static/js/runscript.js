@@ -80,12 +80,12 @@ $(document).on('pagebeforeshow', '#sell-edit', function(event) {
     gallerySwiper.init($('#sell-edit-gallery'));
 });
 
-$(document).on('pagebeforeshow', '#sell-detail', function(event) {
+$(document).on('pageshow', '#sell-detail', function(event) {
 //$("body").on('pagecontainerbeforetransition', function() {
     detailLoader.init('sell');
     gallerySwiper.init($('#sell-detail .gallery'));
 });
-$(document).on('pagebeforeshow', '#buy-detail', function(event) {
+$(document).on('pageshow', '#buy-detail', function(event) {
     detailLoader.init('buy');
 });
 
