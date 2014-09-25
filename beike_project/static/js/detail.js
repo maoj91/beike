@@ -25,7 +25,8 @@ var detailLoader = (function($, undefined) {
                     post_id: post_id,
                     follow_option: follow_option
                 }
-            }).then(function(data) {});
+            }).then(function(data) {
+            });
         });
 
         $page.find('#open-close-post').on('slidestop', function(event) {
@@ -39,7 +40,8 @@ var detailLoader = (function($, undefined) {
                     post_id: post_id,
                     operation: operation
                 }
-            }).then(function(data) {});
+            }).then(function(data) {
+            });
         });
         
         showFollowStatus();
@@ -75,7 +77,6 @@ var detailLoader = (function($, undefined) {
                 is_followed: is_followed
             }
         }).then(function(data) {
-
         });
     },
     showFollowStatus = function() {
@@ -140,23 +141,4 @@ var detailLoader = (function($, undefined) {
         togglePostStatus: togglePostStatus
     };
 }(jQuery));
-
-$(document).delegate('#sell-detail', 'pagebeforeshow', function(event) {
-//$("body").on('pagecontainerbeforetransition', function() {
-    detailLoader.init('sell');
-    gallerySwiper.init($('#sell-detail .gallery'));
-});
-
-$(document).delegate('#buy-detail', 'pagebeforeshow', function(event) {
-    detailLoader.init('buy');
-});
-
-$(document).delegate('#sell-edit', 'pagebeforeshow', function(event) {
-    formLoader.init('sell', $('#sell-edit'));
-    gallerySwiper.init($('#sell-edit .gallery'));
-});
-
-$(document).delegate('#buy-edit', 'pagebeforeshow', function(event) {
-    formLoader.init('buy', $('#buy-edit'));
-});
 

@@ -1,12 +1,12 @@
 /****************************************
  *    Buy/Sell posts list javascript    *
  ****************************************/
-var postLoader = (function($, undefined) {
+var postLoaderConstructor = function() { return (function($, undefined) {
     var page, $page, // buy or sell
         $document = $(document),
         $window = $(window),
         $list1, $list2, $loadmore,
-        $searchbar, $searchbox, $zip,
+        $searchbar, $searchbox, $zip, $keyword,
         postPageNum, numPerPage, hasMorePost, slotPos = 0,
         currentPosition,
         loadingPost = false,
@@ -17,7 +17,7 @@ var postLoader = (function($, undefined) {
         if ( $searchbar.hasClass('search-extra') )
             setTimeout(function() { $zip.focus(); }, 600);
         else {
-            postLoader.refreshPosts();
+            refreshPosts();
             $page.find(".post-ask-location").hide();
         }
     },
@@ -26,7 +26,7 @@ var postLoader = (function($, undefined) {
     },
     hideCategory = function(refresh) {
         $searchbox.removeClass('search-category-on');
-        if (refresh) postLoader.refreshPosts();
+        if (refresh) refreshPosts();
     },
     init = function(initPage) {
         console.log(initPage+" init");
@@ -37,6 +37,7 @@ var postLoader = (function($, undefined) {
         $list2 = $page.find('.post-list2');
         $loadmore = $page.find('.post-load-more').show();
         $zip = $page.find('#zipcode');
+        $keyword = $page.find('#searchKeyword');
         $searchbar = $page.find('.search-bar');
         $searchbox = $page.find('.search-category-box');
         numPerPage = $page.find('.num-per-page').val();
@@ -44,6 +45,7 @@ var postLoader = (function($, undefined) {
         
         hasMorePost = true;
         locUtil.getLocation(function(data) {
+            $zip.val(data.zipcode);
             currentPosition = data;
             getAndDisplayPosts();
         }, function() {
@@ -53,20 +55,21 @@ var postLoader = (function($, undefined) {
         });
         
         $(document).on('scrollstop', function() { 
-            if ($window.scrollTop() >= $document.height() - $window.height() - 200)
+            if (($('.ui-page-active')[0].id === 'nearby-'+page+'post') && ($window.scrollTop() >= $document.height() - $window.height() - 200)) {//console.log(page);
                 getAndDisplayPosts();
+            }
         });
 
-        $page.find('#zipcode').keypress(function (e) { 
+        $zip.keypress(function (e) { 
             if (e.which == 13) { toggleExtra(); $(this).blur(); }
         });
 
-        $page.find('#sellPostKeyword').keypress(function (e) { 
+        $keyword.keypress(function (e) { 
             if (e.which == 13) { hideCategory(1); $(this).blur(); } 
         });
 
         $page.find('.ui-radio').on('click', function() {
-            $page.find('#sellPostKeyword').focus();
+            $keyword.focus();
         });
     },
     clearPosts = function() {
@@ -177,12 +180,11 @@ var postLoader = (function($, undefined) {
         
     },
     refreshPosts = function() {
-        $page.find('#popupBasic-popup').removeClass('ui-popup-active');
-        $page.find('#popupBasic-popup').addClass('ui-popup-hidden');
-        $page.find('#popupBasic-popup').addClass('ui-popup-truncate');
-        
+        //$page.find('#popupBasic-popup').removeClass('ui-popup-active');
+        //$page.find('#popupBasic-popup').addClass('ui-popup-hidden');
+        //$page.find('#popupBasic-popup').addClass('ui-popup-truncate');
         category = $page.find('input[name="category"]:checked').val();
-        keyword = $page.find('#sellPostKeyword').val();
+        keyword = $keyword.val();
         locUtil.getLocByZip($zip.val(), function(data) {
             currentPosition = data;
             clearPosts();
@@ -199,25 +201,7 @@ var postLoader = (function($, undefined) {
         showCategory: showCategory,
         hideCategory: hideCategory
     };
-}(jQuery));
+}(jQuery)); };
 
-
-$(document).delegate('#nearby-buypost', 'pagebeforeshow', function() {
-    if ($('.ui-page-active').attr('id') !== 'buy-detail')
-    {
-        $(document).off('scrollstop');
-        postLoader.init('buy');
-    }
-});
-
-$(document).delegate('#nearby-sellpost', 'pagebeforeshow', function() {
-    if ($('.ui-page-active').attr('id') !== 'sell-detail')
-    {
-        $(document).off('scrollstop');
-        postLoader.init('sell');
-    }
-});
-
-
-
-
+var buyPostLoader = postLoaderConstructor();
+var sellPostLoader = postLoaderConstructor();

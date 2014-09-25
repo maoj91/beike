@@ -4,10 +4,10 @@
 {% include "head.html" with title="周边物品" %}
 
 <body>
-    <div id="nearby-sellpost" data-role="page" data-fullscreen="true">
+    <div id="nearby-sellpost" data-role="page" data-fullscreen="true" data-dom-cache="true">
         {% include "header.html" with title="周边物品" %}
-        {% include "search.html" with categories=categories %}
-        <div id="sell-list" data-role="main">
+        {% include "search.html" with categories=categories page="sell" %}
+        <div id="sell-list" data-role="main" style="margin-bottom: 55px;">
             <input type="hidden" class="num-per-page" name="num-per-page" value="{{num_per_page}}" />
             <div class="post-list1"></div>
             <div class="post-list2"></div>
