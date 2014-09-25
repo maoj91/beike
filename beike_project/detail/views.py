@@ -161,8 +161,33 @@ def buy_detail_edit(request,offset):
         'email':email,'user_image':user_image, 'categories':categories},RequestContext(request))
 
 def buy_detail_save(request,offset):
-    # please add buy_detail_save response
-    raise Http404()
+    if not is_request_valid(request):
+        return HttpResponseRedirect('/user/user_guide')
+    wx_id = request.session['wx_id']
+    user = get_user(wx_id)
+    try:
+        offset = int(offset)
+    except ValueError:
+        raise Http404()
+    post = BuyPost.objects.get(id=offset)
+    if request.method == 'POST':
+        phone_checked = request.POST.get('phone-checked', 'off')
+        email_checked = request.POST.get('email-checked', 'off')
+        sms_checked = request.POST.get('sms-checked', 'off')
+        phone_number = request.POST.get('phone_number','')
+        email = request.POST.get('email','')
+        post.preferred_contacts = get_contact(phone_checked,email_checked,sms_checked,phone_number,email)
+        category_id = int(request.POST.get('category',''))
+        post.category = get_category(category_id)
+        post.title = request.POST.get('title','')
+        post.content = request.POST.get('content','')
+        post.price = request.POST.get('price','')
+        condition_value = request.POST.get('condition-slider',0) 
+        post.item_condition = get_condition(condition_value)
+        post.save()
+        return HttpResponseRedirect('/detail/buy/'+str(post.id)+'/')
+    else:
+        raise Http404
 
 
 def buy_post_detail(request,offset):
