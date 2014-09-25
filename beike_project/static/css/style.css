@@ -1,10 +1,19 @@
+/*@font-face {
+	font-family:'PingHei';
+	font-style:normal;
+	font-weight:200;
+	src:url("/static/fonts/PingHei-light.woff") format("woff"), url("/static/fonts/PingHei-light.ttf") format("truetype");
+	*src:url('');
+	/* Copyright (c) 2000-2008, Changzhou SinoType Technology Co., Ltd.  All rights reserved. 
+}*/
+
 /* CSS for general style settings */
-html, body, div, img, span, p, a {
+html, body, div, img, span, p, a, input, textarea {
     margin: 0;
     padding: 0;
     border: 0;
-    font-size: 100%;
     font: inherit;
+    font-size: 100%;
     vertical-align: baseline; 
 }
 
@@ -31,7 +40,8 @@ body {
 -moz-user-select: none;
 -ms-user-select: none;
 user-select: none;*/
-    font-family: \5FAE\8F6F\96C5\9ED1, sans-serif !important;
+    font-family:  \5FAE\8F6F\96C5\9ED1, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    /*PingHei, \5FAE\8F6F\96C5\9ED1, "Lucida Sans Unicode", sans-serif !important;*/
     font-size: 14px;
     -webkit-font-smoothing: antialiased;
 }
@@ -367,26 +377,6 @@ div.search-icon {
 }
 img.search-icon-img {height: 25px; width: 25px; cursor: pointer;}
 
-/*
-div.search-item {
-    width: 25%;
-    height: 50px;
-    border-right: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-    box-sizing: border-box;
-    float: left;
-    text-align: center;
-    line-height: 50px;
-    cursor: pointer;
-}
-
-div.search-item:nth-child(3) {
-    border-bottom: none;
-}
-*/
-
-
-
 div.search-extra-box {
     width: 50%;
     height: 100%;
@@ -429,26 +419,16 @@ img.form-icon {
 }
 img.form-icon.hide { display: none; }
 
-
-    /* need to clean up the following */ 
-label.error {
-    display: block;
-    color: red;
-    font-size: 14px;
-    line-height: 1.4;
-    padding-top: .5em;
-    vertical-align: top;
-    font-weight: bold;
-    width: 200px;
-    float: left;
-}
-
 .readonly {
     border: none;
     background-color: transparent;
     padding: 14px 0;
 }
 
+textarea:read-only {
+    border: none;
+    background-color: transparent !important;
+}
 
 #category-button.ui-btn {
     height: 2.2em;

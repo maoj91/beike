@@ -4,181 +4,41 @@
 {% include "head.html" with title="修改资料" %}
 
 <body>
-    <div data-role="page" id="user-update-page" data-theme="a">
-        <link rel="stylesheet" type="text/css" href="/static/me.css">
-        <div data-role="header" data-position="fixed">
+<div data-role="page" id="user-update-page" data-fullscreen="true">
+    {% include "header.html" with title="修改资料" %}
+    <div data-role="content">
+        
+    <form action="/user/{{user.id}}/update/" method="post" enctype="multipart/form-data" data-ajax= "false">
+        {% csrf_token %}
+        {% if user_image %}
+        <div class="user-image-box">
+            <img class="user-image" src="{{user_image.image_url}}"/>
         </div>
-        <div data-role="content" style="padding:0;">
-            <div id="image-uploader" style="margin-top:10px;">
-                {% if user_image %}
-                <div style="display:table;margin:0 auto;">
-                        <img id='profile_image' src='{{user_image.image_url}}' style="width: 90px;height:90px;border-radius: 50%;"/>
-                </div>
-                {% endif %}
+        {% endif %}
+        
+        <input type="hidden" id="image_url" name="image_url">
+        <input type="hidden" id="image_width" name="image_width">
+        <input type="hidden" id="image_height" name="image_height">
+        <input type="hidden" id="image_orientation" name="image_orientation" />
 
-                <div style="position: relative; text-align: center;">
-                    <div id="progressbar" style=" width: 60%; position: absolute; top: 100px; left: 20%;"></div>
-                    <div id="current_image">
-                    </div>
-                </div>
+        {% if user.name %}
+        <div class="user-name"><p>{{user.name}}</p></div>
+        {% endif %}
+        
+        <input type="text" name="name" id="name" value="{{user.name}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入用户名" />
+        
+        
+        {% include "profile.html" with user=user edit=1 %}
 
-                <div class="ui-grid-solo" style="width:100%;padding-top:15px;padding-bottom:15px;text-align:center;">
-                    <div class="ui-block-a" style="display:inline-block;padding-left:2px;padding-right:1px;padding-top:2px;padding-bottom:2px;width:29px;height:24px;text-align:center;background-color: rgb(172,172,172);">
-                        <input style="display:none;" data-role="none" type="file" id="post_image" name="post_image" accept="image/*"/>
-                        <label for="post_image">
-                            <img src='/static/images/sell_post/upload.png' style="width:25px;">
-                        </label>
-                    </div>
-                </div>
-            </div>
+        {% if is_owner %}
+        <button class="submit-button" type="submit" id="submit_btn">提 交</button>
+        {% endif %}
 
-        <form action="/user/{{user.id}}/update/" method="post" enctype="multipart/form-data" data-ajax= "false">
-            {% csrf_token %}
-            <input type="hidden" id="image_url" name="image_url">
-            <input type="hidden" id="image_width" name="image_width">
-            <input type="hidden" id="image_height" name="image_height">
-            <input type="hidden" id="image_orientation" name="image_orientation" />
-
-            <div class="ui-grid-a" style="clear:both;">
-                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
-                        <div class="field-label-inner-div">用&nbsp;户&nbsp;名</div>
-                    </div>
-                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
-                        <input type="text" name="name" id="name" value="{{user.name}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入用户名" />
-                    </div>
-            </div>
-
-            <div class="ui-grid-solo" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;">
-                基本资料
-            </div>
-
-            <div class="ui-grid-a">
-                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
-                        <div class="field-label-inner-div">邮&nbsp;&nbsp;&nbsp;&nbsp;箱</div>
-                    </div>
-                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
-                        <input type="text" name="email" id="email" value="{{user.email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
-                    </div>
-            </div>
-
-            <div class="ui-grid-a">
-                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
-                        <div class="field-label-inner-div">学校/单位</div>
-                    </div>
-                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
-                        <input type="text" name="organization" id="organization" value="{{user.organization}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入学校或单位" />
-                    </div>
-            </div>
-
-
-            <div class="ui-grid-a">
-                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
-                        <div class="field-label-inner-div">所&nbsp;在&nbsp;地</div>
-                    </div>
-                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
-                        <a href="/user/{{user.id}}/edit_address/" id="edit_address" data-role="button" data-icon="check">{{user.address.city}}</a>
-                    </div>
-            </div>
-
-
-
-            <div class="ui-grid-solo" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;">
-                自我介绍
-            </div>
-
-            <div class="ui-grid-solo" style="padding-top:10px;margin-left:5%;margin-right:5%;height: 150px !important;">
-                <div class="ui-block-a">
-                    <span id="lengthCounter" class="text-p" style="float:right">0/3000</span>
-                </div>
-                <div class="ui-block-a">
-                    <textarea name="description" id="description" data-rule-content="true" value="{{user.description}}" maxlength="3000" placeholder="自我介绍">
-                    {{user.description}}
-                    </textarea>
-                </div>
-            </div>
-
-
-
-            <div class="ui-grid-solo" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;">
-                详细信息
-            </div>
-
-            <div class="ui-grid-a">
-                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
-                        <div class="field-label-inner-div">性&nbsp;&nbsp;&nbsp;&nbsp;别</div>
-                    </div>
-                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
-                        <fieldset class="ui-field-contain">
-                            <select name="gender" id="gender" value="{{user.gender}}">
-                              <option value="0">未知</option>
-                              <option value="1">男</option>
-                              <option value="2">女</option>
-                            </select>
-                        </fieldset>                    
-                    </div>
-            </div>
-
-            <div class="ui-grid-a">
-                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
-                        <div class="field-label-inner-div">生&nbsp;&nbsp;&nbsp;&nbsp;日</div>
-                    </div>
-                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
-                        <!-- TODO: add validation of input -->
-                        {% if user.date_of_birth %}
-                        <input type="date" name="date_of_birth" id="date_of_birth" value={{user.date_of_birth|date:"Y-m-d"}}>
-                        {% else %}
-                        <input type="date" name="date_of_birth" id="date_of_birth" max="{{today_str}}">
-                        {% endif %}
-                    </div>
-            </div>
-
-            <div class="ui-grid-a">
-                    <div class="ui-block-a" style="width:25%;margin-left:5%;">
-                        <div class="field-label-inner-div">手&nbsp;&nbsp;&nbsp;&nbsp;机</div>
-                    </div>
-                    <div class="ui-block-b" style="width:65%;margin-right:5%;">
-                        <input type="text" name="mobile_phone" id="mobile_phone" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
-                    </div>
-            </div>
-
-            <div class="ui-grid-solo" style="width:100%;background-color:#d1cfd1;">
-                    <input type="image" value="Submit" id="submit_btn" src="https://s3-us-west-2.amazonaws.com/beike-s3/static/img/03/submit.png" style="max-width:80px;vertical-align: middle;">
-            </div>
-        </form>
-
-        </div>
-
-        <div data-role="footer" data-position="fixed">
-            <div class="ui-grid-d" style="background-color: rgb(35,192,148);">
-                <div class="ui-block-a">
-                    <a href="/">
-                        <img height="28" width="30" style="padding:10px 5px 5px 10px;" src='/static/images/navigation/homepage.png' />
-                    </a>
-                </div>
-                <div class="ui-block-b">
-                    <a href="/buy/form/">
-                        <img height="50" width="50" src='/static/images/navigation/buy_form.png' />
-                    </a>
-                </div>
-                <div class="ui-block-c">
-                    <a href="/sell/form/">
-                        <img height="50" width="50" src='/static/images/navigation/sell_form.png' />
-                    </a>
-                </div>
-                <div class="ui-block-d">
-                    <a href="/buy/all_list/">
-                        <img height="50" width="50" src='/static/images/navigation/buy_posts.png' />
-                    </a>
-                </div>
-                <div class="ui-block-e">
-                    <a href="/sell/all_list/">
-                        <img height="50" width="50" src='/static/images/navigation/sell_posts.png' />
-                    </a>
-                </div>
-            </div>
-        </div>
-
+        <div id="error">{% if error %}<p>{{error}}</p>{% endif %}</div>
+    </form>
     </div>
+    {% include "footer.html" %}
+</div>
 </body>
 
 </html>

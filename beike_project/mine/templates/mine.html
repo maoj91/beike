@@ -4,17 +4,20 @@
 {% include "head.html" %}
 
 <body>
-    <div data-role="page" id="main-page" data-theme="a" data-fullscreen="true">
-        {% include "header.html" with title="我的" %}
+<div data-role="page" id="main-page" data-theme="a" data-fullscreen="true">
+    {% include "header.html" with title="我的" %}
         
-        <div data-role="content">
-            <div class="ui-grid-solo" style="display:table;margin:0 auto;">
-                {% if image %} {% for key, value in image.items %} {% if key == 'image_url' %}
-                <a href="/user/{{user.id}}/">
-                    <img id='profile_image' src='{{value}}' style="width:80px;height: 80px;border-radius: 50%;" />
-                </a>
-                {% elif key == 'width' %} {% elif key == 'height' %} {% endif %} {% endfor %} {% endif %}
-            </div>
+    <div data-role="content">
+        {% if image %}
+        <div class="user-image-box">
+            <a href="/user/{{user.id}}/"><img class="user-image" src="{{image.image_url}}"/></a>
+        </div>
+        {% endif %}
+
+        {% if user.name %}
+        <div class="user-name"><p>{{user.name}}</p></div>
+        {% endif %}
+                
             <div data-role="collapsible-set" data-corners="false">
                 <div data-role="collapsible" data-collapsed="true" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" data-iconpos="right">
 

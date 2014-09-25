@@ -1,0 +1,72 @@
+<div class="ui-grid-solo" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;">基本资料</div>
+
+<div class="form-left lifted">邮箱</div>
+<div class="form-right">
+{% if edit %}
+    <input type="text" name="email" id="email" value="{{user.email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
+{% else %}
+    <input readonly class="readonly" data-role="none" value="{{user.email|default:'未填'}}" />
+{% endif %}
+</div>
+
+<div class="form-left lifted">学校</div>
+<div class="form-right">
+{% if edit %}
+    <input type="text" name="organization" id="organization" value="{{user.organization}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入学校或单位" />
+{% else %}
+    <input readonly class="readonly" data-role="none" value="{{user.organization|default:'未填'}}" />
+{% endif %}
+</div>
+
+<div class="form-left lifted">所在地</div>
+<div class="form-right">
+{% if edit %}
+    <a href="/user/{{user.id}}/edit_address/" id="edit_address" data-role="button" data-icon="check">{{user.address.city}}</a>
+{% else %}
+    <input readonly class="readonly" data-role="none" value="{{user.address.city|default:'未填'}}" />
+{% endif %}
+</div>
+
+<div class="ui-grid-solo" style="clear:both;margin-top:20px;padding:5px 5% 5px 5%;background-color:#d1cfd1;">详细信息</div>
+
+<div class="form-left lifted">性别</div>
+<div class="form-right">
+{% if edit %}
+    <select class="form-button" name="gender" id="gender">
+        <option value="0" {% if user.gender == 0 %}selected{%endif%}>未知</option>
+        <option value="1" {% if user.gender == 1 %}selected{%endif%}>男</option>
+        <option value="2" {% if user.gender == 2 %}selected{%endif%}>女</option>
+    </select>
+{% else %}
+    <input readonly class="readonly" data-role="none" value="{% if user.gender == 1%}男{% elif user.gender == 2%}女{% else %}未填{% endif %}" />
+{% endif %}
+</div>
+
+<div class="form-left lifted">年龄</div>
+<div class="form-right">
+{% if edit %}
+    <input type="date" name="date_of_birth" id="date_of_birth" max="{{today_str}}" value="{{user.date_of_birth|date:'Y-m-d'}}">
+{% else %}
+    <input readonly class="readonly" data-role="none" value="{{user.age|default:'未填'}}"/>
+{% endif %}
+</div>
+
+<div class="form-left lifted">手机</div>
+<div class="form-right">
+{% if edit %}
+    <input type="text" name="mobile_phone" id="mobile_phone" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
+{% else %}
+    <input readonly class="readonly" data-role="none" value="{{user.mobile_phone|default:'未填'}}" />
+{% endif %}
+</div>
+
+<div class="form-left" style="height: 35px;">自我介绍</div>
+<div class="form-right" style="height: 35px; min-height: 35px;"><span id="lengthCounter">0/300</span></div>
+<div style="clear:both"></div>
+<div class="form-description-box">
+{% if edit %}
+    <textarea name="description" id="description" data-rule-content="true" value="{{user.description}}" maxlength="300" placeholder="自我介绍">{{user.description}}</textarea>
+{% else %}
+    <textarea readonly>{% if user.description %}{{user.description}}{% else %}未填{% endif %}</textarea>
+{% endif %}
+</div>

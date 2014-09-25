@@ -33,7 +33,8 @@ def index(request,offset):
     privacies = Privacy.objects.values('description')
     user_image = ImageMetadata.deserialize_list(user.image_url)[0]
     age = get_age(user.date_of_birth)
-    return render_to_response('user.html',{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities,'age':age},RequestContext(request))
+    user.age = age
+    return render_to_response('user.html',{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities},RequestContext(request))
 
 def user_guide(request):
     return render_to_response('user_guide.html')

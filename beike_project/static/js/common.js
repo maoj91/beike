@@ -62,7 +62,7 @@ function convert_state(name, to) {
 }
 
 var locUtil = (function($, undefined) {
-    var location = null,
+    var hasLocation = false,
         locData = {
             latitude: null, longitude: null, 
             city: null, state: null, zipcode: null
@@ -80,6 +80,7 @@ var locUtil = (function($, undefined) {
             dataType: "json",
             data: { zipcode: zipcode }
         }).then(function(data) {
+            hasLocation = true;
             locData.zipcode = zipcode;
             locData.city = data.city;
             locData.state = convert_state(data.state,'abbrev');
@@ -90,10 +91,10 @@ var locUtil = (function($, undefined) {
             else
                 defaultCallback.apply(null, [locData]);
         }).fail(function() {
-            if (callback && callback.apply !== undefined)
+            /*if (callback && callback.apply !== undefined)
                 callback.apply(null, [locData]);
             else
-                defaultCallback.apply(null, [locData]);
+                defaultCallback.apply(null, [locData]);*/
         });
     },
     getLocByLatLon = function(latlon, callback) {
@@ -108,6 +109,7 @@ var locUtil = (function($, undefined) {
                 longitude: latlon.longitude
             }
         }).then(function(data) {
+            hasLocation = true;
             locData.city = data.city;
             locData.state = convert_state(data.state,'abbrev');
             locData.zipcode = data.zipcode;
@@ -115,6 +117,8 @@ var locUtil = (function($, undefined) {
                 callback.apply(null, [locData]);
             else
                 defaultCallback.apply(null, [locData]);
+        }).fail(function() {
+            //hasLocation = false;
         });
     },
     refreshLocation = function(callback, failCallback) {
@@ -122,9 +126,10 @@ var locUtil = (function($, undefined) {
             getCurrentLocationDeferred({
                 enableHighAccuracy: true
             }).done(function (loc) {
-                location = loc;
+                hasLocation = true;
                 getLocByLatLon(loc.coords, callback);
             }).fail(function() {
+                //hasLocation = false;
                 console.error("getLocation call failed");
                 if (failCallback && failCallback.apply !== undefined)
                     failCallback.apply(null);
@@ -137,7 +142,7 @@ var locUtil = (function($, undefined) {
         //return locData;
     },
     getLocation = function(callback, failCallback) {
-        if (!location)
+        if (!hasLocation)
             refreshLocation(callback, failCallback);
         else if (callback && callback.apply !== undefined)
             callback.apply(null, [locData]);
@@ -146,7 +151,7 @@ var locUtil = (function($, undefined) {
     };
     
     return {
-        refreshLocation: refreshLocation,
+        refreshLocation: refreshLocation,locData:locData,
         //getLocByLatLon: getLocByLatLon,
         getLocByZip: getLocByZip,
         getLocation: getLocation

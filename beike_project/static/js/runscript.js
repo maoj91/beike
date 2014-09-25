@@ -15,6 +15,13 @@ $(document).on("pagebeforeshow", function() {
     }
 });
 
+$(document).on('pagebeforeshow', '#main', function() {
+    locUtil.getLocation(function(data) { 
+        $('.main-city-text').html(data.city); 
+    }, function(data) { 
+        $('.main-city-text').html('获取位置'); 
+    });
+});
 
 $(document).on('pageshow', '#buy-form', function(event) {
 /*
