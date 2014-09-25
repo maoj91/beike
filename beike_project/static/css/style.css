@@ -729,8 +729,8 @@ input.gallery-uploader-input {
 
 
 div.user-image-box { 
-    width: 160px; 
-    height: 160px;
+    width: 140px; 
+    height: 140px;
     margin: 30px auto 0; 
     border-radius: 50%;
     border: 5px solid white;
@@ -747,12 +747,13 @@ div.user-image-box:before {
     border: 1px solid #eee;
 }
 div.user-image-box:active { 
-    width: 158px; 
-    height: 158px;
+    width: 138px; 
+    height: 138px;
     margin: 32px auto 2px;
     box-shadow: 0 0 8px #aaa;
 }
-img.user-image { width: 160px; height: 160px; border-radius: 50%; }
+img.user-image { width: 140px; height: 140px; border-radius: 50%; }
+img.user-image:active { width: 138px; height: 138px; border-radius: 50%; }
 div.user-name { margin: 15px auto; text-align: center; font-size: 16pt;}
 
 div.user-contacts {
