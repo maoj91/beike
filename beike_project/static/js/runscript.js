@@ -104,4 +104,6 @@ $(document).on('pageinit', '#nearby-sellpost', function() {
     }
 });
 
-
+$(document).on('pagebeforeshow', function() {
+    $('.refresh-title')[0].contentWindow.location.reload();
+});
