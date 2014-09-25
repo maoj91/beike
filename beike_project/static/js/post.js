@@ -54,8 +54,8 @@ var postLoaderConstructor = function() { return (function($, undefined) {
             $page.find(".post-ask-location").show();
         });
         
-        $(document).on('scrollstop', function() { 
-            if (($('.ui-page-active')[0].id === 'nearby-'+page+'post') && ($window.scrollTop() >= $document.height() - $window.height() - 200)) {//console.log(page);
+        $(document).on('scrollstop', function() { //alert($window.scrollTop()+','+$document.height()+','+$window.height());
+            if (($('.ui-page-active')[0].id === 'nearby-'+page+'post') && ($window.scrollTop() >= $document.height() - $window.height() - 200)) {
                 getAndDisplayPosts();
             }
         });

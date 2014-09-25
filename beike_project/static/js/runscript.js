@@ -65,7 +65,6 @@ WeixinApi.showToolbar();
 
 $(document).on('pagebeforeshow', '#buy-form', function(event) {
     formLoader.init('buy');
-    //WeixinApi.ready(function() {WeixinApi.hideOptionMenu();});
 });
 $(document).on('pagebeforeshow', '#sell-form', function(event) {
     formLoader.init('sell');
