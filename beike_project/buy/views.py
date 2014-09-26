@@ -15,6 +15,7 @@ from django.contrib.gis.geos import Point
 from buy.buy_post_util import BuyPostUtil
 from data.data_util import get_contact
 from django.contrib.gis.measure import D
+from django.db.models import Q
 
 NUM_PER_PAGE = settings.NUM_BUY_POST_PER_PAGE
 
