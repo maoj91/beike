@@ -26,9 +26,15 @@ def get_posts_by_page(request):
         page_num = request.GET.get('pageNum')
         latitude = request.GET.get('latitude')
         longitude = request.GET.get('longitude')
+        category = request.GET.get('category')
+        keyword = request.GET.get('keyword', '')
         origin = Point(float(longitude), float(latitude), srid=4326)
         #TO-DO, filter more based on city or distance
         query_set = BuyPost.objects.filter(is_open=True).distance(origin).order_by('distance')
+        if category != '':
+            query_set = query_set.filter(category__id=category)
+        if keyword != '':
+            query_set = query_set.filter(Q(content__icontains=keyword)|Q(title__icontains=keyword))
         #TO-DO: make the record count configurable
         paginator = Paginator(query_set, 20)
 
