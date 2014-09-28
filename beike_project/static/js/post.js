@@ -49,6 +49,7 @@ var postLoaderConstructor = function() { return (function($, undefined) {
             currentPosition = data;
             getAndDisplayPosts();
         }, function() {
+            clearPosts();
             toggleExtra();
             $loadmore.hide();
             $page.find(".post-ask-location").show();
@@ -191,6 +192,11 @@ var postLoaderConstructor = function() { return (function($, undefined) {
             currentPosition = data;
             clearPosts();
             getAndDisplayPosts();
+        }, function() {
+            clearPosts();
+            toggleExtra();
+            $loadmore.hide();
+            $page.find(".post-ask-location").show();
         });
     };
     

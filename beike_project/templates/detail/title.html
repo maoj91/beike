@@ -3,7 +3,7 @@
     <div class="detail-title">{{post.title}}</div>
 
     <div class="share-button-wrapper">
-        <img id="share" class="share-button" src="/static/images/detail/share.png" onclick="detailLoader.showShareMsg();"> 
-        <img id="follow" class="share-button" src="/static/images/detail/not_followed.png" onclick="detailLoader.toggleFollowStatus();">
+        <div class="share-button-box" onclick="detailLoader.showShareMsg();"><img id="share" class="share-button" src="/static/images/detail/share.png"></div> 
+        <div class="share-button-box" onclick="detailLoader.toggleFollowStatus();"><img id="follow" class="share-button" src="/static/images/detail/not_followed.png"></div>
     </div>
 </div>

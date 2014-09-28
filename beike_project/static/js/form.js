@@ -1,11 +1,98 @@
 /****************************************
  *     Buy/Sell new form javascript     *
  ****************************************/
-var formLoader = (function($, undefined) {
-    var page, $page,
+var formLocation = (function($, undefined) {
+    var $page,
         $latitude, $longitude,
         $zipcode, $cityName,
         $locState1, $locState2,
+        loadingStr = '加载中...',
+        noLocationStr = 'Oops, no locations!';
+    var init = function($initPage) {
+        locUtil.getLocation();
+        
+        $page = $initPage;
+        $latitude = $page.find('#latitude');
+        $longitude = $page.find('#longitude');
+        $zipcode = $page.find('#zipcode');
+        $cityName = $page.find('#city-name');
+        $locState1 = $page.find('.form-loc-state1').show();
+        $locState2 = $page.find('.form-loc-state2').hide();
+        
+        locUtil.getLocation(function(data) {
+            $zipcode.val(data.zipcode);
+            $cityName.val(data.city+', '+data.state);
+            $latitude.val(data.latitude);
+            $longitude.val(data.longitude);
+        });
+
+        $zipcode.keypress(function (e) { 
+            if (e.which == 13) {
+                e.preventDefault();
+                $(this).blur();
+                getLocationByZipcode();
+            }
+        });
+        
+        var $description = $page.find('#description'),
+            $counter = $page.find('#lengthCounter');
+        $counter.html($description.val().length + '/300');
+        $description.bind('input propertychange', function() {
+            $counter.html($description.val().length + '/300');
+        });
+    }, 
+    changeLocation = function() {
+        $locState1.hide();
+        $locState2.show();
+        $zipcode.focus();
+    },
+    refreshLocation = function() {
+        $cityName.attr('placeholder', loadingStr);
+        locUtil.refreshLocation(function(data) {
+            $zipcode.val(data.zipcode);
+            $cityName.val(data.city+', '+data.state);
+            $latitude.val(data.latitude);
+            $longitude.val(data.longitude);
+            $cityName.attr('placeholder', noLocationStr);
+        }, function() {
+            $zipcode.val('');
+            $cityName.val('');
+            $latitude.val('');
+            $longitude.val('');
+            $cityName.attr('placeholder', noLocationStr);
+        });
+        $locState1.show();
+        $locState2.hide();
+    },
+    getLocationByZipcode = function() {
+        $cityName.attr('placeholder', loadingStr);
+        locUtil.getLocByZip($zipcode.val(), function(data) {
+            $zipcode.val(data.zipcode);
+            $cityName.val(data.city+', '+data.state);
+            $latitude.val(data.latitude);
+            $longitude.val(data.longitude);
+            $cityName.attr('placeholder', noLocationStr);
+        }, function() {
+            $zipcode.val('');
+            $cityName.val('');
+            $latitude.val('');
+            $longitude.val('');
+            $cityName.attr('placeholder', noLocationStr);
+        });
+        $locState1.show();
+        $locState2.hide();
+    };
+        
+    return {
+        init: init,
+        changeLocation: changeLocation,
+        refreshLocation: refreshLocation,
+        getLocationByZipcode: getLocationByZipcode
+    }
+}(jQuery));
+
+var formLoader = (function($, undefined) {
+    var page, $page,
         $condition,
         isEmailChecked = false,
         isPhoneChecked = false,
@@ -13,7 +100,6 @@ var formLoader = (function($, undefined) {
     
     var init = function(initPage, $initPage) {
         console.log('form init');
-        locUtil.getLocation();
         
         page = initPage;
         if ($initPage) 
@@ -21,14 +107,9 @@ var formLoader = (function($, undefined) {
         else
             $page = $('#'+page+'-form');
         
-        $latitude = $page.find('#latitude');
-        $longitude = $page.find('#longitude');
-        $zipcode = $page.find('#zipcode');
-        $cityName = $page.find('#city-name');
-        $locState1 = $page.find('.form-loc-state1').show();
-        $locState2 = $page.find('.form-loc-state2').hide();
+        formLocation.init($page);
+        
         $condition = $page.find('#condition-slider');
-
         chooseCondition($condition.val());
 
         // hide footer when user entering
@@ -74,60 +155,6 @@ var formLoader = (function($, undefined) {
                 }
             }, validateOptions));
         }
-        
-        locUtil.getLocation(function(data) {
-            $zipcode.val(data.zipcode);
-            $cityName.val(data.city+', '+data.state);
-            $latitude.val(data.latitude);
-            $longitude.val(data.longitude);
-        });
-
-        var $description = $page.find('#description'),
-            $counter = $page.find('#lengthCounter');
-        $counter.html($description.val().length + '/300');
-        $description.bind('input propertychange', function() {
-            $counter.html($description.val().length + '/300');
-        });
-    },
-    changeLocation = function() {
-        $locState1.hide();
-        $locState2.show();
-    },
-    refreshLocation = function() {
-        $cityName.attr('placeholder','加载中...');
-        locUtil.refreshLocation(function(data) {
-            $zipcode.val(data.zipcode);
-            $cityName.val(data.city+', '+data.state);
-            $latitude.val(data.latitude);
-            $longitude.val(data.longitude);
-            $cityName.attr('placeholder','Oops, no locations!');
-        }, function() {
-            $zipcode.val('');
-            $cityName.val('');
-            $latitude.val('');
-            $longitude.val('');
-            $cityName.attr('placeholder','Oops, no locations!');
-        });
-        $locState1.show();
-        $locState2.hide();
-    },
-    getLocationByZipcode = function() {
-        $cityName.attr('placeholder','加载中...');
-        locUtil.getLocByZip($zipcode.val(), function(data) {
-            $zipcode.val(data.zipcode);
-            $cityName.val(data.city+', '+data.state);
-            $latitude.val(data.latitude);
-            $longitude.val(data.longitude);
-            $cityName.attr('placeholder','Oops, no locations!');
-        }, function() {
-            $zipcode.val('');
-            $cityName.val('');
-            $latitude.val('');
-            $longitude.val('');
-            $cityName.attr('placeholder','Oops, no locations!');
-        });
-        $locState1.show();
-        $locState2.hide();
     },
     clickPhoneContact = function() {
         if (isPhoneChecked) {
@@ -199,9 +226,6 @@ var formLoader = (function($, undefined) {
     
     return {
         init: init,
-        changeLocation: changeLocation,
-        refreshLocation: refreshLocation,
-        getLocationByZipcode: getLocationByZipcode,
         clickPhoneContact: clickPhoneContact,
         clickEmailContact: clickEmailContact,
         clickSmsContact: clickSmsContact,
@@ -209,3 +233,55 @@ var formLoader = (function($, undefined) {
     };
 }(jQuery));
 
+/******************************************
+**    User info/edit                
+******************************************/
+var userLoader = (function($, undefined) {
+    var page, $page;
+    var init = function(initPage) {
+        console.log('user loader init');
+        
+        page = initPage;
+        $page = $('#user-update-page');
+        
+        formLocation.init($page);
+
+        var isUploading = false;
+        $('#post_image').fileupload({
+            url: "/s3/upload/",
+            dataType: 'json',
+            done: function(e, data) {
+                var imageInfo = {};
+                imageInfo['url'] = data.result.image_url;
+                imageInfo['width'] = data.result.width;
+                imageInfo['height'] = data.result.height;
+                imageInfo['orientation'] = data.result.orientation;
+                $('#image_url').val(imageInfo['url']);
+                $('#image_width').val(imageInfo['width']);
+                $('#image_height').val(imageInfo['height']);
+                $('#image_orientation').val(imageInfo['orientation']);
+                $('#profile_image').attr('src',imageInfo['url']);
+                console.log(JSON.stringify(imageInfo));
+            },
+            progressall: function(e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('.progressbar').show();
+                jQMProgressBar('progressbar').setValue(progress);
+                isUploading = true;
+                $('#image-uploader').attr("disabled", true);
+                $('#post_image').attr("disabled", true);
+            },
+            fail: function(e, data) {
+                alert("照片上传出错，请重试一次");
+            },
+            always: function(e, data) {
+                $('.progressbar').hide();
+                isUploading = false;
+                $('#image-uploader').attr("disabled", false);
+                $('#post_image').attr("disabled", false);
+            }
+        });
+    };
+
+    return { init: init };
+}(jQuery));

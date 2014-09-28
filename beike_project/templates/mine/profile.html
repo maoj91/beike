@@ -25,7 +25,7 @@
             <input readonly class="readonly" data-role="none" placeholder="oops! no location" name="city_name" id="city-name"></input>
         </div>
         <div style="width: 30%; float: right;">
-            <a class="form-button" data-role="button" onclick="userLoader.changeLocation();">修改</a>
+            <a class="form-button" data-role="button" onclick="formLocation.changeLocation();">修改</a>
         </div>
     </div>
     <div class="form-right form-loc-state2">
@@ -33,10 +33,10 @@
             <input type="text" maxlength="6" name="zipcode" id="zipcode" placeholder="zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="zipcode">
         </div>
         <div style="width: 30%; float: right;">
-            <a class="form-button" data-role="button" onclick="userLoader.getLocationByZipcode();">更新</a>
+            <a class="form-button" data-role="button" onclick="formLocation.getLocationByZipcode();">更新</a>
         </div>
         <div style="width: 30%; float: right; margin-right: 5%;">
-            <a class="form-button" data-role="button" onclick="userLoader.refreshLocation();">自动</a>
+            <a class="form-button" data-role="button" onclick="formLocation.refreshLocation();">自动</a>
         </div>
     </div>
 
@@ -64,14 +64,19 @@
 {% endif %}
 </div>
 
+
+{% if edit %}
+<div class="form-left">生日</div>
+<div class="form-right">
+    <input type="date" name="date_of_birth" id="date_of_birth" max="{{today_str}}" value="{{user.date_of_birth|date:'Y-m-d'}}">
+</div>
+{% else %}
 <div class="form-left">年龄</div>
 <div class="form-right">
-{% if edit %}
-    <input type="date" name="date_of_birth" id="date_of_birth" max="{{today_str}}" value="{{user.date_of_birth|date:'Y-m-d'}}">
-{% else %}
     <div class="form-right-text">{{user.age|default:'未填'}}</div>
-{% endif %}
 </div>
+{% endif %}
+
 
 <div class="form-left">学校</div>
 <div class="form-right">

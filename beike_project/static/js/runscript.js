@@ -81,11 +81,11 @@ $(document).on('pagebeforeshow', '#sell-edit', function(event) {
 
 $(document).on('pagebeforeshow', '#sell-detail', function(event) {
 //$("body").on('pagecontainerbeforetransition', function() {
-    detailLoader.init('sell');
+    detailLoader.init('sell',$(this));
     gallerySwiper.init($('#sell-detail .gallery'));
 });
 $(document).on('pagebeforeshow', '#buy-detail', function(event) {
-    detailLoader.init('buy');
+    detailLoader.init('buy',$(this));
 });
 
 
@@ -102,6 +102,10 @@ $(document).on('pageinit', '#nearby-sellpost', function() {
         //$(document).off('scrollstop');
         sellPostLoader.init('sell');
     }
+});
+
+$(document).on('pagebeforeshow', '#user-update-page', function() {
+    userLoader.init('user-update-page');
 });
 
 $(document).on('pagebeforeshow', function() {

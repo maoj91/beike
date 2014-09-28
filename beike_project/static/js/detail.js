@@ -4,9 +4,9 @@
 var detailLoader = (function($, undefined) {
     var page, $page,
         wx_id, post_id,
-    init = function(initPage) {
+    init = function(initPage, $initPage) {
         page = initPage;
-        $page = $('.ui-page-active');
+        $page = $initPage;
         wx_id = $page.find('#wx_id').val();
         post_id = $page.find('#post_id').val();
 
@@ -108,4 +108,3 @@ var detailLoader = (function($, undefined) {
         togglePostStatus: togglePostStatus
     };
 }(jQuery));
-

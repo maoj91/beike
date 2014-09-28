@@ -12,12 +12,12 @@
 
 <div class="user-contacts">
 {% if email_checked %}
-    <a id="email-button" class="user-contact-link" href="mailto:{{email}}?Subject={{post.title}}">Email<!--data-role="button" img class="detail-contact-icon" src="/static/images/detail/email_selected.png"/--></a>
+    <a id="email-button" class="user-contact-link" data-role="button" href="mailto:{{email}}?Subject={{post.title}}"><div style="position:absolute;top:0;width:50px;text-align:center;">Email</div><!--data-role="button" img class="detail-contact-icon" src="/static/images/detail/email_selected.png"/--></a>
 {% endif %}
-{% if phone_checked%}
+{% if phone_checked %}
     <a class="user-contact-link" href="tel:{{phone}}"><img class="user-contact-icon" src="/static/images/detail/phone_selected.png" /></a>
 {% endif%}
-{% if sms_checked%}
+{% if sms_checked %}
     <a class="user-contact-link" href="sms:{{phone}}"><img class="user-contact-icon" src="/static/images/detail/sms_selected.png" /></a>
 {% endif%}
 </div>
@@ -40,7 +40,7 @@
 
 <div class="detail-edit-box">
     <a class="detail-bottom-button" href="/detail/{{page}}/{{post.id}}/edit/"><button class="submit-button">修 改</button></a>
-    <div class="detail-bottom-button"><button class="submit-button" onclick="detailLoader.togglePostStatus();">Hide</button></div>
+    <div class="detail-bottom-button"><button class="submit-button" onclick="detailLoader.togglePostStatus();">隐 藏</button></div>
     <div style="clear:both;"></div>
 </div>
 {% endif %}

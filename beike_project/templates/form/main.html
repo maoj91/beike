@@ -27,7 +27,7 @@
         <input readonly class="readonly" data-role="none" placeholder="Oops, no locations!" name="city_name" id="city-name"></input>
     </div>
     <div style="width: 30%; float: right;">
-        <a class="form-button" data-role="button" onclick="formLoader.changeLocation();">修改</a>
+        <a class="form-button" data-role="button" onclick="formLocation.changeLocation();">修改</a>
     </div>
 </div>
 <div class="form-right form-loc-state2">
@@ -35,10 +35,10 @@
         <input type="number" name="zipcode" id="zipcode" placeholder="zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="zipcode">
     </div>
     <div style="width: 30%; float: right;">
-        <a class="form-button" data-role="button" onclick="formLoader.getLocationByZipcode();">更新</a>
+        <a class="form-button" data-role="button" onclick="formLocation.getLocationByZipcode();">更新</a>
     </div>
     <div style="width: 30%; float: right; margin-right: 5%;">
-        <a class="form-button" data-role="button" onclick="formLoader.refreshLocation();">自动</a>
+        <a class="form-button" data-role="button" onclick="formLocation.refreshLocation();">自动</a>
     </div>
 </div>
 

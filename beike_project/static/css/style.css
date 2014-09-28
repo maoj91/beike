@@ -315,25 +315,17 @@ img.post-load-more {
     width: 50px;
     margin: 0 auto;
 }
-div.post-ask-location {
+div.post-ask-location, div.post-empty {
     position: absolute;
-    top: 0;
+    top: 20px;
     width: 100%;
     height: 300px;
-    background-image: url('/static/images/postlist/ask-location.png');
     background-repeat: no-repeat;
     background-position: center center; 
 }
 
-div.post-empty {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 300px;
-    background-image: url('/static/images/postlist/icon.png');
-    background-repeat: no-repeat;
-    background-position: center center; 
-}
+div.post-ask-location { background-image: url('/static/images/postlist/ask-location.png'); }
+div.post-empty { background-image: url('/static/images/postlist/icon.png'); }
 
 /* CSS for search */
 div.search-bar-wrapper {
@@ -553,21 +545,24 @@ div.detail-title {
 
 div.share-button-wrapper {
     display: block;
-    width: 82px;
-    height: 26px;
-    padding: 7px;
+    width: 96px;
+    height: 40px;
     float: right;
 }
-img.share-button {
+div.share-button-box {
     display: block;
+    padding: 7px;
     height: 26px;
     width: 26px;
     float: left;
-    /*border: 1px solid #ddd;
-    border-radius: 5px;
-    /*padding: 7px;*/
-    margin-left: 15px;
+    margin-left: 8px;
     cursor: pointer;
+}
+
+img.share-button {
+    position: relative;
+    height: 26px;
+    width: 26px;
 }
 
 span.detail-postdate {
