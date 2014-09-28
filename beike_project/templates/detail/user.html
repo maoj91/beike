@@ -12,7 +12,7 @@
 
 <div class="user-contacts">
 {% if email_checked %}
-    <a id="email-button" class="user-contact-link" data-role="button" href="mailto:{{email}}?Subject={{post.title}}">Email<!--img class="detail-contact-icon" src="/static/images/detail/email_selected.png"/--></a>
+    <a id="email-button" class="user-contact-link" href="mailto:{{email}}?Subject={{post.title}}">Email<!--data-role="button" img class="detail-contact-icon" src="/static/images/detail/email_selected.png"/--></a>
 {% endif %}
 {% if phone_checked%}
     <a class="user-contact-link" href="tel:{{phone}}"><img class="user-contact-icon" src="/static/images/detail/phone_selected.png" /></a>
