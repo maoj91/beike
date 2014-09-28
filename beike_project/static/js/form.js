@@ -94,21 +94,37 @@ var formLoader = (function($, undefined) {
         $locState2.show();
     },
     refreshLocation = function() {
+        $cityName.attr('placeholder','加载中...');
         locUtil.refreshLocation(function(data) {
             $zipcode.val(data.zipcode);
             $cityName.val(data.city+', '+data.state);
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
+            $cityName.attr('placeholder','Oops, no locations!');
+        }, function() {
+            $zipcode.val('');
+            $cityName.val('');
+            $latitude.val('');
+            $longitude.val('');
+            $cityName.attr('placeholder','Oops, no locations!');
         });
         $locState1.show();
         $locState2.hide();
     },
     getLocationByZipcode = function() {
+        $cityName.attr('placeholder','加载中...');
         locUtil.getLocByZip($zipcode.val(), function(data) {
             $zipcode.val(data.zipcode);
             $cityName.val(data.city+', '+data.state);
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
+            $cityName.attr('placeholder','Oops, no locations!');
+        }, function() {
+            $zipcode.val('');
+            $cityName.val('');
+            $latitude.val('');
+            $longitude.val('');
+            $cityName.attr('placeholder','Oops, no locations!');
         });
         $locState1.show();
         $locState2.hide();

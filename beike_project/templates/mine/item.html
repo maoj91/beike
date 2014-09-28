@@ -1,0 +1,18 @@
+<li>
+    <a class="mine-link-box" href="/detail/sell/{{post.id}}">
+        <div class="mine-title-wrapper">
+            <div class="mine-price-wrapper">
+                <span class="mine-currency">$</span>
+                <span class="mine-price">{{price}}</span>
+            </div>
+            <div class="mine-title">{{post.title}}</div>
+        </div>
+        <div class="mine-postdate">
+            {{post.date_published|date:"M d, Y"}}{% if has_user %}, by {{post.user.name}}{% endif %}
+        </div>
+        
+        <div class="mine-content">
+            {{post.content}}
+        </div>
+    </a>
+</li>

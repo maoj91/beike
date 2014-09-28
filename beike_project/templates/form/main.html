@@ -1,9 +1,9 @@
-<div class="form-left lifted">标题</div>
+<div class="form-left">标题</div>
 <div class="form-right">
     <input type="text" maxlength="20" name="title" id="title" value="{{post.title}}" placeholder="请输入标题" data-rule-required="true" data-rule-content="true" data-msg-required="请输入标题" />
 </div>
 
-<div class="form-left lifted">类别</div>
+<div class="form-left">类别</div>
 <div class="form-right">
     <select class="form-button" name="category" id="category" data-placeholder="true">
         {% for category in categories %}
@@ -16,7 +16,7 @@
     </select>
 </div>
 
-<div class="form-left lifted">价格</div>
+<div class="form-left">价格</div>
 <div class="form-right">
     <input type="number" min="0" max="1000000000" name="price" value="{{post.price}}" placeholder="请标价" data-rule-required="true" data-rule-content="true" data-msg-required="请输入价格">
 </div>
@@ -24,7 +24,7 @@
 <div class="form-left">地点</div>
 <div class="form-right form-loc-state1">
     <div style="width: 60%; float: left;">
-        <input readonly class="readonly" data-role="none" placeholder="oops! no location" name="city_name" id="city-name"></input>
+        <input readonly class="readonly" data-role="none" placeholder="Oops, no locations!" name="city_name" id="city-name"></input>
     </div>
     <div style="width: 30%; float: right;">
         <a class="form-button" data-role="button" onclick="formLoader.changeLocation();">修改</a>
@@ -32,7 +32,7 @@
 </div>
 <div class="form-right form-loc-state2">
     <div style="width: 30%; float: left;">
-        <input type="text" maxlength="6" name="zipcode" id="zipcode" placeholder="zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="zipcode">
+        <input type="number" name="zipcode" id="zipcode" placeholder="zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="zipcode">
     </div>
     <div style="width: 30%; float: right;">
         <a class="form-button" data-role="button" onclick="formLoader.getLocationByZipcode();">更新</a>

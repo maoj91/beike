@@ -3,20 +3,37 @@
 ******************************************/
 var userLoader = (function($, undefined) {
     var loader = {},
-        page, $page;
-
-    loader.init = function(initPage) {
+        page, $page,
+        $latitude, $longitude,
+        $zipcode, $cityName,
+        $locState1, $locState2;
+    var init = function(initPage) {
+        console.log('user loader init');
+        locUtil.getLocation();
+        
         page = initPage;
-        $page = $('#user-update-page');     
-        $page.find('#description').bind('input propertychange', function() {
-            var contentLength = $(this).val().length;
-            $page.find('#lengthCounter').html(contentLength + '/3000');
+        $page = $('#user-update-page');
+        
+        $latitude = $page.find('#latitude');
+        $longitude = $page.find('#longitude');
+        $zipcode = $page.find('#zipcode');
+        $cityName = $page.find('#city-name');
+        $locState1 = $page.find('.form-loc-state1').show();
+        $locState2 = $page.find('.form-loc-state2').hide();
+        
+        locUtil.getLocation(function(data) {
+            $zipcode.val(data.zipcode);
+            $cityName.val(data.city+', '+data.state);
+            $latitude.val(data.latitude);
+            $longitude.val(data.longitude);
         });
-
-        //init lengthCounter
-        var contentLength = $('#description').val().length;
-        var lengthCount = contentLength + "/" + 3000;
-        $('#lengthCounter').text(lengthCount);
+        
+        var $description = $page.find('#description'),
+            $counter = $page.find('#lengthCounter');
+        $counter.html($description.val().length + '/300');
+        $description.bind('input propertychange', function() {
+            $counter.html($description.val().length + '/300');
+        });
 
         var isUploading = false;
         $('#post_image').fileupload({
@@ -53,12 +70,41 @@ var userLoader = (function($, undefined) {
                 $('#post_image').attr("disabled", false);
             }
         });
+    },
+    changeLocation = function() {
+        $locState1.hide();
+        $locState2.show();
+    },
+    refreshLocation = function() {
+        locUtil.refreshLocation(function(data) {
+            $zipcode.val(data.zipcode);
+            $cityName.val(data.city+', '+data.state);
+            $latitude.val(data.latitude);
+            $longitude.val(data.longitude);
+        });
+        $locState1.show();
+        $locState2.hide();
+    },
+    getLocationByZipcode = function() {
+        locUtil.getLocByZip($zipcode.val(), function(data) {
+            $zipcode.val(data.zipcode);
+            $cityName.val(data.city+', '+data.state);
+            $latitude.val(data.latitude);
+            $longitude.val(data.longitude);
+        });
+        $locState1.show();
+        $locState2.hide();
     };
 
-    return loader;
+    return {
+        init: init,
+        changeLocation: changeLocation,
+        refreshLocation: refreshLocation,
+        getLocationByZipcode: getLocationByZipcode
+    };
 }(jQuery));
 
-$(document).delegate('#user-update-page', 'pageinit', function() {
+$(document).on('pagebeforeshow', '#user-update-page', function() {
     userLoader.init('user-update-page');
 });
 

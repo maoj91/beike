@@ -10,7 +10,7 @@
         <div id="city" class="main-city-box">
             <a href="/user/{{user.id}}/edit_address/" class="main-city">
                 <img class="main-city-icon" src="/static/images/homepage/citymark.png" />
-                <span class="main-city-text">{{city}}</span>
+                <span class="main-city-text">{{city|default:"获取位置"}}</span>
             </a>
         </div>
     </div>

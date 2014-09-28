@@ -73,7 +73,7 @@ var locUtil = (function($, undefined) {
         navigator.geolocation.getCurrentPosition(deferred.resolve, deferred.reject, options);
         return deferred.promise();
     },
-    getLocByZip = function(zipcode, callback) {
+    getLocByZip = function(zipcode, callback, failCallback) {
         $.ajax({
             type: "get",
             url: "/user/get_info/get_latlong_by_zipcode",
@@ -91,10 +91,14 @@ var locUtil = (function($, undefined) {
             else
                 defaultCallback.apply(null, [locData]);
         }).fail(function() {
-            /*if (callback && callback.apply !== undefined)
-                callback.apply(null, [locData]);
-            else
-                defaultCallback.apply(null, [locData]);*/
+            locData = {
+                latitude: null, longitude: null, 
+                city: null, state: null, zipcode: null
+            };
+            hasLocation = false;
+            console.error("getLocation call failed");
+            if (failCallback && failCallback.apply !== undefined)
+                failCallback.apply(null);
         });
     },
     getLocByLatLon = function(latlon, callback) {
@@ -129,7 +133,12 @@ var locUtil = (function($, undefined) {
                 hasLocation = true;
                 getLocByLatLon(loc.coords, callback);
             }).fail(function() {
-                //hasLocation = false;
+                // clear if refresh and does not find location.
+                locData = {
+                    latitude: null, longitude: null, 
+                    city: null, state: null, zipcode: null
+                };
+                hasLocation = false;
                 console.error("getLocation call failed");
                 if (failCallback && failCallback.apply !== undefined)
                     failCallback.apply(null);
@@ -151,7 +160,7 @@ var locUtil = (function($, undefined) {
     };
     
     return {
-        refreshLocation: refreshLocation,locData:locData,
+        refreshLocation: refreshLocation,
         //getLocByLatLon: getLocByLatLon,
         getLocByZip: getLocByZip,
         getLocation: getLocation

@@ -31,11 +31,11 @@ var detailLoader = (function($, undefined) {
         }
         $page.find('#is_followed').val(is_followed);
         $page.find('#follow').attr('src', follow_img);
-        $page.find('#follow-popup').html(popup_msg);
+        /*$page.find('#follow-popup').html(popup_msg);
         $page.find('#follow-popup').popup('open');
         setTimeout(function() {
             $page.find('#follow-popup').popup('close');
-        }, 1000);
+        }, 1000);*/
         $.ajax({
             type: 'get',
             url: '/' + page + '/follow_post',

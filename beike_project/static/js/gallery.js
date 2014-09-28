@@ -50,7 +50,8 @@ var gallerySwiper = (function($, undefined) {
             $progressbar = $initGallery.find('.gallery-progressbar');
             $uploader.fileupload(uploadOptions);a=$initGallery;
         }
-        $gallery.swipe(swpieOptions);
+        if (nImg>1 && !canUpload)
+            $gallery.swipe(swpieOptions);
         selectImage(0);
         ifShowThumbnails();
     },

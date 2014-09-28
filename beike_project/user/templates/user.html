@@ -17,11 +17,11 @@
         <div class="user-name"><p>{{user.name}}</p></div>
         {% endif %}
         
-        {% include "profile.html" with user=user %}
+        {% include "mine/profile.html" with user=user %}
 
         {% if is_owner %}
         <div class="detail-edit-box">
-            <a class="detail-bottom-button" href="/user/{{user.id}}/edit/"><button class="submit-button">修 改</button></a>
+            <a class="detail-bottom-button" style="width:100%;" href="/user/{{user.id}}/edit/"><button class="submit-button">修 改</button></a>
             <div style="clear:both;"></div>
         </div>
         {% endif %}

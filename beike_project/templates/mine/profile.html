@@ -1,0 +1,98 @@
+<hr>
+
+<div class="form-left">邮箱</div>
+<div class="form-right">
+{% if edit %}
+    <input type="text" name="email" id="email" value="{{user.email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
+{% else %}
+    <div class="form-right-text">{{user.email|default:'未填'}}</div>
+{% endif %}
+</div>
+
+<div class="form-left">手机</div>
+<div class="form-right">
+{% if edit %}
+    <input type="text" name="mobile_phone" id="mobile_phone" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
+{% else %}
+    <div class="form-right-text">{{user.mobile_phone|default:'未填'}}</div>
+{% endif %}
+</div>
+
+<div class="form-left">所在地</div>
+{% if edit %}
+    <div class="form-right form-loc-state1">
+        <div style="width: 60%; float: left;">
+            <input readonly class="readonly" data-role="none" placeholder="oops! no location" name="city_name" id="city-name"></input>
+        </div>
+        <div style="width: 30%; float: right;">
+            <a class="form-button" data-role="button" onclick="userLoader.changeLocation();">修改</a>
+        </div>
+    </div>
+    <div class="form-right form-loc-state2">
+        <div style="width: 30%; float: left;">
+            <input type="text" maxlength="6" name="zipcode" id="zipcode" placeholder="zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="zipcode">
+        </div>
+        <div style="width: 30%; float: right;">
+            <a class="form-button" data-role="button" onclick="userLoader.getLocationByZipcode();">更新</a>
+        </div>
+        <div style="width: 30%; float: right; margin-right: 5%;">
+            <a class="form-button" data-role="button" onclick="userLoader.refreshLocation();">自动</a>
+        </div>
+    </div>
+
+    <input type="hidden" name="latitude" id="latitude"></input>
+    <input type="hidden" name="longitude" id="longitude"></input>
+{% else %}
+<div class="form-right">
+    <div class="form-right-text">{{user.address.city|default:'未填'}}</div>
+</div>
+{% endif %}
+
+
+<hr>
+
+<div class="form-left">性别</div>
+<div class="form-right">
+{% if edit %}
+    <select class="form-button" name="gender" id="gender">
+        <option value="0" {% if user.gender == 0 %}selected{%endif%}>未知</option>
+        <option value="1" {% if user.gender == 1 %}selected{%endif%}>男</option>
+        <option value="2" {% if user.gender == 2 %}selected{%endif%}>女</option>
+    </select>
+{% else %}
+    <div class="form-right-text">{% if user.gender == 1%}男{% elif user.gender == 2%}女{% else %}未填{% endif %}</div>
+{% endif %}
+</div>
+
+<div class="form-left">年龄</div>
+<div class="form-right">
+{% if edit %}
+    <input type="date" name="date_of_birth" id="date_of_birth" max="{{today_str}}" value="{{user.date_of_birth|date:'Y-m-d'}}">
+{% else %}
+    <div class="form-right-text">{{user.age|default:'未填'}}</div>
+{% endif %}
+</div>
+
+<div class="form-left">学校</div>
+<div class="form-right">
+{% if edit %}
+    <input type="text" name="organization" id="organization" value="{{user.organization}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入学校或单位" />
+{% else %}
+    <div class="form-right-text">{{user.organization|default:'未填'}}</div>
+{% endif %}
+</div>
+
+<hr>
+
+<div class="form-left" style="height: 35px;">自我介绍</div>
+{% if edit %}
+<div class="form-right" style="height: 35px; min-height: 35px;"><span id="lengthCounter">0/300</span></div>
+{% endif %}
+<div style="clear:both"></div>
+<div class="form-description-box">
+{% if edit %}
+    <textarea name="description" id="description" data-rule-content="true" value="{{user.description}}" maxlength="300" placeholder="自我介绍">{{user.description}}</textarea>
+{% else %}
+    <div class="user-description" style="margin-bottom: 20px;">{% if user.description %}{{user.description}}{% else %}未填{% endif %}</div>
+{% endif %}
+</div>
