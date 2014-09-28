@@ -16,23 +16,17 @@ var gallerySwiper = (function($, undefined) {
         url: "/s3/upload/",
         dataType: 'json',
         done: function(e, data) {
-            var imageInfo = {
-                url: data.result.image_url,
-                width: data.result.width,
-                height: data.result.height,
-                orientation: data.result.orientation
-            };
-            addImage(imageInfo);
+            addImage(data.result);
             //console.log(JSON.stringify(imagesInfo[nImg]));
         },
         progressall: function(e, data) {
             var pct = parseInt(data.loaded / data.total * 100, 10);
-            $('.gallery-uploader-input').attr('disabled','true');
+            $uploader.attr('disabled','true');
             $progressbar.css('width', pct+"%");
         },
         fail: function() { alert("照片上传出错，请重试一次"); },
         always: function() {
-            $('.gallery-uploader-input').removeAttr('disabled');
+            $uploader.removeAttr('disabled');
             $progressbar.css('width','0');
         }
     },
@@ -48,7 +42,7 @@ var gallerySwiper = (function($, undefined) {
             canUpload = true;
             $uploader = $initGallery.find('.gallery-uploader-input');
             $progressbar = $initGallery.find('.gallery-progressbar');
-            $uploader.fileupload(uploadOptions);a=$initGallery;
+            $uploader.fileupload(uploadOptions);
         }
         if (nImg>1 && !canUpload)
             $gallery.swipe(swpieOptions);
@@ -88,9 +82,8 @@ var gallerySwiper = (function($, undefined) {
             currentImg = i;
             $($thumbnails.children(':not(.gallery-uploader)').removeClass('selected')[i]).addClass('selected');
         }
-    };
-    
-    function ifShowThumbnails() {
+    },
+    ifShowThumbnails = function() {
         if ((nImg == 0) || (nImg == 1 && !canUpload))
             $('.gallery-wrapper').addClass('gallery-no-thumbnails');
         else
@@ -100,11 +93,11 @@ var gallerySwiper = (function($, undefined) {
             $('.gallery-delete').hide();
         else if (canUpload)
             $('.gallery-delete').show();
-    }
-    function addImage(imageInfo) {
+    },
+    addImage = function(imageInfo) {
         if (nImg < MAX_N_IMG) {
             var index = nImg,
-                url = imageInfo.url,
+                url = imageInfo.image_url,
                 $thumbnail = $('<div class="gallery-thumbnail-box" onclick="gallerySwiper.select('+nImg+');">'+
                     '<img class="gallery-thumbnail" src="'+url+'" />'+
                     '<div class="gallery-thumbnail-bar"></div>'+
@@ -114,17 +107,16 @@ var gallerySwiper = (function($, undefined) {
             $gallery.append($img);
             $thumbnails.append($thumbnail);
             
-            $('#image_url' + index).val(imageInfo['url']);
-            $('#image_width' + index).val(imageInfo['width']);
-            $('#image_height' + index).val(imageInfo['height']);
+            $('#image_url' + index).val(url);
+            $('#image_width' + index).val(imageInfo.width);
+            $('#image_height' + index).val(imageInfo.height);
             //$('#image_orientation' + index).val(imageInfo['orientation']);
             
             selectImage(index);
             ifShowThumbnails();
         }
-    }
-
-    function swipeStatus(event, phase, direction, distance) {
+    },
+    swipeStatus = function(event, phase, direction, distance) {
         img_w = $gallery.width()/MAX_N_IMG;
         if(phase=='move' && (direction=='left' || direction=='right'))
         {
@@ -139,16 +131,16 @@ var gallerySwiper = (function($, undefined) {
             else if (direction == 'left') nextImage();
             $($thumbnails.children(':not(.gallery-uploader)').removeClass('selected')[currentImg]).addClass('selected');
         }
-    }
-    function previousImage () {
+    },
+    previousImage = function() {
         currentImg = Math.max(currentImg-1, 0);
         scrollImages( $gallery.width()/MAX_N_IMG * currentImg, speed);
-    }
-    function nextImage() {
+    },
+    nextImage = function() {
         currentImg = Math.min(currentImg+1, nImg-1);
         scrollImages( $gallery.width()/MAX_N_IMG * currentImg, speed);
-    }
-    function scrollImages(distance, duration) {
+    },
+    scrollImages = function(distance, duration) {
         $gallery.css('-webkit-transition-duration', (duration/1000).toFixed(1) + 's');
 
         //inverse the number we set in the css

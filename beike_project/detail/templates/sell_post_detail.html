@@ -42,6 +42,7 @@
                 <span class="city-text">{{post.user.address.city}}</span>
             </div>
         </div>
+        <div style="height:20px;"></div>
         {% include "detail/user.html" with page="sell" post_image=post_image post=post is_owner=is_owner %}
 
     <img id="share_msg" src="/static/images/detail/share_msg.png" style="display:none;width:100%;max-height:100%;position:absolute;left:0;top:0;z-index:1;background-color:black;opacity: 0.6;" onclick="detailLoader.hideShareMsg()">
