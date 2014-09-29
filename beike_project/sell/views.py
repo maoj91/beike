@@ -188,7 +188,7 @@ def form_submit(request):
 
 def get_image_info(request):
     image_list = []
-    for i in range(0, 3):
+    for i in range(0, 4):
         image_url = request.POST.get('image_url' + str(i))
         image_width = request.POST.get('image_width' + str(i))
         image_height = request.POST.get('image_height' + str(i))
