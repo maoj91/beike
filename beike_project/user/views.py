@@ -129,17 +129,24 @@ def update(request,offset):
         user.mobile_phone = request.POST.get('mobile_phone','')   
         user.gender = int(request.POST.get('gender',''))
         dob = request.POST.get('date_of_birth','')
+        latitude = request.POST.get('latitude')
+        longitude = request.POST.get('longitude')
+        city_id = request.POST.get('city-id')
+        zipcode = request.POST.get('zipcode')
         if dob: 
             user.date_of_birth = datetime.strptime(dob, '%Y-%m-%d')
         new_image = get_image_info(request)      
         if new_image:
             user.image_url = new_image
         user.save()
+        print(city_id)
+        print(zipcode)
+        print(latitude)
+        print(longitude)
+        update_user_address(user.id, city_id, zipcode, latitude, longitude)
+        
     user_image = ImageMetadata.deserialize_list(user.image_url)[0]
-    states = State.objects.values('name')
-    cities = City.objects.all()
-    privacies = Privacy.objects.values('description')
-    return HttpResponseRedirect('/user/'+str(offset),{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities,'privacies':privacies},RequestContext(request))
+    return HttpResponseRedirect('/user/'+str(offset),{'user':user,'is_owner':is_owner,'user_image':user_image},RequestContext(request))
 
 def get_info(request):
     if 'wx_id' not in request.session or 'key' not in request.session: 

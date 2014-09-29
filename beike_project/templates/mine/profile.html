@@ -22,7 +22,7 @@
 {% if edit %}
     <div class="form-right form-loc-state1">
         <div style="width: 60%; float: left;">
-            <input readonly class="readonly" data-role="none" placeholder="oops! no location" name="city_name" id="city-name"></input>
+            <input readonly class="readonly" data-role="none" placeholder="oops! no location" name="city-name" id="city-name"></input>
         </div>
         <div style="width: 30%; float: right;">
             <a class="form-button" data-role="button" onclick="formLocation.changeLocation();">修改</a>
@@ -40,8 +40,9 @@
         </div>
     </div>
 
-    <input type="hidden" name="latitude" id="latitude"></input>
-    <input type="hidden" name="longitude" id="longitude"></input>
+    <input type="hidden" name="latitude" id="latitude"/>
+    <input type="hidden" name="longitude" id="longitude"/>
+    <input type="hidden" name="city-id" id="city-id"/>
 {% else %}
 <div class="form-right">
     <div class="form-right-text">{{user.address.city|default:'未填'}}</div>

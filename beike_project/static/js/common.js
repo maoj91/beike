@@ -65,7 +65,7 @@ var locUtil = (function($, undefined) {
     var hasLocation = false,
         locData = {
             latitude: null, longitude: null, 
-            city: null, state: null, zipcode: null
+            city: null, city_id: null, state: null, zipcode: null
         },
         defaultCallback = function(data) { console.log(data); },
     getCurrentLocationDeferred = function(options) {
@@ -76,7 +76,7 @@ var locUtil = (function($, undefined) {
     getLocByZip = function(zipcode, callback, failCallback) {
         $.ajax({
             type: "get",
-            url: "/user/get_info/get_latlong_by_zipcode",
+            url: "/user/get_info/get_location_by_zipcode",
             dataType: "json",
             data: { zipcode: zipcode }
         }).then(function(data) {
@@ -86,6 +86,7 @@ var locUtil = (function($, undefined) {
             locData.state = convert_state(data.state,'abbrev');
             locData.latitude = data.latitude;
             locData.longitude = data.longitude;
+            locData.city_id = data.city_id
             if (callback && callback.apply !== undefined)
                 callback.apply(null, [locData]);
             else
@@ -106,7 +107,7 @@ var locUtil = (function($, undefined) {
         locData.longitude = latlon.longitude;
         $.ajax({
             type: "get",
-            url: "/user/get_info/get_zipcode_by_latlong",
+            url: "/user/get_info/get_location_by_latlong",
             dataType: "json",
             data: {
                 latitude: latlon.latitude,
@@ -115,6 +116,7 @@ var locUtil = (function($, undefined) {
         }).then(function(data) {
             hasLocation = true;
             locData.city = data.city;
+            locData.city_id = data.city_id
             locData.state = convert_state(data.state,'abbrev');
             locData.zipcode = data.zipcode;
             if (callback && callback.apply !== undefined)
@@ -136,7 +138,7 @@ var locUtil = (function($, undefined) {
                 // clear if refresh and does not find location.
                 locData = {
                     latitude: null, longitude: null, 
-                    city: null, state: null, zipcode: null
+                    city: null, city_id: null, state: null, zipcode: null
                 };
                 hasLocation = false;
                 console.error("getLocation call failed");

@@ -104,9 +104,8 @@ def is_user_has_email(user_id):
 
 def update_user_address(user_id, city_id, zipcode, latitude, longitude):
         user = User.objects.get(id=user_id)
-        # create address
-        address = Address()
         city = City.objects.get(pk=city_id)
+        address = Address()        
         address.city = city
         address.zip_code = zipcode
         address.latlon = Point(float(longitude), float(latitude), srid=4326)

@@ -6,6 +6,7 @@ var formLocation = (function($, undefined) {
         $latitude, $longitude,
         $zipcode, $cityName,
         $locState1, $locState2,
+        $cityId,
         loadingStr = '加载中...',
         noLocationStr = 'Oops, no locations!';
     var init = function($initPage) {
@@ -16,6 +17,7 @@ var formLocation = (function($, undefined) {
         $longitude = $page.find('#longitude');
         $zipcode = $page.find('#zipcode');
         $cityName = $page.find('#city-name');
+        $cityId = $page.find('#city-id');
         $locState1 = $page.find('.form-loc-state1').show();
         $locState2 = $page.find('.form-loc-state2').hide();
         
@@ -24,6 +26,7 @@ var formLocation = (function($, undefined) {
             $cityName.val(data.city+', '+data.state);
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
+            $cityId.val(data.city_id);
         });
 
         $zipcode.keypress(function (e) { 
@@ -54,12 +57,14 @@ var formLocation = (function($, undefined) {
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
             $cityName.attr('placeholder', noLocationStr);
+            $cityId.val(data.city_id);
         }, function() {
             $zipcode.val('');
             $cityName.val('');
             $latitude.val('');
             $longitude.val('');
             $cityName.attr('placeholder', noLocationStr);
+            $cityId.val('');
         });
         $locState1.show();
         $locState2.hide();
@@ -72,12 +77,14 @@ var formLocation = (function($, undefined) {
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
             $cityName.attr('placeholder', noLocationStr);
+            $cityId.val(data.city_id);
         }, function() {
             $zipcode.val('');
             $cityName.val('');
             $latitude.val('');
             $longitude.val('');
             $cityName.attr('placeholder', noLocationStr);
+            $cityId.val('');
         });
         $locState1.show();
         $locState2.hide();
