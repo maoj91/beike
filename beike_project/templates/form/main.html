@@ -18,7 +18,7 @@
 
 <div class="form-left">价格</div>
 <div class="form-right">
-    <input type="number" min="0" max="1000000000" name="price" value="{{post.price}}" placeholder="请标价" data-rule-required="true" data-rule-content="true" data-msg-required="请输入价格">
+    <input type="tel" id="price" name="price" value="{{post.price}}" placeholder="请标价" data-rule-required="true" data-rule-content="true" data-msg-required="请输入价格" maxlength="7">
 </div>
 
 <div class="form-left">地点</div>
@@ -32,7 +32,7 @@
 </div>
 <div class="form-right form-loc-state2">
     <div style="width: 30%; float: left;">
-        <input type="number" name="zipcode" id="zipcode" placeholder="zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="zipcode">
+        <input type="tel" name="zipcode" id="zipcode" placeholder="zipcode" data-rule-required="true" data-rule-content="true" data-msg-required="zipcode" maxlength="6">
     </div>
     <div style="width: 30%; float: right;">
         <a class="form-button" data-role="button" onclick="formLocation.getLocationByZipcode();">更新</a>

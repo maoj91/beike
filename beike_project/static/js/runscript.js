@@ -82,7 +82,7 @@ $(document).on('pagebeforeshow', '#sell-edit', function(event) {
 $(document).on('pagebeforeshow', '#sell-detail', function(event) {
 //$("body").on('pagecontainerbeforetransition', function() {
     detailLoader.init('sell',$(this));
-    gallerySwiper.init($('#sell-detail .gallery'));
+    gallerySwiper.init($(this).find('.gallery'));
 });
 $(document).on('pagebeforeshow', '#buy-detail', function(event) {
     detailLoader.init('buy',$(this));

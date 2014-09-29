@@ -6,49 +6,6 @@ var gallerySwiper = (function($, undefined) {
         $gallery, $thumbnails,
         $uploader, canUpload,
         $progressbar,
-    swpieOptions = {
-        triggerOnTouchEnd : true,
-        swipeStatus : swipeStatus,
-        allowPageScroll: 'vertical',
-        //threshold: 75
-    },
-    uploadOptions = {
-        url: "/s3/upload/",
-        dataType: 'json',
-        done: function(e, data) {
-            addImage(data.result);
-            //console.log(JSON.stringify(imagesInfo[nImg]));
-        },
-        progressall: function(e, data) {
-            var pct = parseInt(data.loaded / data.total * 100, 10);
-            $uploader.attr('disabled','true');
-            $progressbar.css('width', pct+"%");
-        },
-        fail: function() { alert("照片上传出错，请重试一次"); },
-        always: function() {
-            $uploader.removeAttr('disabled');
-            $progressbar.css('width','0');
-        }
-    },
-    init = function($initGallery) {
-        console.log('gallery init');
-        currentImg = 0;
-        img_w = $initGallery.width();
-        $gallery = $initGallery.children('.gallery-list');
-        $thumbnails = $initGallery.children('.gallery-thumbnail-list');
-        nImg = $thumbnails.children(':not(.gallery-uploader)').length;
-        canUpload = false;
-        if ($gallery.hasClass('gallery-canupload')) {
-            canUpload = true;
-            $uploader = $initGallery.find('.gallery-uploader-input');
-            $progressbar = $initGallery.find('.gallery-progressbar');
-            $uploader.fileupload(uploadOptions);
-        }
-        if (nImg>1 && !canUpload)
-            $gallery.swipe(swpieOptions);
-        selectImage(0);
-        ifShowThumbnails();
-    },
     deleteImage = function() {
         if (confirm("要删除该照片吗?") == true) {
             nImg--;
@@ -147,7 +104,50 @@ var gallerySwiper = (function($, undefined) {
         var value = (distance<0 ? '' : '-') + Math.abs(distance).toString();
 
         $gallery.css('-webkit-transform', 'translate3d('+value +'px,0px,0px)');
-    }
+    },
+    swpieOptions = {
+        triggerOnTouchEnd : true,
+        swipeStatus : swipeStatus,
+        allowPageScroll: 'vertical',
+        //threshold: 75
+    },
+    uploadOptions = {
+        url: "/s3/upload/",
+        dataType: 'json',
+        done: function(e, data) {
+            addImage(data.result);
+            //console.log(JSON.stringify(imagesInfo[nImg]));
+        },
+        progressall: function(e, data) {
+            var pct = parseInt(data.loaded / data.total * 100, 10);
+            $uploader.attr('disabled','true');
+            $progressbar.css('width', pct+"%");
+        },
+        fail: function() { alert("照片上传出错，请重试一次"); },
+        always: function() {
+            $uploader.removeAttr('disabled');
+            $progressbar.css('width','0');
+        }
+    },
+    init = function($initGallery) {
+        console.log('gallery init');
+        currentImg = 0;
+        img_w = $initGallery.width();
+        $gallery = $initGallery.children('.gallery-list');
+        $thumbnails = $initGallery.children('.gallery-thumbnail-list');
+        nImg = $thumbnails.children(':not(.gallery-uploader)').length;
+        canUpload = false;
+        if ($gallery.hasClass('gallery-canupload')) {
+            canUpload = true;
+            $uploader = $initGallery.find('.gallery-uploader-input');
+            $progressbar = $initGallery.find('.gallery-progressbar');
+            $uploader.fileupload(uploadOptions);
+        }
+        if (nImg>1 || canUpload)
+            $gallery.swipe(swpieOptions);
+        selectImage(0);
+        ifShowThumbnails();
+    };
     
     return {init: init, select: selectImage, deleteImage: deleteImage};
 }(jQuery));

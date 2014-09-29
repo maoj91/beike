@@ -44,10 +44,11 @@ var formLocation = (function($, undefined) {
             $counter.html($description.val().length + '/300');
         });
     }, 
-    changeLocation = function() {
+    changeLocation = function(notFocus) {
         $locState1.hide();
         $locState2.show();
-        $zipcode.focus();
+        if (!notFocus)
+            $zipcode.focus();
     },
     refreshLocation = function() {
         $cityName.attr('placeholder', loadingStr);
@@ -135,18 +136,24 @@ var formLoader = (function($, undefined) {
         isSmsChecked = false;
         
         var validateOptions = {
-            ignore: '',
+            ignore: '#phone_number:hidden, #email:hidden',
             focusCleanup: true,
             rules: {
+                price: 'digitonly',
                 phone_number: 'digitonly',
                 zipcode: 'digitonly'
             },
             errorPlacement: function(error, element) {
                 element.attr('placeholder', error.html());
                 element.addClass('hasError');
-                if (element[0].id === 'zipcode') {
-                    $locState1.hide();
-                    $locState2.show();
+                var id = element[0].id;
+                if (id === 'zipcode') {
+                    formLocation.changeLocation(1);
+                    element.val(parseInt(element.val()) || '');
+                    element.attr('data-msg-required', error.html());
+                } else if (id === 'price' || id === 'phone_number') {
+                    element.val(parseInt(element.val()) || '');
+                    element.attr('data-msg-required', error.html());
                 }
             }
         };

@@ -28,7 +28,7 @@
     </div>
     <div id="phone_number_div">
     {% if phone and phone != " " %}
-        <input type="tel" id="phone_number" name="phone_number" placeholder="手机号码" value="{{phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入电话号码" />
+        <input type="tel" id="phone_number" name="phone_number" placeholder="手机号码" value="{{phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入电话号码" maxlength="11" />
     {% else %}
         <input type="tel" id="phone_number" name="phone_number" placeholder="手机号码" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
     {% endif %}
