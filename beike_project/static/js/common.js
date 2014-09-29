@@ -92,10 +92,6 @@ var locUtil = (function($, undefined) {
             else
                 defaultCallback.apply(null, [locData]);
         }).fail(function() {
-            locData = {
-                latitude: null, longitude: null, 
-                city: null, state: null, zipcode: null
-            };
             hasLocation = false;
             console.error("getLocation call failed");
             if (failCallback && failCallback.apply !== undefined)
@@ -124,7 +120,7 @@ var locUtil = (function($, undefined) {
             else
                 defaultCallback.apply(null, [locData]);
         }).fail(function() {
-            //hasLocation = false;
+            hasLocation = false;
         });
     },
     refreshLocation = function(callback, failCallback) {
@@ -135,17 +131,10 @@ var locUtil = (function($, undefined) {
                 hasLocation = true;
                 getLocByLatLon(loc.coords, callback);
             }).fail(function() {
-                // clear if refresh and does not find location.
-                locData = {
-                    latitude: null, longitude: null, 
-                    city: null, city_id: null, state: null, zipcode: null
-                };
                 hasLocation = false;
                 console.error("getLocation call failed");
                 if (failCallback && failCallback.apply !== undefined)
                     failCallback.apply(null);
-            }).always(function() {
-                //do nothing
             });
         } else {
             console.error("Geolocation is disabled.");

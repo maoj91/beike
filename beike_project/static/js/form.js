@@ -30,6 +30,18 @@ var formLocation = (function($, undefined) {
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
             $cityId.val(data.city_id);
+            $editButton.attr('onclick', 'formLocation.changeLocation();');
+            $submitButton.prop('disabled', false);
+            $cityName.attr('placeholder', noLocationStr);
+        }, function() {
+            $zipcode.val('');
+            $cityName.val('');
+            $latitude.val('');
+            $longitude.val('');
+            $cityId.val('');
+            $editButton.attr('onclick', 'formLocation.changeLocation();');
+            $submitButton.prop('disabled', false);
+            $cityName.attr('placeholder', noLocationStr);
         });
 
         $zipcode.keypress(function (e) { 
@@ -62,19 +74,19 @@ var formLocation = (function($, undefined) {
             $cityName.val(data.city+', '+data.state);
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
+            $cityId.val(data.city_id);
             $editButton.attr('onclick', 'formLocation.changeLocation();');
             $submitButton.prop('disabled', false);
             $cityName.attr('placeholder', noLocationStr);
-            $cityId.val(data.city_id);
         }, function() {
             $zipcode.val('');
             $cityName.val('');
             $latitude.val('');
             $longitude.val('');
+            $cityId.val('');
             $editButton.attr('onclick', 'formLocation.changeLocation();');
             $submitButton.prop('disabled', false);
             $cityName.attr('placeholder', noLocationStr);
-            $cityId.val('');
         });
         $locState1.show();
         $locState2.hide();
@@ -88,19 +100,19 @@ var formLocation = (function($, undefined) {
             $cityName.val(data.city+', '+data.state);
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
+            $cityId.val(data.city_id);
             $editButton.attr('onclick', 'formLocation.changeLocation();');
             $submitButton.prop('disabled', false);
             $cityName.attr('placeholder', noLocationStr);
-            $cityId.val(data.city_id);
         }, function() {
             $zipcode.val('');
             $cityName.val('');
             $latitude.val('');
             $longitude.val('');
+            $cityId.val('');
             $editButton.attr('onclick', 'formLocation.changeLocation();');
             $submitButton.prop('disabled', false);
             $cityName.attr('placeholder', noLocationStr);
-            $cityId.val('');
         });
         $locState1.show();
         $locState2.hide();
