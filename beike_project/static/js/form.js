@@ -253,6 +253,29 @@ var userLoader = (function($, undefined) {
         
         formLocation.init($page);
 
+        
+        var $uploader = $page.find('.gallery-uploader-input'),
+            uploadOptions = {
+            url: "/s3/upload/",
+            dataType: 'json',
+            done: function(e, data) {
+                addImage(data.result);
+                //console.log(JSON.stringify(imagesInfo[nImg]));
+            },
+            progressall: function(e, data) {
+                //var pct = parseInt(data.loaded / data.total * 100, 10);
+                //$uploader.attr('disabled','true');
+                //$progressbar.css('width', pct+"%");
+            },
+            fail: function() { alert("照片上传出错，请重试一次"); },
+            always: function() {
+                $uploader.removeAttr('disabled');
+                //$progressbar.css('width','0');
+            }
+        };
+        $uploader.fileupload(uploadOptions);
+        
+        /*
         var isUploading = false;
         $('#post_image').fileupload({
             url: "/s3/upload/",
@@ -282,13 +305,21 @@ var userLoader = (function($, undefined) {
                 alert("照片上传出错，请重试一次");
             },
             always: function(e, data) {
-                $('.progressbar').hide();
+                //$('.progressbar').hide();
                 isUploading = false;
                 $('#image-uploader').attr("disabled", false);
                 $('#post_image').attr("disabled", false);
             }
-        });
+        });*/
+    },
+    addImage = function(imageInfo) {
+        var url = imageInfo.image_url;
+        $page.find('.user-image').attr('src', url);
+        $page.find('#image_url').val(url);
+        $page.find('#image_width').val(imageInfo.width);
+        $page.find('#image_height').val(imageInfo.height);
+        //$('#image_orientation').val(imageInfo['orientation']);
     };
-
+    
     return { init: init };
 }(jQuery));

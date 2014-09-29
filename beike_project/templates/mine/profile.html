@@ -3,7 +3,7 @@
 <div class="form-left">邮箱</div>
 <div class="form-right">
 {% if edit %}
-    <input type="text" name="email" id="email" value="{{user.email}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
+    <input type="text" name="email" id="email" value="{{user.email}}" placeholder="请输入email" data-rule-required="true" data-rule-content="true" data-msg-required="请输入email" />
 {% else %}
     <div class="form-right-text">{{user.email|default:'未填'}}</div>
 {% endif %}
@@ -12,7 +12,7 @@
 <div class="form-left">手机</div>
 <div class="form-right">
 {% if edit %}
-    <input type="text" name="mobile_phone" id="mobile_phone" value="{{user.mobile_phone}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入手机号码" />
+    <input type="tel" name="mobile_phone" id="mobile_phone" value="{{user.mobile_phone}}" placeholder="请输入手机号码" data-rule-required="false" data-rule-content="true" data-msg-required="请输入手机号码" />
 {% else %}
     <div class="form-right-text">{{user.mobile_phone|default:'未填'}}</div>
 {% endif %}

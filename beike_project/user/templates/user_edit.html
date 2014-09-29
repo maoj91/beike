@@ -13,6 +13,7 @@
         {% if user_image %}
         <div class="user-image-box">
             <img class="user-image" src="{{user_image.image_url}}"/>
+            <input type="file" data-role="none" class="gallery-uploader-input" style="position:absolute;top:0;" name="post_image" accept="image/*" />
         </div>
         {% endif %}
         
@@ -21,7 +22,7 @@
         <input type="hidden" id="image_height" name="image_height">
         <input type="hidden" id="image_orientation" name="image_orientation" />
 
-        <div class="user-name" style="width:50%;"><input type="text" name="name" id="name" value="{{user.name}}" data-rule-required="true" data-rule-content="true" data-msg-required="请输入用户名" /></div>
+        <div class="user-name" style="width:50%;"><input type="text" name="name" id="name" value="{{user.name}}" placeholder="请输入用户名" data-rule-required="true" data-rule-content="true" data-msg-required="请输入用户名" /></div>
         
         {% include "mine/profile.html" with user=user edit=1 %}
 
