@@ -1,11 +1,24 @@
-/*@font-face {
-	font-family:'PingHei';
-	font-style:normal;
-	font-weight:200;
-	src:url("/static/fonts/PingHei-light.woff") format("woff"), url("/static/fonts/PingHei-light.ttf") format("truetype");
-	*src:url('');
-	/* Copyright (c) 2000-2008, Changzhou SinoType Technology Co., Ltd.  All rights reserved. 
-}*/
+@font-face {
+	font-family: 'LanTing';
+	font-style: normal;
+	src: url("/static/fonts/LanTing.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url("/static/fonts/OpenSans.woff2") format('woff2'), url("/static/fonts/OpenSans.ttf") format('truetype');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Lato Light'), local('Lato-Light'), url("/static/fonts/Lato-Light.woff2") format('woff2'), url("/static/fonts/Lato-Light.ttf") format('truetype');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
 
 /* CSS for general style settings */
 html, body, div, img, span, p, a, input, textarea {
@@ -39,8 +52,7 @@ body {
 -moz-user-select: none;
 -ms-user-select: none;
 user-select: none;
-    font-family: 'Open Sans', \5FAE\8F6F\96C5\9ED1, sans-serif;
-    
+    font-family: 'Open Sans', '\5FAE\8F6F\96C5\9ED1', sans-serif;
     /*PingHei, \5FAE\8F6F\96C5\9ED1, "Lucida Sans Unicode", "Lucida Grande", sans-serif;*/
     font-size: 14px;
     -webkit-font-smoothing: antialiased;
@@ -294,11 +306,12 @@ img.post-image {
     margin: 7px 0 0;
 }
 div.post-price {
-    color: #666;
+    color: #333;
     margin-top: 7px;
-    font-size: 16px;
-    line-height: 16px;
+    font-size: 20px;
+    line-height: 20px;
     font-weight: normal;
+    font-family: Lato, sans-serif;
 }
 span.post-currency {
     color: #ff9933;
@@ -306,7 +319,7 @@ span.post-currency {
 }
 div.post-distance {
     color: #aaa;
-    margin-top: 5px;
+    margin-top: 2px;
     font-size: 12px;
     font-weight: normal;
 }
@@ -565,21 +578,18 @@ img.share-button {
     width: 26px;
 }
 
-span.detail-postdate {
-    color: #aaa;
-    font-size: 16px;
-}
+span.detail-postdate { color: #aaa; }
 div.detail-category {
     float: right;
     color: #24c498;
+    margin-top: 10px;
     font-size: 16px;
+    height: 16px;
+    line-height: 16px;
 }
 div.detail-price-wrapper {
-    margin-top: 1px;
-    color: #666;
-    font-size: 20px;
-    line-height: 20px;
-    font-weight: normal;
+    height: 26px;
+    line-height: 26px;
     float: left;
 }
 span.detail-currency {
@@ -587,8 +597,20 @@ span.detail-currency {
     color: #ff9933;
     font-size: 20px;
     width: 10px;
+    font-family: Lato, sans-serif;
 }
-span.detail-price {}
+span.detail-price {
+    position: relative;
+    color: #333;
+    font-size: 26px;
+    font-family: Lato, sans-serif;
+    bottom: -1px;
+}
+span.detail-condition {
+    color: #aaa;
+    font-size: 18px;
+    margin-left: 5px;
+}
 
 div.detail-content {
     clear: both;
@@ -753,8 +775,8 @@ input.gallery-uploader-input {
 
 
 div.user-image-box { 
-    width: 140px; 
-    height: 140px;
+    width: 120px; 
+    height: 120px;
     margin: 30px auto 0; 
     border-radius: 50%;
     border: 5px solid white;
@@ -771,13 +793,13 @@ div.user-image-box:before {
     border: 1px solid #eee;
 }
 div.user-image-box:active { 
-    width: 138px; 
-    height: 138px;
+    width: 118px; 
+    height: 118px;
     margin: 32px auto 2px;
     box-shadow: 0 0 8px #aaa;
 }
-img.user-image { width: 140px; height: 140px; border-radius: 50%; }
-img.user-image:active { width: 138px; height: 138px; border-radius: 50%; }
+img.user-image { width: 120px; height: 120px; border-radius: 50%; }
+img.user-image:active { width: 118px; height: 118px; border-radius: 50%; }
 div.user-name { margin: 20px auto 20px; text-align: center; font-size: 16pt;}
 
 div.user-contacts {
@@ -879,17 +901,22 @@ div.detail-edit-box {
     text-decoration: underline;
 }
 
-.ui-collapsible-heading-toggle { border-color: #dddddd !important; }
-
+.ui-collapsible-heading-toggle {
+    padding: 5px 10px !important;
+    background-color: #fafafa !important; 
+    border-color: #dddddd !important; 
+}
+.ui-collapsible-heading-toggle, .ui-collapsible-content {
+    border-left: none !important; 
+    border-right: none !important;
+}
 .mine-menu-icon { margin-left: -8px; }
 .mine-link-box { 
-    padding-top: 13px;
-    padding-left: 13px;
-    padding-bottom: 13px;
+    padding-top: 10px;
+    padding-left: 15px;
+    padding-bottom: 10px;
 }
-.mine-title-wrapper {
-    
-}
+.mine-title-wrapper {}
 .mine-menu-title { font-size: 13pt; }
 div.mine-title {
     padding: 2px;
@@ -903,38 +930,39 @@ div.mine-title {
     overflow: hidden;
     float: none;
 }
-div.mine-postdate {
-    clear: both;
-    margin-top: 2px;
-    padding: 2px;
-    color: #aaa;
-    font-size: 12px;
-}
 div.mine-price-wrapper {
     padding: 2px;
     box-sizing: border-box;
     float: right;
-    font-size: 18px;
-    line-height: 18px;
     text-align: right;
-    margin-right: 10px;
+    margin: 5px 10px 0 0;
     color: black;
+    font-family: Lato, sans-serif;
+    line-height: 24px;
 }
 span.mine-currency {
     color: #ff9933;
-    line-height: 18px;
+    font-size: 18px;
 }
 span.mine-price {
-    line-height: 18px;
+    font-size: 24px;
+}
+div.mine-postdate {
+    float: left;
+    padding: 2px;
+    color: #aaa;
+    font-size: 12px;
 }
 div.mine-content {
+    float: left;
     padding: 2px;
     margin-top: 3px;
-    font-size: 14px;
-    line-height: 14px;
+    font-size: 16px;
+    line-height: 16px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     width: 100%;
     color: #555;
+    clear: both;
 }

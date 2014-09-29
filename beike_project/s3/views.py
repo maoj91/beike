@@ -19,7 +19,7 @@ import json
 import time
 import logging
 import StringIO
-import pygame
+#import pygame
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from data.image_util import ImageMetadata

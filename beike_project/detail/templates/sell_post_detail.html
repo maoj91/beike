@@ -14,7 +14,7 @@
         <div class="detail-price-wrapper">
             <span class="detail-currency">$&nbsp;</span>
             <span class="detail-price">{{post.price}}</span>
-
+            <span class="detail-condition">
             {% if post.item_condition.name == 'Condition1' %}
                 全新
             {% elif post.item_condition.name == 'Condition2' %}
@@ -26,6 +26,7 @@
             {% elif post.item_condition.name == 'Condition5' %}
                 旧
             {% endif %}
+            </span>
         </div>
         <div class="detail-category">
             <span class="detail-postdate">{{ post.date_published|date:"n月j日" }},</span>
