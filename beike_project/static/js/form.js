@@ -6,7 +6,7 @@ var formLocation = (function($, undefined) {
         $latitude, $longitude,
         $zipcode, $cityName,
         $locState1, $locState2,
-        $cityId,
+        $cityId, $editButton,
         loadingStr = '加载中...',
         noLocationStr = 'Oops, no locations!';
     var init = function($initPage) {
@@ -18,6 +18,7 @@ var formLocation = (function($, undefined) {
         $zipcode = $page.find('#zipcode');
         $cityName = $page.find('#city-name');
         $cityId = $page.find('#city-id');
+        $editButton = $page.find('#form-edit-loc');
         $locState1 = $page.find('.form-loc-state1').show();
         $locState2 = $page.find('.form-loc-state2').hide();
         
@@ -52,11 +53,13 @@ var formLocation = (function($, undefined) {
     },
     refreshLocation = function() {
         $cityName.attr('placeholder', loadingStr);
+        $editButton.attr('onclick', '');
         locUtil.refreshLocation(function(data) {
             $zipcode.val(data.zipcode);
             $cityName.val(data.city+', '+data.state);
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
+            $editButton.attr('onclick', 'formLocation.changeLocation();');
             $cityName.attr('placeholder', noLocationStr);
             $cityId.val(data.city_id);
         }, function() {
@@ -64,6 +67,7 @@ var formLocation = (function($, undefined) {
             $cityName.val('');
             $latitude.val('');
             $longitude.val('');
+            $editButton.attr('onclick', 'formLocation.changeLocation();');
             $cityName.attr('placeholder', noLocationStr);
             $cityId.val('');
         });
@@ -72,11 +76,13 @@ var formLocation = (function($, undefined) {
     },
     getLocationByZipcode = function() {
         $cityName.attr('placeholder', loadingStr);
+        $editButton.prop('onclick', '');
         locUtil.getLocByZip($zipcode.val(), function(data) {
             $zipcode.val(data.zipcode);
             $cityName.val(data.city+', '+data.state);
             $latitude.val(data.latitude);
             $longitude.val(data.longitude);
+            $editButton.attr('onclick', 'formLocation.changeLocation();');
             $cityName.attr('placeholder', noLocationStr);
             $cityId.val(data.city_id);
         }, function() {
@@ -84,6 +90,7 @@ var formLocation = (function($, undefined) {
             $cityName.val('');
             $latitude.val('');
             $longitude.val('');
+            $editButton.attr('onclick', 'formLocation.changeLocation();');
             $cityName.attr('placeholder', noLocationStr);
             $cityId.val('');
         });
