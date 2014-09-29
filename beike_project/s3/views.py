@@ -19,6 +19,7 @@ import json
 import time
 import logging
 import StringIO
+import pygame
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from data.image_util import ImageMetadata
@@ -55,38 +56,37 @@ def upload(request):
             return HttpResponseBadRequest("Must have file attached.")
         # Open the file
         file = request.FILES['post_image']
-        img = Image.open(file)
-        format = img.format
-        #resize the image
-        resized_img = resize_image(img)
-        imgMetadata = save_image_in_s3(resized_img, format, image_prefix)
+        pilImg = Image.open(file)
+        exifData = get_exif_data(pilImg)
+        degree = get_image_rotation_degree(exifData.get("Orientation", 1))
+
+        pygameImg = pygame.image.load(file)
+        resized_img = resize_image(pygameImg, 300, degree)
+        imgMetadata = save_image_in_s3(resized_img, image_prefix)
         return HttpResponse(ImageMetadata.serialize(imgMetadata));
     else:
         return HttpResponseBadRequest("Invalid request.")
 
-def resize_image(img):
-    # Get the exif data
-    exif_data = get_exif_data(img)
-
-    # Rotate the image
-    degree = get_image_rotation_degree(exif_data.get("Orientation", 1))
-    rotated_img = img.rotate(degree)
-    width, height = rotated_img.size
+def resize_image(img, maxDimension, degree):
+    width = img.get_width()
+    height = img.get_height()
 
     # Resize the image but keep the height/width ratio
-    resize_width = 300
-    resize_height = 300
+    resize_width = maxDimension
+    resize_height = maxDimension
     if width > height:
         resize_height = int((height/width) * resize_width)
     else:
         resize_width = int((width/height) * resize_height)
-    resized_img = rotated_img.resize((resize_width, resize_height))
-    return resized_img
 
-def save_image_in_s3(img, format, image_prefix):
+    scaledImg = pygame.transform.smoothscale(img, (resize_width, resize_height))
+    rotatedImg = pygame.transform.rotate(scaledImg, degree)
+    return rotatedImg
+
+def save_image_in_s3(img, image_prefix):
     # Save to output
     output = StringIO.StringIO()
-    img.save(output, format)
+    pygame.image.save(img, output)
     # Save to S3
     AWS_ACCESS_KEY = AWS.objects.all()[0].access_key.encode('utf8')
     AWS_SECRET_KEY = AWS.objects.all()[0].access_secret.encode('utf8')
@@ -98,7 +98,7 @@ def save_image_in_s3(img, format, image_prefix):
     url = 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, k.key)
     k.set_contents_from_string(output.getvalue())
     k.set_acl('public-read')
-    imgMetadata = ImageMetadata(url, img.size[0], img.size[1])
+    imgMetadata = ImageMetadata(url, img.get_width(), img.get_height())
     return imgMetadata
 
 def get_image_rotation_degree(orientation):
