@@ -56,30 +56,6 @@ def edit(request,offset):
     return render_to_response('user_edit.html',{'user':user,'is_owner':is_owner,'user_image':user_image,'states':states,'cities':cities},RequestContext(request))
 
 
-def edit_address(request,offset):
-    try:
-        offset = int(offset)
-    except ValueError:
-        raise Http404()
-    if not is_request_valid(request):
-        return HttpResponseRedirect('/user/user_guide')
-    wx_id = request.session['wx_id']
-    user = User.objects.get(id=offset)
-    return render_to_response('user_edit_address.html',{'user':user},RequestContext(request))
-
-def save_address(request, offset):
-    if not is_request_valid(request):
-        return HttpResponseRedirect('/user/user_guide')
-    wx_id = request.session['wx_id']
-    user = User.objects.get(id=offset)
-    if request.method == 'POST':
-        city_id = request.POST.get('city_id')
-        zipcode = request.POST.get('zipcode')
-        latitude = request.POST.get('latitude')
-        longitude = request.POST.get('longitude')     
-        update_user_address(user.id, city_id, zipcode, latitude, longitude)
-        return HttpResponseRedirect('/user/'+str(user.id))
-
 def create(request):
     if not is_request_valid(request):
         return HttpResponseRedirect('/user/user_guide')
